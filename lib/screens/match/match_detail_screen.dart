@@ -1,0 +1,99 @@
+import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/chat/chat_screen.dart';
+import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class MatchDetailScreen extends StatefulWidget {
+  final DetailedMatch match;
+
+  MatchDetailScreen({Key key, @required this.match}) : super(key: key);
+
+  @override
+  _MatchDetailScreenState createState() => _MatchDetailScreenState();
+}
+
+class _MatchDetailScreenState extends State<MatchDetailScreen>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  // final _myTabbedPageKey = new GlobalKey<_MatchDetailScreenState>();
+
+  List<Text> tabChoices = [
+    Text('QUIZ',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        )),
+    Text('CHAT',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        )),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: tabChoices.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
+    final opponents =
+        widget.match.userList.where((u) => u.id != user.id).toList();
+    final opponentId = opponents.map((user) => user.id).toList();
+
+    final tabWidgets = [
+      ChatScreen(
+        userId: user.id,
+        targetUserId: opponentId[0],
+        targetUserPhoto: opponents[0].photoUrl,
+        messageId: widget.match.messageId.last,
+        userMap: widget.match.userList.map((u) => u.id).toList().asMap(),
+      ),
+      Scaffold(
+        body: Center(
+          child: Text('PROFILE SCREEN'),
+        ),
+      )
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          opponents[0]
+              .displayName, // TODO: join names once multi person quizzes are enabled
+          style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+        ),
+        backgroundColor: Colors.white.withOpacity(0.8),
+        elevation: 6,
+        leading: BackButton(
+          color: Colors.black,
+        ),
+        bottom: TabBar(
+          indicatorColor: Colors.black,
+          controller: _tabController,
+          tabs: tabChoices.map((text) {
+            return Tab(
+              child: text,
+            );
+          }).toList(),
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey.shade400,
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: tabWidgets,
+      ),
+    );
+  }
+}
