@@ -36,8 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
 
-    // TODO: add default profile url
-    _profilePicture = AssetImage('assets/icon.png');
+    _profilePicture = AssetImage('assets/blank-profile-picture.jpeg');
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -59,34 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       return Scaffold(
         key: _scaffoldKey,
-        // endDrawer: Container(
-        //   width: MediaQuery.of(context).size.width * 0.5,
-        //   child: Drawer(
-        //     child: ListView(
-        //       // Important: Remove any padding from the ListView.
-        //       padding: EdgeInsets.zero,
-        //       children: <Widget>[
-        //         Container(
-        //           height: 80,
-        //           child: DrawerHeader(
-        //             child: Text('Settings'),
-        //             decoration: BoxDecoration(
-        //               color: Colors.blue,
-        //             ),
-        //           ),
-        //         ),
-        //         ListTile(
-        //           title: Text('Item 1'),
-        //           onTap: () {},
-        //         ),
-        //         ListTile(
-        //           title: Text('Item 2'),
-        //           onTap: () {},
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
         appBar: AppBar(
           title: Text(
             'Profile',
@@ -196,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           image: (user.photoUrl != null &&
                                   user.photoUrl.isNotEmpty)
                               ? CachedNetworkImageProvider(user.photoUrl)
-                              : AssetImage('assets/blank-profile-picture.jpeg'),
+                              : _profilePicture,
                           fit: BoxFit.cover,
                         ),
                         shape: BoxShape.circle,

@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.message),
-            title: Text('Games'),
+            title: Text('Matches'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
