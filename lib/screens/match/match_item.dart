@@ -38,8 +38,7 @@ class MatchItem extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           child: Text(
-            opponentList[0]
-                .displayName, // TODO: join list of names once we enable multiple users in a single group
+            opponentList[0].displayName ?? '',
             style: Theme.of(context).textTheme.title,
           ),
         ),

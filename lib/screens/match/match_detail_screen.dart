@@ -20,12 +20,12 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   // final _myTabbedPageKey = new GlobalKey<_MatchDetailScreenState>();
 
   List<Text> tabChoices = [
-    Text('QUIZ',
+    Text('CHAT',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
         )),
-    Text('CHAT',
+    Text('PROFILE',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
@@ -69,8 +69,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          opponents[0]
-              .displayName, // TODO: join names once multi person quizzes are enabled
+          opponents[0].displayName ?? opponents[0].email,
           style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
         ),
         backgroundColor: Colors.white.withOpacity(0.8),
