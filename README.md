@@ -1,16 +1,19 @@
 # canteen_frontend
 
-A new Flutter project.
+This is the codebase for the Canteen mobile app, written in Flutter.
+
+## Development Notes
+
+*** PLEASE READ THIS BEFORE YOU GET STARTED ***
+
+* The build time is extremely long because `cloud_firestore` is a piece of shit. Right now the build time is between 10-15 minutes when you first run the build in debug mode. Subsequent builds should be faster because cocoa pods cache the build artifacts if they haven't changed.
+    * https://github.com/FirebaseExtended/flutterfire/issues/349
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Clone the repo.
+2. Start the iOS simulator.
+3. Run in debug mode in your IDE of choice.
+    * In VSCode, press F5.
+4. Create your own account in the app.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
