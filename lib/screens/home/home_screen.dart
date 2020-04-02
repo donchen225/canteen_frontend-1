@@ -1,11 +1,8 @@
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_screen.dart';
-import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,6 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
     _strangersButtonColor = Colors.white;
 
     widgetOptions = [
+      Scaffold(
+        body: Center(
+          child: Text('SEARCH SCREEN'),
+        ),
+      ),
       MatchListScreen(
         matchRepository: MatchRepository(),
         userRepository: widget._userRepository,
@@ -64,6 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: null,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            title: Text('Search'),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message),
             title: Text('Matches'),
