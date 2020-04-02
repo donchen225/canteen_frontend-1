@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:meta/meta.dart';
@@ -28,7 +29,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     });
     final debounceStream = events.where((event) {
       return (event is EmailChanged || event is PasswordChanged);
-    }).debounceTime(Duration(milliseconds: 300));
+    }).debounceTime(Duration(milliseconds: FORM_REFRESH_MILLISECONDS));
     return super.transformEvents(
       nonDebounceStream.mergeWith([debounceStream]),
       next,

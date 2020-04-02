@@ -84,10 +84,6 @@ class _SignUpFormState extends State<SignUpForm> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isEmailValid ? 'Invalid Email' : null;
-                    },
                   ),
                   TextFormField(
                     controller: _passwordController,
@@ -97,10 +93,6 @@ class _SignUpFormState extends State<SignUpForm> {
                     ),
                     obscureText: true,
                     autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
-                    },
                   ),
                   SignUpButton(
                     onPressed: isRegisterButtonEnabled(state)

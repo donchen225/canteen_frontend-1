@@ -91,11 +91,7 @@ class _LoginFormState extends State<LoginForm> {
                       labelText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    autovalidate: true,
                     autocorrect: false,
-                    validator: (_) {
-                      return !state.isEmailValid ? 'Invalid Email' : null;
-                    },
                   ),
                   TextFormField(
                     controller: _passwordController,
@@ -104,11 +100,7 @@ class _LoginFormState extends State<LoginForm> {
                       labelText: 'Password',
                     ),
                     obscureText: true,
-                    autovalidate: true,
                     autocorrect: false,
-                    validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
-                    },
                   ),
                   // TODO: change this error to a pop up
                   state.isFailure

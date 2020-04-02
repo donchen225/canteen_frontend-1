@@ -1,3 +1,6 @@
+// Login/Sign-up constants
+const int FORM_REFRESH_MILLISECONDS = 300;
+
 // Firebase Storage constants
 const String FIREBASE_STORAGE_URL = 'gs://get-canteen.appspot.com';
 
