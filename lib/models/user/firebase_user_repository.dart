@@ -53,19 +53,21 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  // Future<void> addLearnSkill(String id, SkillEntity skill) {
-  //   return Firestore.instance.runTransaction((Transaction tx) {
-  //     tx.set(userCollection.document(id).collection("learn_skill").document(),
-  //         skill.toDocument());
-  //   });
-  // }
+  Future<void> addLearnSkill(String id, int position, SkillEntity skill) {
+    return Firestore.instance.runTransaction((Transaction tx) {
+      tx.update(userCollection.document(id), {
+        "learn_skill": {position.toString(): skill.toDocument()}
+      });
+    });
+  }
 
-  // Future<void> addTeachSkill(String id, SkillEntity skill) {
-  //   return Firestore.instance.runTransaction((Transaction tx) {
-  //     tx.set(userCollection.document(id),
-  //         skill.toDocument());
-  //   });
-  // }
+  Future<void> addTeachSkill(String id, int position, SkillEntity skill) {
+    return Firestore.instance.runTransaction((Transaction tx) {
+      tx.update(userCollection.document(id), {
+        "teach_skill": {position.toString(): skill.toDocument()}
+      });
+    });
+  }
 
   Future<void> updateUserSignInTime(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) async {
@@ -90,12 +92,6 @@ class FirebaseUserRepository extends UserRepository {
       });
     });
   }
-
-  // Future<bool> exists(String id) async {
-  //   var snapShot = await userCollection.document(id).get();
-
-  //   return (snapShot != null && snapShot.exists);
-  // }
 
   /// Only use this if necessary, first check FirebaseUser in
   /// Authentication state
