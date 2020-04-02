@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,14 +14,13 @@ import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/simple_bloc_delegate.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_event.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  final UserRepository userRepository = UserRepository();
+  final UserRepository userRepository = FirebaseUserRepository();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -75,7 +75,8 @@ class App extends StatelessWidget {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is Authenticated) {
-                BlocProvider.of<UserBloc>(context).add(LoadUser(state.user));
+                BlocProvider.of<UserBloc>(context)
+                    .add(InitializeUser(state.user));
 
                 BlocProvider.of<MatchBloc>(context)
                     .add(LoadMatches(state.user.uid));

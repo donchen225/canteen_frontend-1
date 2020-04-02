@@ -12,7 +12,9 @@ class AuthenticationBloc
 
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository;
+        _userRepository = userRepository {
+    print('IN AUTH BLOC CONSTRUCTOR');
+  }
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -32,9 +34,8 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
-        final user = await _userRepository.getFirebaseUser();
+      final user = await _userRepository.getFirebaseUser();
+      if (user != null) {
         await _userRepository.updateUserSignInTime(user);
         yield Authenticated(user);
       } else {

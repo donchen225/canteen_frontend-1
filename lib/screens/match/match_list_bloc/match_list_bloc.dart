@@ -64,7 +64,7 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
           return userCache[id];
         }
 
-        var u = await _userRepository.getUserFromId(id);
+        var u = await _userRepository.getUser(id);
         if (!userCache.containsKey(id)) {
           userCache[u.id] = u;
         }

@@ -75,7 +75,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Colors.black,
               onPressed: () {
                 BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-                BlocProvider.of<UserBloc>(context).add(LogOutUser());
                 BlocProvider.of<MatchBloc>(context).add(ClearMatches());
               },
             )

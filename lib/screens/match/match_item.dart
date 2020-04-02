@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_state.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,10 @@ class MatchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
-    final opponentList = match.userList.where((u) => u.id != user.id).toList();
+    final user =
+        (BlocProvider.of<AuthenticationBloc>(context).state as Authenticated)
+            .user;
+    final opponentList = match.userList.where((u) => u.id != user.uid).toList();
 
     return ListTile(
       onTap: onTap,

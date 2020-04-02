@@ -22,4 +22,4 @@ class UserLoaded extends UserState {
   String toString() => 'UserLoaded { ${user.toString()}  }';
 }
 
-class UserCleared extends UserState {}
+class UserEmpty extends UserState {}

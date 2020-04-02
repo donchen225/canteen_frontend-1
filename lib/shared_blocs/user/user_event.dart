@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -8,16 +9,28 @@ abstract class UserEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadUser extends UserEvent {
+class InitializeUser extends UserEvent {
   final FirebaseUser firebaseUser;
 
-  const LoadUser(this.firebaseUser);
+  const InitializeUser(this.firebaseUser);
 
   @override
   List<Object> get props => [firebaseUser];
 
   @override
-  String toString() => 'LoadUser { firebaseUser: $firebaseUser }';
+  String toString() => 'InitializeUser { firebaseUser: $firebaseUser }';
+}
+
+class LoadUser extends UserEvent {
+  final User user;
+
+  const LoadUser(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'LoadUser { user: $user }';
 }
 
 abstract class UpdateUser extends UserEvent {
