@@ -1,15 +1,16 @@
 import 'dart:io';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:mime/mime.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorage {
   final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: 'gs://deepqs-c2e07.appspot.com');
+      FirebaseStorage(storageBucket: FIREBASE_STORAGE_URL);
 
   // TODO: create a thumbnail from the image
   Future<StorageUploadTask> upload(File file, String userId) async {
     // Reject file sizes > 10MB
-    if ((await file.length()) > 10000000) {
+    if ((await file.length()) > FIREBASE_STORAGE_MAX_UPLOAD_SIZE) {
       print('File size must be < 10MB.');
       return null;
     }

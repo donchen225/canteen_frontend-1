@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
-import 'package:canteen_frontend/helpers/validators.dart';
+import 'package:canteen_frontend/utils/validators.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
