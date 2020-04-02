@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
@@ -43,10 +45,27 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> addFirebaseUser(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) {
-      tx.set(userCollection.document(user.uid),
-          FirebaseUserEntity.fromFirebaseUser(user).toDocument());
+      tx.set(
+          userCollection.document(user.uid),
+          UserEntity.fromFirebaseUserEntity(
+                  FirebaseUserEntity.fromFirebaseUser(user))
+              .toDocument());
     });
   }
+
+  // Future<void> addLearnSkill(String id, SkillEntity skill) {
+  //   return Firestore.instance.runTransaction((Transaction tx) {
+  //     tx.set(userCollection.document(id).collection("learn_skill").document(),
+  //         skill.toDocument());
+  //   });
+  // }
+
+  // Future<void> addTeachSkill(String id, SkillEntity skill) {
+  //   return Firestore.instance.runTransaction((Transaction tx) {
+  //     tx.set(userCollection.document(id),
+  //         skill.toDocument());
+  //   });
+  // }
 
   Future<void> updateUserSignInTime(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) async {
