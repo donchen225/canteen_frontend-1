@@ -5,12 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorage {
   final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: FIREBASE_STORAGE_URL);
+      FirebaseStorage(storageBucket: firebaseStorageUrl);
 
   // TODO: create a thumbnail from the image
   Future<StorageUploadTask> upload(File file, String userId) async {
     // Reject file sizes > 10MB
-    if ((await file.length()) > FIREBASE_STORAGE_MAX_UPLOAD_SIZE) {
+    if ((await file.length()) > firebaseStorageMaxUploadSize) {
       print('File size must be < 10MB.');
       return null;
     }

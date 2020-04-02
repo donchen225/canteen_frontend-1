@@ -29,7 +29,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     });
     final debounceStream = events.where((event) {
       return (event is EmailChanged || event is PasswordChanged);
-    }).debounceTime(Duration(milliseconds: FORM_REFRESH_MILLISECONDS));
+    }).debounceTime(Duration(milliseconds: formRefreshMilliseconds));
     return super.transformEvents(
       nonDebounceStream.mergeWith([debounceStream]),
       next,
