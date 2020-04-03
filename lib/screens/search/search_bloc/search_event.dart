@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SearchEvent extends Equatable {
@@ -20,5 +21,19 @@ class SearchStarted extends SearchEvent {
   @override
   String toString() {
     return 'SearchStarted { identifier: $identifier }';
+  }
+}
+
+class SearchInspectUser extends SearchEvent {
+  final User user;
+
+  const SearchInspectUser(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() {
+    return 'SearchInspectUser { user: $user }';
   }
 }

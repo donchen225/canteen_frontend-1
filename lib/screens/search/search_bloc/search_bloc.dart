@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -21,6 +22,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _mapSearchStartedToState(event.identifier);
     } else if (event is SearchCleared) {
       yield* _mapSearchClearedToState();
+    } else if (event is SearchInspectUser) {
+      yield* _mapSearchInspectUserToState(event.user);
     }
   }
 
@@ -48,5 +51,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<SearchState> _mapSearchClearedToState() async* {
     yield SearchReset();
+  }
+
+  Stream<SearchState> _mapSearchInspectUserToState(User user) async* {
+    yield SearchShowProfile(user);
   }
 }

@@ -3,8 +3,10 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_screen.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -54,6 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
+      if (_selectedIndex == index) {
+        if (_selectedIndex == 0) {
+          BlocProvider.of<SearchBloc>(context).add(SearchCleared());
+        }
+      }
       _selectedIndex = index;
     });
   }

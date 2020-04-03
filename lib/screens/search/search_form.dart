@@ -46,6 +46,7 @@ class _SearchFormState extends State<SearchForm> {
             flex: 4,
             child: BlocBuilder<SearchBloc, SearchState>(
               builder: (context, state) {
+                print('IN SEARCH FORM');
                 if (state is SearchLoading) {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is SearchCompleteWithResults) {
@@ -54,23 +55,29 @@ class _SearchFormState extends State<SearchForm> {
                     itemBuilder: (context, index) {
                       final user = state.userList[index];
 
-                      return ListTile(
-                        leading: Container(
-                          width: 50, // TODO: change this to be dynamic
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: (user.photoUrl != null &&
-                                      user.photoUrl.isNotEmpty)
-                                  ? CachedNetworkImageProvider(user.photoUrl)
-                                  : AssetImage(
-                                      'assets/blank-profile-picture.jpeg'),
-                              fit: BoxFit.cover,
+                      return GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SearchBloc>(context)
+                              .add(SearchInspectUser(user));
+                        },
+                        child: ListTile(
+                          leading: Container(
+                            width: 50, // TODO: change this to be dynamic
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: (user.photoUrl != null &&
+                                        user.photoUrl.isNotEmpty)
+                                    ? CachedNetworkImageProvider(user.photoUrl)
+                                    : AssetImage(
+                                        'assets/blank-profile-picture.jpeg'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
+                          title: Text(user.email),
                         ),
-                        title: Text(user.email),
                       );
                     },
                   );

@@ -14,10 +14,25 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search'),
-      ),
-      body: SearchForm(userRepository: _userRepository),
-    );
+        appBar: AppBar(
+          title: Text('Search'),
+        ),
+        body: BlocListener<SearchBloc, SearchState>(
+          listener: (context, state) {},
+          child: BlocBuilder<SearchBloc, SearchState>(
+            builder: (context, state) {
+              print('IN SEARCH SCREEN');
+              if (state is SearchShowProfile) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('PROFILE SCREEN'),
+                  ),
+                );
+              } else {
+                return SearchForm(userRepository: _userRepository);
+              }
+            },
+          ),
+        ));
   }
 }
