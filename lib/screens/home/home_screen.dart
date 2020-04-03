@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_screen.dart';
+import 'package:canteen_frontend/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,10 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _strangersButtonColor = Colors.white;
 
     widgetOptions = [
-      Scaffold(
-        body: Center(
-          child: Text('SEARCH SCREEN'),
-        ),
+      SearchScreen(
+        userRepository: widget._userRepository,
       ),
       MatchListScreen(
         matchRepository: MatchRepository(),

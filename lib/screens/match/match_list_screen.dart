@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list.dart';
-import 'package:canteen_frontend/screens/match/search_dialog.dart';
 import 'package:flutter/material.dart';
 
 class MatchListScreen extends StatelessWidget {
@@ -24,27 +23,22 @@ class MatchListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Matches',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-          ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.grey[200],
         elevation: 2,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Colors.black,
-            ),
-            onPressed: () => showDialog(
-                context: context,
-                child: SearchDialog(
-                  userRepository: _userRepository,
-                  matchRepository: _matchRepository,
-                )),
-          )
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.add,
+          //     color: Colors.black,
+          //   ),
+          //   onPressed: () => showDialog(
+          //       context: context,
+          //       child: SearchDialog(
+          //         userRepository: _userRepository,
+          //         matchRepository: _matchRepository,
+          //       )),
+          // )
         ],
       ),
       body: MatchList(),

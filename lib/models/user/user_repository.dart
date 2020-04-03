@@ -16,6 +16,8 @@ abstract class UserRepository {
   // Get the User and listen to all future changes
   Stream<User> getCurrentUser(String userId) {}
 
+  Future<List<User>> getAllUsers() async {}
+
   /// Gets the User from the "user" Firestore collection
   /// Use this when possible over getUser()
   // TODO: combine data from FirebaseUser and Firestore after adding in other types of login

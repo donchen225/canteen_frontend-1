@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -120,6 +119,15 @@ class FirebaseUserRepository extends UserRepository {
     return userCollection.document(userId).snapshots().map((snapshot) {
       return User.fromEntity(UserEntity.fromSnapshot(snapshot));
     });
+  }
+
+  // TODO: remove this function
+  Future<List<User>> getAllUsers() async {
+    return userCollection.getDocuments().then((querySnapshot) => querySnapshot
+        .documents
+        .map((documentSnapshot) =>
+            User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
+        .toList());
   }
 
   // TODO: make this stream based

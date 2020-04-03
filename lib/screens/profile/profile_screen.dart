@@ -61,14 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           title: Text(
             'Profile',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-            ),
           ),
           elevation: 2,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.grey[200],
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.exit_to_app),

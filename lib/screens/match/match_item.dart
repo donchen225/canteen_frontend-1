@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
