@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,6 +97,11 @@ class App extends StatelessWidget {
                       BlocProvider<MatchListBloc>(
                         create: (context) => MatchListBloc(
                           matchBloc: BlocProvider.of<MatchBloc>(context),
+                          userRepository: _userRepository,
+                        ),
+                      ),
+                      BlocProvider<SearchBloc>(
+                        create: (context) => SearchBloc(
                           userRepository: _userRepository,
                         ),
                       ),

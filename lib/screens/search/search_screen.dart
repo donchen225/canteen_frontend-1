@@ -17,10 +17,7 @@ class SearchScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Search'),
       ),
-      body: BlocProvider<SearchBloc>(
-        create: (context) => SearchBloc(userRepository: _userRepository),
-        child: SearchForm(userRepository: _userRepository),
-      ),
+      body: SearchForm(userRepository: _userRepository),
     );
   }
 }
