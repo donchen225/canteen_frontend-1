@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/update_name_field.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
@@ -165,40 +166,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                             );
                           },
-                          child: Container(
-                            height: 160,
-                            width: 160,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: (user.photoUrl != null &&
-                                        user.photoUrl.isNotEmpty)
-                                    ? CachedNetworkImageProvider(user.photoUrl)
-                                    : _profilePicture,
-                                fit: BoxFit.cover,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Colors.white,
-                                  ),
-                                  color: Colors.blue[500],
-                                  shape: BoxShape.circle,
-                                ),
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  CupertinoIcons.add,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
+                          child: ProfilePicture(
+                            photoUrl: user.photoUrl,
+                            localPicture: _profilePicture,
+                            editable: true,
+                            size: 160,
                           ),
                         ),
                       ],
