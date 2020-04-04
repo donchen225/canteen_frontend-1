@@ -89,173 +89,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: ListView(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
-                child: Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        showCupertinoModalPopup(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              CupertinoActionSheet(
-                            title: Text(
-                              'Change Profile Photo',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                            actions: <Widget>[
-                              // TODO: implement this
-                              CupertinoActionSheetAction(
-                                onPressed: () {},
-                                child: Text(
-                                  'Remove Current Photo',
-                                  style: TextStyle(color: Colors.red),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
+                    child: Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: Text(
+                                  'Change Profile Photo',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
                                 ),
+                                actions: <Widget>[
+                                  // TODO: implement this
+                                  CupertinoActionSheetAction(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Remove Current Photo',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () =>
+                                        _pickImage(ImageSource.camera)
+                                            .then((nothing) async {
+                                      setState(() {
+                                        _profilePicture = FileImage(_imageFile);
+                                      });
+                                      CloudStorage()
+                                          .upload(_imageFile, user.id)
+                                          .then((task) async {
+                                        final downloadUrl =
+                                            (await task.onComplete);
+                                        final String url = (await downloadUrl
+                                            .ref
+                                            .getDownloadURL());
+                                        widget._userRepository
+                                            .updatePhoto(user.id, url);
+                                      });
+                                    }),
+                                    child: Text(
+                                      'Take Photo',
+                                    ),
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () =>
+                                        _pickImage(ImageSource.gallery)
+                                            .then((nothing) async {
+                                      setState(() {
+                                        _profilePicture = FileImage(_imageFile);
+                                      });
+                                      CloudStorage()
+                                          .upload(_imageFile, user.id)
+                                          .then((task) async {
+                                        final downloadUrl =
+                                            (await task.onComplete);
+                                        final String url = (await downloadUrl
+                                            .ref
+                                            .getDownloadURL());
+                                        widget._userRepository
+                                            .updatePhoto(user.id, url);
+                                      });
+                                    }),
+                                    child: Text(
+                                      'Choose from Library',
+                                    ),
+                                  )
+                                ],
                               ),
-                              CupertinoActionSheetAction(
-                                onPressed: () => _pickImage(ImageSource.camera)
-                                    .then((nothing) async {
-                                  setState(() {
-                                    _profilePicture = FileImage(_imageFile);
-                                  });
-                                  CloudStorage()
-                                      .upload(_imageFile, user.id)
-                                      .then((task) async {
-                                    final downloadUrl = (await task.onComplete);
-                                    final String url = (await downloadUrl.ref
-                                        .getDownloadURL());
-                                    widget._userRepository
-                                        .updatePhoto(user.id, url);
-                                  });
-                                }),
-                                child: Text(
-                                  'Take Photo',
-                                ),
-                              ),
-                              CupertinoActionSheetAction(
-                                onPressed: () => _pickImage(ImageSource.gallery)
-                                    .then((nothing) async {
-                                  setState(() {
-                                    _profilePicture = FileImage(_imageFile);
-                                  });
-                                  CloudStorage()
-                                      .upload(_imageFile, user.id)
-                                      .then((task) async {
-                                    final downloadUrl = (await task.onComplete);
-                                    final String url = (await downloadUrl.ref
-                                        .getDownloadURL());
-                                    widget._userRepository
-                                        .updatePhoto(user.id, url);
-                                  });
-                                }),
-                                child: Text(
-                                  'Choose from Library',
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: (user.photoUrl != null &&
-                                    user.photoUrl.isNotEmpty)
-                                ? CachedNetworkImageProvider(user.photoUrl)
-                                : _profilePicture,
-                            fit: BoxFit.cover,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
+                            );
+                          },
                           child: Container(
-                            width: 25,
-                            height: 25,
+                            height: 160,
+                            width: 160,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: Colors.white,
+                              image: DecorationImage(
+                                image: (user.photoUrl != null &&
+                                        user.photoUrl.isNotEmpty)
+                                    ? CachedNetworkImageProvider(user.photoUrl)
+                                    : _profilePicture,
+                                fit: BoxFit.cover,
                               ),
-                              color: Colors.blue[500],
                               shape: BoxShape.circle,
                             ),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              CupertinoIcons.add,
-                              color: Colors.white,
-                              size: 20,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Colors.white,
+                                  ),
+                                  color: Colors.blue[500],
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  CupertinoIcons.add,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text('Games'),
-                              Text('Played'),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  '0',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text('Quizzes'),
-                              Text('Won'),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  '0',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text('Questions'),
-                              Text('Answered'),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  '0',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: EdgeInsets.all(5),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       user.displayName ?? '',
