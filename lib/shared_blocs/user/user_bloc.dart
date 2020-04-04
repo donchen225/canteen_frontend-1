@@ -16,7 +16,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   StreamSubscription _authSubscription;
 
   UserBloc(
-      {@required UserRepository userRepository, @required authenticationBloc})
+      {@required UserRepository userRepository,
+      @required AuthenticationBloc authenticationBloc})
       : assert(userRepository != null),
         assert(authenticationBloc != null),
         _userRepository = userRepository,

@@ -3,16 +3,17 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_screen.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
-  final User user;
 
-  HomeScreen({Key key, this.user, @required UserRepository userRepository})
+  HomeScreen({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
@@ -48,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         userRepository: widget._userRepository,
       ),
       ProfileScreen(
-        user: widget.user,
         userRepository: widget._userRepository,
       ),
     ];
