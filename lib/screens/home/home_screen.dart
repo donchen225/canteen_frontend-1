@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         matchRepository: MatchRepository(),
         userRepository: widget._userRepository,
       ),
-      ProfileScreen(
+      UserProfileScreen(
         userRepository: widget._userRepository,
       ),
     ];
