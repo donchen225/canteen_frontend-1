@@ -1,12 +1,9 @@
 import 'package:canteen_frontend/models/match/match_repository.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
-import 'package:canteen_frontend/screens/profile/profile_screen.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,16 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/update_name_field.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -230,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: EdgeInsets.all(20),
                 child: Text(
-                  'Favorite Questions',
+                  'Want to learn',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
