@@ -76,7 +76,7 @@ class _SearchFormState extends State<SearchForm> {
                               ),
                             ),
                           ),
-                          title: Text(user.email),
+                          title: Text(user.displayName ?? ''),
                         ),
                       );
                     },

@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
+import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_event.dart';
 import 'package:canteen_frontend/screens/prospect_profile/prospect_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_form.dart';
@@ -15,7 +16,12 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SearchBloc, SearchState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is SearchShowProfile) {
+          BlocProvider.of<ProspectProfileBloc>(context)
+              .add(LoadProspectProfile(state.user));
+        }
+      },
       child: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
           print('IN SEARCH SCREEN');
@@ -23,6 +29,7 @@ class SearchScreen extends StatelessWidget {
             duration: Duration(milliseconds: 200),
             switchOutCurve: Threshold(0),
             transitionBuilder: (Widget child, Animation<double> animation) {
+              print('BUILDER');
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(0.25, 0),
