@@ -31,12 +31,15 @@ class ProspectProfileScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    ProfilePicture(
-                      photoUrl: user.photoUrl,
-                      localPicture:
-                          AssetImage('assets/blank-profile-picture.jpeg'),
-                      editable: false,
-                      size: 160,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: ProfilePicture(
+                        photoUrl: user.photoUrl,
+                        localPicture:
+                            AssetImage('assets/blank-profile-picture.jpeg'),
+                        editable: false,
+                        size: 160,
+                      ),
                     ),
                   ],
                 ),
