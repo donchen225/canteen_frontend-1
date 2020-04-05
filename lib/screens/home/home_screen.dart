@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
+import 'package:canteen_frontend/screens/potential_match/potential_match_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       SearchScreen(
         userRepository: widget._userRepository,
       ),
+      PotentialMatchScreen(),
       MatchListScreen(
         matchRepository: MatchRepository(),
         userRepository: widget._userRepository,
@@ -68,10 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBodyBehindAppBar: true,
       appBar: null,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             title: Text('Search'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.offline_bolt),
+            title: Text('Likes'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message),
