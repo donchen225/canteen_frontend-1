@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/screens/prospect_profile/prospect_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_form.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +14,29 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Search'),
-        ),
-        body: BlocListener<SearchBloc, SearchState>(
-          listener: (context, state) {},
-          child: BlocBuilder<SearchBloc, SearchState>(
-            builder: (context, state) {
-              print('IN SEARCH SCREEN');
-              if (state is SearchShowProfile) {
-                return Scaffold(
-                  body: Center(
-                    child: Text('PROFILE SCREEN'),
-                  ),
-                );
-              } else {
-                return SearchForm(userRepository: _userRepository);
-              }
+    return BlocListener<SearchBloc, SearchState>(
+      listener: (context, state) {},
+      child: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, state) {
+          print('IN SEARCH SCREEN');
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 200),
+            switchOutCurve: Threshold(0),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.25, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
             },
-          ),
-        ));
+            child: state is SearchShowProfile
+                ? ProspectProfileScreen()
+                : SearchForm(userRepository: _userRepository),
+          );
+        },
+      ),
+    );
   }
 }
