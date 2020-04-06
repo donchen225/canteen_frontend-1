@@ -1,5 +1,11 @@
+import 'package:canteen_frontend/models/match/status.dart';
+import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
+import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +19,11 @@ class ProspectProfileScreen extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (state is ProspectProfileLoaded) {
           final user = state.user;
+          final currentUserId = (BlocProvider.of<AuthenticationBloc>(context)
+                  .state as Authenticated)
+              .user
+              .uid;
+
           return Scaffold(
             appBar: AppBar(
               title: Text(user.displayName ?? ''),
@@ -23,56 +34,20 @@ class ProspectProfileScreen extends StatelessWidget {
               elevation: 5,
               child: Icon(Icons.message),
               onPressed: () {
-                print('Clicked');
+                BlocProvider.of<MatchBloc>(context).add(
+                  AddMatch(
+                    Match(
+                      userId: {
+                        currentUserId: 1,
+                        user.id: 0,
+                      },
+                      status: MatchStatus.initialized,
+                    ),
+                  ),
+                );
               },
             ),
-            body: ListView(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: ProfilePicture(
-                        photoUrl: user.photoUrl,
-                        localPicture:
-                            AssetImage('assets/blank-profile-picture.jpeg'),
-                        editable: false,
-                        size: 160,
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'About',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    user.about ?? '',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'I am teaching',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'I am learning',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
+            body: ProfileList(user),
           );
         }
       },

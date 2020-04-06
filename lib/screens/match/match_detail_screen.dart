@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/chat/chat_screen.dart';
+import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,29 +48,22 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   @override
   Widget build(BuildContext context) {
     final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
-    final opponents =
-        widget.match.userList.where((u) => u.id != user.id).toList();
-    final opponentId = opponents.map((user) => user.id).toList();
+    final prospect = widget.match.userList.firstWhere((u) => u.id != user.id);
 
     final tabWidgets = [
       ChatScreen(
         userId: user.id,
-        targetUserId: opponentId[0],
-        targetUserPhoto: opponents[0].photoUrl,
-        messageId: widget.match.messageId.last,
+        targetUserId: prospect.id,
+        targetUserPhoto: prospect.photoUrl,
         userMap: widget.match.userList.map((u) => u.id).toList().asMap(),
       ),
-      Scaffold(
-        body: Center(
-          child: Text('PROFILE SCREEN'),
-        ),
-      )
+      ProfileList(prospect),
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          opponents[0].displayName ?? opponents[0].email,
+          prospect.displayName ?? prospect.email,
           style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
         ),
         backgroundColor: Colors.white.withOpacity(0.8),

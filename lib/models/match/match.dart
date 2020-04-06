@@ -1,21 +1,22 @@
 import 'package:canteen_frontend/models/match/match_entity.dart';
+import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:meta/meta.dart';
 
 class Match {
   final String id;
   final Map<String, int> userId;
-  final List<String> quizId;
   final List<String> messageId;
+  final MatchStatus status;
 
-  Match({@required this.userId, this.quizId, this.messageId, this.id});
+  Match({@required this.userId, this.messageId, this.id, this.status});
 
   static Match fromEntity(MatchEntity entity) {
     return Match(
       id: entity.id,
       userId: entity.userId,
-      quizId: entity.quizId,
       messageId: entity.messageId,
+      status: MatchStatus.values[entity.status],
     );
   }
 
@@ -23,8 +24,8 @@ class Match {
     return MatchEntity(
       id: id,
       userId: userId,
-      quizId: quizId,
       messageId: messageId,
+      status: status.index,
     );
   }
 }
@@ -35,17 +36,17 @@ class DetailedMatch extends Match {
   DetailedMatch(
       {@required userId,
       @required id,
-      @required quizId,
       @required messageId,
+      @required status,
       @required this.userList})
-      : super(userId: userId, id: id, quizId: quizId, messageId: messageId);
+      : super(userId: userId, id: id, messageId: messageId, status: status);
 
   static DetailedMatch fromMatch(Match match, List<User> userList) {
     return DetailedMatch(
         userId: match.userId,
         id: match.id,
-        quizId: match.quizId,
         messageId: match.messageId,
+        status: match.status,
         userList: userList);
   }
 }

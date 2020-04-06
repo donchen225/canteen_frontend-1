@@ -17,4 +17,27 @@ This is the codebase for the Canteen mobile app, written in Flutter.
     * In VSCode, press F5.
 4. Create your own account in the app.
 
+## Firestore collections
 
+### Users
+
+* `about`: `string` - The description of the user.
+* `creation_time`: `timestamp` - When the user was created. The value is copied from Firebase Authentication.
+* `display_name`: `string` - The display name of the user.
+* `email`: `string` - The email address of the user.
+* `is_anonymous`: `boolean` - Whether the user is anonymous.
+* `is_email_verified`: `boolean` - Whether the user email address is verified.
+* `last_sign_in_time`: `timestamp` - When the user last signed in.
+* `learn_skills`: `map<string, Skill>` - The list of skills the user wants to learn.
+* `phone_number`: `string` - The phone number of the user.
+* `photo_url`: `string` - The URL of the user photo. Photo is stored in Firebase storage.
+* `provider_id`: `string` - The method used for Firebase Authentication.
+* `teach_skills`: `map<string, Skill>` - The list of skills the user wants to teach.
+
+### Matches
+
+* `user_id`: `map<string, int>` - The users in the match.
+* `status`: `string` - The status of the match. Possible values:
+    * `initialized`
+    * `accepted`
+    * `declined`

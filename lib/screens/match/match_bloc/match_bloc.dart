@@ -41,8 +41,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       yield* _mapDeleteMatchToState(event);
     } else if (event is MatchesUpdated) {
       yield* _mapMatchesUpdateToState(event);
-    } else if (event is AddQuizToMatch) {
-      yield* _mapAddQuizToMatchToState(event);
     } else if (event is ClearMatches) {
       yield* _mapClearMatchesToState();
     }
@@ -101,10 +99,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     });
 
     yield MatchesLoaded(matchList);
-  }
-
-  Stream<MatchState> _mapAddQuizToMatchToState(AddQuizToMatch event) async* {
-    _matchRepository.addQuiztoMatch(event.matchId, event.quizId);
   }
 
   Stream<MatchState> _mapClearMatchesToState() async* {
