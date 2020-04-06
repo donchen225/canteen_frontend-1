@@ -23,3 +23,15 @@ class UserProfileLoaded extends UserProfileState {
 }
 
 class UserProfileEmpty extends UserProfileState {}
+
+class UserProfileEditingAbout extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingAbout(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'UserProfileEditingAbout { user: ${user.toString()}  }';
+}

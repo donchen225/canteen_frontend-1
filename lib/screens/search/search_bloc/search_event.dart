@@ -37,3 +37,5 @@ class SearchInspectUser extends SearchEvent {
     return 'SearchInspectUser { user: $user }';
   }
 }
+
+class ShowSearchResults extends SearchEvent {}
