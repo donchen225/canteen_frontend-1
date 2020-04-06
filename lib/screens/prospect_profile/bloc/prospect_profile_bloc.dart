@@ -17,11 +17,18 @@ class ProspectProfileBloc
       ProspectProfileEvent event) async* {
     if (event is LoadProspectProfile) {
       yield* _mapLoadProspectProfileToState(event.user);
+    } else if (event is ConfirmProspectProfile) {
+      yield* _mapConfirmProspectProfileToState(event.user);
     }
   }
 
   Stream<ProspectProfileState> _mapLoadProspectProfileToState(
       User user) async* {
     yield ProspectProfileLoaded(user);
+  }
+
+  Stream<ProspectProfileState> _mapConfirmProspectProfileToState(
+      User user) async* {
+    yield ProspectProfileConfirmation(user);
   }
 }

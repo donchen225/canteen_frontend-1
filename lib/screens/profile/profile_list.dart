@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 class ProfileList extends StatelessWidget {
   final User user;
   final double height;
-  final double width;
 
-  ProfileList(this.user, {@required this.height, @required this.width});
+  ProfileList(this.user, {@required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,7 @@ class ProfileList extends StatelessWidget {
               elevation: 0.3,
               color: Colors.white,
               child: Container(
-                height: 100,
+                height: height,
                 padding: EdgeInsets.all(10),
                 child: Text(user.about ?? ''),
               ),

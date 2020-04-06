@@ -19,7 +19,7 @@ class UserProfileLoaded extends UserProfileState {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'UserProfileLoaded { ${user.toString()}  }';
+  String toString() => 'UserProfileLoaded { user: ${user.toString()}  }';
 }
 
 class UserProfileEmpty extends UserProfileState {}

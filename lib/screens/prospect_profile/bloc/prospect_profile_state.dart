@@ -19,5 +19,18 @@ class ProspectProfileLoaded extends ProspectProfileState {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'UserProfileLoaded { ${user.toString()}  }';
+  String toString() => 'UserProfileLoaded { user: ${user.toString()}  }';
+}
+
+class ProspectProfileConfirmation extends ProspectProfileState {
+  final User user;
+
+  const ProspectProfileConfirmation(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'ProspectProfileConfirmation { user: ${user.toString()}  }';
 }

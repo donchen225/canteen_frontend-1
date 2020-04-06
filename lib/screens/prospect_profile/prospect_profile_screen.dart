@@ -1,10 +1,6 @@
-import 'package:canteen_frontend/models/match/status.dart';
-import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
-import 'package:canteen_frontend/models/match/match.dart';
-import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/screens/prospect_profile/confirm_prospect_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,10 +15,6 @@ class ProspectProfileScreen extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (state is ProspectProfileLoaded) {
           final user = state.user;
-          final currentUserId = (BlocProvider.of<AuthenticationBloc>(context)
-                  .state as Authenticated)
-              .user
-              .uid;
 
           return Scaffold(
             appBar: AppBar(
@@ -34,21 +26,17 @@ class ProspectProfileScreen extends StatelessWidget {
               elevation: 5,
               child: Icon(Icons.message),
               onPressed: () {
-                BlocProvider.of<MatchBloc>(context).add(
-                  AddMatch(
-                    Match(
-                      userId: {
-                        currentUserId: 1,
-                        user.id: 0,
-                      },
-                      status: MatchStatus.initialized,
-                    ),
-                  ),
-                );
+                BlocProvider.of<ProspectProfileBloc>(context)
+                    .add(ConfirmProspectProfile(user));
               },
             ),
-            body: ProfileList(user),
+            body: ProfileList(
+              user,
+              height: 100,
+            ),
           );
+        } else if (state is ProspectProfileConfirmation) {
+          return ConfirmProspectScreen(state.user);
         }
       },
     );
