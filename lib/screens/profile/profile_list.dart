@@ -12,7 +12,7 @@ class ProfileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[200],
+      color: Colors.grey[100],
       child: Padding(
         padding: EdgeInsets.only(left: 20, right: 20),
         child: ListView(
