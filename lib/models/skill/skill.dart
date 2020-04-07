@@ -30,4 +30,12 @@ class Skill {
       skill.price,
     );
   }
+
+  SkillEntity toEntity() {
+    return SkillEntity(
+      name,
+      description,
+      price,
+    );
+  }
 }

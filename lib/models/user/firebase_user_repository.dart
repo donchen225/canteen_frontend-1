@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,14 +66,6 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> addTeachSkill(String id, int position, SkillEntity skill) {
-    return Firestore.instance.runTransaction((Transaction tx) {
-      tx.update(userCollection.document(id), {
-        "teach_skill": {position.toString(): skill.toDocument()}
-      });
-    });
-  }
-
   Future<void> updateUserSignInTime(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(user.uid), {
@@ -101,6 +94,20 @@ class FirebaseUserRepository extends UserRepository {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "about": about,
       });
+    });
+  }
+
+  User updateTeachSkill(Skill skill, int index) {
+    final updatedUser = _user.updateTeachSkill(skill, index);
+    _updateTeachSkill(skill.toEntity(), index);
+
+    return updatedUser;
+  }
+
+  Future<void> _updateTeachSkill(SkillEntity skill, int index) {
+    return Firestore.instance.runTransaction((Transaction tx) {
+      tx.update(userCollection.document(_firebaseUser.uid),
+          {"teach_skill.${index.toString()}": skill.toDocument()});
     });
   }
 

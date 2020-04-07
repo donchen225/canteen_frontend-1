@@ -28,11 +28,11 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 * `is_anonymous`: `boolean` - Whether the user is anonymous.
 * `is_email_verified`: `boolean` - Whether the user email address is verified.
 * `last_sign_in_time`: `timestamp` - When the user last signed in.
-* `learn_skills`: `map<string, Skill>` - The list of skills the user wants to learn.
+* `learn_skill`: `map<string, Skill>` - The list of skills the user wants to learn.
 * `phone_number`: `string` - The phone number of the user.
 * `photo_url`: `string` - The URL of the user photo. Photo is stored in Firebase storage.
 * `provider_id`: `string` - The method used for Firebase Authentication.
-* `teach_skills`: `map<string, Skill>` - The list of skills the user wants to teach.
+* `teach_skill`: `map<string, Skill>` - The list of skills the user wants to teach.
 
 ### Matches
 

@@ -38,14 +38,16 @@ class EditAboutSection extends UserProfileEvent {
 // TODO: remove User
 class EditTeachSkill extends UserProfileEvent {
   final User user;
+  final int skillIndex;
 
-  const EditTeachSkill(this.user);
-
-  @override
-  List<Object> get props => [user];
+  const EditTeachSkill(this.user, {this.skillIndex});
 
   @override
-  String toString() => 'EditTeachSkill { user: ${user.toString()} }';
+  List<Object> get props => [user, skillIndex];
+
+  @override
+  String toString() =>
+      'EditTeachSkill { user: ${user.toString()} skillIndex: $skillIndex }';
 }
 
 class UpdateAboutSection extends UserProfileEvent {
@@ -65,13 +67,14 @@ class UpdateAboutSection extends UserProfileEvent {
 class UpdateTeachSkill extends UserProfileEvent {
   final User user;
   final Skill skill;
+  final int skillIndex;
 
-  const UpdateTeachSkill(this.user, this.skill);
+  const UpdateTeachSkill(this.user, this.skill, this.skillIndex);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, skill, skillIndex];
 
   @override
   String toString() =>
-      'UpdateTeachSkill { user: ${user.toString()} skill: ${skill.toString()} }';
+      'UpdateTeachSkill { user: ${user.toString()} skill: ${skill.toString()} skillIndex: $skillIndex }';
 }

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class EditProfileSkill extends StatefulWidget {
   final User user;
   final String skillType;
+  final int skillIndex;
 
-  EditProfileSkill({@required this.user, @required this.skillType});
+  EditProfileSkill(
+      {@required this.user, @required this.skillType, this.skillIndex});
 
   _EditProfileSkillState createState() => _EditProfileSkillState();
 }
@@ -18,6 +21,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   TextEditingController _skillPriceController;
   TextEditingController _skillDescriptionController;
   final double _titleFontSize = 18;
+  Skill skill;
 
   @override
   void initState() {
@@ -27,11 +31,24 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillNameController = TextEditingController();
     _skillPriceController = TextEditingController();
     _skillDescriptionController = TextEditingController();
+
+    skill = Skill('', '', 0);
   }
 
   @override
   Widget build(BuildContext context) {
-    // _skillNameController.text = widget.user.about;
+    final skillList = widget.skillType == 'teach'
+        ? widget.user.teachSkill
+        : widget.user.learnSkill;
+
+    if (widget.skillIndex < skillList.length) {
+      skill = skillList[widget.skillIndex];
+    }
+
+    _skillNameController.text = skill.name;
+    _skillPriceController.text = skill.price.toString();
+    _skillDescriptionController.text = skill.description;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -53,12 +70,21 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                 : 'Edit Learn Skill'),
             GestureDetector(
               onTap: () {
-                // if (widget.user.about != _textController.text) {
-                //   _userProfileBloc.add(
-                //       UpdateAboutSection(widget.user, _textController.text));
-                // } else {
-                //   _userProfileBloc.add(LoadUserProfile(widget.user));
-                // }
+                final price = int.parse(_skillPriceController.text);
+
+                if (skill.name != _skillNameController.text ||
+                    skill.price != price ||
+                    skill.description != _skillDescriptionController.text) {
+                  print('UPDATING SKILL');
+                  _userProfileBloc.add(UpdateTeachSkill(
+                      widget.user,
+                      Skill(_skillNameController.text,
+                          _skillDescriptionController.text, price),
+                      widget.skillIndex ?? 0));
+                } else {
+                  print('NOT UPDATING SKILL');
+                  _userProfileBloc.add(LoadUserProfile(widget.user));
+                }
               },
               child: Text(
                 'Done',

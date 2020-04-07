@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -197,6 +198,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     _userProfileBloc.add(EditAboutSection(user));
                   },
                   child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.grey[200]),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                     margin: EdgeInsets.all(0),
                     elevation: 0.3,
                     color: Colors.white,
@@ -216,24 +221,56 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 user.teachSkill.length > 0
                     ? ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
                         itemCount: user.teachSkill.length,
                         itemBuilder: (context, index) {
                           final skill = user.teachSkill[index];
-                          return GestureDetector(
-                            onTap: () {
-                              _userProfileBloc.add(EditTeachSkill(user));
-                            },
-                            child: Card(
-                              margin: EdgeInsets.all(0),
-                              elevation: 0.3,
-                              color: Colors.white,
-                              child: Container(
-                                height: 100,
-                                padding: EdgeInsets.all(15),
-                                child: Text(user.about ?? ''),
+                          return Padding(
+                            padding: EdgeInsets.only(top: 5, bottom: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                _userProfileBloc.add(
+                                    EditTeachSkill(user, skillIndex: index));
+                              },
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.grey[200]),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                margin: EdgeInsets.all(0),
+                                elevation: 0.3,
+                                color: Colors.white,
+                                child: Container(
+                                  height: 100,
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        skill.name +
+                                            ' - ' +
+                                            '\$${(skill.price).toString()}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(skill.description),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           );
+                        },
+                      )
+                    : Container(),
+                user.teachSkill.length < 3
+                    ? AddIcon(
+                        160,
+                        onTap: () {
+                          _userProfileBloc.add(EditTeachSkill(user,
+                              skillIndex: user.teachSkill.length));
                         },
                       )
                     : Container(),
@@ -270,7 +307,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
 
       if (state is UserProfileEditingTeachSkill) {
-        return EditProfileSkill(user: state.user, skillType: 'teach');
+        return EditProfileSkill(
+            user: state.user, skillType: 'teach', skillIndex: state.skillIndex);
       }
     });
   }

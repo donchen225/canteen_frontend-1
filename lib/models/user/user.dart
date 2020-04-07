@@ -84,4 +84,29 @@ class User {
       isEmailVerified: isEmailVerified,
     );
   }
+
+  User updateTeachSkill(Skill skill, int index) {
+    var teachSkills = teachSkill;
+    if (teachSkills.length == index) {
+      teachSkills.add(skill);
+    } else {
+      teachSkills[index] = skill;
+    }
+
+    return User(
+      providerId,
+      id,
+      displayName: displayName,
+      about: about,
+      photoUrl: photoUrl,
+      learnSkill: learnSkill,
+      teachSkill: teachSkills,
+      email: email,
+      phoneNumber: phoneNumber,
+      creationTimestamp: creationTimestamp,
+      lastSignInTimestamp: lastSignInTimestamp,
+      isAnonymous: isAnonymous,
+      isEmailVerified: isEmailVerified,
+    );
+  }
 }

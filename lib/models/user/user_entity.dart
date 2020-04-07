@@ -58,10 +58,10 @@ class UserEntity extends Equatable {
       displayName: snap.data["display_name"],
       about: snap.data["about"],
       photoUrl: snap.data["photo_url"],
-      learnSkills: snap.data["learn_skills"]?.map<String, Skill>(
+      learnSkills: snap.data["learn_skill"]?.map<String, Skill>(
               (k, v) => MapEntry(k as String, Skill.fromMap(v))) ??
           {},
-      teachSkills: snap.data["teach_skills"]?.map<String, Skill>(
+      teachSkills: snap.data["teach_skill"]?.map<String, Skill>(
               (k, v) => MapEntry(k as String, Skill.fromMap(v))) ??
           {},
       email: snap.data["email"],
@@ -94,8 +94,8 @@ class UserEntity extends Equatable {
       "display_name": displayName,
       "about": about,
       "photo_url": photoUrl,
-      "learn_skills": learnSkills,
-      "teach_skills": teachSkills,
+      "learn_skill": learnSkills,
+      "teach_skill": teachSkills,
       "email": email,
       "phone_number": phoneNumber,
       "creation_time": creationTimestamp,

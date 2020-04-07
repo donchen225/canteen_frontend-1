@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -33,6 +34,8 @@ abstract class UserRepository {
   Future<void> updateDisplayName(String id, String name) async {}
 
   User updateAbout(String updatedText) {}
+
+  User updateTeachSkill(Skill skill, int index) {}
 
   Future<void> updatePhoto(String id, String url) async {}
 }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,24 +33,7 @@ class ProfilePicture extends StatelessWidget {
       child: editable
           ? Align(
               alignment: Alignment.bottomRight,
-              child: Container(
-                height: size / 4,
-                width: size / 4,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 2,
-                    color: Colors.white,
-                  ),
-                  color: Colors.blue[500],
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  CupertinoIcons.add,
-                  color: Colors.white,
-                  size: size / 5,
-                ),
-              ),
+              child: AddIcon(size),
             )
           : Container(),
     );

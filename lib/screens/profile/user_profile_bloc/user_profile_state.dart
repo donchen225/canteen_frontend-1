@@ -38,15 +38,16 @@ class UserProfileEditingAbout extends UserProfileState {
 
 class UserProfileEditingTeachSkill extends UserProfileState {
   final User user;
+  final int skillIndex;
 
-  const UserProfileEditingTeachSkill(this.user);
+  const UserProfileEditingTeachSkill(this.user, this.skillIndex);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, skillIndex];
 
   @override
   String toString() =>
-      'UserProfileEditingTeachSkill { user: ${user.toString()}  }';
+      'UserProfileEditingTeachSkill { user: ${user.toString()}, skillIndex: $skillIndex  }';
 }
 
 class UserProfileEditingLearnSkill extends UserProfileState {

@@ -57,7 +57,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         targetUserPhoto: prospect.photoUrl,
         userMap: widget.match.userList.map((u) => u.id).toList().asMap(),
       ),
-      ProfileList(prospect),
+      ProfileList(prospect, height: 100),
     ];
 
     return Scaffold(
