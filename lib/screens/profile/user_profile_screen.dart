@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
+import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
@@ -188,7 +189,57 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(
                     'About',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _userProfileBloc.add(EditAboutSection(user));
+                  },
+                  child: Card(
+                    margin: EdgeInsets.all(0),
+                    elevation: 0.3,
+                    color: Colors.white,
+                    child: Container(
+                      height: 100,
+                      padding: EdgeInsets.all(15),
+                      child: Text(user.about ?? ''),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: Text(
+                    "I'm teaching",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ListView.builder(
+                  itemCount: user.teachSkill.length,
+                  itemBuilder: (context, index) {
+                    final skill = user.teachSkill[index];
+                    return GestureDetector(
+                      onTap: () {
+                        _userProfileBloc.add(EditTeachSkill(user));
+                      },
+                      child: Card(
+                        margin: EdgeInsets.all(0),
+                        elevation: 0.3,
+                        color: Colors.white,
+                        child: Container(
+                          height: 100,
+                          padding: EdgeInsets.all(15),
+                          child: Text(user.about ?? ''),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: Text(
+                    "I'm learning",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 GestureDetector(
@@ -214,6 +265,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
       if (state is UserProfileEditingAbout) {
         return EditProfileScreen(user: state.user);
+      }
+
+      if (state is UserProfileEditingTeachSkill) {
+        return EditProfileSkill(user: state.user, skillType: 'teach');
       }
     });
   }

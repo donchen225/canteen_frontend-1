@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/authentication_bloc.dart';
 import 'package:meta/meta.dart';
 
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_event.dart';
@@ -42,6 +43,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapEditAboutSectionToState(event.user);
     } else if (event is UpdateAboutSection) {
       yield* _mapUpdateAboutSectionToState(event.user, event.about);
+    } else if (event is EditTeachSkill) {
+      yield* _mapEditTeachSkillToState(event.user);
     }
   }
 
@@ -58,5 +61,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     final updatedUser = user.updateAbout(about);
     _userRepository.updateAbout(user.id, about);
     yield UserProfileLoaded(updatedUser);
+  }
+
+  Stream<UserProfileState> _mapEditTeachSkillToState(User user) async* {
+    yield UserProfileEditingTeachSkill(user);
   }
 }

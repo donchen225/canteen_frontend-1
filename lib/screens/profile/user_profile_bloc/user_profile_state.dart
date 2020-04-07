@@ -35,3 +35,29 @@ class UserProfileEditingAbout extends UserProfileState {
   @override
   String toString() => 'UserProfileEditingAbout { user: ${user.toString()}  }';
 }
+
+class UserProfileEditingTeachSkill extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingTeachSkill(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UserProfileEditingTeachSkill { user: ${user.toString()}  }';
+}
+
+class UserProfileEditingLearnSkill extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingLearnSkill(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UserProfileEditingLearnSkill { user: ${user.toString()}  }';
+}

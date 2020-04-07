@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -34,6 +35,19 @@ class EditAboutSection extends UserProfileEvent {
   String toString() => 'EditAboutSection { user: ${user.toString()} }';
 }
 
+// TODO: remove User
+class EditTeachSkill extends UserProfileEvent {
+  final User user;
+
+  const EditTeachSkill(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'EditTeachSkill { user: ${user.toString()} }';
+}
+
 class UpdateAboutSection extends UserProfileEvent {
   final User user;
   final String about;
@@ -46,4 +60,18 @@ class UpdateAboutSection extends UserProfileEvent {
   @override
   String toString() =>
       'UpdateAboutSection { user: ${user.toString()} about: $about }';
+}
+
+class UpdateTeachSkill extends UserProfileEvent {
+  final User user;
+  final Skill skill;
+
+  const UpdateTeachSkill(this.user, this.skill);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UpdateTeachSkill { user: ${user.toString()} skill: ${skill.toString()} }';
 }
