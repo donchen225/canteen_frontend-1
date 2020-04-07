@@ -36,29 +36,17 @@ class UserProfileEditingAbout extends UserProfileState {
   String toString() => 'UserProfileEditingAbout { user: ${user.toString()}  }';
 }
 
-class UserProfileEditingTeachSkill extends UserProfileState {
+class UserProfileEditingSkill extends UserProfileState {
   final User user;
+  final String skillType;
   final int skillIndex;
 
-  const UserProfileEditingTeachSkill(this.user, this.skillIndex);
+  const UserProfileEditingSkill(this.user, this.skillType, this.skillIndex);
 
   @override
   List<Object> get props => [user, skillIndex];
 
   @override
   String toString() =>
-      'UserProfileEditingTeachSkill { user: ${user.toString()}, skillIndex: $skillIndex  }';
-}
-
-class UserProfileEditingLearnSkill extends UserProfileState {
-  final User user;
-
-  const UserProfileEditingLearnSkill(this.user);
-
-  @override
-  List<Object> get props => [user];
-
-  @override
-  String toString() =>
-      'UserProfileEditingLearnSkill { user: ${user.toString()}  }';
+      'UserProfileEditingSkill { user: ${user.toString()} skillType: $skillType skillIndex: $skillIndex  }';
 }

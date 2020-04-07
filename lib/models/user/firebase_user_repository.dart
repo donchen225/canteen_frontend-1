@@ -111,6 +111,20 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
+  User updateLearnSkill(Skill skill, int index) {
+    final updatedUser = _user.updateTeachSkill(skill, index);
+    _updateLearnSkill(skill.toEntity(), index);
+
+    return updatedUser;
+  }
+
+  Future<void> _updateLearnSkill(SkillEntity skill, int index) {
+    return Firestore.instance.runTransaction((Transaction tx) {
+      tx.update(userCollection.document(_firebaseUser.uid),
+          {"learn_skill.${index.toString()}": skill.toDocument()});
+    });
+  }
+
   Future<void> updatePhoto(String id, String url) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(id), {

@@ -109,4 +109,29 @@ class User {
       isEmailVerified: isEmailVerified,
     );
   }
+
+  User updateLearnSkill(Skill skill, int index) {
+    var learnSkills = learnSkill;
+    if (learnSkills.length == index) {
+      learnSkills.add(skill);
+    } else {
+      learnSkills[index] = skill;
+    }
+
+    return User(
+      providerId,
+      id,
+      displayName: displayName,
+      about: about,
+      photoUrl: photoUrl,
+      learnSkill: learnSkills,
+      teachSkill: teachSkill,
+      email: email,
+      phoneNumber: phoneNumber,
+      creationTimestamp: creationTimestamp,
+      lastSignInTimestamp: lastSignInTimestamp,
+      isAnonymous: isAnonymous,
+      isEmailVerified: isEmailVerified,
+    );
+  }
 }

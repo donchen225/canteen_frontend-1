@@ -76,10 +76,11 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                     skill.price != price ||
                     skill.description != _skillDescriptionController.text) {
                   print('UPDATING SKILL');
-                  _userProfileBloc.add(UpdateTeachSkill(
+                  _userProfileBloc.add(UpdateSkill(
                       widget.user,
                       Skill(_skillNameController.text,
                           _skillDescriptionController.text, price),
+                      widget.skillType,
                       widget.skillIndex ?? 0));
                 } else {
                   print('NOT UPDATING SKILL');

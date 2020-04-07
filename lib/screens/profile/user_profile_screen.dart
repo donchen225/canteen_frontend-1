@@ -230,8 +230,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             padding: EdgeInsets.only(top: 5, bottom: 5),
                             child: GestureDetector(
                               onTap: () {
-                                _userProfileBloc.add(
-                                    EditTeachSkill(user, skillIndex: index));
+                                _userProfileBloc
+                                    .add(EditSkill(user, 'teach', index));
                               },
                               child: Card(
                                 shape: RoundedRectangleBorder(
@@ -269,8 +269,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ? AddIcon(
                         160,
                         onTap: () {
-                          _userProfileBloc.add(EditTeachSkill(user,
-                              skillIndex: user.teachSkill.length));
+                          _userProfileBloc.add(
+                              EditSkill(user, 'teach', user.teachSkill.length));
                         },
                       )
                     : Container(),
@@ -281,21 +281,64 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    _userProfileBloc.add(EditAboutSection(user));
-                  },
-                  child: Card(
-                    margin: EdgeInsets.all(0),
-                    elevation: 0.3,
-                    color: Colors.white,
-                    child: Container(
-                      height: 100,
-                      padding: EdgeInsets.all(15),
-                      child: Text(user.about ?? ''),
-                    ),
-                  ),
-                ),
+                user.learnSkill.length > 0
+                    ? ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: user.learnSkill.length,
+                        itemBuilder: (context, index) {
+                          final skill = user.learnSkill[index];
+                          return Padding(
+                            padding: EdgeInsets.only(top: 5, bottom: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                _userProfileBloc
+                                    .add(EditSkill(user, 'learn', index));
+                              },
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.grey[200]),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                margin: EdgeInsets.all(0),
+                                elevation: 0.3,
+                                color: Colors.white,
+                                child: Container(
+                                  height: 100,
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        skill.name +
+                                            ' - ' +
+                                            '\$${(skill.price).toString()}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(skill.description),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Container(),
+                user.learnSkill.length < 3
+                    ? Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: AddIcon(
+                          160,
+                          onTap: () {
+                            _userProfileBloc.add(EditSkill(
+                                user, 'learn', user.learnSkill.length));
+                          },
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -306,9 +349,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         return EditProfileScreen(user: state.user);
       }
 
-      if (state is UserProfileEditingTeachSkill) {
+      if (state is UserProfileEditingSkill) {
         return EditProfileSkill(
-            user: state.user, skillType: 'teach', skillIndex: state.skillIndex);
+            user: state.user,
+            skillType: state.skillType,
+            skillIndex: state.skillIndex);
       }
     });
   }

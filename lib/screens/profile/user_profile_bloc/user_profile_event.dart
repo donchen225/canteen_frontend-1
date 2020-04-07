@@ -36,18 +36,19 @@ class EditAboutSection extends UserProfileEvent {
 }
 
 // TODO: remove User
-class EditTeachSkill extends UserProfileEvent {
+class EditSkill extends UserProfileEvent {
   final User user;
   final int skillIndex;
+  final String skillType;
 
-  const EditTeachSkill(this.user, {this.skillIndex});
+  const EditSkill(this.user, this.skillType, this.skillIndex);
 
   @override
-  List<Object> get props => [user, skillIndex];
+  List<Object> get props => [user, skillType, skillIndex];
 
   @override
   String toString() =>
-      'EditTeachSkill { user: ${user.toString()} skillIndex: $skillIndex }';
+      'EditSkill { user: ${user.toString()} skillType: $skillType skillIndex: $skillIndex }';
 }
 
 class UpdateAboutSection extends UserProfileEvent {
@@ -64,17 +65,18 @@ class UpdateAboutSection extends UserProfileEvent {
       'UpdateAboutSection { user: ${user.toString()} about: $about }';
 }
 
-class UpdateTeachSkill extends UserProfileEvent {
+class UpdateSkill extends UserProfileEvent {
   final User user;
   final Skill skill;
+  final String skillType;
   final int skillIndex;
 
-  const UpdateTeachSkill(this.user, this.skill, this.skillIndex);
+  const UpdateSkill(this.user, this.skill, this.skillType, this.skillIndex);
 
   @override
-  List<Object> get props => [user, skill, skillIndex];
+  List<Object> get props => [user, skill, skillType, skillIndex];
 
   @override
   String toString() =>
-      'UpdateTeachSkill { user: ${user.toString()} skill: ${skill.toString()} skillIndex: $skillIndex }';
+      'UpdateSkill { user: ${user.toString()} skill: ${skill.toString()} skillType: $skillType skillIndex: $skillIndex }';
 }
