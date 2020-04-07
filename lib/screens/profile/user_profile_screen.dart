@@ -90,159 +90,155 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               // )
             ],
           ),
-          body: Padding(
+          body: ListView(
             padding: EdgeInsets.only(left: 20, right: 20),
-            child: ListView(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
-                      child: Row(
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoActionSheet(
-                                  title: Text(
-                                    'Change Profile Photo',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
+                    child: Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoActionSheet(
+                                title: Text(
+                                  'Change Profile Photo',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  // TODO: implement this
+                                  CupertinoActionSheetAction(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Remove Current Photo',
+                                      style: TextStyle(color: Colors.red),
                                     ),
                                   ),
-                                  actions: <Widget>[
-                                    // TODO: implement this
-                                    CupertinoActionSheetAction(
-                                      onPressed: () {},
-                                      child: Text(
-                                        'Remove Current Photo',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () =>
+                                        _pickImage(ImageSource.camera)
+                                            .then((nothing) async {
+                                      setState(() {
+                                        _profilePicture = FileImage(_imageFile);
+                                      });
+                                      CloudStorage()
+                                          .upload(_imageFile, user.id)
+                                          .then((task) async {
+                                        final downloadUrl =
+                                            (await task.onComplete);
+                                        final String url = (await downloadUrl
+                                            .ref
+                                            .getDownloadURL());
+                                        widget._userRepository
+                                            .updatePhoto(user.id, url);
+                                      });
+                                    }),
+                                    child: Text(
+                                      'Take Photo',
                                     ),
-                                    CupertinoActionSheetAction(
-                                      onPressed: () =>
-                                          _pickImage(ImageSource.camera)
-                                              .then((nothing) async {
-                                        setState(() {
-                                          _profilePicture =
-                                              FileImage(_imageFile);
-                                        });
-                                        CloudStorage()
-                                            .upload(_imageFile, user.id)
-                                            .then((task) async {
-                                          final downloadUrl =
-                                              (await task.onComplete);
-                                          final String url = (await downloadUrl
-                                              .ref
-                                              .getDownloadURL());
-                                          widget._userRepository
-                                              .updatePhoto(user.id, url);
-                                        });
-                                      }),
-                                      child: Text(
-                                        'Take Photo',
-                                      ),
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () =>
+                                        _pickImage(ImageSource.gallery)
+                                            .then((nothing) async {
+                                      setState(() {
+                                        _profilePicture = FileImage(_imageFile);
+                                      });
+                                      CloudStorage()
+                                          .upload(_imageFile, user.id)
+                                          .then((task) async {
+                                        final downloadUrl =
+                                            (await task.onComplete);
+                                        final String url = (await downloadUrl
+                                            .ref
+                                            .getDownloadURL());
+                                        widget._userRepository
+                                            .updatePhoto(user.id, url);
+                                      });
+                                    }),
+                                    child: Text(
+                                      'Choose from Library',
                                     ),
-                                    CupertinoActionSheetAction(
-                                      onPressed: () =>
-                                          _pickImage(ImageSource.gallery)
-                                              .then((nothing) async {
-                                        setState(() {
-                                          _profilePicture =
-                                              FileImage(_imageFile);
-                                        });
-                                        CloudStorage()
-                                            .upload(_imageFile, user.id)
-                                            .then((task) async {
-                                          final downloadUrl =
-                                              (await task.onComplete);
-                                          final String url = (await downloadUrl
-                                              .ref
-                                              .getDownloadURL());
-                                          widget._userRepository
-                                              .updatePhoto(user.id, url);
-                                        });
-                                      }),
-                                      child: Text(
-                                        'Choose from Library',
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                            child: ProfilePicture(
-                              photoUrl: user.photoUrl,
-                              localPicture: _profilePicture,
-                              editable: true,
-                              size: 160,
-                            ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          child: ProfilePicture(
+                            photoUrl: user.photoUrl,
+                            localPicture: _profilePicture,
+                            editable: true,
+                            size: 160,
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                ProfileSectionTitle('About'),
-                GestureDetector(
-                  onTap: () {
-                    _userProfileBloc.add(EditAboutSection(user));
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.grey[200]),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    margin: EdgeInsets.all(0),
-                    elevation: 0.3,
-                    color: Colors.white,
-                    child: Container(
-                      height: 100,
-                      padding: EdgeInsets.all(15),
-                      child: Text(user.about ?? ''),
+                        ),
+                      ],
                     ),
                   ),
+                ],
+              ),
+              ProfileSectionTitle('About'),
+              GestureDetector(
+                onTap: () {
+                  _userProfileBloc.add(EditAboutSection(user));
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey[200]),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  margin: EdgeInsets.all(0),
+                  elevation: 0.3,
+                  color: Colors.white,
+                  child: Container(
+                    height: 100,
+                    padding: EdgeInsets.all(15),
+                    child: Text(user.about ?? ''),
+                  ),
                 ),
-                ProfileSectionTitle("I'm teaching"),
-                SkillList(
-                  user.teachSkill,
-                  onTap: (int index) =>
-                      _userProfileBloc.add(EditSkill(user, 'teach', index)),
-                ),
-                user.teachSkill.length < 3
-                    ? AddIcon(
+              ),
+              ProfileSectionTitle("I'm teaching"),
+              SkillList(
+                user.teachSkill,
+                onTap: (int index) =>
+                    _userProfileBloc.add(EditSkill(user, 'teach', index)),
+              ),
+              user.teachSkill.length < 3
+                  ? AddIcon(
+                      160,
+                      onTap: () {
+                        _userProfileBloc.add(
+                            EditSkill(user, 'teach', user.teachSkill.length));
+                      },
+                    )
+                  : Container(),
+              ProfileSectionTitle("I'm learning"),
+              SkillList(
+                user.learnSkill,
+                onTap: (int index) =>
+                    _userProfileBloc.add(EditSkill(user, 'learn', index)),
+              ),
+              user.learnSkill.length < 3
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: AddIcon(
                         160,
                         onTap: () {
                           _userProfileBloc.add(
-                              EditSkill(user, 'teach', user.teachSkill.length));
+                              EditSkill(user, 'learn', user.learnSkill.length));
                         },
-                      )
-                    : Container(),
-                ProfileSectionTitle("I'm learning"),
-                SkillList(
-                  user.learnSkill,
-                  onTap: (int index) =>
-                      _userProfileBloc.add(EditSkill(user, 'learn', index)),
-                ),
-                user.learnSkill.length < 3
-                    ? Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: AddIcon(
-                          160,
-                          onTap: () {
-                            _userProfileBloc.add(EditSkill(
-                                user, 'learn', user.learnSkill.length));
-                          },
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
         );
       }

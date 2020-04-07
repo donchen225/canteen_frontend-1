@@ -2,6 +2,8 @@ import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
+import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -31,10 +33,13 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        padding: EdgeInsets.only(top: 80, left: 40, right: 40, bottom: 80),
         children: <Widget>[
-          Text(
-            widget.user.displayName ?? '',
-            style: TextStyle(fontSize: 30),
+          Center(
+            child: Text(
+              widget.user.displayName ?? '',
+              style: TextStyle(fontSize: 30),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -49,6 +54,18 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                 ),
               ),
             ],
+          ),
+          ProfileSectionTitle("I'm teaching"),
+          SkillList(
+            widget.user.teachSkill,
+            height: 50,
+            showDescription: false,
+          ),
+          ProfileSectionTitle("I'm learning"),
+          SkillList(
+            widget.user.learnSkill,
+            height: 50,
+            showDescription: false,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

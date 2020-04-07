@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 
 class SkillList extends StatelessWidget {
   final List<Skill> skills;
+  final double height;
+  final bool showDescription;
   final Function onTap;
 
-  SkillList(this.skills, {this.onTap}) : assert(skills != null);
+  SkillList(this.skills,
+      {this.height = 100, this.showDescription = true, this.onTap})
+      : assert(skills != null);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.all(0),
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: skills.length,
@@ -19,10 +24,9 @@ class SkillList extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: GestureDetector(
-            onTap: () {
-              onTap(index);
-            },
+            onTap: () => onTap != null ? onTap(index) : {},
             child: ProfileTextCard(
+              height: height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -30,7 +34,7 @@ class SkillList extends StatelessWidget {
                     skill.name + ' - ' + '\$${(skill.price).toString()}',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(skill.description),
+                  showDescription ? Text(skill.description) : Container(),
                 ],
               ),
             ),

@@ -8,7 +8,7 @@ class ProfileSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
+      padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Text(
         text,
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
