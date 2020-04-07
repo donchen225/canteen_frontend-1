@@ -109,6 +109,7 @@ class App extends StatelessWidget {
                       ),
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(
+                          userRepository: _userRepository,
                           userBloc: BlocProvider.of<UserBloc>(context),
                         ),
                       ),

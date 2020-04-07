@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:meta/meta.dart';
 
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_event.dart';
@@ -8,11 +9,16 @@ import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
+  final UserRepository _userRepository;
   final UserBloc _userBloc;
   StreamSubscription _userSubscription;
 
-  UserProfileBloc({@required UserBloc userBloc})
-      : assert(userBloc != null),
+  UserProfileBloc({
+    @required UserRepository userRepository,
+    @required UserBloc userBloc,
+  })  : assert(userRepository != null),
+        assert(userBloc != null),
+        _userRepository = userRepository,
         _userBloc = userBloc {
     _userSubscription = _userBloc.listen((state) {
       print('USER BLOC STATE CHANGE');
@@ -32,8 +38,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   ) async* {
     if (event is LoadUserProfile) {
       yield* _mapLoadUserProfileToState(event.user);
+    } else if (event is EditAboutSection) {
+      yield* _mapEditAboutSectionToState(event.user);
     } else if (event is UpdateAboutSection) {
-      yield* _mapUpdateAboutSectionToState(event.user);
+      yield* _mapUpdateAboutSectionToState(event.user, event.about);
     }
   }
 
@@ -41,7 +49,14 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     yield UserProfileLoaded(user);
   }
 
-  Stream<UserProfileState> _mapUpdateAboutSectionToState(User user) async* {
+  Stream<UserProfileState> _mapEditAboutSectionToState(User user) async* {
     yield UserProfileEditingAbout(user);
+  }
+
+  Stream<UserProfileState> _mapUpdateAboutSectionToState(
+      User user, String about) async* {
+    final updatedUser = user.updateAbout(about);
+    _userRepository.updateAbout(user.id, about);
+    yield UserProfileLoaded(updatedUser);
   }
 }

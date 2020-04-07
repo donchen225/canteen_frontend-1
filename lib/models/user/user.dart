@@ -66,4 +66,22 @@ class User {
       isEmailVerified: entity.isEmailVerified,
     );
   }
+
+  User updateAbout(String updatedText) {
+    return User(
+      providerId,
+      id,
+      displayName: displayName,
+      about: updatedText,
+      photoUrl: photoUrl,
+      learnSkill: learnSkill,
+      teachSkill: teachSkill,
+      email: email,
+      phoneNumber: phoneNumber,
+      creationTimestamp: creationTimestamp,
+      lastSignInTimestamp: lastSignInTimestamp,
+      isAnonymous: isAnonymous,
+      isEmailVerified: isEmailVerified,
+    );
+  }
 }

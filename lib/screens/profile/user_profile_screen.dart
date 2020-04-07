@@ -4,7 +4,6 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/profile/update_name_field.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -194,7 +193,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _userProfileBloc.add(UpdateAboutSection(user));
+                    _userProfileBloc.add(EditAboutSection(user));
                   },
                   child: Card(
                     margin: EdgeInsets.all(0),
@@ -202,7 +201,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     color: Colors.white,
                     child: Container(
                       height: 100,
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(15),
                       child: Text(user.about ?? ''),
                     ),
                   ),

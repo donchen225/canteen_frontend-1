@@ -33,5 +33,7 @@ abstract class UserRepository {
 
   Future<void> updateDisplayName(String id, String name) async {}
 
+  Future<void> updateAbout(String id, String name) async {}
+
   Future<void> updatePhoto(String id, String url) async {}
 }

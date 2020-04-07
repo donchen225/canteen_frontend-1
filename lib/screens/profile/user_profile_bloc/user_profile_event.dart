@@ -22,14 +22,28 @@ class LoadUserProfile extends UserProfileEvent {
 
 class ClearProfile extends UserProfileEvent {}
 
-class UpdateAboutSection extends UserProfileEvent {
+class EditAboutSection extends UserProfileEvent {
   final User user;
 
-  const UpdateAboutSection(this.user);
+  const EditAboutSection(this.user);
 
   @override
   List<Object> get props => [user];
 
   @override
-  String toString() => 'UpdateAboutSection { user: ${user.toString()} }';
+  String toString() => 'EditAboutSection { user: ${user.toString()} }';
+}
+
+class UpdateAboutSection extends UserProfileEvent {
+  final User user;
+  final String about;
+
+  const UpdateAboutSection(this.user, this.about);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UpdateAboutSection { user: ${user.toString()} about: $about }';
 }

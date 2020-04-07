@@ -13,16 +13,19 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   UserProfileBloc _userProfileBloc;
+  TextEditingController _textController;
 
   @override
   void initState() {
     super.initState();
 
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
+    _textController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+    _textController.text = widget.user.about;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -40,11 +43,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             Text('Edit About'),
-            Text(
-              'Done',
-              style: TextStyle(fontSize: 14),
+            GestureDetector(
+              onTap: () {
+                if (widget.user.about != _textController.text) {
+                  _userProfileBloc.add(
+                      UpdateAboutSection(widget.user, _textController.text));
+                } else {
+                  _userProfileBloc.add(LoadUserProfile(widget.user));
+                }
+              },
+              child: Text(
+                'Done',
+                style: TextStyle(fontSize: 14),
+              ),
             ),
           ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.25,
+          padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.grey[400]),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: TextField(
+            controller: _textController,
+            autofocus: true,
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(border: InputBorder.none),
+            keyboardType: TextInputType.multiline,
+            maxLength:
+                150, // TODO: move character counter to bottom right corner of container
+            maxLines: null,
+          ),
         ),
       ),
     );
