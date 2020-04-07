@@ -214,27 +214,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                ListView.builder(
-                  itemCount: user.teachSkill.length,
-                  itemBuilder: (context, index) {
-                    final skill = user.teachSkill[index];
-                    return GestureDetector(
-                      onTap: () {
-                        _userProfileBloc.add(EditTeachSkill(user));
-                      },
-                      child: Card(
-                        margin: EdgeInsets.all(0),
-                        elevation: 0.3,
-                        color: Colors.white,
-                        child: Container(
-                          height: 100,
-                          padding: EdgeInsets.all(15),
-                          child: Text(user.about ?? ''),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                user.teachSkill.length > 0
+                    ? ListView.builder(
+                        itemCount: user.teachSkill.length,
+                        itemBuilder: (context, index) {
+                          final skill = user.teachSkill[index];
+                          return GestureDetector(
+                            onTap: () {
+                              _userProfileBloc.add(EditTeachSkill(user));
+                            },
+                            child: Card(
+                              margin: EdgeInsets.all(0),
+                              elevation: 0.3,
+                              color: Colors.white,
+                              child: Container(
+                                height: 100,
+                                padding: EdgeInsets.all(15),
+                                child: Text(user.about ?? ''),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Container(),
                 Padding(
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(

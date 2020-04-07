@@ -13,15 +13,14 @@ abstract class UserRepository {
   // Gets the User from the "user" Firestore collection using id
   Future<User> getUser(String id) async {}
 
+  Future<User> currentUser() async {}
+
+  User currentUserNow() {}
+
   // Get the User and listen to all future changes
   Stream<User> getCurrentUser(String userId) {}
 
   Future<List<User>> getAllUsers() async {}
-
-  /// Gets the User from the "user" Firestore collection
-  /// Use this when possible over getUser()
-  // TODO: combine data from FirebaseUser and Firestore after adding in other types of login
-  Future<User> getUserFromFirebaseUser(FirebaseUser user) async {}
 
   /// Only use this if necessary, first check FirebaseUser in
   /// Authentication state
@@ -31,7 +30,7 @@ abstract class UserRepository {
 
   Future<void> updateDisplayName(String id, String name) async {}
 
-  Future<void> updateAbout(String id, String name) async {}
+  User updateAbout(String updatedText) {}
 
   Future<void> updatePhoto(String id, String url) async {}
 }

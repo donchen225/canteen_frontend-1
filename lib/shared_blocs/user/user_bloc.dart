@@ -70,7 +70,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapUpdateUserDisplayNameToState(
       String id, String name) async* {
     await _userRepository.updateDisplayName(id, name);
-    yield UserLoaded(await _userRepository.getUser(id));
+    yield UserLoaded(await _userRepository.currentUser());
   }
 
   Stream<UserState> _mapLogOutToState() async* {

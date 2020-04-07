@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FirebaseUserRepository extends UserRepository {
   final FirebaseAuth _firebaseAuth;
   final userCollection = Firestore.instance.collection('user');
+  User _user; // current user stored in memory
+  FirebaseUser _firebaseUser; // current firebase user stored in memory
 
   FirebaseUserRepository({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
@@ -37,6 +39,8 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> signOut() async {
+    clearFirebaseUser();
+    clearUser();
     return Future.wait([
       _firebaseAuth.signOut(),
     ]);
@@ -85,9 +89,16 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> updateAbout(String id, String about) {
+  User updateAbout(String about) {
+    final updatedUser = _user.updateAbout(about);
+    _updateAbout(about);
+
+    return updatedUser;
+  }
+
+  Future<void> _updateAbout(String about) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(id), {
+      tx.update(userCollection.document(_firebaseUser.uid), {
         "about": about,
       });
     });
@@ -101,32 +112,93 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  /// Only use this if necessary, first check FirebaseUser in
-  /// Authentication state
   Future<FirebaseUser> getFirebaseUser() async {
-    return _firebaseAuth.currentUser();
+    if (_firebaseUser != null) {
+      return _firebaseUser;
+    }
+
+    final user = _firebaseAuth.currentUser();
+    saveFirebaseUser(user);
+
+    return user;
+  }
+
+  void saveUser(User user) {
+    _user = user;
+  }
+
+  void clearUser() {
+    _user = null;
+  }
+
+  // TODO: remove future parameter
+  void saveFirebaseUser(Future<FirebaseUser> user) async {
+    _firebaseUser = await user;
+  }
+
+  void clearFirebaseUser() {
+    _firebaseUser = null;
   }
 
   // Gets the User from the "user" Firestore collection using id
   Future<User> getUser(String id) async {
-    return userCollection
-        .document(id)
-        .get()
-        .then((snapshot) => UserEntity.fromSnapshot(snapshot))
-        .then((userEntity) => User.fromEntity(userEntity));
+    return userCollection.document(id).get().then((snapshot) {
+      print('INSIDE GET USER');
+      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
+      return UserEntity.fromSnapshot(snapshot);
+    }).then((userEntity) {
+      final user = User.fromEntity(userEntity);
+
+      saveUser(user);
+
+      return user;
+    });
   }
 
-  /// Gets the User from the "user" Firestore collection
-  /// Use this when possible over getUser()
-  // TODO: combine data from FirebaseUser and Firestore after adding in other types of login
-  Future<User> getUserFromFirebaseUser(FirebaseUser user) async {
-    return getUser(user.uid);
+  Future<User> _getLocalUser() async {
+    return userCollection
+        .document((await getFirebaseUser()).uid)
+        .get(source: Source.cache)
+        .then((snapshot) {
+      print('INSIDE GET LOCAL USER');
+      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
+      return UserEntity.fromSnapshot(snapshot);
+    }).then((userEntity) {
+      final user = User.fromEntity(userEntity);
+
+      saveUser(user);
+
+      return user;
+    });
+  }
+
+  Future<User> currentUser() async {
+    if (_user != null) {
+      return Future.value(_user);
+    }
+    try {
+      return _getLocalUser();
+    } catch (e) {
+      print('GET LOCAL USER FAILED');
+      print(e);
+      return getUser((await getFirebaseUser()).uid);
+    }
+  }
+
+  User currentUserNow() {
+    return _user ?? null;
   }
 
   // Listens to changes for a single user ID
   Stream<User> getCurrentUser(String userId) {
     return userCollection.document(userId).snapshots().map((snapshot) {
-      return User.fromEntity(UserEntity.fromSnapshot(snapshot));
+      print('INSIDE GET CURRENT USER');
+      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
+      final user = User.fromEntity(UserEntity.fromSnapshot(snapshot));
+
+      saveUser(user);
+
+      return user;
     });
   }
 
