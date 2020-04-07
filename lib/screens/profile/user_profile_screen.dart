@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
@@ -187,13 +188,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: Text(
-                    'About',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                ProfileSectionTitle('About'),
                 GestureDetector(
                   onTap: () {
                     _userProfileBloc.add(EditAboutSection(user));
@@ -213,13 +208,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: Text(
-                    "I'm teaching",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                ProfileSectionTitle("I'm teaching"),
                 SkillList(
                   user.teachSkill,
                   onTap: (int index) =>
@@ -234,13 +223,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         },
                       )
                     : Container(),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: Text(
-                    "I'm learning",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                ProfileSectionTitle("I'm learning"),
                 SkillList(
                   user.learnSkill,
                   onTap: (int index) =>

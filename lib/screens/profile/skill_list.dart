@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:flutter/material.dart';
 
 class SkillList extends StatelessWidget {
@@ -21,27 +22,16 @@ class SkillList extends StatelessWidget {
             onTap: () {
               onTap(index);
             },
-            child: Card(
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              margin: EdgeInsets.all(0),
-              elevation: 0.3,
-              color: Colors.white,
-              child: Container(
-                height: 100,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      skill.name + ' - ' + '\$${(skill.price).toString()}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(skill.description),
-                  ],
-                ),
+            child: ProfileTextCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    skill.name + ' - ' + '\$${(skill.price).toString()}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(skill.description),
+                ],
               ),
             ),
           ),

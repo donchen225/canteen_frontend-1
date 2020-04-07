@@ -1,5 +1,8 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
+import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
+import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:flutter/material.dart';
 
 class ProfileList extends StatelessWidget {
@@ -31,56 +34,20 @@ class ProfileList extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: Text(
-                'About',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(0),
-              elevation: 0.3,
-              color: Colors.white,
+            ProfileSectionTitle('About'),
+            ProfileTextCard(
               child: Container(
                 height: height,
-                padding: EdgeInsets.all(10),
                 child: Text(user.about ?? ''),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: Text(
-                'I am teaching',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+            ProfileSectionTitle("I'm teaching"),
+            SkillList(
+              user.teachSkill,
             ),
-            Card(
-              margin: EdgeInsets.all(0),
-              elevation: 0.3,
-              color: Colors.white,
-              child: Container(
-                height: 100,
-                padding: EdgeInsets.all(10),
-                child: Text('Skill #1'),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: Text(
-                'I am learning',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(0),
-              elevation: 0.3,
-              color: Colors.white,
-              child: Container(
-                height: 100,
-                padding: EdgeInsets.all(10),
-                child: Text('Skill #1'),
-              ),
+            ProfileSectionTitle("I'm learning"),
+            SkillList(
+              user.learnSkill,
             ),
           ],
         ),
