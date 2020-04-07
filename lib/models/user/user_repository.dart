@@ -17,6 +17,8 @@ abstract class UserRepository {
 
   User currentUserNow() {}
 
+  String currentUserId() {}
+
   // Get the User and listen to all future changes
   Stream<User> getCurrentUser(String userId) {}
 

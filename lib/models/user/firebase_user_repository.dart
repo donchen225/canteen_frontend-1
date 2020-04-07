@@ -189,15 +189,15 @@ class FirebaseUserRepository extends UserRepository {
     return _user ?? null;
   }
 
+  String currentUserId() {
+    return _user?.id ?? null;
+  }
+
   // Listens to changes for a single user ID
   Stream<User> getCurrentUser(String userId) {
     return userCollection.document(userId).snapshots().map((snapshot) {
-      print('INSIDE GET CURRENT USER');
-      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
       final user = User.fromEntity(UserEntity.fromSnapshot(snapshot));
-
       saveUser(user);
-
       return user;
     });
   }
