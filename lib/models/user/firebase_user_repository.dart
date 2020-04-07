@@ -42,6 +42,7 @@ class FirebaseUserRepository extends UserRepository {
     ]);
   }
 
+  // TODO: catch ALL transactions, transactions do NOT run offline
   Future<void> addFirebaseUser(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) {
       tx.set(
@@ -136,27 +137,5 @@ class FirebaseUserRepository extends UserRepository {
         .map((documentSnapshot) =>
             User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
         .toList());
-  }
-
-  // TODO: make this stream based
-  // TODO: clean this up
-  Future<List<User>> searchUser(String identifier) async {
-    var usersFromEmail = userCollection
-        .where("email", isEqualTo: identifier)
-        .getDocuments()
-        .then((querySnapshot) => querySnapshot.documents
-            .map((documentSnapshot) =>
-                User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
-            .toList());
-    var usersFromDisplayName = userCollection
-        .where("displayName", isEqualTo: identifier)
-        .getDocuments()
-        .then((querySnapshot) => querySnapshot.documents
-            .map((documentSnapshot) =>
-                User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
-            .toList());
-
-    return Future.wait([usersFromEmail, usersFromDisplayName])
-        .then((userList) => userList.expand((i) => i).toList());
   }
 }

@@ -27,8 +27,6 @@ abstract class UserRepository {
   /// Authentication state
   Future<FirebaseUser> getFirebaseUser() async {}
 
-  Future<List<User>> searchUser(String identifier) async {}
-
   Future<void> updateUserSignInTime(FirebaseUser user) async {}
 
   Future<void> updateDisplayName(String id, String name) async {}
