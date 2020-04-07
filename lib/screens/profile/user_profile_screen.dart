@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -219,52 +220,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                user.teachSkill.length > 0
-                    ? ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: user.teachSkill.length,
-                        itemBuilder: (context, index) {
-                          final skill = user.teachSkill[index];
-                          return Padding(
-                            padding: EdgeInsets.only(top: 5, bottom: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                _userProfileBloc
-                                    .add(EditSkill(user, 'teach', index));
-                              },
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.grey[200]),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                margin: EdgeInsets.all(0),
-                                elevation: 0.3,
-                                color: Colors.white,
-                                child: Container(
-                                  height: 100,
-                                  padding: EdgeInsets.all(15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        skill.name +
-                                            ' - ' +
-                                            '\$${(skill.price).toString()}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(skill.description),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Container(),
+                SkillList(
+                  user.teachSkill,
+                  onTap: (int index) =>
+                      _userProfileBloc.add(EditSkill(user, 'teach', index)),
+                ),
                 user.teachSkill.length < 3
                     ? AddIcon(
                         160,
@@ -281,52 +241,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                user.learnSkill.length > 0
-                    ? ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: user.learnSkill.length,
-                        itemBuilder: (context, index) {
-                          final skill = user.learnSkill[index];
-                          return Padding(
-                            padding: EdgeInsets.only(top: 5, bottom: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                _userProfileBloc
-                                    .add(EditSkill(user, 'learn', index));
-                              },
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.grey[200]),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                margin: EdgeInsets.all(0),
-                                elevation: 0.3,
-                                color: Colors.white,
-                                child: Container(
-                                  height: 100,
-                                  padding: EdgeInsets.all(15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        skill.name +
-                                            ' - ' +
-                                            '\$${(skill.price).toString()}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(skill.description),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Container(),
+                SkillList(
+                  user.learnSkill,
+                  onTap: (int index) =>
+                      _userProfileBloc.add(EditSkill(user, 'learn', index)),
+                ),
                 user.learnSkill.length < 3
                     ? Padding(
                         padding: EdgeInsets.only(bottom: 20),
