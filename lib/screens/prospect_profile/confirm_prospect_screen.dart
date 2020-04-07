@@ -31,6 +31,11 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId =
+        (BlocProvider.of<AuthenticationBloc>(context).state as Authenticated)
+            .user
+            .uid;
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.only(top: 80, left: 40, right: 40, bottom: 80),
@@ -74,35 +79,33 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                 width: 200,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.red)),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
                   elevation: 0,
                   color: Colors.red[200],
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   focusColor: Colors.transparent,
                   child: Text('Send Request', style: TextStyle(fontSize: 14)),
-                  onPressed: () {
-                    final currentUserId =
-                        (BlocProvider.of<AuthenticationBloc>(context).state
-                                as Authenticated)
-                            .user
-                            .uid;
-                    BlocProvider.of<MatchBloc>(context).add(
-                      AddMatch(
-                        Match(
-                          userId: {
-                            currentUserId: 1,
-                            widget.user.id: 0,
-                          },
-                          status: MatchStatus.initialized,
-                        ),
-                      ),
-                    );
+                  onPressed: currentUserId != widget.user.id
+                      ? () {
+                          BlocProvider.of<MatchBloc>(context).add(
+                            AddMatch(
+                              Match(
+                                userId: {
+                                  currentUserId: 1,
+                                  widget.user.id: 0,
+                                },
+                                status: MatchStatus.initialized,
+                              ),
+                            ),
+                          );
 
-                    // TODO: show previous search results instead of redoing search
-                    BlocProvider.of<SearchBloc>(context).add(SearchStarted(''));
-                  },
+                          // TODO: show previous search results instead of redoing search
+                          BlocProvider.of<SearchBloc>(context)
+                              .add(SearchStarted(''));
+                        }
+                      : null,
                 ),
               ),
             ],
