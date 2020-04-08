@@ -15,13 +15,18 @@ class RequestGrid extends StatelessWidget {
         // TODO: show something when in MatchListLoaded state
         return Center(child: CircularProgressIndicator());
       } else if (state is DetailedRequestListLoaded) {
-        return ProfileGrid(
-          state.requestList.map((request) => request.sender).toList(),
-          items: state.requestList,
-          onTap: (request) {
-            BlocProvider.of<RequestListBloc>(context)
-                .add(InspectDetailedRequest(request));
-          },
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Requests'),
+          ),
+          body: ProfileGrid(
+            state.requestList.map((request) => request.sender).toList(),
+            items: state.requestList,
+            onTap: (request) {
+              BlocProvider.of<RequestListBloc>(context)
+                  .add(InspectDetailedRequest(request));
+            },
+          ),
         );
       } else if (state is IndividualDetailedRequestLoaded) {
         return Scaffold(
