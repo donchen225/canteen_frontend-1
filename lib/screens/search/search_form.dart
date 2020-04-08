@@ -111,7 +111,9 @@ class _SearchFormState extends State<SearchForm> {
                             itemCount: user.teachSkill.length,
                             itemBuilder: (context, index) {
                               final skill = user.teachSkill[index];
-                              return Text(skill.name ?? '');
+                              return Text((skill.name ?? '') +
+                                  ' - ' +
+                                  ('\$${skill.price.toString()}' ?? ''));
                             }),
                       ],
                     ),
