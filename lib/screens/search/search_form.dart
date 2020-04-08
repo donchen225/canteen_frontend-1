@@ -42,6 +42,14 @@ class _SearchFormState extends State<SearchForm> {
             ),
           ),
         ),
+        Padding(
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          child: Row(
+            children: <Widget>[
+              Text('New Users', style: TextStyle(fontSize: 20))
+            ],
+          ),
+        ),
         Expanded(
             flex: 4,
             child: BlocBuilder<SearchBloc, SearchState>(
@@ -50,7 +58,11 @@ class _SearchFormState extends State<SearchForm> {
                 if (state is SearchLoading) {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is SearchEmpty) {
-                  return ListView.builder(
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2),
                     itemCount: state.allUsers.length,
                     itemBuilder: (context, index) {
                       final user = state.allUsers[index];
@@ -60,23 +72,44 @@ class _SearchFormState extends State<SearchForm> {
                           BlocProvider.of<SearchBloc>(context)
                               .add(SearchInspectUser(user));
                         },
-                        child: ListTile(
-                          leading: Container(
-                            width: 50, // TODO: change this to be dynamic
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: (user.photoUrl != null &&
-                                        user.photoUrl.isNotEmpty)
-                                    ? CachedNetworkImageProvider(user.photoUrl)
-                                    : AssetImage(
-                                        'assets/blank-profile-picture.jpeg'),
-                                fit: BoxFit.cover,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 15, right: 15),
+                          child: ListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            children: <Widget>[
+                              Container(
+                                width: 150, // TODO: change this to be dynamic
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  image: DecorationImage(
+                                    image: (user.photoUrl != null &&
+                                            user.photoUrl.isNotEmpty)
+                                        ? CachedNetworkImageProvider(
+                                            user.photoUrl)
+                                        : AssetImage(
+                                            'assets/blank-profile-picture.jpeg'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 5, left: 5, right: 5),
+                                child: Text(user.displayName ?? ''),
+                              ),
+                              ListView.builder(
+                                  padding: EdgeInsets.only(left: 5, right: 5),
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: user.teachSkill.length,
+                                  itemBuilder: (context, index) {
+                                    final skill = user.teachSkill[index];
+                                    return Text(skill.name ?? '');
+                                  }),
+                            ],
                           ),
-                          title: Text(user.displayName ?? ''),
                         ),
                       );
                     },
@@ -92,23 +125,20 @@ class _SearchFormState extends State<SearchForm> {
                           BlocProvider.of<SearchBloc>(context)
                               .add(SearchInspectUser(user));
                         },
-                        child: ListTile(
-                          leading: Container(
-                            width: 50, // TODO: change this to be dynamic
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: (user.photoUrl != null &&
-                                        user.photoUrl.isNotEmpty)
-                                    ? CachedNetworkImageProvider(user.photoUrl)
-                                    : AssetImage(
-                                        'assets/blank-profile-picture.jpeg'),
-                                fit: BoxFit.cover,
-                              ),
+                        child: Container(
+                          // width: 50, // TODO: change this to be dynamic
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              image: (user.photoUrl != null &&
+                                      user.photoUrl.isNotEmpty)
+                                  ? CachedNetworkImageProvider(user.photoUrl)
+                                  : AssetImage(
+                                      'assets/blank-profile-picture.jpeg'),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          title: Text(user.displayName ?? ''),
                         ),
                       );
                     },
