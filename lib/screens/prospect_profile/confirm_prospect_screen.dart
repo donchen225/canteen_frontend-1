@@ -102,7 +102,7 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
 
                           // TODO: show previous search results instead of redoing search
                           BlocProvider.of<SearchBloc>(context)
-                              .add(SearchStarted(''));
+                              .add(SearchCleared());
                         }
                       : null,
                 ),
