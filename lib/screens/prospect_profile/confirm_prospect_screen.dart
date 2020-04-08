@@ -1,4 +1,6 @@
 import 'package:canteen_frontend/models/match/status.dart';
+import 'package:canteen_frontend/models/request/request.dart';
+import 'package:canteen_frontend/models/request/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -6,6 +8,7 @@ import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/request/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:flutter/material.dart';
@@ -89,14 +92,13 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                   child: Text('Send Request', style: TextStyle(fontSize: 14)),
                   onPressed: currentUserId != widget.user.id
                       ? () {
-                          BlocProvider.of<MatchBloc>(context).add(
-                            AddMatch(
-                              Match(
-                                userId: {
-                                  currentUserId: 1,
-                                  widget.user.id: 0,
-                                },
-                                status: MatchStatus.initialized,
+                          // TODO: add selected skill and comment
+                          BlocProvider.of<RequestBloc>(context).add(
+                            AddRequest(
+                              Request(
+                                sender: currentUserId,
+                                receiver: widget.user.id,
+                                status: RequestStatus.initialized,
                               ),
                             ),
                           );

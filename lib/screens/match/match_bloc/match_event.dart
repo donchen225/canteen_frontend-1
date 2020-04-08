@@ -47,19 +47,6 @@ class UpdateMatch extends MatchEvent {
   String toString() => 'UpdateMatch { updatedMatch: $updatedMatch }';
 }
 
-class AddQuizToMatch extends MatchEvent {
-  final String matchId;
-  final String quizId;
-
-  const AddQuizToMatch({@required this.quizId, @required this.matchId});
-
-  @override
-  List<Object> get props => [matchId, quizId];
-
-  @override
-  String toString() => 'AddQuizToMatch { matchId: $matchId, quizId: $quizId }';
-}
-
 class DeleteMatch extends MatchEvent {
   final Match match;
 

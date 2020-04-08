@@ -22,7 +22,6 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         _userRepository = userRepository,
         _userBloc = userBloc {
     _userSubscription = _userBloc.listen((state) {
-      print('USER BLOC STATE CHANGE');
       if (state is UserLoaded) {
         add(LoadUserProfile(state.user));
       }
@@ -30,9 +29,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   }
 
   @override
-  UserProfileState get initialState =>
-      UserProfileLoaded(_userRepository.currentUserNow()) ??
-      UserProfileLoading();
+  UserProfileState get initialState {
+    final user = _userRepository.currentUserNow();
+    return user != null ? UserProfileLoaded(user) : UserProfileLoading();
+  }
 
   @override
   Stream<UserProfileState> mapEventToState(
@@ -77,5 +77,11 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         ? _userRepository.updateTeachSkill(skill, index)
         : _userRepository.updateLearnSkill(skill, index);
     yield UserProfileLoaded(updatedUser);
+  }
+
+  @override
+  Future<void> close() {
+    _userSubscription?.cancel();
+    return super.close();
   }
 }

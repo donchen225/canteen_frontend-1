@@ -1,6 +1,8 @@
+import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
+import 'package:canteen_frontend/screens/request/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,13 @@ void main() {
             );
           },
         ),
+        BlocProvider<RequestBloc>(
+          create: (context) {
+            return RequestBloc(
+              requestRepository: RequestRepository(),
+            );
+          },
+        ),
       ],
       child: App(userRepository: userRepository),
     ),
@@ -83,6 +92,9 @@ class App extends StatelessWidget {
 
                 BlocProvider.of<MatchBloc>(context)
                     .add(LoadMatches(state.user.uid));
+
+                BlocProvider.of<RequestBloc>(context)
+                    .add(LoadRequests(state.user.uid));
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(

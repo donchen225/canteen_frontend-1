@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:meta/meta.dart';
 
+@immutable
 class Match {
   final String id;
   final Map<String, int> userId;

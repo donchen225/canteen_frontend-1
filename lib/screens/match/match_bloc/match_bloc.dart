@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:canteen_frontend/models/match/status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:meta/meta.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
-import 'package:tuple/tuple.dart';
 
 class MatchBloc extends Bloc<MatchEvent, MatchState> {
   final MatchRepository _matchRepository;
@@ -18,17 +16,11 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   MatchBloc(
       {@required MatchRepository matchRepository,
-      @required UserRepository userRepository}) // TODO: add QuizRepository
+      @required UserRepository userRepository})
       : assert(matchRepository != null),
         assert(userRepository != null),
         _matchRepository = matchRepository,
         _userRepository = userRepository;
-  // {_quizSubscription = _quizBloc.listen((state) {
-  //   if (state is QuizWaitingResponse) {
-  //     print('MATCH BLOC: QUIZ WAITING RESPONSE');
-  //     add(LoadUser(state.user));
-  //   }
-  // });
 
   // TODO: load local matches
   @override
@@ -54,26 +46,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     _matchSubscription =
         _matchRepository.getAllMatches(event.userId).listen((matches) {
       print('RECEIVED MATCH EVENT');
-      List<Tuple2<DocumentChangeType, Match>> matchList = [];
-      List<Tuple2<DocumentChangeType, Match>> requestList = [];
-
-      matches.forEach((change) {
-        if (change.item2.status == MatchStatus.initialized) {
-          requestList.add(change);
-        }
-
-        if (change.item2.status == MatchStatus.accepted) {
-          matchList.add(change);
-        }
-      });
-
-      if (matchList.length > 0) {
-        add(MatchesUpdated(matchList));
-      }
-
-      if (requestList.length > 0) {
-        print('REQUEST LIST');
-      }
+      add(MatchesUpdated(matches));
     });
   }
 
@@ -93,10 +66,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       print('FAILED TO ADD MATCH');
     }
   }
-
-  // Stream<MatchesState> _mapUpdateTodoToState(UpdateTodo event) async* {
-  //   _matchRepository.updateMatch(event.updatedTodo);
-  // }
 
   Stream<MatchState> _mapDeleteMatchToState(DeleteMatch event) async* {
     _matchRepository.deleteMatch(event.match);

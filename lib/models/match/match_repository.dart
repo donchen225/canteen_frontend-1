@@ -13,14 +13,6 @@ class MatchRepository {
     });
   }
 
-  Future<void> addQuiztoMatch(String matchId, String quizId) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(matchCollection.document(matchId), {
-        'quiz_id': FieldValue.arrayUnion([quizId])
-      });
-    });
-  }
-
   Future<void> deleteMatch(Match match) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.delete(matchCollection.document(match.id));
@@ -57,7 +49,8 @@ class MatchRepository {
 
   Stream<List<Tuple2<DocumentChangeType, Match>>> getAllMatches(String userId) {
     return matchCollection
-        .where("user_id.$userId", isGreaterThanOrEqualTo: 0)
+        .where("user_id.$userId", isEqualTo: 0)
+        .where('status', isEqualTo: 0)
         .snapshots()
         .map((snapshot) {
       return snapshot.documentChanges
