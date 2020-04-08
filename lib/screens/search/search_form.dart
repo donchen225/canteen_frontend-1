@@ -49,6 +49,38 @@ class _SearchFormState extends State<SearchForm> {
                 print('IN SEARCH FORM');
                 if (state is SearchLoading) {
                   return Center(child: CircularProgressIndicator());
+                } else if (state is SearchEmpty) {
+                  return ListView.builder(
+                    itemCount: state.allUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = state.allUsers[index];
+
+                      return GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SearchBloc>(context)
+                              .add(SearchInspectUser(user));
+                        },
+                        child: ListTile(
+                          leading: Container(
+                            width: 50, // TODO: change this to be dynamic
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: (user.photoUrl != null &&
+                                        user.photoUrl.isNotEmpty)
+                                    ? CachedNetworkImageProvider(user.photoUrl)
+                                    : AssetImage(
+                                        'assets/blank-profile-picture.jpeg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          title: Text(user.displayName ?? ''),
+                        ),
+                      );
+                    },
+                  );
                 } else if (state is SearchCompleteWithResults) {
                   return ListView.builder(
                     itemCount: state.userList.length,

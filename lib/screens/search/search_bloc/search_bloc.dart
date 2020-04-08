@@ -12,7 +12,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         _userRepository = userRepository;
 
   @override
-  SearchState get initialState => SearchReset();
+  SearchState get initialState => SearchLoading();
 
   @override
   Stream<SearchState> mapEventToState(
@@ -49,8 +49,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
+  // TODO: paginate results
   Stream<SearchState> _mapSearchClearedToState() async* {
-    yield SearchReset();
+    final users = await _userRepository.getAllUsers();
+    yield SearchEmpty(users);
   }
 
   Stream<SearchState> _mapSearchInspectUserToState(User user) async* {

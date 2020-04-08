@@ -8,7 +8,17 @@ abstract class SearchState extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchReset extends SearchState {}
+class SearchEmpty extends SearchState {
+  final List<User> allUsers;
+
+  const SearchEmpty(this.allUsers);
+
+  @override
+  List<Object> get props => [allUsers];
+
+  @override
+  String toString() => 'SearchEmpty { ${allUsers.toString()} }';
+}
 
 class SearchLoading extends SearchState {}
 

@@ -117,7 +117,7 @@ class App extends StatelessWidget {
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(
                           userRepository: _userRepository,
-                        ),
+                        )..add(SearchCleared()),
                       ),
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(
