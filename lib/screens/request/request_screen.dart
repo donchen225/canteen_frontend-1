@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PotentialMatchScreen extends StatelessWidget {
-  PotentialMatchScreen();
+class RequestScreen extends StatelessWidget {
+  RequestScreen();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Likes you'),
+        title: Text('Requests'),
       ),
       body: Center(
-        child: Text('POTENTIAL MATCH SCREEN'),
+        child: Text('REQUESTS SCREEN'),
       ),
     );
   }

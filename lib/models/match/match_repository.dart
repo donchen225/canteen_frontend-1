@@ -58,6 +58,7 @@ class MatchRepository {
   Stream<List<Tuple2<DocumentChangeType, Match>>> getAllMatches(String userId) {
     return matchCollection
         .where("user_id.$userId", isGreaterThanOrEqualTo: 0)
+        .where("status", isEqualTo: 1)
         .snapshots()
         .map((snapshot) {
       return snapshot.documentChanges

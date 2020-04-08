@@ -28,8 +28,9 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   //   }
   // });
 
+  // TODO: load local matches
   @override
-  MatchState get initialState => MatchesLoading();
+  MatchState get initialState => MatchesLoaded([]);
 
   @override
   Stream<MatchState> mapEventToState(MatchEvent event) async* {

@@ -26,20 +26,6 @@ class MatchListScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         elevation: 2,
-        actions: <Widget>[
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.add,
-          //     color: Colors.black,
-          //   ),
-          //   onPressed: () => showDialog(
-          //       context: context,
-          //       child: SearchDialog(
-          //         userRepository: _userRepository,
-          //         matchRepository: _matchRepository,
-          //       )),
-          // )
-        ],
       ),
       body: MatchList(),
     );
