@@ -24,6 +24,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       yield* _mapAddRequestToState(event);
     } else if (event is RequestsUpdated) {
       yield* _mapRequestsUpdatedToState(event);
+    } else if (event is AcceptRequest) {
+      yield* _mapAcceptRequestToState(event);
+    } else if (event is DeclineRequest) {
+      yield* _mapDeclineRequestToState(event);
     }
   }
 
@@ -41,6 +45,17 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
 
   Stream<RequestState> _mapRequestsUpdatedToState(
       RequestsUpdated event) async* {
+    yield RequestsLoading();
     yield RequestsLoaded(event.requests);
+  }
+
+  Stream<RequestState> _mapAcceptRequestToState(AcceptRequest event) async* {
+    await _requestRepository.acceptRequest(event.request);
+    yield RequestsLoaded(_requestRepository.currentRequests());
+  }
+
+  Stream<RequestState> _mapDeclineRequestToState(DeclineRequest event) async* {
+    await _requestRepository.declineRequest(event.request);
+    yield RequestsLoaded(_requestRepository.currentRequests());
   }
 }

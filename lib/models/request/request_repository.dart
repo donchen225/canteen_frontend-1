@@ -22,7 +22,27 @@ class RequestRepository {
     });
   }
 
-  List<DetailedRequest> currentRequests() {
+  Future<void> acceptRequest(Request request) {
+    Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(requestCollection.document(request.id), {"status": 1});
+    });
+
+    _requests.removeWhere((r) => r.id == request.id);
+  }
+
+  Future<void> declineRequest(Request request) {
+    Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(requestCollection.document(request.id), {"status": 2});
+    });
+
+    _requests.removeWhere((r) => r.id == request.id);
+  }
+
+  List<Request> currentRequests() {
+    return _requests;
+  }
+
+  List<DetailedRequest> currentDetailedRequests() {
     return _detailedRequests;
   }
 
@@ -32,7 +52,7 @@ class RequestRepository {
 
   Stream<List<Request>> getAllRequests(String userId) {
     return requestCollection
-        .where('receiver', isEqualTo: userId)
+        .where('receiver_id', isEqualTo: userId)
         .where('status', isEqualTo: 0)
         .snapshots()
         .map((snapshot) {

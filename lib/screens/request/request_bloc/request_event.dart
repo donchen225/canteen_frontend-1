@@ -52,3 +52,27 @@ class UpdateRequest extends RequestEvent {
   @override
   String toString() => 'UpdateRequest { requestList: $requestList }';
 }
+
+class AcceptRequest extends RequestEvent {
+  final Request request;
+
+  const AcceptRequest(this.request);
+
+  @override
+  List<Object> get props => [request];
+
+  @override
+  String toString() => 'AcceptRequest { request: $request }';
+}
+
+class DeclineRequest extends RequestEvent {
+  final Request request;
+
+  const DeclineRequest(this.request);
+
+  @override
+  List<Object> get props => [request];
+
+  @override
+  String toString() => 'DeclineRequest { request: $request }';
+}

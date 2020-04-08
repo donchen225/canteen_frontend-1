@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +45,10 @@ class RequestGrid extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(15),
                     child: FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        BlocProvider.of<RequestBloc>(context)
+                            .add(DeclineRequest(state.request));
+                      },
                       child: Icon(Icons.clear),
                     ),
                   ),
@@ -54,7 +58,10 @@ class RequestGrid extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(15),
                     child: FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        BlocProvider.of<RequestBloc>(context)
+                            .add(AcceptRequest(state.request));
+                      },
                       child: Icon(Icons.check),
                     ),
                   ),
