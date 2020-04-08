@@ -1,7 +1,10 @@
+import 'package:canteen_frontend/models/match/status.dart';
+import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/models/match/match.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,6 +64,18 @@ class RequestGrid extends StatelessWidget {
                       onPressed: () {
                         BlocProvider.of<RequestBloc>(context)
                             .add(AcceptRequest(state.request));
+
+                        BlocProvider.of<MatchBloc>(context).add(
+                          AddMatch(
+                            Match(
+                              userId: {
+                                state.request.senderId: 0,
+                                state.request.receiverId: 0,
+                              },
+                              status: MatchStatus.initialized,
+                            ),
+                          ),
+                        );
                       },
                       child: Icon(Icons.check),
                     ),
