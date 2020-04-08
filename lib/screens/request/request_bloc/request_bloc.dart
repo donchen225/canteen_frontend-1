@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:meta/meta.dart';
 
-import 'package:canteen_frontend/screens/request/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RequestBloc extends Bloc<RequestEvent, RequestState> {
