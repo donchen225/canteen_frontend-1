@@ -125,20 +125,23 @@ class _SearchFormState extends State<SearchForm> {
                           BlocProvider.of<SearchBloc>(context)
                               .add(SearchInspectUser(user));
                         },
-                        child: Container(
-                          // width: 50, // TODO: change this to be dynamic
-                          // height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            image: DecorationImage(
-                              image: (user.photoUrl != null &&
-                                      user.photoUrl.isNotEmpty)
-                                  ? CachedNetworkImageProvider(user.photoUrl)
-                                  : AssetImage(
-                                      'assets/blank-profile-picture.jpeg'),
-                              fit: BoxFit.cover,
+                        child: ListTile(
+                          leading: Container(
+                            width: 50, // TODO: change this to be dynamic
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: (user.photoUrl != null &&
+                                        user.photoUrl.isNotEmpty)
+                                    ? CachedNetworkImageProvider(user.photoUrl)
+                                    : AssetImage(
+                                        'assets/blank-profile-picture.jpeg'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
+                          title: Text(user.displayName ?? ''),
                         ),
                       );
                     },
