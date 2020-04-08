@@ -4,16 +4,16 @@ import 'package:meta/meta.dart';
 
 class RequestEntity extends Equatable {
   final String id;
-  final String sender;
-  final String receiver;
+  final String senderId;
+  final String receiverId;
   final String skill;
   final String comment;
   final int status;
 
   const RequestEntity(
       {@required this.id,
-      @required this.sender,
-      @required this.receiver,
+      @required this.senderId,
+      @required this.receiverId,
       @required this.skill,
       @required this.comment,
       @required this.status});
@@ -21,8 +21,8 @@ class RequestEntity extends Equatable {
   Map<String, Object> toJson() {
     return {
       'id': id,
-      'sender': sender,
-      'receiver': receiver,
+      'sender_id': senderId,
+      'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
       'status': status,
@@ -30,18 +30,18 @@ class RequestEntity extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, sender, receiver, skill, comment, status];
+  List<Object> get props => [id, senderId, receiverId, skill, comment, status];
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, sender: $sender, receiver: $receiver, skill: $skill, comment: $comment, status: $status }';
+    return 'MatchEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, status: $status }';
   }
 
   static RequestEntity fromJson(Map<String, Object> json) {
     return RequestEntity(
       id: json['id'] as String,
-      sender: json['sender'] as String,
-      receiver: json['receiver'] as String,
+      senderId: json['sender_id'] as String,
+      receiverId: json['receiver_id'] as String,
       skill: json['skill'] as String,
       comment: json['comment'] as String,
       status: json['status'] as int,
@@ -51,8 +51,8 @@ class RequestEntity extends Equatable {
   static RequestEntity fromSnapshot(DocumentSnapshot snapshot) {
     return RequestEntity(
       id: snapshot.documentID,
-      sender: snapshot.data['sender'],
-      receiver: snapshot.data['receiver'],
+      senderId: snapshot.data['sender_id'],
+      receiverId: snapshot.data['receiver_id'],
       skill: snapshot.data['skill'],
       comment: snapshot.data['comment'],
       status: snapshot.data['status'],
@@ -61,8 +61,8 @@ class RequestEntity extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
-      'sender': sender,
-      'receiver': receiver,
+      'sender_id': senderId,
+      'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
       'status': status,

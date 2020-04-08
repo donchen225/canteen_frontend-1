@@ -93,8 +93,8 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                           BlocProvider.of<RequestBloc>(context).add(
                             AddRequest(
                               Request(
-                                sender: currentUserId,
-                                receiver: widget.user.id,
+                                senderId: currentUserId,
+                                receiverId: widget.user.id,
                                 status: RequestStatus.initialized,
                               ),
                             ),

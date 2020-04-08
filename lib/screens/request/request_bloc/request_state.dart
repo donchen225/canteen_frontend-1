@@ -23,17 +23,3 @@ class RequestsLoaded extends RequestState {
     return 'RequestsLoaded { requestList: $requestList }';
   }
 }
-
-// class DetailedRequestLoaded extends RequestState {
-//   final List<DetailedRequest> requestList;
-
-//   const DetailedRequestLoaded(this.requestList);
-
-//   @override
-//   List<Object> get props => [requestList];
-
-//   @override
-//   String toString() {
-//     return 'DetailedRequestLoaded { requestList: $requestList }';
-//   }
-// }

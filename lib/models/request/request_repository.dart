@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class RequestRepository {
   final requestCollection = Firestore.instance.collection('request');
   List<Request> _requests = [];
+  List<DetailedRequest> _detailedRequests = [];
 
   RequestRepository();
 
@@ -19,6 +20,14 @@ class RequestRepository {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.delete(requestCollection.document(request.id));
     });
+  }
+
+  List<DetailedRequest> currentRequests() {
+    return _detailedRequests;
+  }
+
+  Future<void> saveDetailedRequest(DetailedRequest request) async {
+    _detailedRequests.add(request);
   }
 
   Stream<List<Request>> getAllRequests(String userId) {

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,59 +67,11 @@ class _SearchFormState extends State<SearchForm> {
           if (state is SearchLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is SearchEmpty) {
-            return GridView.builder(
-              padding: EdgeInsets.only(top: 20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, crossAxisSpacing: 2, mainAxisSpacing: 2),
-              itemCount: state.allUsers.length,
-              itemBuilder: (context, index) {
-                final user = state.allUsers[index];
-
-                return GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<SearchBloc>(context)
-                        .add(SearchInspectUser(user));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(left: 15, right: 15),
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: <Widget>[
-                        Container(
-                          width: 150, // TODO: change this to be dynamic
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            image: DecorationImage(
-                              image: (user.photoUrl != null &&
-                                      user.photoUrl.isNotEmpty)
-                                  ? CachedNetworkImageProvider(user.photoUrl)
-                                  : AssetImage(
-                                      'assets/blank-profile-picture.jpeg'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 5, left: 5, right: 5),
-                          child: Text(user.displayName ?? ''),
-                        ),
-                        ListView.builder(
-                            padding: EdgeInsets.only(left: 5, right: 5),
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: user.teachSkill.length,
-                            itemBuilder: (context, index) {
-                              final skill = user.teachSkill[index];
-                              return Text((skill.name ?? '') +
-                                  ' - ' +
-                                  ('\$${skill.price.toString()}' ?? ''));
-                            }),
-                      ],
-                    ),
-                  ),
-                );
+            return ProfileGrid(
+              state.allUsers,
+              onTap: (user) {
+                BlocProvider.of<SearchBloc>(context)
+                    .add(SearchInspectUser(user));
               },
             );
           } else if (state is SearchCompleteWithResults) {

@@ -11,6 +11,7 @@ class FirebaseUserRepository extends UserRepository {
   final FirebaseAuth _firebaseAuth;
   final userCollection = Firestore.instance.collection('user');
   User _user; // current user stored in memory
+  Map<String, User> _userMap = {}; // all users stored in memory
   FirebaseUser _firebaseUser; // current firebase user stored in memory
 
   FirebaseUserRepository({FirebaseAuth firebaseAuth})
@@ -148,8 +149,16 @@ class FirebaseUserRepository extends UserRepository {
     _user = user;
   }
 
+  void saveUserMap(User user) {
+    _userMap[user.id] = user;
+  }
+
   void clearUser() {
     _user = null;
+  }
+
+  void clearUserMap() {
+    _userMap = {};
   }
 
   // TODO: remove future parameter
@@ -163,31 +172,39 @@ class FirebaseUserRepository extends UserRepository {
 
   // Gets the User from the "user" Firestore collection using id
   Future<User> getUser(String id) async {
-    return userCollection.document(id).get().then((snapshot) {
-      print('INSIDE GET USER');
-      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
-      return UserEntity.fromSnapshot(snapshot);
-    }).then((userEntity) {
-      final user = User.fromEntity(userEntity);
+    if (_userMap.containsKey(id)) {
+      return Future.value(_userMap[id]);
+    }
 
-      saveUser(user);
-
-      return user;
-    });
+    try {
+      return _getLocalUser(id);
+    } catch (e) {
+      print('GET LOCAL USER FAILED');
+      print(e);
+      return userCollection.document(id).get().then((snapshot) {
+        return UserEntity.fromSnapshot(snapshot);
+      }).then((userEntity) {
+        final user = User.fromEntity(userEntity);
+        saveUser(user);
+        return user;
+      });
+    }
   }
 
-  Future<User> _getLocalUser() async {
+  Future<User> _getLocalUser(String id) async {
     return userCollection
-        .document((await getFirebaseUser()).uid)
+        .document(id)
         .get(source: Source.cache)
         .then((snapshot) {
-      print('INSIDE GET LOCAL USER');
-      print(snapshot.metadata.isFromCache ? "LOCAL CACHE" : "SERVER");
       return UserEntity.fromSnapshot(snapshot);
     }).then((userEntity) {
       final user = User.fromEntity(userEntity);
 
-      saveUser(user);
+      saveUserMap(user);
+
+      if (id == _user.id) {
+        saveUser(user);
+      }
 
       return user;
     });
@@ -198,7 +215,7 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(_user);
     }
     try {
-      return _getLocalUser();
+      return _getLocalUser((await getFirebaseUser()).uid);
     } catch (e) {
       print('GET LOCAL USER FAILED');
       print(e);

@@ -44,8 +44,7 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   Stream<MatchListState> _mapMatchListUpdatedToState(
     UpdateMatchList event,
   ) async* {
-    yield DetailedMatchListLoaded(await _getDetailedMatchList(
-        (_matchBloc.state as MatchesLoaded).matches));
+    yield DetailedMatchListLoaded(await _getDetailedMatchList(event.matchList));
   }
 
   @override

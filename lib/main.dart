@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
+  final RequestRepository requestRepository = RequestRepository();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -58,22 +60,31 @@ void main() {
         BlocProvider<RequestBloc>(
           create: (context) {
             return RequestBloc(
-              requestRepository: RequestRepository(),
+              requestRepository: requestRepository,
             );
           },
         ),
       ],
-      child: App(userRepository: userRepository),
+      child: App(
+        userRepository: userRepository,
+        requestRepository: requestRepository,
+      ),
     ),
   );
 }
 
 class App extends StatelessWidget {
   final UserRepository _userRepository;
+  final RequestRepository _requestRepository;
 
-  App({Key key, @required UserRepository userRepository})
+  App(
+      {Key key,
+      @required UserRepository userRepository,
+      @required RequestRepository requestRepository})
       : assert(userRepository != null),
+        assert(requestRepository != null),
         _userRepository = userRepository,
+        _requestRepository = requestRepository,
         super(key: key);
 
   @override
@@ -112,6 +123,13 @@ class App extends StatelessWidget {
                         create: (context) => MatchListBloc(
                           matchBloc: BlocProvider.of<MatchBloc>(context),
                           userRepository: _userRepository,
+                        ),
+                      ),
+                      BlocProvider<RequestListBloc>(
+                        create: (context) => RequestListBloc(
+                          requestBloc: BlocProvider.of<RequestBloc>(context),
+                          userRepository: _userRepository,
+                          requestRepository: _requestRepository,
                         ),
                       ),
                       BlocProvider<SearchBloc>(

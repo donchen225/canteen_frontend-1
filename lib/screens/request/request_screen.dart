@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/screens/request/request_grid.dart';
 import 'package:flutter/material.dart';
 
 class RequestScreen extends StatelessWidget {
@@ -8,9 +9,7 @@ class RequestScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Requests'),
       ),
-      body: Center(
-        child: Text('REQUESTS SCREEN'),
-      ),
+      body: RequestGrid(),
     );
   }
 }

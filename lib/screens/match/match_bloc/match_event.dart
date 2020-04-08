@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:tuple/tuple.dart';
-import 'package:meta/meta.dart';
 
 abstract class MatchEvent extends Equatable {
   const MatchEvent();
