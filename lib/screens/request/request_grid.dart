@@ -30,24 +30,37 @@ class RequestGrid extends StatelessWidget {
         );
       } else if (state is IndividualDetailedRequestLoaded) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(state.request.sender.displayName ?? ''),
-          ),
-          floatingActionButton: FloatingActionButton(
-            foregroundColor: Colors.white,
-            backgroundColor: Theme.of(context).primaryColor,
-            elevation: 5,
-            child: Icon(Icons.message),
-            onPressed: () {
-              // BlocProvider.of<ProspectProfileBloc>(context)
-              //     .add(ConfirmProspectProfile(user));
-            },
-          ),
-          body: ProfileList(
-            state.request.sender,
-            height: 100,
-          ),
-        );
+            appBar: AppBar(
+              title: Text(state.request.sender.displayName ?? ''),
+            ),
+            body: Stack(
+              children: <Widget>[
+                ProfileList(
+                  state.request.sender,
+                  height: 100,
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: FloatingActionButton(
+                      onPressed: () {},
+                      child: Icon(Icons.clear),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: FloatingActionButton(
+                      onPressed: () {},
+                      child: Icon(Icons.check),
+                    ),
+                  ),
+                ),
+              ],
+            ));
       }
     });
   }
