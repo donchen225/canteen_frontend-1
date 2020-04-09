@@ -28,6 +28,7 @@ class RequestRepository {
     });
 
     _requests.removeWhere((r) => r.id == request.id);
+    _detailedRequests.removeWhere((r) => r.id == request.id);
   }
 
   Future<void> declineRequest(Request request) {
@@ -36,6 +37,7 @@ class RequestRepository {
     });
 
     _requests.removeWhere((r) => r.id == request.id);
+    _detailedRequests.removeWhere((r) => r.id == request.id);
   }
 
   List<Request> currentRequests() {
