@@ -39,5 +39,5 @@ abstract class UserRepository {
 
   User updateLearnSkill(Skill skill, int index) {}
 
-  Future<void> updatePhoto(String id, String url) async {}
+  Future<void> updatePhoto(String url) async {}
 }

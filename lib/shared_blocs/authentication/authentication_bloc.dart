@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
@@ -36,12 +37,14 @@ class AuthenticationBloc
     try {
       final user = await _userRepository.getFirebaseUser();
       if (user != null) {
-        await _userRepository.updateUserSignInTime(user);
+        _userRepository.updateUserSignInTime(user);
+        CachedSharedPreferences.setString(PreferenceConstants.userId, user.uid);
         yield Authenticated(user);
       } else {
         yield Unauthenticated();
       }
-    } catch (_) {
+    } catch (e) {
+      print('AUTHENTICATION ERROR: $e');
       yield Unauthenticated();
     }
   }

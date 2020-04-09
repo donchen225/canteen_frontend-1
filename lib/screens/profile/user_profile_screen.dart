@@ -138,8 +138,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         final String url = (await downloadUrl
                                             .ref
                                             .getDownloadURL());
-                                        widget._userRepository
-                                            .updatePhoto(user.id, url);
+                                        widget._userRepository.updatePhoto(url);
                                       });
                                     }),
                                     child: Text(
@@ -161,8 +160,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         final String url = (await downloadUrl
                                             .ref
                                             .getDownloadURL());
-                                        widget._userRepository
-                                            .updatePhoto(user.id, url);
+                                        widget._userRepository.updatePhoto(url);
                                       });
                                     }),
                                     child: Text(

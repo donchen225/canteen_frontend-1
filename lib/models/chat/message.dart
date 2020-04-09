@@ -1,35 +1,57 @@
 import 'package:canteen_frontend/models/chat/message_entity.dart';
-import 'package:canteen_frontend/models/chat/message_type.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class Message {
+abstract class Message {
   final String id;
   final String senderId;
-  final MessageType type;
+  final bool isSelf;
   final DateTime timestamp;
 
   Message({
     @required this.id,
     @required this.senderId,
-    @required this.type,
+    @required this.isSelf,
     @required this.timestamp,
   });
 
-  static Message fromEntity(MessageEntity entity) {
-    return Message(
+  static Message fromEntity(MessageEntity entity) {}
+
+  MessageEntity toEntity() {}
+}
+
+@immutable
+class TextMessage extends Message {
+  final String id;
+  final String senderId;
+  final String text;
+  final bool isSelf;
+  final DateTime timestamp;
+
+  TextMessage({
+    this.id,
+    @required this.senderId,
+    @required this.text,
+    @required this.isSelf,
+    @required this.timestamp,
+  });
+
+  static TextMessage fromEntity(TextMessageEntity entity) {
+    return TextMessage(
       id: entity.id,
       senderId: entity.senderId,
-      type: MessageType.values[entity.type],
+      text: entity.text,
+      isSelf:
+          false, // TODO: set this dynamically by checking against user id in shared preferences
       timestamp: entity.timestamp,
     );
   }
 
-  MessageEntity toEntity() {
-    return MessageEntity(
+  TextMessageEntity toEntity() {
+    return TextMessageEntity(
+      text: text,
       id: id,
       senderId: senderId,
-      type: type.index,
       timestamp: timestamp,
     );
   }

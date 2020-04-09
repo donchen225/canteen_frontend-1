@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -126,9 +127,9 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> updatePhoto(String id, String url) {
+  Future<void> updatePhoto(String url) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(id), {
+      tx.update(userCollection.document(_firebaseUser.uid), {
         "photo_url": url,
       });
     });
@@ -228,7 +229,8 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   String currentUserId() {
-    return _user?.id ?? null;
+    return _user?.id ??
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
   }
 
   // Listens to changes for a single user ID

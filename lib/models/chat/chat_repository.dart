@@ -17,12 +17,15 @@ class ChatRepository {
     });
   }
 
-  Future<void> addMessage(Chat chat, Message message) {
+  Future<void> sendMessage(String chatId, Message message) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
-        chatCollection.document(chat.id).collection(messages).document(),
+        chatCollection.document(chatId).collection(messages).document(),
         message.toEntity().toDocument(),
       );
     });
   }
+
+  // TODO: listen to document changes and process the changes
+  Stream<List<Chat>> getChats() {}
 }
