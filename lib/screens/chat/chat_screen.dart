@@ -406,26 +406,16 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       child: Row(
         children: <Widget>[
-          // Button send image
-          Material(
-            child: new Container(
-              margin: new EdgeInsets.symmetric(horizontal: 1.0),
-              child: new IconButton(
-                icon: new Icon(Icons.image),
-                onPressed: getImage,
-                color: primaryColor,
-              ),
-            ),
-            color: Colors.white,
-          ),
           // Edit text
           Flexible(
             child: Container(
+              padding: EdgeInsets.only(left: 20),
               child: TextField(
                 style: TextStyle(color: primaryColor, fontSize: 15.0),
+                maxLines: null,
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Send a message...',
+                  hintText: 'Send a message',
                   hintStyle: TextStyle(color: greyColor2),
                 ),
                 focusNode: focusNode,
@@ -435,10 +425,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // Button send message
           Material(
-            child: new Container(
-              margin: new EdgeInsets.symmetric(horizontal: 8.0),
-              child: new IconButton(
-                icon: new Icon(Icons.send),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.send),
                 onPressed: () => onSendMessage(textEditingController.text, 0),
                 color: primaryColor,
               ),
