@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/models/chat/chat.dart';
 import 'package:canteen_frontend/models/chat/message.dart';
-import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/chat/message_item.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _MessageListState extends State<MessageList> {
       double maxScroll = listScrollController.position.maxScrollExtent;
       double currentScroll = listScrollController.position.pixels;
       if (maxScroll == currentScroll) {
-        BlocProvider.of<ChatBloc>(context)
+        BlocProvider.of<MessageBloc>(context)
             .add(FetchPreviousMessagesEvent(this.chat, messages.last));
       }
     });
@@ -37,10 +37,10 @@ class _MessageListState extends State<MessageList> {
 
   @override
   Widget build(BuildContext context) {
-    final userId = chat.userId.keys.firstWhere((id) =>
+    final userId = chat.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
     // TODO: implement build
-    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+    return BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
       print(state);
       if (state is FetchedMessagesState) {
         print('Received Messages');

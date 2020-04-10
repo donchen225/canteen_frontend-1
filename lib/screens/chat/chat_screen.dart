@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/models/chat/chat.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/chat/chat_input.dart';
+import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/chat/message_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +21,7 @@ class _ChatScreenState extends State<ChatScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final User user;
   final Chat chat;
-  ChatBloc _chatBloc;
+  MessageBloc _messageBloc;
   bool isFirstLaunch = true;
   bool configMessagePeek = true;
 
@@ -31,9 +31,9 @@ class _ChatScreenState extends State<ChatScreen>
   void initState() {
     super.initState();
     print('INITIALIZE CHAT SCREEN');
-    _chatBloc = BlocProvider.of<ChatBloc>(context);
-    _chatBloc.add(RegisterActiveChatEvent(chat.id));
-    _chatBloc.add(FetchConversationDetailsEvent(chat));
+    _messageBloc = BlocProvider.of<MessageBloc>(context);
+    _messageBloc.add(RegisterActiveChatEvent(chat.id));
+    _messageBloc.add(FetchConversationDetailsEvent(chat));
   }
 
   @override

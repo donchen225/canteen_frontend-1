@@ -5,33 +5,19 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class ChatState extends Equatable {
-  const ChatState();
+abstract class MessageState extends Equatable {
+  const MessageState();
 
   @override
   List<Object> get props => [];
 }
 
-class InitialChatState extends ChatState {}
-
-class ChatListLoaded extends ChatState {
-  final List<Chat> chatList;
-
-  const ChatListLoaded(this.chatList);
-
+class FetchingMessagesState extends MessageState {
   @override
-  List<Object> get props => [chatList];
-
-  @override
-  String toString() => 'ChatListLoaded { chatList: $chatList }';
+  String toString() => 'FetchingMessagesState';
 }
 
-class FetchingMessageState extends ChatState {
-  @override
-  String toString() => 'FetchingMessageState';
-}
-
-class FetchedMessagesState extends ChatState {
+class FetchedMessagesState extends MessageState {
   final List<Message> messages;
   final String userId;
   final isPrevious;
@@ -45,7 +31,7 @@ class FetchedMessagesState extends ChatState {
       'FetchedMessagesState {messages: $messages, userId: $userId, isPrevious: $isPrevious}';
 }
 
-class ErrorState extends ChatState {
+class ErrorState extends MessageState {
   final Exception exception;
 
   ErrorState(this.exception);
@@ -54,7 +40,7 @@ class ErrorState extends ChatState {
   String toString() => 'ErrorState';
 }
 
-class FetchedContactDetailsState extends ChatState {
+class FetchedContactDetailsState extends MessageState {
   final User user;
   final String username;
 
@@ -64,17 +50,7 @@ class FetchedContactDetailsState extends ChatState {
   String toString() => 'FetchedContactDetailsState';
 }
 
-class PageChangedState extends ChatState {
-  final int index;
-  final Chat activeChat;
-
-  const PageChangedState(this.index, this.activeChat);
-
-  @override
-  String toString() => 'PageChangedState';
-}
-
-class ToggleEmojiKeyboardState extends ChatState {
+class ToggleEmojiKeyboardState extends MessageState {
   final bool showEmojiKeyboard;
 
   const ToggleEmojiKeyboardState(this.showEmojiKeyboard);

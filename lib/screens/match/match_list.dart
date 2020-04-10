@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/chat_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,19 +26,19 @@ class MatchList extends StatelessWidget {
                 final chats = chatState.chatList;
 
                 return ListView.builder(
-                  itemCount: matches.length,
+                  itemCount: chats.length,
                   itemBuilder: (context, index) {
-                    final match = matches[index];
+                    final chat = chats[index];
+                    final match =
+                        matches.firstWhere((m) => m.chatId == chat.id);
                     return MatchItem(
                         match: match,
+                        chat: chat,
                         onTap: () async {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) {
-                              // TODO: find better way to get the corresponding chat
                               return MatchDetailScreen(
-                                  match: match,
-                                  chat: chats.firstWhere(
-                                      (chat) => chat.id == match.chatId));
+                                  match: match, chat: chat);
                             }),
                           );
                         });

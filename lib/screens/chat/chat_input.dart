@@ -1,4 +1,5 @@
-import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/message_bloc/message_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,12 +10,12 @@ class ChatInput extends StatefulWidget {
 
 class _ChatInputState extends State<ChatInput> {
   final TextEditingController textEditingController = TextEditingController();
-  ChatBloc _chatBloc;
+  MessageBloc _messageBloc;
   bool showEmojiKeyboard = false;
   @override
   void initState() {
     super.initState();
-    _chatBloc = BlocProvider.of<ChatBloc>(context);
+    _messageBloc = BlocProvider.of<MessageBloc>(context);
   }
 
   @override
@@ -71,7 +72,7 @@ class _ChatInputState extends State<ChatInput> {
 
   void sendMessage(context) {
     if (textEditingController.text.isEmpty) return;
-    _chatBloc.add(SendTextMessageEvent(textEditingController.text));
+    _messageBloc.add(SendTextMessageEvent(textEditingController.text));
     textEditingController.clear();
   }
 }

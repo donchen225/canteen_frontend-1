@@ -28,29 +28,44 @@ class ChatRepository {
         chatCollection.document(chatId).collection(messages).document(),
         message.toEntity().toDocument(),
       );
+
+      tx.update(chatCollection.document(chatId), {
+        "last_updated": message.timestamp,
+      });
     });
   }
 
+  Future<Message> getMessage(String chatId, DateTime dateTime) {
+    try {
+      return chatCollection
+          .document(chatId)
+          .collection(messages)
+          .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
+          .limit(1)
+          .getDocuments()
+          .then((doc) {
+        return Message.fromEntity(
+            MessageEntity.fromSnapshot(doc.documents.first));
+      });
+    } catch (e) {
+      print("ERROR: NO MESSAGE FOUND - $e");
+    }
+  }
+
+  // TODO: change this to document changes
   Stream<List<Chat>> getChats() {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
     return chatCollection
-        .where("user_id.$userId", isEqualTo: 0)
+        .where("user_id", arrayContains: userId)
+        .orderBy("last_updated", descending: true)
         .snapshots()
-        .transform(
-          StreamTransformer<QuerySnapshot, List<Chat>>.fromHandlers(
-            handleData: (QuerySnapshot snapshot, EventSink<List<Chat>> sink) =>
-                sink.add(
-              snapshot.documents
-                  .map(
-                    (doc) => Chat.fromEntity(
-                      ChatEntity.fromSnapshot(doc),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        );
+        .map((snapshot) {
+      print('GETTING SNAPSHOT');
+      return snapshot.documents
+          .map((doc) => Chat.fromEntity(ChatEntity.fromSnapshot(doc)))
+          .toList();
+    });
   }
 
   Stream<List<Message>> getMessages(String chatId) {
@@ -64,15 +79,10 @@ class ChatRepository {
       StreamTransformer<QuerySnapshot, List<Message>>.fromHandlers(
         handleData: (QuerySnapshot snapshot, EventSink<List<Message>> sink) {
           sink.add(
-            snapshot.documents.map((doc) {
-              final a = Message.fromEntity(MessageEntity.fromSnapshot(doc));
-
-              print('MESSAGE');
-              print(doc.data);
-              print(MessageEntity.fromSnapshot(doc));
-              print(a);
-              return a;
-            }).toList(),
+            snapshot.documents
+                .map((doc) =>
+                    Message.fromEntity(MessageEntity.fromSnapshot(doc)))
+                .toList(),
           );
         },
       ),

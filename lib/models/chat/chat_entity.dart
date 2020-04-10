@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 class ChatEntity extends Equatable {
   final String id;
-  final Map<String, int> userId;
+  final List<String> userId;
   final DateTime lastUpdated;
   final DateTime createdOn;
 
@@ -25,8 +25,7 @@ class ChatEntity extends Equatable {
   factory ChatEntity.fromSnapshot(DocumentSnapshot snapshot) {
     return ChatEntity(
       id: snapshot.documentID,
-      userId: snapshot.data['user_id']
-          .map<String, int>((k, v) => MapEntry(k as String, v as int)),
+      userId: snapshot.data['user_id'].map<String>((x) => x as String).toList(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
       createdOn: snapshot.data['created_on'].toDate(),
     );

@@ -4,38 +4,15 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class ChatEvent extends Equatable {
-  const ChatEvent();
+abstract class MessageEvent extends Equatable {
+  const MessageEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class AddChat extends ChatEvent {
-  final Chat chat;
-
-  const AddChat(this.chat);
-
-  @override
-  String toString() => 'AddChat { chat: $chat }';
-}
-
-class LoadChats extends ChatEvent {
-  @override
-  String toString() => 'LoadChats';
-}
-
-class ReceivedChats extends ChatEvent {
-  final List<Chat> chatList;
-
-  const ReceivedChats(this.chatList);
-
-  @override
-  String toString() => 'ReceivedChats { chatList: $chatList }';
-}
-
 //triggered to get details of currently open conversation
-class FetchConversationDetailsEvent extends ChatEvent {
+class FetchConversationDetailsEvent extends MessageEvent {
   final Chat chat;
 
   const FetchConversationDetailsEvent(this.chat);
@@ -45,7 +22,7 @@ class FetchConversationDetailsEvent extends ChatEvent {
 }
 
 //triggered to fetch messages of chat, this will also keep a subscription for new messages
-class FetchMessagesEvent extends ChatEvent {
+class FetchMessagesEvent extends MessageEvent {
   final Chat chat;
 
   const FetchMessagesEvent(this.chat);
@@ -55,7 +32,7 @@ class FetchMessagesEvent extends ChatEvent {
 }
 
 //triggered to fetch messages of chat
-class FetchPreviousMessagesEvent extends ChatEvent {
+class FetchPreviousMessagesEvent extends MessageEvent {
   final Chat chat;
   final Message lastMessage;
 
@@ -66,7 +43,7 @@ class FetchPreviousMessagesEvent extends ChatEvent {
 }
 
 //triggered when messages stream has new data
-class ReceivedMessagesEvent extends ChatEvent {
+class ReceivedMessagesEvent extends MessageEvent {
   final List<Message> messages;
   final String userId;
 
@@ -77,7 +54,7 @@ class ReceivedMessagesEvent extends ChatEvent {
 }
 
 //triggered to send new text message
-class SendTextMessageEvent extends ChatEvent {
+class SendTextMessageEvent extends MessageEvent {
   final String message;
 
   const SendTextMessageEvent(this.message);
@@ -87,7 +64,7 @@ class SendTextMessageEvent extends ChatEvent {
 }
 
 //triggered on page change
-class PageChangedEvent extends ChatEvent {
+class PageChangedEvent extends MessageEvent {
   final int index;
   final Chat activeChat;
 
@@ -98,7 +75,7 @@ class PageChangedEvent extends ChatEvent {
       'PageChangedEvent { index: $index, activeChat: $activeChat }';
 }
 
-class RegisterActiveChatEvent extends ChatEvent {
+class RegisterActiveChatEvent extends MessageEvent {
   final String activeChatId;
 
   const RegisterActiveChatEvent(this.activeChatId);
@@ -109,7 +86,7 @@ class RegisterActiveChatEvent extends ChatEvent {
 }
 
 // hide/show emojikeyboard
-class ToggleEmojiKeyboardEvent extends ChatEvent {
+class ToggleEmojiKeyboardEvent extends MessageEvent {
   final bool showEmojiKeyboard;
 
   ToggleEmojiKeyboardEvent(this.showEmojiKeyboard);

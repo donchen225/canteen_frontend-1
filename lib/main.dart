@@ -1,7 +1,8 @@
 import 'package:canteen_frontend/models/chat/chat_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
-import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/chat_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/chat/message_bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -78,10 +79,19 @@ void main() async {
             );
           },
         ),
+        BlocProvider<MessageBloc>(
+          create: (context) {
+            return MessageBloc(
+              chatRepository: chatRepository,
+              userRepository: userRepository,
+            );
+          },
+        ),
       ],
       child: App(
         userRepository: userRepository,
         requestRepository: requestRepository,
+        chatRepository: chatRepository,
       ),
     ),
   );
@@ -90,15 +100,18 @@ void main() async {
 class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
+  final ChatRepository _chatRepository;
 
   App(
       {Key key,
       @required UserRepository userRepository,
-      @required RequestRepository requestRepository})
+      @required RequestRepository requestRepository,
+      @required ChatRepository chatRepository})
       : assert(userRepository != null),
         assert(requestRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
+        _chatRepository = chatRepository,
         super(key: key);
 
   @override
@@ -159,7 +172,7 @@ class App extends StatelessWidget {
                       ),
                       BlocProvider<ProspectProfileBloc>(
                         create: (context) => ProspectProfileBloc(),
-                      )
+                      ),
                     ],
                     child: HomeScreen(userRepository: _userRepository),
                   );
