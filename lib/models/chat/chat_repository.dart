@@ -64,10 +64,15 @@ class ChatRepository {
       StreamTransformer<QuerySnapshot, List<Message>>.fromHandlers(
         handleData: (QuerySnapshot snapshot, EventSink<List<Message>> sink) {
           sink.add(
-            snapshot.documents
-                .map((doc) =>
-                    Message.fromEntity(MessageEntity.fromSnapshot(doc)))
-                .toList(),
+            snapshot.documents.map((doc) {
+              final a = Message.fromEntity(MessageEntity.fromSnapshot(doc));
+
+              print('MESSAGE');
+              print(doc.data);
+              print(MessageEntity.fromSnapshot(doc));
+              print(a);
+              return a;
+            }).toList(),
           );
         },
       ),

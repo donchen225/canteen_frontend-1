@@ -136,12 +136,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Stream<ChatState> mapFetchConversationDetailsEventToState(
       FetchConversationDetailsEvent event) async* {
     print('fetching details for ${event.chat.id}');
-    User user = await _userRepository.getUser(event.chat.id);
-    yield FetchedContactDetailsState(
-        user,
-        event.chat.userId.keys.firstWhere((id) =>
-            id !=
-            CachedSharedPreferences.getString(PreferenceConstants.userId)));
+    final userId = event.chat.userId.keys.firstWhere((id) =>
+        id != CachedSharedPreferences.getString(PreferenceConstants.userId));
+    User user = await _userRepository.getUser(userId);
+    yield FetchedContactDetailsState(user, userId);
     add(FetchMessagesEvent(event.chat));
   }
 

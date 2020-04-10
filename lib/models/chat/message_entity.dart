@@ -52,7 +52,7 @@ class TextMessageEntity extends MessageEntity {
       id: snapshot.documentID,
       text: data['text'],
       senderId: data['sender_id'],
-      timestamp: data['timestamp'],
+      timestamp: data['timestamp'].toDate(),
     );
   }
 
@@ -68,13 +68,14 @@ class TextMessageEntity extends MessageEntity {
 
   @override
   String toString() =>
-      '{ id : $id, senderId : $senderId, timeStamp : $timestamp, text: $text }';
+      '{ id : $id, senderId : $senderId, timeStamp : $timestamp, text: $text, type: ${MessageType.text.index} } }';
 
   Map<String, Object> toDocument() {
     return {
       'text': text,
       'sender_id': senderId,
       'timestamp': timestamp,
+      'type': MessageType.text.index,
     };
   }
 }

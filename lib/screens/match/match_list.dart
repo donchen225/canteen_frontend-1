@@ -21,6 +21,7 @@ class MatchList extends StatelessWidget {
 
           return BlocBuilder<ChatBloc, ChatState>(
             builder: (chatContext, chatState) {
+              print('CHAT STATE: $chatState');
               if (chatState is ChatListLoaded) {
                 final chats = chatState.chatList;
 
@@ -43,6 +44,8 @@ class MatchList extends StatelessWidget {
                         });
                   },
                 );
+              } else {
+                return Center(child: CircularProgressIndicator());
               }
             },
           );

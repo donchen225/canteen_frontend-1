@@ -33,6 +33,7 @@ class _ChatScreenState extends State<ChatScreen>
     print('INITIALIZE CHAT SCREEN');
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     _chatBloc.add(RegisterActiveChatEvent(chat.id));
+    _chatBloc.add(FetchConversationDetailsEvent(chat));
   }
 
   @override

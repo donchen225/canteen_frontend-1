@@ -16,7 +16,13 @@ abstract class Message {
     @required this.timestamp,
   });
 
-  static Message fromEntity(MessageEntity entity) {}
+  factory Message.fromEntity(MessageEntity entity) {
+    Message message;
+    if (entity is TextMessageEntity) {
+      message = TextMessage.fromEntity(entity);
+    }
+    return message;
+  }
 
   MessageEntity toEntity() {}
 }
@@ -37,7 +43,7 @@ class TextMessage extends Message {
     @required this.timestamp,
   });
 
-  static TextMessage fromEntity(TextMessageEntity entity) {
+  factory TextMessage.fromEntity(TextMessageEntity entity) {
     return TextMessage(
       id: entity.id,
       senderId: entity.senderId,
