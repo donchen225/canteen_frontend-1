@@ -38,6 +38,7 @@ abstract class MessageEntity extends Equatable {
 
 class TextMessageEntity extends MessageEntity {
   String text;
+
   TextMessageEntity({
     this.text,
     id,
@@ -48,8 +49,8 @@ class TextMessageEntity extends MessageEntity {
   factory TextMessageEntity.fromSnapshot(DocumentSnapshot snapshot) {
     Map data = snapshot.data;
     return TextMessageEntity(
-      text: data['text'],
       id: snapshot.documentID,
+      text: data['text'],
       senderId: data['sender_id'],
       timestamp: data['timestamp'],
     );
@@ -68,4 +69,12 @@ class TextMessageEntity extends MessageEntity {
   @override
   String toString() =>
       '{ id : $id, senderId : $senderId, timeStamp : $timestamp, text: $text }';
+
+  Map<String, Object> toDocument() {
+    return {
+      'text': text,
+      'sender_id': senderId,
+      'timestamp': timestamp,
+    };
+  }
 }

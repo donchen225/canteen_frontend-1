@@ -30,16 +30,14 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   File _imageFile;
-  ImageProvider _profilePicture;
+  ImageProvider _profilePicture =
+      AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
 
   @override
   void initState() {
     super.initState();
-
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
-
-    _profilePicture = AssetImage('assets/blank-profile-picture.jpeg');
   }
 
   Future<void> _pickImage(ImageSource source) async {

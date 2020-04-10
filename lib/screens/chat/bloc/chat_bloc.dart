@@ -68,8 +68,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         text: event.message,
         timestamp: DateTime.now().toUtc(),
         isSelf: true,
-        senderId: _userRepository
-            .currentUserId(), // TODO: get this from user preferene?
+        senderId: CachedSharedPreferences.getString(PreferenceConstants.userId),
       );
       await _chatRepository.sendMessage(activeChatId, message);
     }

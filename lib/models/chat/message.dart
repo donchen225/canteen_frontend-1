@@ -50,8 +50,8 @@ class TextMessage extends Message {
 
   TextMessageEntity toEntity() {
     return TextMessageEntity(
-      text: text,
       id: id,
+      text: text,
       senderId: senderId,
       timestamp: timestamp,
     );
