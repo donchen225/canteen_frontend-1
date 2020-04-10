@@ -44,7 +44,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       yield* mapFetchPreviousMessagesEventToState(event);
     }
     if (event is ReceivedMessagesEvent) {
-      print('dispatching received messages');
       yield FetchedMessagesState(event.messages, event.userId,
           isPrevious: false);
     }
