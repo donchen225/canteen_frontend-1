@@ -26,30 +26,17 @@ class _ChatInputState extends State<ChatInput> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Material(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 1.0),
-                      child: IconButton(
-                        icon: Icon(Icons.face),
-                        color: Theme.of(context).accentColor,
-                        onPressed: () => _chatBloc
-                            .add(ToggleEmojiKeyboardEvent(!showEmojiKeyboard)),
-                      ),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                  ),
-
                   // Text input
                   Flexible(
                     child: Material(
                         child: Container(
-                      color: Theme.of(context).primaryColor,
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      color: Colors.white70,
                       child: TextField(
-                        style: Theme.of(context).textTheme.body2,
                         controller: textEditingController,
                         autofocus: true,
                         decoration: InputDecoration.collapsed(
-                          hintText: 'Type a message',
+                          hintText: 'Send a message',
                           hintStyle:
                               TextStyle(color: Theme.of(context).hintColor),
                         ),
@@ -64,31 +51,13 @@ class _ChatInputState extends State<ChatInput> {
                       child: IconButton(
                         icon: Icon(Icons.send),
                         onPressed: () => sendMessage(context),
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    color: Theme.of(context).primaryColor,
+                    color: Colors.white,
                   ),
                 ],
               ),
-              // BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
-              //   showEmojiKeyboard = state is ToggleEmojiKeyboardState &&
-              //       state.showEmojiKeyboard;
-              //   if (!showEmojiKeyboard) return Container();
-              //   //hide keyboard
-              //   FocusScope.of(context).requestFocus(new FocusNode());
-              //   //create emojipicker
-              //   return EmojiPicker(
-              //     rows: 4,
-              //     columns: 7,
-              //     bgColor: Theme.of(context).backgroundColor,
-              //     indicatorColor: Theme.of(context).accentColor,
-              //     onEmojiSelected: (emoji, category) {
-              //       textEditingController.text =
-              //           textEditingController.text + emoji.emoji;
-              //     },
-              //   );
-              // })
             ],
           ),
           width: double.infinity,
@@ -96,7 +65,6 @@ class _ChatInputState extends State<ChatInput> {
             border: Border(
                 top:
                     BorderSide(color: Theme.of(context).hintColor, width: 0.5)),
-            color: Theme.of(context).primaryColor,
           ),
         ));
   }

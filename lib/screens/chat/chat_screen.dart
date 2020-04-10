@@ -47,8 +47,7 @@ class _ChatScreenState extends State<ChatScreen>
               child: Stack(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(top: 100),
-                color: Theme.of(context).backgroundColor,
+                color: Colors.white,
                 child: MessageList(chat),
               ),
             ],
