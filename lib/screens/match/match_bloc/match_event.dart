@@ -11,15 +11,10 @@ abstract class MatchEvent extends Equatable {
 }
 
 class LoadMatches extends MatchEvent {
-  final String userId;
-
-  const LoadMatches(this.userId);
+  const LoadMatches();
 
   @override
-  List<Object> get props => [userId];
-
-  @override
-  String toString() => 'LoadMatches { userId: $userId }';
+  String toString() => 'LoadMatches';
 }
 
 class AddMatch extends MatchEvent {

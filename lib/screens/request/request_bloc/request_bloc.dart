@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/request/request_repository.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -19,7 +20,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   @override
   Stream<RequestState> mapEventToState(RequestEvent event) async* {
     if (event is LoadRequests) {
-      yield* _mapLoadRequestsToState(event);
+      yield* _mapLoadRequestsToState();
     } else if (event is AddRequest) {
       yield* _mapAddRequestToState(event);
     } else if (event is RequestsUpdated) {
@@ -31,10 +32,12 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     }
   }
 
-  Stream<RequestState> _mapLoadRequestsToState(LoadRequests event) async* {
+  Stream<RequestState> _mapLoadRequestsToState() async* {
     _requestSubscription?.cancel();
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
     _requestSubscription =
-        _requestRepository.getAllRequests(event.userId).listen((requests) {
+        _requestRepository.getAllRequests(userId).listen((requests) {
       add(RequestsUpdated(requests));
     });
   }

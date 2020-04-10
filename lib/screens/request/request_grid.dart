@@ -1,4 +1,6 @@
+import 'package:canteen_frontend/models/chat/chat.dart';
 import 'package:canteen_frontend/models/match/status.dart';
+import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
@@ -62,18 +64,22 @@ class RequestGrid extends StatelessWidget {
                     padding: EdgeInsets.all(15),
                     child: FloatingActionButton(
                       onPressed: () {
+                        final userList = [
+                          state.request.senderId,
+                          state.request.receiverId
+                        ];
                         BlocProvider.of<RequestBloc>(context)
                             .add(AcceptRequest(state.request));
 
                         BlocProvider.of<MatchBloc>(context).add(
                           AddMatch(
-                            Match(
-                              userId: {
-                                state.request.senderId: 0,
-                                state.request.receiverId: 0,
-                              },
-                              status: MatchStatus.initialized,
-                            ),
+                            Match.create(userId: userList),
+                          ),
+                        );
+
+                        BlocProvider.of<ChatBloc>(context).add(
+                          AddChat(
+                            Chat.create(userId: userList),
                           ),
                         );
                       },

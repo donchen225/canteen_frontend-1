@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/chat/message_entity.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -41,8 +42,8 @@ class TextMessage extends Message {
       id: entity.id,
       senderId: entity.senderId,
       text: entity.text,
-      isSelf:
-          false, // TODO: set this dynamically by checking against user id in shared preferences
+      isSelf: entity.senderId ==
+          CachedSharedPreferences.getString(PreferenceConstants.userId),
       timestamp: entity.timestamp,
     );
   }

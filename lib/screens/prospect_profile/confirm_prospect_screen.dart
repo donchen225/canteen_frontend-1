@@ -92,10 +92,9 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                           // TODO: add selected skill and comment
                           BlocProvider.of<RequestBloc>(context).add(
                             AddRequest(
-                              Request(
+                              Request.create(
                                 senderId: currentUserId,
                                 receiverId: widget.user.id,
-                                status: RequestStatus.initialized,
                               ),
                             ),
                           );

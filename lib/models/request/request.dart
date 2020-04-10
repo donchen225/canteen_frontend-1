@@ -11,15 +11,26 @@ class Request {
   final String skill;
   final String comment;
   final RequestStatus status;
+  final DateTime createdOn;
 
   Request({
     @required this.senderId,
     @required this.receiverId,
     @required this.status,
+    @required this.createdOn,
     this.id,
     this.skill,
     this.comment,
   });
+
+  static Request create({String senderId, String receiverId}) {
+    return Request(
+      senderId: senderId,
+      receiverId: receiverId,
+      status: RequestStatus.initialized,
+      createdOn: DateTime.now().toUtc(),
+    );
+  }
 
   static Request fromEntity(RequestEntity entity) {
     return Request(
@@ -28,7 +39,8 @@ class Request {
         receiverId: entity.receiverId,
         skill: entity.skill,
         comment: entity.comment,
-        status: RequestStatus.values[entity.status]);
+        status: RequestStatus.values[entity.status],
+        createdOn: entity.createdOn);
   }
 
   RequestEntity toEntity() {
@@ -39,6 +51,7 @@ class Request {
       skill: skill,
       comment: comment,
       status: status.index,
+      createdOn: createdOn,
     );
   }
 }
@@ -53,6 +66,7 @@ class DetailedRequest extends Request {
       @required skill,
       @required comment,
       @required status,
+      @required createdOn,
       @required this.sender})
       : super(
             id: id,
@@ -60,7 +74,8 @@ class DetailedRequest extends Request {
             receiverId: receiverId,
             skill: skill,
             comment: comment,
-            status: status);
+            status: status,
+            createdOn: createdOn);
 
   static DetailedRequest fromRequest(Request request, User sender) {
     return DetailedRequest(
@@ -70,6 +85,7 @@ class DetailedRequest extends Request {
         skill: request.skill,
         comment: request.comment,
         status: request.status,
+        createdOn: request.createdOn,
         sender: sender);
   }
 }

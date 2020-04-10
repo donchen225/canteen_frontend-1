@@ -54,6 +54,7 @@ class TextMessageEntity extends MessageEntity {
       timestamp: data['timestamp'],
     );
   }
+
   @override
   Map<String, dynamic> toMap() {
     return {

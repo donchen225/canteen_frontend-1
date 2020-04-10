@@ -6,15 +6,13 @@ abstract class RequestEvent extends Equatable {
 }
 
 class LoadRequests extends RequestEvent {
-  final String userId;
-
-  const LoadRequests(this.userId);
+  const LoadRequests();
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [];
 
   @override
-  String toString() => 'LoadRequests { userId: $userId }';
+  String toString() => 'LoadRequests';
 }
 
 class RequestsUpdated extends RequestEvent {

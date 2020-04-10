@@ -9,6 +9,7 @@ class RequestEntity extends Equatable {
   final String skill;
   final String comment;
   final int status;
+  final DateTime createdOn;
 
   const RequestEntity(
       {@required this.id,
@@ -16,7 +17,8 @@ class RequestEntity extends Equatable {
       @required this.receiverId,
       @required this.skill,
       @required this.comment,
-      @required this.status});
+      @required this.status,
+      @required this.createdOn});
 
   Map<String, Object> toJson() {
     return {
@@ -26,6 +28,7 @@ class RequestEntity extends Equatable {
       'skill': skill,
       'comment': comment,
       'status': status,
+      'created_on': createdOn,
     };
   }
 
@@ -34,7 +37,7 @@ class RequestEntity extends Equatable {
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, status: $status }';
+    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, status: $status, createdOn: $createdOn }';
   }
 
   static RequestEntity fromJson(Map<String, Object> json) {
@@ -45,6 +48,7 @@ class RequestEntity extends Equatable {
       skill: json['skill'] as String,
       comment: json['comment'] as String,
       status: json['status'] as int,
+      createdOn: DateTime.parse(json['created_on']),
     );
   }
 
@@ -56,6 +60,7 @@ class RequestEntity extends Equatable {
       skill: snapshot.data['skill'],
       comment: snapshot.data['comment'],
       status: snapshot.data['status'],
+      createdOn: snapshot.data['created_on'].toDate(),
     );
   }
 
@@ -66,6 +71,7 @@ class RequestEntity extends Equatable {
       'skill': skill,
       'comment': comment,
       'status': status,
+      'created_on': createdOn,
     };
   }
 }

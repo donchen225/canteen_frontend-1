@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:meta/meta.dart';
@@ -29,7 +30,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   @override
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
     if (event is LoadMatches) {
-      yield* _mapLoadMatchesToState(event);
+      yield* _mapLoadMatchesToState();
     } else if (event is AddMatch) {
       yield* _mapAddMatchToState(event);
     } else if (event is DeleteMatch) {
@@ -41,10 +42,12 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     }
   }
 
-  Stream<MatchState> _mapLoadMatchesToState(LoadMatches event) async* {
+  Stream<MatchState> _mapLoadMatchesToState() async* {
     _matchSubscription?.cancel();
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
     _matchSubscription =
-        _matchRepository.getAllMatches(event.userId).listen((matches) {
+        _matchRepository.getAllMatches(userId).listen((matches) {
       print('RECEIVED MATCH EVENT');
       add(MatchesUpdated(matches));
     });

@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/models/chat/chat_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
+import 'package:canteen_frontend/screens/chat/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -28,7 +30,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
+  final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
+  final ChatRepository chatRepository = ChatRepository();
   await CachedSharedPreferences.getInstance();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
@@ -54,7 +58,7 @@ void main() async {
         BlocProvider<MatchBloc>(
           create: (context) {
             return MatchBloc(
-              matchRepository: MatchRepository(),
+              matchRepository: matchRepository,
               userRepository: userRepository,
             );
           },
@@ -63,6 +67,14 @@ void main() async {
           create: (context) {
             return RequestBloc(
               requestRepository: requestRepository,
+            );
+          },
+        ),
+        BlocProvider<ChatBloc>(
+          create: (context) {
+            return ChatBloc(
+              chatRepository: chatRepository,
+              userRepository: userRepository,
             );
           },
         ),
@@ -103,11 +115,11 @@ class App extends StatelessWidget {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
 
-                BlocProvider.of<MatchBloc>(context)
-                    .add(LoadMatches(state.user.uid));
+                BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-                BlocProvider.of<RequestBloc>(context)
-                    .add(LoadRequests(state.user.uid));
+                BlocProvider.of<ChatBloc>(context).add(LoadChats());
+
+                BlocProvider.of<RequestBloc>(context).add(LoadRequests());
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/chat/chat.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/chat/chat_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
@@ -8,8 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MatchDetailScreen extends StatefulWidget {
   final DetailedMatch match;
+  final Chat chat;
 
-  MatchDetailScreen({Key key, @required this.match}) : super(key: key);
+  MatchDetailScreen({Key key, @required this.match, @required this.chat})
+      : super(key: key);
 
   @override
   _MatchDetailScreenState createState() => _MatchDetailScreenState();
@@ -52,10 +55,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
 
     final tabWidgets = [
       ChatScreen(
-        userId: user.id,
-        targetUserId: prospect.id,
-        targetUserPhoto: prospect.photoUrl,
-        userMap: widget.match.userList.map((u) => u.id).toList().asMap(),
+        user: prospect,
+        chat: widget.chat,
       ),
       ProfileList(prospect, height: 100),
     ];
