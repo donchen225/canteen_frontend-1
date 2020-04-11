@@ -71,7 +71,6 @@ class RequestEntity extends Equatable {
       'skill': skill,
       'comment': comment,
       'status': status,
-      'created_on': createdOn,
     };
   }
 }

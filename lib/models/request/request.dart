@@ -17,7 +17,7 @@ class Request {
     @required this.senderId,
     @required this.receiverId,
     @required this.status,
-    @required this.createdOn,
+    this.createdOn,
     this.id,
     this.skill,
     this.comment,
@@ -28,7 +28,6 @@ class Request {
       senderId: senderId,
       receiverId: receiverId,
       status: RequestStatus.initialized,
-      createdOn: DateTime.now().toUtc(),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/request/request_entity.dart';
+import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestRepository {
@@ -10,10 +11,17 @@ class RequestRepository {
   RequestRepository();
 
   Future<void> addRequest(Request request) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(requestCollection.document(request.id),
-          request.toEntity().toDocument());
+    print('ADDING REQUEST');
+    CloudFunctionManager.addRequest.call(request.toEntity().toDocument()).then(
+        (result) {
+      print(result.data);
+    }, onError: (error) {
+      print('ERROR: $error');
     });
+    // return Firestore.instance.runTransaction((Transaction tx) async {
+    //   tx.set(requestCollection.document(request.id),
+    //       request.toEntity().toDocument());
+    // });
   }
 
   Future<void> deleteRequest(Request request) async {
