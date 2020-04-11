@@ -31,6 +31,7 @@ class MatchList extends StatelessWidget {
                     final chat = chats[index];
                     final match =
                         matches.firstWhere((m) => m.chatId == chat.id);
+
                     return MatchItem(
                         match: match,
                         chat: chat,
