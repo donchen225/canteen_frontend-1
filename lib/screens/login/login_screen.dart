@@ -8,6 +8,8 @@ import 'login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   final UserRepository _userRepository;
+  final Color gradientStart = Colors.deepPurple[600];
+  final Color gradientEnd = Colors.purple[400];
 
   LoginScreen({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
@@ -17,20 +19,19 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Canteen',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 40,
-          ),
+      body: Container(
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+              colors: [gradientStart, gradientEnd],
+              begin: const FractionalOffset(0.5, 0.0),
+              end: const FractionalOffset(0.0, 0.5),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(userRepository: _userRepository),
-        child: LoginForm(userRepository: _userRepository),
+        child: BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(userRepository: _userRepository),
+          child: LoginForm(userRepository: _userRepository),
+        ),
       ),
     );
   }

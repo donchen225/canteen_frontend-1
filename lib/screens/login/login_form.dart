@@ -21,7 +21,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final Color _textColor = Colors.white;
   LoginBloc _loginBloc;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -83,24 +83,51 @@ class _LoginFormState extends State<LoginForm> {
             padding: EdgeInsets.all(20.0),
             child: Form(
               child: ListView(
+                padding: EdgeInsets.only(top: 20, left: 15, right: 15),
                 children: <Widget>[
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        'Canteen',
+                        style: TextStyle(
+                          color: _textColor,
+                          fontSize: 40,
+                        ),
+                      ),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: TextFormField(
+                      controller: _emailController,
+                      style: TextStyle(color: _textColor),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: _textColor),
+                        fillColor: Colors.white.withOpacity(0.1),
+                        filled: true,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
                     ),
-                    obscureText: true,
-                    autocorrect: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: TextFormField(
+                      style: TextStyle(color: _textColor),
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Password',
+                        labelStyle: TextStyle(color: _textColor),
+                        fillColor: Colors.white.withOpacity(0.1),
+                        filled: true,
+                      ),
+                      obscureText: true,
+                      autocorrect: false,
+                    ),
                   ),
                   // TODO: change this error to a pop up
                   state.isFailure
