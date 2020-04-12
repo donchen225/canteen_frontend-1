@@ -20,6 +20,8 @@ class ConfirmProspectScreen extends StatefulWidget {
 }
 
 class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
+  bool _teachingSelected = false;
+  bool _learningSelected = false;
   ProspectProfileBloc _prospectProfileBloc;
 
   @override
@@ -65,12 +67,28 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
             widget.user.teachSkill,
             height: 50,
             showDescription: false,
+            selectable: true,
+            selector: _teachingSelected,
+            onTap: (index) {
+              setState(() {
+                _teachingSelected = true;
+                _learningSelected = false;
+              });
+            },
           ),
           ProfileSectionTitle("I'm learning"),
           SkillList(
             widget.user.learnSkill,
             height: 50,
             showDescription: false,
+            selectable: true,
+            selector: _learningSelected,
+            onTap: (index) {
+              setState(() {
+                _teachingSelected = false;
+                _learningSelected = true;
+              });
+            },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

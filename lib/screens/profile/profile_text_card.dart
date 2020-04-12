@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class ProfileTextCard extends StatelessWidget {
   final Widget child;
   final double height;
+  Color color;
 
-  ProfileTextCard({this.child, this.height = 100});
+  ProfileTextCard({this.child, this.height = 100, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ProfileTextCard extends StatelessWidget {
       ),
       margin: EdgeInsets.all(0),
       elevation: 0.3,
-      color: Colors.white,
+      color: color,
       child: Container(
         height: height,
         padding: EdgeInsets.all(15),

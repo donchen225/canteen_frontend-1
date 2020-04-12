@@ -2,15 +2,54 @@ import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:flutter/material.dart';
 
-class SkillList extends StatelessWidget {
+class SkillList extends StatefulWidget {
   final List<Skill> skills;
   final double height;
   final bool showDescription;
+  final bool selectable;
+  final bool selector;
   final Function onTap;
 
   SkillList(this.skills,
-      {this.height = 100, this.showDescription = true, this.onTap})
+      {this.height = 100,
+      this.showDescription = true,
+      this.selectable = false,
+      this.selector = true,
+      this.onTap})
       : assert(skills != null);
+
+  _SkillListState createState() => _SkillListState();
+}
+
+class _SkillListState extends State<SkillList> {
+  Color backgroundColor = Colors.white;
+  Color selectedColor = Colors.red;
+  int _selectedIndex;
+
+  Color _getColor(int index) {
+    if (widget.selectable) {
+      return widget.selector &&
+              _selectedIndex != null &&
+              _selectedIndex == index
+          ? selectedColor
+          : backgroundColor;
+    }
+    return backgroundColor;
+  }
+
+  void _onSelected(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
+  void _onTapFunction(index) {
+    if (widget.selectable) {
+      _onSelected(index);
+    }
+
+    if (widget.onTap != null) {
+      widget.onTap(index);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +57,16 @@ class SkillList extends StatelessWidget {
       padding: EdgeInsets.all(0),
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: skills.length,
+      itemCount: widget.skills.length,
       itemBuilder: (context, index) {
-        final skill = skills[index];
+        final skill = widget.skills[index];
         return Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: GestureDetector(
-            onTap: () => onTap != null ? onTap(index) : {},
+            onTap: () => _onTapFunction(index),
             child: ProfileTextCard(
-              height: height,
+              height: widget.height,
+              color: _getColor(index),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -34,7 +74,9 @@ class SkillList extends StatelessWidget {
                     skill.name + ' - ' + '\$${(skill.price).toString()}',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  showDescription ? Text(skill.description) : Container(),
+                  widget.showDescription
+                      ? Text(skill.description)
+                      : Container(),
                 ],
               ),
             ),
