@@ -66,11 +66,9 @@ class RequestEntity extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
-      'sender_id': senderId,
       'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
-      'status': status,
     };
   }
 }
