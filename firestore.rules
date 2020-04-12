@@ -3,25 +3,24 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /user/{userId} {
       allow create: if isAuthenticated();
-    }
-
-    match /user/{userId} {
       allow update: if isOwner(userId);
-    }
-
-    match /user/{document=**} {
       allow read: if isAuthenticated();
     }
 
     match /chat/{document=**} {
       allow read, write: if isAuthenticated();
     }
-    match /match/{document=**} {
+
+    match /match/{matchId} {
       allow read, write: if isAuthenticated();
     }
-    match /request/{document=**} {
-      allow read, write: if isAuthenticated();
+
+    match /requests/{requestId} {
+      allow read: if resource.data.receiver_id == request.auth.uid;
+      allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/user/$(request.resource.data.receiver_id));
+      allow update: if request.resource.data.receiver_id == request.auth.uid;
     }
+
   }
 
   function isAuthenticated() {

@@ -4,7 +4,7 @@ import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestRepository {
-  final requestCollection = Firestore.instance.collection('request');
+  final requestCollection = Firestore.instance.collection('requests');
   List<Request> _requests = [];
   List<DetailedRequest> _detailedRequests = [];
 

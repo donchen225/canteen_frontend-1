@@ -3,7 +3,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
-const REQUEST_COLLECTION = 'request';
+const REQUEST_COLLECTION = 'requests';
 
 admin.initializeApp();
 
@@ -11,7 +11,7 @@ const firestore = admin.firestore();
 
 // [START messageFunctionTrigger]
 // Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
-exports.addRequest = functions.https.onCall((data, context) => {
+exports.addRequest = functions.https.onCall(async (data, context) => {
 
     // Checking that the user is authenticated.
     if (!context.auth) {
@@ -52,6 +52,19 @@ exports.addRequest = functions.https.onCall((data, context) => {
     // [END authIntegration]
 
     // [START returnMessageAsync]
+    if (receiverId === uid) {
+        throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
+    }
+
+    await firestore.collection('user').doc(receiverId).get().then((doc) => {
+        if (!doc.exists) {
+            throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
 
     // Create document
     const doc = {
@@ -64,7 +77,6 @@ exports.addRequest = functions.https.onCall((data, context) => {
     };
 
     return firestore.collection(REQUEST_COLLECTION).doc().set(doc).then(() => {
-        console.log('New Request written');
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);

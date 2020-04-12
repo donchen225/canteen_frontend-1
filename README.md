@@ -41,3 +41,7 @@ This is the codebase for the Canteen mobile app, written in Flutter.
     * `initialized`
     * `accepted`
     * `declined`
+
+## Notes
+
+* If using the Firebase Admin SDK in cloud functions, Firestore security rules are ignored.
