@@ -55,4 +55,8 @@ class CachedSharedPreferences {
       }
     });
   }
+
+  static Future clear() async {
+    await _preferences.clear();
+  }
 }

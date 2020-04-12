@@ -9,6 +9,7 @@ import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,6 +79,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 onPressed: () {
                   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
+                  BlocProvider.of<RequestBloc>(context).add(ClearRequests());
                 },
               )
               // IconButton(

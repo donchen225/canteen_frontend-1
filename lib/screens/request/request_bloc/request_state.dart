@@ -8,6 +8,8 @@ abstract class RequestState extends Equatable {
   List<Object> get props => [];
 }
 
+class ReqeustsCleared extends RequestState {}
+
 class RequestsLoading extends RequestState {}
 
 class RequestsLoaded extends RequestState {

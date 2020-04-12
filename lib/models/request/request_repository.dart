@@ -55,6 +55,11 @@ class RequestRepository {
     _detailedRequests.add(request);
   }
 
+  void clearRequests() {
+    _requests = [];
+    _detailedRequests = [];
+  }
+
   Stream<List<Request>> getAllRequests(String userId) {
     return requestCollection
         .where('receiver_id', isEqualTo: userId)

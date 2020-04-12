@@ -49,12 +49,6 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
     yield DetailedMatchListLoaded(await _getDetailedMatchList(event.matchList));
   }
 
-  @override
-  Future<void> close() {
-    _matchSubscription?.cancel();
-    return super.close();
-  }
-
   Future<List<DetailedMatch>> _getDetailedMatchList(
       List<Match> matchList) async {
     var userCache = Map<String, User>();
@@ -72,5 +66,11 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
         return u;
       })).then((userList) => DetailedMatch.fromMatch(match, userList));
     }));
+  }
+
+  @override
+  Future<void> close() {
+    _matchSubscription?.cancel();
+    return super.close();
   }
 }

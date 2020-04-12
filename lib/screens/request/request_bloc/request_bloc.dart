@@ -29,6 +29,8 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
       yield* _mapAcceptRequestToState(event);
     } else if (event is DeclineRequest) {
       yield* _mapDeclineRequestToState(event);
+    } else if (event is ClearRequests) {
+      yield* _mapClearRequestsToState();
     }
   }
 
@@ -36,8 +38,10 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     _requestSubscription?.cancel();
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
+    print('LOAD REQUESTS with $userId');
     _requestSubscription =
         _requestRepository.getAllRequests(userId).listen((requests) {
+      print('RECEIVING REQUESTS FROM FIRESTORE');
       add(RequestsUpdated(requests));
     });
   }
@@ -60,5 +64,16 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   Stream<RequestState> _mapDeclineRequestToState(DeclineRequest event) async* {
     await _requestRepository.declineRequest(event.request);
     yield RequestsLoaded(_requestRepository.currentRequests());
+  }
+
+  Stream<RequestState> _mapClearRequestsToState() async* {
+    _requestRepository.clearRequests();
+    yield ReqeustsCleared();
+  }
+
+  @override
+  Future<void> close() {
+    _requestSubscription?.cancel();
+    return super.close();
   }
 }

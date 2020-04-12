@@ -74,3 +74,13 @@ class DeclineRequest extends RequestEvent {
   @override
   String toString() => 'DeclineRequest { request: $request }';
 }
+
+class ClearRequests extends RequestEvent {
+  const ClearRequests();
+
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'ClearRequests';
+}

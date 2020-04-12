@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -38,7 +39,9 @@ class AuthenticationBloc
       final user = await _userRepository.getFirebaseUser();
       if (user != null) {
         _userRepository.updateUserSignInTime(user);
-        CachedSharedPreferences.setString(PreferenceConstants.userId, user.uid);
+        print('APP STARTED WITH USER ID: ${user.uid}');
+        await CachedSharedPreferences.setString(
+            PreferenceConstants.userId, user.uid);
         yield Authenticated(user);
       } else {
         yield Unauthenticated();
@@ -51,12 +54,15 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
     final user = await _userRepository.getFirebaseUser();
-    await _userRepository.updateUserSignInTime(user);
+    _userRepository.updateUserSignInTime(user);
+    await CachedSharedPreferences.setString(
+        PreferenceConstants.userId, user.uid);
     yield Authenticated(user);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    yield Unauthenticated();
+    CachedSharedPreferences.clear();
     _userRepository.signOut();
+    yield Unauthenticated();
   }
 }
