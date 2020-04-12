@@ -11,17 +11,12 @@ class RequestRepository {
   RequestRepository();
 
   Future<void> addRequest(Request request) {
-    print('ADDING REQUEST');
     CloudFunctionManager.addRequest.call(request.toEntity().toDocument()).then(
         (result) {
       print(result.data);
     }, onError: (error) {
-      print('ERROR: $error');
+      print('ERROR ADDING REQUEST: $error');
     });
-    // return Firestore.instance.runTransaction((Transaction tx) async {
-    //   tx.set(requestCollection.document(request.id),
-    //       request.toEntity().toDocument());
-    // });
   }
 
   Future<void> deleteRequest(Request request) async {

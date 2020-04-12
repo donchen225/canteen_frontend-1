@@ -65,6 +65,17 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.exists) {
+                throw new functions.https.HttpsError('already-exists', 'Request already exists.');
+            }
+        });
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
 
     // Create document
     const doc = {
