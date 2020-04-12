@@ -75,24 +75,39 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: EdgeInsets.all(20),
             child: Form(
               child: ListView(
+                padding: EdgeInsets.only(top: 20, left: 15, right: 15),
                 children: <Widget>[
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
+                  Center(
+                      child: Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Text('Sign Up',
+                        style: TextStyle(
+                          fontSize: 40,
+                        )),
+                  )),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                      ),
+                      obscureText: true,
+                      autocorrect: false,
                     ),
-                    obscureText: true,
-                    autocorrect: false,
                   ),
                   SignUpButton(
                     onPressed: isRegisterButtonEnabled(state)
@@ -105,6 +120,25 @@ class _SignUpFormState extends State<SignUpForm> {
                       state.isFailure ? state.error.message : '',
                       style: TextStyle(color: Colors.red),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Already have an account? ',
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.maybePop(context);
+                          },
+                          child: Text(
+                            'Sign in.',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ))
+                    ],
                   ),
                 ],
               ),
