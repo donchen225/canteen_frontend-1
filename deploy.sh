@@ -1,2 +1,2 @@
-firebase deploy --only functions:addRequest
+firebase deploy --only functions
 firebase deploy --only firestore:rules

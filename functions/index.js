@@ -9,8 +9,7 @@ admin.initializeApp();
 
 const firestore = admin.firestore();
 
-// [START messageFunctionTrigger]
-// Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
+// Create request in Firestore
 exports.addRequest = functions.https.onCall(async (data, context) => {
 
     // Checking that the user is authenticated.
@@ -93,4 +92,3 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 });
-// [END messageFunctionTrigger]
