@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/request/request_entity.dart';
 import 'package:canteen_frontend/models/request/status.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:meta/meta.dart';
 
@@ -23,8 +24,11 @@ class Request {
     this.comment,
   });
 
-  static Request create({String senderId, String receiverId}) {
+  static Request create({Skill skill, String senderId, String receiverId}) {
     return Request(
+      skill: skill != null
+          ? (skill.name + ' - ' + '\$${(skill.price).toString()}')
+          : '',
       senderId: senderId,
       receiverId: receiverId,
       status: RequestStatus.initialized,

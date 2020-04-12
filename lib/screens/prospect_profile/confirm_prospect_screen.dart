@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/models/request/request.dart';
-import 'package:canteen_frontend/models/request/status.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
@@ -22,6 +22,7 @@ class ConfirmProspectScreen extends StatefulWidget {
 class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
   bool _teachingSelected = false;
   bool _learningSelected = false;
+  Skill _selectedSkill;
   ProspectProfileBloc _prospectProfileBloc;
 
   @override
@@ -74,6 +75,7 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                 _teachingSelected = true;
                 _learningSelected = false;
               });
+              _selectedSkill = widget.user.teachSkill[index];
             },
           ),
           ProfileSectionTitle("I'm learning"),
@@ -88,6 +90,7 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                 _teachingSelected = false;
                 _learningSelected = true;
               });
+              _selectedSkill = widget.user.teachSkill[index];
             },
           ),
           Row(
@@ -111,6 +114,7 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                           BlocProvider.of<RequestBloc>(context).add(
                             AddRequest(
                               Request.create(
+                                skill: _selectedSkill,
                                 senderId: currentUserId,
                                 receiverId: widget.user.id,
                               ),

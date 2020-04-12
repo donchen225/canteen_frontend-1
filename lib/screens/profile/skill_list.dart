@@ -41,7 +41,7 @@ class _SkillListState extends State<SkillList> {
     setState(() => _selectedIndex = index);
   }
 
-  void _onTapFunction(index) {
+  void _onTapFunction(int index) {
     if (widget.selectable) {
       _onSelected(index);
     }
