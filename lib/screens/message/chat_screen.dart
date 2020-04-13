@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen>
         child: Scaffold(
       key: _scaffoldKey,
       body: GestureDetector(
-        onTap: () {
+        onTapDown: (_) {
           FocusScopeNode currentFocus = FocusScope.of(context);
 
           if (!currentFocus.hasPrimaryFocus) {

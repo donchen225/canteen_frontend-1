@@ -61,54 +61,64 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
       ),
-      body: BlocBuilder<SearchBloc, SearchState>(
-        builder: (context, state) {
-          print('IN SEARCH FORM');
-          if (state is SearchLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is SearchEmpty) {
-            return ProfileGrid(
-              state.allUsers,
-              onTap: (user) {
-                BlocProvider.of<SearchBloc>(context)
-                    .add(SearchInspectUser(user));
-              },
-            );
-          } else if (state is SearchCompleteWithResults) {
-            return ListView.builder(
-              itemCount: state.userList.length,
-              itemBuilder: (context, index) {
-                final user = state.userList[index];
+      body: GestureDetector(
+        onTapDown: (_) {
+          FocusScopeNode currentFocus = FocusScope.of(context);
 
-                return GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<SearchBloc>(context)
-                        .add(SearchInspectUser(user));
-                  },
-                  child: ListTile(
-                    leading: Container(
-                      width: 50, // TODO: change this to be dynamic
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: (user.photoUrl != null &&
-                                  user.photoUrl.isNotEmpty)
-                              ? CachedNetworkImageProvider(user.photoUrl)
-                              : AssetImage('assets/blank-profile-picture.jpeg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    title: Text(user.displayName ?? ''),
-                  ),
-                );
-              },
-            );
-          } else {
-            return Container();
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
           }
         },
+        child: BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, state) {
+            print('IN SEARCH FORM');
+            if (state is SearchLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is SearchEmpty) {
+              return ProfileGrid(
+                state.allUsers,
+                onTap: (user) {
+                  BlocProvider.of<SearchBloc>(context)
+                      .add(SearchInspectUser(user));
+                },
+              );
+            } else if (state is SearchCompleteWithResults) {
+              return ListView.builder(
+                itemCount: state.userList.length,
+                itemBuilder: (context, index) {
+                  final user = state.userList[index];
+
+                  return GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<SearchBloc>(context)
+                          .add(SearchInspectUser(user));
+                    },
+                    child: ListTile(
+                      leading: Container(
+                        width: 50, // TODO: change this to be dynamic
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: (user.photoUrl != null &&
+                                    user.photoUrl.isNotEmpty)
+                                ? CachedNetworkImageProvider(user.photoUrl)
+                                : AssetImage(
+                                    'assets/blank-profile-picture.jpeg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      title: Text(user.displayName ?? ''),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }
