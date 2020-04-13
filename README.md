@@ -43,6 +43,10 @@ This is the codebase for the Canteen mobile app, written in Flutter.
     * `accepted`
     * `declined`
 
+## Setting up algolia
+1. Get `ALGOLIA_APP_ID` and `ALGOLIA_ADMIN_API_KEY` from Algolia and set in `.env`.
+2. Create index on algolia.
+
 ## Notes
 
 * If using the Firebase Admin SDK in cloud functions, Firestore security rules are ignored.
