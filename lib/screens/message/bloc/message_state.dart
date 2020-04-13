@@ -1,5 +1,4 @@
-import 'package:canteen_frontend/models/chat/chat.dart';
-import 'package:canteen_frontend/models/chat/message.dart';
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';

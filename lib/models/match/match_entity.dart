@@ -4,62 +4,62 @@ import 'package:meta/meta.dart';
 
 class MatchEntity extends Equatable {
   final String id;
-  final Map<String, int> userId;
-  final String chatId;
+  final List<String> userId;
   final int status;
+  final DateTime lastUpdated;
   final DateTime createdOn;
 
   const MatchEntity(
       {@required this.id,
       @required this.userId,
-      @required this.chatId,
       @required this.status,
+      @required this.lastUpdated,
       @required this.createdOn});
 
   Map<String, Object> toJson() {
     return {
       'id': id,
       'user_id': userId,
-      'chat_id': chatId,
       'status': status,
       'created_on': createdOn,
+      'last_updated': lastUpdated,
     };
   }
 
   @override
-  List<Object> get props => [id, userId, chatId, status, createdOn];
+  List<Object> get props => [id, userId, status, createdOn, lastUpdated];
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, userId: $userId, chatId: $chatId, status: $status, createdOn: $createdOn }';
+    return 'MatchEntity { id: $id, userId: $userId, status: $status, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static MatchEntity fromJson(Map<String, Object> json) {
     return MatchEntity(
       id: json['id'] as String,
-      userId: json['user_id'] as Map<String, int>,
-      chatId: json['chat_id'] as String,
+      userId: json['user_id'] as List<String>,
       status: json['status'] as int,
       createdOn: DateTime.parse(json['created_on']),
+      lastUpdated: DateTime.parse(json['last_updated']),
     );
   }
 
   static MatchEntity fromSnapshot(DocumentSnapshot snapshot) {
     return MatchEntity(
-        id: snapshot.documentID,
-        userId: snapshot.data['user_id']
-            .map<String, int>((k, v) => MapEntry(k as String, v as int)),
-        chatId: snapshot.data['chat_id'],
-        status: snapshot.data['status'],
-        createdOn: snapshot.data["created_on"].toDate());
+      id: snapshot.documentID,
+      userId: snapshot.data['user_id'].map<String>((x) => x as String).toList(),
+      status: snapshot.data['status'],
+      createdOn: snapshot.data["created_on"].toDate(),
+      lastUpdated: snapshot.data['last_updated'].toDate(),
+    );
   }
 
   Map<String, Object> toDocument() {
     return {
       'user_id': userId,
-      'chat_id': chatId,
       'status': status,
       'created_on': createdOn,
+      'last_updated': lastUpdated,
     };
   }
 }

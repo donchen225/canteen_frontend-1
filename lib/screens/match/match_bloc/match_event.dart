@@ -17,6 +17,15 @@ class LoadMatches extends MatchEvent {
   String toString() => 'LoadMatches';
 }
 
+class RegisterActiveMatch extends MatchEvent {
+  final String activeMatchId;
+
+  const RegisterActiveMatch(this.activeMatchId);
+
+  @override
+  String toString() => 'RegisterActiveMatch { activeMatchId : $activeMatchId }';
+}
+
 class AddMatch extends MatchEvent {
   final Match match;
 
@@ -54,15 +63,15 @@ class DeleteMatch extends MatchEvent {
 }
 
 class MatchesUpdated extends MatchEvent {
-  final List<Tuple2<DocumentChangeType, Match>> matchesChanged;
+  final List<Tuple2<DocumentChangeType, Match>> updates;
 
-  const MatchesUpdated(this.matchesChanged);
-
-  @override
-  List<Object> get props => [matchesChanged];
+  const MatchesUpdated(this.updates);
 
   @override
-  String toString() => 'MatchesUpdated { matchesChanged: $matchesChanged }';
+  List<Object> get props => [updates];
+
+  @override
+  String toString() => 'MatchesUpdated { updates: $updates }';
 }
 
 class ClearMatches extends MatchEvent {}

@@ -1,39 +1,39 @@
-import 'package:canteen_frontend/models/chat/chat.dart';
+import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/chat/chat_input.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/chat/message_list.dart';
+import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/message/chat_input.dart';
+import 'package:canteen_frontend/screens/message/message_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   final User user;
-  final Chat chat;
+  final DetailedMatch match;
 
-  const ChatScreen({@required this.chat, this.user});
+  const ChatScreen({@required this.match, this.user});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState(chat, user);
+  _ChatScreenState createState() => _ChatScreenState(match, user);
 }
 
 class _ChatScreenState extends State<ChatScreen>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final User user;
-  final Chat chat;
+  final Match match;
   MessageBloc _messageBloc;
   bool isFirstLaunch = true;
   bool configMessagePeek = true;
 
-  _ChatScreenState(this.chat, this.user);
+  _ChatScreenState(this.match, this.user);
 
   @override
   void initState() {
     super.initState();
     print('INITIALIZE CHAT SCREEN');
     _messageBloc = BlocProvider.of<MessageBloc>(context);
-    _messageBloc.add(RegisterActiveChatEvent(chat.id));
-    _messageBloc.add(FetchConversationDetailsEvent(chat));
+    _messageBloc.add(RegisterActiveChatEvent(match.id));
+    _messageBloc.add(FetchConversationDetailsEvent(match));
   }
 
   @override
@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen>
             children: <Widget>[
               Container(
                 color: Colors.white,
-                child: MessageList(chat),
+                child: MessageList(match),
               ),
             ],
           )),

@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseUserRepository extends UserRepository {
   final FirebaseAuth _firebaseAuth;
-  final userCollection = Firestore.instance.collection('user');
+  final userCollection = Firestore.instance.collection('users');
   User _user; // current user stored in memory
   Map<String, User> _userMap = {}; // all users stored in memory
   FirebaseUser _firebaseUser; // current firebase user stored in memory

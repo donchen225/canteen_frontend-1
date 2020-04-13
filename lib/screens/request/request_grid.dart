@@ -1,5 +1,3 @@
-import 'package:canteen_frontend/models/chat/chat.dart';
-import 'package:canteen_frontend/screens/chat/chat_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
@@ -73,12 +71,6 @@ class RequestGrid extends StatelessWidget {
                         BlocProvider.of<MatchBloc>(context).add(
                           AddMatch(
                             Match.create(userId: userList),
-                          ),
-                        );
-
-                        BlocProvider.of<ChatBloc>(context).add(
-                          AddChat(
-                            Chat.create(userId: userList),
                           ),
                         );
                       },

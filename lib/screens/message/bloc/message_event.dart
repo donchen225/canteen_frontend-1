@@ -1,5 +1,5 @@
-import 'package:canteen_frontend/models/chat/chat.dart';
-import 'package:canteen_frontend/models/chat/message.dart';
+import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -13,9 +13,9 @@ abstract class MessageEvent extends Equatable {
 
 //triggered to get details of currently open conversation
 class FetchConversationDetailsEvent extends MessageEvent {
-  final Chat chat;
+  final Match match;
 
-  const FetchConversationDetailsEvent(this.chat);
+  const FetchConversationDetailsEvent(this.match);
 
   @override
   String toString() => 'FetchConversationDetailsEvent';
@@ -23,9 +23,9 @@ class FetchConversationDetailsEvent extends MessageEvent {
 
 //triggered to fetch messages of chat, this will also keep a subscription for new messages
 class FetchMessagesEvent extends MessageEvent {
-  final Chat chat;
+  final Match match;
 
-  const FetchMessagesEvent(this.chat);
+  const FetchMessagesEvent(this.match);
 
   @override
   String toString() => 'FetchMessagesEvent';
@@ -33,10 +33,10 @@ class FetchMessagesEvent extends MessageEvent {
 
 //triggered to fetch messages of chat
 class FetchPreviousMessagesEvent extends MessageEvent {
-  final Chat chat;
+  final Match match;
   final Message lastMessage;
 
-  const FetchPreviousMessagesEvent(this.chat, this.lastMessage);
+  const FetchPreviousMessagesEvent(this.match, this.lastMessage);
 
   @override
   String toString() => 'FetchPreviousMessagesEvent';
@@ -66,13 +66,13 @@ class SendTextMessageEvent extends MessageEvent {
 //triggered on page change
 class PageChangedEvent extends MessageEvent {
   final int index;
-  final Chat activeChat;
+  final Match activeMatch;
 
-  const PageChangedEvent(this.index, this.activeChat);
+  const PageChangedEvent(this.index, this.activeMatch);
 
   @override
   String toString() =>
-      'PageChangedEvent { index: $index, activeChat: $activeChat }';
+      'PageChangedEvent { index: $index, activeMatch: $activeMatch }';
 }
 
 class RegisterActiveChatEvent extends MessageEvent {

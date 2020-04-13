@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/models/chat/message_type.dart';
+import 'package:canteen_frontend/models/message/message_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 

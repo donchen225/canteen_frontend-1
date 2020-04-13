@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/models/chat/message.dart';
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

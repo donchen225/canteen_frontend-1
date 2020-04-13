@@ -5,14 +5,14 @@ abstract class MatchListEvent extends Equatable {
   const MatchListEvent();
 }
 
-class UpdateMatchList extends MatchListEvent {
-  final List<Match> matchList;
+class LoadMatchList extends MatchListEvent {
+  final List<DetailedMatch> matchList;
 
-  const UpdateMatchList(this.matchList);
+  const LoadMatchList(this.matchList);
 
   @override
   List<Object> get props => [matchList];
 
   @override
-  String toString() => 'UpdateMatchList { matchList: $matchList }';
+  String toString() => 'LoadMatchList { matchList: $matchList }';
 }

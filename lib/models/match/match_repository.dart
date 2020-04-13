@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:canteen_frontend/models/message/message.dart';
+import 'package:canteen_frontend/models/message/message_entity.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:canteen_frontend/models/match/match.dart';
@@ -5,7 +10,51 @@ import 'package:canteen_frontend/models/match/match_entity.dart';
 import 'package:tuple/tuple.dart';
 
 class MatchRepository {
-  final matchCollection = Firestore.instance.collection('match');
+  final matchCollection = Firestore.instance.collection('matches');
+  static const String messages = "messages";
+  List<Match> _matches = [];
+  List<DetailedMatch> _detailedMatches = [];
+
+  MatchRepository();
+
+  List<Match> currentMatches() {
+    return _matches;
+  }
+
+  List<DetailedMatch> currentDetailedMatches() {
+    return _detailedMatches;
+  }
+
+  void clearMatches() {
+    _matches = [];
+    _detailedMatches = [];
+  }
+
+  void saveMatch(Match match) {
+    _matches.insert(0, match);
+  }
+
+  void saveDetailedMatch(DetailedMatch match) {
+    _detailedMatches.insert(0, match);
+  }
+
+  void updateMatch(DocumentChangeType type, Match match) {
+    if (type == DocumentChangeType.modified) {
+      _matches.removeWhere((match) => match.id == match.id);
+      _matches.insert(0, match);
+    } else if (type == DocumentChangeType.removed) {
+      _matches.removeWhere((match) => match.id == match.id);
+    }
+  }
+
+  void updateDetailedMatch(DocumentChangeType type, Match match) {
+    if (type == DocumentChangeType.modified) {
+      _detailedMatches.removeWhere((match) => match.id == match.id);
+      _detailedMatches.insert(0, match);
+    } else if (type == DocumentChangeType.removed) {
+      _detailedMatches.removeWhere((match) => match.id == match.id);
+    }
+  }
 
   Future<void> addMatch(Match match) {
     return Firestore.instance.runTransaction((Transaction tx) async {
@@ -19,37 +68,43 @@ class MatchRepository {
     });
   }
 
-  // Gets the match containing the userId and the opponentUserIds
-  // If more than 1 match exists, an exception will be thrown
-  // If no match exists, will return null
-  Future<Match> getMatch(String userId, List<String> opponentUserId) async {
-    try {
-      var query = matchCollection.where("user_id.$userId", isEqualTo: true);
-      opponentUserId.forEach((id) {
-        query = query.where("user_id.$id", isEqualTo: true);
+  Future<void> sendMessage(String matchId, Message message) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.set(
+        matchCollection.document(matchId).collection(messages).document(),
+        message.toEntity().toDocument(),
+      );
+
+      tx.update(matchCollection.document(matchId), {
+        "last_updated": message.timestamp,
       });
+    });
+  }
 
-      var numUsers = opponentUserId.length + 1;
-      var filteredDoc = (await query.getDocuments())
-          .documents
-          .where((doc) => doc.data['user_id'].length == numUsers);
-
-      if (filteredDoc.length > 1) {
-        throw Exception(
-            'Only 1 match should exist. Found ${filteredDoc.length} matches.');
-      } else if (filteredDoc.length == 0) {
-        return null;
-      }
-
-      return Match.fromEntity(MatchEntity.fromSnapshot(filteredDoc.first));
+  Future<Message> getMessage(String matchId, DateTime dateTime) {
+    try {
+      return matchCollection
+          .document(matchId)
+          .collection(messages)
+          .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
+          .limit(1)
+          .getDocuments()
+          .then((doc) {
+        return Message.fromEntity(
+          MessageEntity.fromSnapshot(doc.documents.first),
+        );
+      });
     } catch (e) {
-      print(e.toString());
+      print("ERROR: NO MESSAGE FOUND - $e");
     }
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Match>>> getAllMatches(String userId) {
+  Stream<List<Tuple2<DocumentChangeType, Match>>> getMatches() {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
     return matchCollection
-        .where("user_id.$userId", isEqualTo: 0)
+        .where("user_id", arrayContains: userId)
+        .orderBy("last_updated", descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.documentChanges
@@ -57,5 +112,45 @@ class MatchRepository {
               Match.fromEntity(MatchEntity.fromSnapshot(doc.document))))
           .toList();
     });
+  }
+
+  Stream<List<Message>> getMessages(String matchId) {
+    return matchCollection
+        .document(matchId)
+        .collection(messages)
+        .orderBy('timestamp', descending: true)
+        .limit(20)
+        .snapshots()
+        .transform(
+      StreamTransformer<QuerySnapshot, List<Message>>.fromHandlers(
+        handleData: (QuerySnapshot snapshot, EventSink<List<Message>> sink) {
+          sink.add(
+            snapshot.documents
+                .map((doc) =>
+                    Message.fromEntity(MessageEntity.fromSnapshot(doc)))
+                .toList(),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<List<Message>> getPreviousMessages(
+      String matchId, Message message) async {
+    DocumentSnapshot lastMessage = await matchCollection
+        .document(matchId)
+        .collection(messages)
+        .document(message.id)
+        .get();
+    return (await matchCollection
+            .document(matchId)
+            .collection(messages)
+            .startAfterDocument(lastMessage)
+            .orderBy('timestamp', descending: true)
+            .limit(20)
+            .getDocuments())
+        .documents
+        .map((doc) => Message.fromEntity(MessageEntity.fromSnapshot(doc)))
+        .toList();
   }
 }

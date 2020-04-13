@@ -50,3 +50,15 @@ class UserProfileEditingSkill extends UserProfileState {
   String toString() =>
       'UserProfileEditingSkill { user: ${user.toString()} skillType: $skillType skillIndex: $skillIndex  }';
 }
+
+class UserProfileEditingName extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingName(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'UserProfileEditingName { user: ${user.toString()}  }';
+}

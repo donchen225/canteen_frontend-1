@@ -1,8 +1,6 @@
-import 'package:canteen_frontend/models/chat/chat_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
-import 'package:canteen_frontend/screens/chat/chat_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/message_bloc.dart';
+import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -33,7 +31,6 @@ void main() async {
   final UserRepository userRepository = FirebaseUserRepository();
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
-  final ChatRepository chatRepository = ChatRepository();
   await CachedSharedPreferences.getInstance();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
@@ -71,18 +68,10 @@ void main() async {
             );
           },
         ),
-        BlocProvider<ChatBloc>(
-          create: (context) {
-            return ChatBloc(
-              chatRepository: chatRepository,
-              userRepository: userRepository,
-            );
-          },
-        ),
         BlocProvider<MessageBloc>(
           create: (context) {
             return MessageBloc(
-              chatRepository: chatRepository,
+              matchRepository: matchRepository,
               userRepository: userRepository,
             );
           },
@@ -91,7 +80,6 @@ void main() async {
       child: App(
         userRepository: userRepository,
         requestRepository: requestRepository,
-        chatRepository: chatRepository,
       ),
     ),
   );
@@ -100,18 +88,15 @@ void main() async {
 class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
-  final ChatRepository _chatRepository;
 
   App(
       {Key key,
       @required UserRepository userRepository,
-      @required RequestRepository requestRepository,
-      @required ChatRepository chatRepository})
+      @required RequestRepository requestRepository})
       : assert(userRepository != null),
         assert(requestRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
-        _chatRepository = chatRepository,
         super(key: key);
 
   @override
@@ -129,8 +114,6 @@ class App extends StatelessWidget {
                     .add(InitializeUser(state.user));
 
                 BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-
-                BlocProvider.of<ChatBloc>(context).add(LoadChats());
 
                 BlocProvider.of<RequestBloc>(context).add(LoadRequests());
               }

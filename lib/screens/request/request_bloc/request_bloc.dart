@@ -36,11 +36,8 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
 
   Stream<RequestState> _mapLoadRequestsToState() async* {
     _requestSubscription?.cancel();
-    final userId =
-        CachedSharedPreferences.getString(PreferenceConstants.userId);
-    print('LOAD REQUESTS with $userId');
     _requestSubscription =
-        _requestRepository.getAllRequests(userId).listen((requests) {
+        _requestRepository.getAllRequests().listen((requests) {
       print('RECEIVING REQUESTS FROM FIRESTORE');
       add(RequestsUpdated(requests));
     });

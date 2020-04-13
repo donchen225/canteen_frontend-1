@@ -1,19 +1,23 @@
 import 'dart:async';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+
+import 'package:canteen_frontend/models/message/message.dart';
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:meta/meta.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:tuple/tuple.dart';
 
 class MatchBloc extends Bloc<MatchEvent, MatchState> {
   final MatchRepository _matchRepository;
   final UserRepository _userRepository;
   StreamSubscription _matchSubscription;
+  Map<String, StreamSubscription> messagesSubscriptionMap = Map();
+  String _activeMatchId;
 
   MatchBloc(
       {@required MatchRepository matchRepository,
@@ -31,6 +35,8 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
     if (event is LoadMatches) {
       yield* _mapLoadMatchesToState();
+    } else if (event is RegisterActiveMatch) {
+      _activeMatchId = event.activeMatchId;
     } else if (event is AddMatch) {
       yield* _mapAddMatchToState(event);
     } else if (event is DeleteMatch) {
@@ -43,27 +49,19 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   }
 
   Stream<MatchState> _mapLoadMatchesToState() async* {
-    _matchSubscription?.cancel();
-    final userId =
-        CachedSharedPreferences.getString(PreferenceConstants.userId);
-    _matchSubscription =
-        _matchRepository.getAllMatches(userId).listen((matches) {
-      print('RECEIVED MATCH EVENT');
-      add(MatchesUpdated(matches));
-    });
+    try {
+      _matchSubscription?.cancel();
+      _matchSubscription = _matchRepository.getMatches().listen((matches) {
+        print('RECEIVED MATCH EVENT');
+        add(MatchesUpdated(matches));
+      });
+    } catch (exception) {
+      print(exception.errorMessage());
+    }
   }
 
   Stream<MatchState> _mapAddMatchToState(AddMatch event) async* {
     try {
-      // Check local matches if match already exists
-      if ((state as MatchesLoaded)
-          .matches
-          .where((match) => DeepCollectionEquality.unordered()
-              .equals(match.userId, event.match.userId))
-          .isNotEmpty) {
-        return;
-      }
-
       _matchRepository.addMatch(event.match);
     } catch (_) {
       print('FAILED TO ADD MATCH');
@@ -75,25 +73,52 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   }
 
   Stream<MatchState> _mapMatchesUpdateToState(MatchesUpdated event) async* {
-    // TODO: remove this hack
-    // For some reason changes to this variable modify the current MatchState
-    // State should only be MatchesLoading during app startup
-    List<Match> matchList = (state is MatchesLoaded)
-        ? List<Match>.from((state as MatchesLoaded).matches)
-        : [];
-
-    event.matchesChanged.forEach((matchChange) {
-      if (matchChange.item1 == DocumentChangeType.added) {
-        matchList.insert(0, matchChange.item2);
-      } else if (matchChange.item1 == DocumentChangeType.modified) {
-        matchList.removeWhere((match) => match.id == matchChange.item2.id);
-        matchList.insert(0, matchChange.item2);
-      } else if (matchChange.item1 == DocumentChangeType.removed) {
-        matchList.removeWhere((match) => match.id == matchChange.item2.id);
+    yield MatchesLoading();
+    final updatedMatches = event.updates;
+    final messageListFuture = Future.wait(updatedMatches.map((update) {
+      if (update.item1 == DocumentChangeType.modified) {
+        return _matchRepository
+            .getMessage(update.item2.id, update.item2.lastUpdated)
+            .catchError((w) => Future<Message>.value(null));
       }
-    });
+      return Future<Message>.value(null);
+    }).toList());
 
-    yield MatchesLoaded(matchList);
+    final userListFuture = Future.wait(updatedMatches.map((update) async {
+      if (update.item1 == DocumentChangeType.modified ||
+          update.item1 == DocumentChangeType.added) {
+        return Future.wait(update.item2.userId.map((id) async {
+          var u = await _userRepository.getUser(id);
+          return u;
+        }));
+      }
+      return Future<List<User>>.value(null);
+    }));
+
+    final messageList = await messageListFuture;
+    final userList = await userListFuture;
+
+    for (int i = 0; i < updatedMatches.length; i++) {
+      List<User> users = userList[i];
+      Tuple2<DocumentChangeType, Match> update = updatedMatches[i];
+
+      // TODO: set a message on initial match
+      if (update.item1 == DocumentChangeType.added) {
+        final detailedMatch = DetailedMatch.fromMatch(update.item2, users);
+        _matchRepository.saveMatch(update.item2);
+        _matchRepository.saveDetailedMatch(detailedMatch);
+      } else if (update.item1 == DocumentChangeType.modified) {
+        Message message = messageList[i];
+        final detailedMatch =
+            DetailedMatch.fromMatch(update.item2, users, lastMessage: message);
+        _matchRepository.updateMatch(update.item1, update.item2);
+        _matchRepository.updateDetailedMatch(update.item1, detailedMatch);
+      } else if (update.item1 == DocumentChangeType.removed) {
+        _matchRepository.updateMatch(update.item1, update.item2);
+        _matchRepository.updateDetailedMatch(update.item1, update.item2);
+      }
+    }
+    yield MatchesLoaded(_matchRepository.currentDetailedMatches());
   }
 
   Stream<MatchState> _mapClearMatchesToState() async* {

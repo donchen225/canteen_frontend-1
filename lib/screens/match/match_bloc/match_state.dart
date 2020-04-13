@@ -11,7 +11,7 @@ abstract class MatchState extends Equatable {
 class MatchesLoading extends MatchState {}
 
 class MatchesLoaded extends MatchState {
-  final List<Match> matches;
+  final List<DetailedMatch> matches;
 
   const MatchesLoaded([this.matches = const []]);
 

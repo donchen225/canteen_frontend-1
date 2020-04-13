@@ -11,7 +11,7 @@ abstract class MatchListState extends Equatable {
 class MatchListLoading extends MatchListState {}
 
 class MatchListLoaded extends MatchListState {
-  final List<Match> matchList;
+  final List<DetailedMatch> matchList;
 
   const MatchListLoaded(this.matchList);
 
@@ -21,19 +21,5 @@ class MatchListLoaded extends MatchListState {
   @override
   String toString() {
     return 'MatchListLoaded { matchList: $matchList }';
-  }
-}
-
-class DetailedMatchListLoaded extends MatchListState {
-  final List<DetailedMatch> matchList;
-
-  const DetailedMatchListLoaded(this.matchList);
-
-  @override
-  List<Object> get props => [matchList];
-
-  @override
-  String toString() {
-    return 'DetailedMatchListLoaded { matchList: $matchList }';
   }
 }

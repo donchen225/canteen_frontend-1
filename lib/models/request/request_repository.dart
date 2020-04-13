@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/request/request_entity.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestRepository {
@@ -60,7 +61,9 @@ class RequestRepository {
     _detailedRequests = [];
   }
 
-  Stream<List<Request>> getAllRequests(String userId) {
+  Stream<List<Request>> getAllRequests() {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
     return requestCollection
         .where('receiver_id', isEqualTo: userId)
         .where('status', isEqualTo: 0)

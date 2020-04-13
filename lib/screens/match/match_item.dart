@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/models/chat/chat.dart';
-import 'package:canteen_frontend/models/chat/message.dart';
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/match/match.dart';
@@ -9,14 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MatchItem extends StatelessWidget {
   final GestureTapCallback onTap;
   final DetailedMatch match;
-  final Chat chat;
   String displayMessage;
 
-  MatchItem(
-      {Key key,
-      @required this.onTap,
-      @required this.match,
-      @required this.chat})
+  MatchItem({Key key, @required this.onTap, @required this.match})
       : super(key: key);
 
   @override
@@ -26,8 +20,8 @@ class MatchItem extends StatelessWidget {
             .user;
     final opponentList = match.userList.where((u) => u.id != user.uid).toList();
 
-    if (chat.lastMessage is TextMessage) {
-      displayMessage = (chat.lastMessage as TextMessage).text;
+    if (match.lastMessage is TextMessage) {
+      displayMessage = (match.lastMessage as TextMessage).text;
       print(displayMessage);
     }
 

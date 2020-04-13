@@ -1,28 +1,28 @@
 import 'dart:async';
-import 'package:canteen_frontend/models/chat/message.dart';
+import 'package:canteen_frontend/models/message/message.dart';
+import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/message_event.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/message_state.dart';
+import 'package:canteen_frontend/screens/message/bloc/message_event.dart';
+import 'package:canteen_frontend/screens/message/bloc/message_state.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 
-import 'package:canteen_frontend/models/chat/chat_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
-  final ChatRepository _chatRepository;
+  final MatchRepository _matchRepository;
   final UserRepository _userRepository;
   Map<String, StreamSubscription> messagesSubscriptionMap = Map();
   StreamSubscription chatsSubscription;
   String activeChatId;
 
   MessageBloc({
-    @required chatRepository,
+    @required matchRepository,
     @required userRepository,
-  })  : assert(chatRepository != null),
+  })  : assert(matchRepository != null),
         assert(userRepository != null),
-        _chatRepository = chatRepository,
+        _matchRepository = matchRepository,
         _userRepository = userRepository;
 
   @override
@@ -54,7 +54,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         isSelf: true,
         senderId: CachedSharedPreferences.getString(PreferenceConstants.userId),
       );
-      await _chatRepository.sendMessage(activeChatId, message);
+      await _matchRepository.sendMessage(activeChatId, message);
     }
 
     if (event is ToggleEmojiKeyboardEvent) {
@@ -67,17 +67,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     try {
       yield FetchingMessagesState();
       StreamSubscription messagesSubscription =
-          messagesSubscriptionMap[event.chat.id];
+          messagesSubscriptionMap[event.match.id];
       messagesSubscription?.cancel();
-      messagesSubscription = _chatRepository.getMessages(event.chat.id).listen(
-          (messages) => add(ReceivedMessagesEvent(
+      messagesSubscription = _matchRepository
+          .getMessages(event.match.id)
+          .listen((messages) => add(ReceivedMessagesEvent(
               messages,
-              event.chat.userId.firstWhere((id) =>
+              event.match.userId.firstWhere((id) =>
                   id !=
                   CachedSharedPreferences.getString(
                       PreferenceConstants.userId)))));
 
-      messagesSubscriptionMap[event.chat.id] = messagesSubscription;
+      messagesSubscriptionMap[event.match.id] = messagesSubscription;
     } catch (exception) {
       print(exception.errorMessage());
       yield ErrorState(exception);
@@ -87,11 +88,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   Stream<MessageState> mapFetchPreviousMessagesEventToState(
       FetchPreviousMessagesEvent event) async* {
     try {
-      final messages = await _chatRepository.getPreviousMessages(
-          event.chat.id, event.lastMessage);
+      final messages = await _matchRepository.getPreviousMessages(
+          event.match.id, event.lastMessage);
       yield FetchedMessagesState(
           messages,
-          event.chat.userId.firstWhere((id) =>
+          event.match.userId.firstWhere((id) =>
               id !=
               CachedSharedPreferences.getString(PreferenceConstants.userId)),
           isPrevious: true);
@@ -103,12 +104,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   Stream<MessageState> mapFetchConversationDetailsEventToState(
       FetchConversationDetailsEvent event) async* {
-    print('fetching details for ${event.chat.id}');
-    final userId = event.chat.userId.firstWhere((id) =>
+    print('fetching details for ${event.match.id}');
+    final userId = event.match.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
     User user = await _userRepository.getUser(userId);
     yield FetchedContactDetailsState(user, userId);
-    add(FetchMessagesEvent(event.chat));
+    add(FetchMessagesEvent(event.match));
   }
 
   @override

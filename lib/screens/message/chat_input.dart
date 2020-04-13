@@ -1,5 +1,4 @@
-import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/message_event.dart';
+import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

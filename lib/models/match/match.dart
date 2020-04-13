@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/models/match/match_entity.dart';
 import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -6,36 +7,40 @@ import 'package:meta/meta.dart';
 @immutable
 class Match {
   final String id;
-  final Map<String, int> userId;
-  final String chatId;
+  final List<String> userId;
   final MatchStatus status;
   final DateTime createdOn;
+  final DateTime lastUpdated;
 
-  Match(
-      {@required this.userId,
-      this.chatId,
-      this.id,
-      this.status,
-      this.createdOn});
+  Match({
+    @required this.userId,
+    this.id,
+    this.status,
+    this.createdOn,
+    this.lastUpdated,
+  });
 
   static Match create({List<String> userId}) {
+    final date = DateTime.now().toUtc();
+
     return Match(
-      userId: Map.fromEntries(userId.map((v) => MapEntry(v, 0))),
-      chatId: userId[0].hashCode < userId[1].hashCode
+      id: userId[0].hashCode < userId[1].hashCode
           ? userId[0] + userId[1]
           : userId[1] + userId[0],
+      userId: userId..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
       status: MatchStatus.initialized,
-      createdOn: DateTime.now().toUtc(),
+      createdOn: date,
+      lastUpdated: date,
     );
   }
 
-  static Match fromEntity(MatchEntity entity) {
+  static Match fromEntity(MatchEntity entity, {Message lastMessage}) {
     return Match(
       id: entity.id,
       userId: entity.userId,
-      chatId: entity.chatId,
       status: MatchStatus.values[entity.status],
       createdOn: entity.createdOn,
+      lastUpdated: entity.lastUpdated,
     );
   }
 
@@ -43,37 +48,39 @@ class Match {
     return MatchEntity(
       id: id,
       userId: userId,
-      chatId: chatId,
       status: status.index,
+      lastUpdated: lastUpdated,
       createdOn: createdOn,
     );
+  }
+
+  Match addLastMessage(Message message) {
+    return Match(
+        id: id, userId: userId, lastUpdated: lastUpdated, createdOn: createdOn);
   }
 }
 
 class DetailedMatch extends Match {
   final List<User> userList;
+  final Message lastMessage;
 
   DetailedMatch(
       {@required userId,
       @required id,
-      @required chatId,
       @required status,
       @required createdOn,
-      @required this.userList})
-      : super(
-            userId: userId,
-            id: id,
-            chatId: chatId,
-            status: status,
-            createdOn: createdOn);
+      @required this.userList,
+      this.lastMessage})
+      : super(userId: userId, id: id, status: status, createdOn: createdOn);
 
-  static DetailedMatch fromMatch(Match match, List<User> userList) {
+  static DetailedMatch fromMatch(Match match, List<User> userList,
+      {Message lastMessage}) {
     return DetailedMatch(
         userId: match.userId,
         id: match.id,
-        chatId: match.chatId,
         status: match.status,
         createdOn: match.createdOn,
-        userList: userList);
+        userList: userList,
+        lastMessage: lastMessage);
   }
 }

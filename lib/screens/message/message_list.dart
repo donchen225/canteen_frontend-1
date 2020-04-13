@@ -1,26 +1,26 @@
-import 'package:canteen_frontend/models/chat/chat.dart';
-import 'package:canteen_frontend/models/chat/message.dart';
-import 'package:canteen_frontend/screens/chat/message_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/chat/message_item.dart';
+import 'package:canteen_frontend/models/message/message.dart';
+import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/message/message_item.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageList extends StatefulWidget {
-  final Chat chat;
+  final Match match;
 
-  MessageList(this.chat);
+  MessageList(this.match);
 
   @override
-  _MessageListState createState() => _MessageListState(chat);
+  _MessageListState createState() => _MessageListState(match);
 }
 
 class _MessageListState extends State<MessageList> {
   final ScrollController listScrollController = ScrollController();
   List<Message> messages = List();
-  final Chat chat;
+  DetailedMatch match;
 
-  _MessageListState(this.chat);
+  _MessageListState(this.match);
 
   @override
   void initState() {
@@ -30,14 +30,14 @@ class _MessageListState extends State<MessageList> {
       double currentScroll = listScrollController.position.pixels;
       if (maxScroll == currentScroll) {
         BlocProvider.of<MessageBloc>(context)
-            .add(FetchPreviousMessagesEvent(this.chat, messages.last));
+            .add(FetchPreviousMessagesEvent(this.match, messages.last));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final userId = chat.userId.firstWhere((id) =>
+    final userId = match.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
     // TODO: implement build
     return BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {

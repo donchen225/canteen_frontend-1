@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/models/chat/message_entity.dart';
+import 'package:canteen_frontend/models/message/message_entity.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 

@@ -41,15 +41,17 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     if (event is LoadUserProfile) {
       yield* _mapLoadUserProfileToState(event.user);
     } else if (event is EditAboutSection) {
-      yield* _mapEditAboutSectionToState(event.user);
+      yield* _mapEditAboutSectionToState(event);
     } else if (event is UpdateAboutSection) {
-      yield* _mapUpdateAboutSectionToState(event.about);
+      yield* _mapUpdateAboutSectionToState(event);
     } else if (event is EditSkill) {
       yield* _mapEditTeachSkillToState(
           event.user, event.skillType, event.skillIndex);
     } else if (event is UpdateSkill) {
       yield* _mapUpdateTeachSkillToState(
           event.skill, event.skillType, event.skillIndex);
+    } else if (event is UpdateName) {
+      yield* _mapUpdateNameToState(event);
     }
   }
 
@@ -57,12 +59,19 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     yield UserProfileLoaded(user);
   }
 
-  Stream<UserProfileState> _mapEditAboutSectionToState(User user) async* {
-    yield UserProfileEditingAbout(user);
+  Stream<UserProfileState> _mapEditAboutSectionToState(
+      EditAboutSection event) async* {
+    yield UserProfileEditingAbout(event.user);
   }
 
-  Stream<UserProfileState> _mapUpdateAboutSectionToState(String about) async* {
-    final updatedUser = _userRepository.updateAbout(about);
+  Stream<UserProfileState> _mapUpdateAboutSectionToState(
+      UpdateAboutSection event) async* {
+    final updatedUser = _userRepository.updateAbout(event.about);
+    yield UserProfileLoaded(updatedUser);
+  }
+
+  Stream<UserProfileState> _mapUpdateNameToState(UpdateName event) async* {
+    final updatedUser = _userRepository.updateAbout(event.name);
     yield UserProfileLoaded(updatedUser);
   }
 
