@@ -69,9 +69,15 @@ class DetailedMatch extends Match {
       @required id,
       @required status,
       @required createdOn,
+      @required lastUpdated,
       @required this.userList,
       this.lastMessage})
-      : super(userId: userId, id: id, status: status, createdOn: createdOn);
+      : super(
+            userId: userId,
+            id: id,
+            status: status,
+            lastUpdated: lastUpdated,
+            createdOn: createdOn);
 
   static DetailedMatch fromMatch(Match match, List<User> userList,
       {Message lastMessage}) {
@@ -81,6 +87,7 @@ class DetailedMatch extends Match {
         status: match.status,
         createdOn: match.createdOn,
         userList: userList,
+        lastUpdated: match.lastUpdated,
         lastMessage: lastMessage);
   }
 }

@@ -76,7 +76,8 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     yield MatchesLoading();
     final updatedMatches = event.updates;
     final messageListFuture = Future.wait(updatedMatches.map((update) {
-      if (update.item1 == DocumentChangeType.modified) {
+      if (update.item1 == DocumentChangeType.modified ||
+          update.item1 == DocumentChangeType.added) {
         return _matchRepository
             .getMessage(update.item2.id, update.item2.lastUpdated)
             .catchError((w) => Future<Message>.value(null));
@@ -102,19 +103,21 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       List<User> users = userList[i];
       Tuple2<DocumentChangeType, Match> update = updatedMatches[i];
 
-      // TODO: set a message on initial match
-      if (update.item1 == DocumentChangeType.added) {
-        final detailedMatch = DetailedMatch.fromMatch(update.item2, users);
-        _matchRepository.saveMatch(update.item2);
-        _matchRepository.saveDetailedMatch(detailedMatch);
-      } else if (update.item1 == DocumentChangeType.modified) {
+      // TODO: set a message on initial match (with no messages sent)
+      if (update.item1 == DocumentChangeType.added ||
+          update.item1 == DocumentChangeType.modified) {
         Message message = messageList[i];
         final detailedMatch =
             DetailedMatch.fromMatch(update.item2, users, lastMessage: message);
-        _matchRepository.updateMatch(update.item1, update.item2);
-        _matchRepository.updateDetailedMatch(update.item1, detailedMatch);
+
+        print('CHECKING DETAILED MATCH');
+        print(detailedMatch.lastUpdated);
+        if (update.item1 == DocumentChangeType.added) {
+          _matchRepository.saveDetailedMatch(detailedMatch);
+        } else {
+          _matchRepository.updateDetailedMatch(update.item1, detailedMatch);
+        }
       } else if (update.item1 == DocumentChangeType.removed) {
-        _matchRepository.updateMatch(update.item1, update.item2);
         _matchRepository.updateDetailedMatch(update.item1, update.item2);
       }
     }

@@ -19,6 +19,8 @@ abstract class MessageEntity extends Equatable {
 
   factory MessageEntity.fromSnapshot(DocumentSnapshot snapshot) {
     final int type = snapshot.data['type'];
+    print(snapshot.data['type']);
+    print(snapshot.data['text']);
     MessageEntity message;
     switch (type) {
       case 0:

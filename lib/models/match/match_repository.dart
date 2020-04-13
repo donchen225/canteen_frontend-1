@@ -12,39 +12,27 @@ import 'package:tuple/tuple.dart';
 class MatchRepository {
   final matchCollection = Firestore.instance.collection('matches');
   static const String messages = "messages";
-  List<Match> _matches = [];
   List<DetailedMatch> _detailedMatches = [];
 
   MatchRepository();
-
-  List<Match> currentMatches() {
-    return _matches;
-  }
 
   List<DetailedMatch> currentDetailedMatches() {
     return _detailedMatches;
   }
 
   void clearMatches() {
-    _matches = [];
     _detailedMatches = [];
   }
 
-  void saveMatch(Match match) {
-    _matches.insert(0, match);
-  }
-
+  // TODO: improve this PLEASE
   void saveDetailedMatch(DetailedMatch match) {
-    _detailedMatches.insert(0, match);
-  }
-
-  void updateMatch(DocumentChangeType type, Match match) {
-    if (type == DocumentChangeType.modified) {
-      _matches.removeWhere((match) => match.id == match.id);
-      _matches.insert(0, match);
-    } else if (type == DocumentChangeType.removed) {
-      _matches.removeWhere((match) => match.id == match.id);
+    var idx = 0;
+    while (idx < _detailedMatches.length) {
+      if (match.lastUpdated.isBefore(_detailedMatches[idx].lastUpdated)) {
+        idx++;
+      }
     }
+    _detailedMatches.insert(idx, match);
   }
 
   void updateDetailedMatch(DocumentChangeType type, Match match) {
@@ -82,6 +70,8 @@ class MatchRepository {
   }
 
   Future<Message> getMessage(String matchId, DateTime dateTime) {
+    print('GETTING MESSAGE');
+    print('MATCH ID: $matchId');
     try {
       return matchCollection
           .document(matchId)
@@ -90,9 +80,10 @@ class MatchRepository {
           .limit(1)
           .getDocuments()
           .then((doc) {
-        return Message.fromEntity(
-          MessageEntity.fromSnapshot(doc.documents.first),
-        );
+        print('GOT DOCUMENTS: ${doc.documents.first}');
+        return Message.fromEntity(MessageEntity.fromSnapshot(
+          doc.documents.first,
+        ));
       });
     } catch (e) {
       print("ERROR: NO MESSAGE FOUND - $e");
