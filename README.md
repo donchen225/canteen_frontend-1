@@ -12,6 +12,7 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 ## Getting Started
 
 1. Clone the repo.
+2. Set environment variables in `.env`.
 2. Start the iOS simulator.
 3. Run in debug mode in your IDE of choice.
     * In VSCode, press F5.
