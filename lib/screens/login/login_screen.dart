@@ -8,8 +8,8 @@ import 'login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   final UserRepository _userRepository;
-  final Color gradientStart = Colors.deepPurple[600];
-  final Color gradientEnd = Colors.purple[400];
+  final Color gradientStart = Colors.deepOrange[600];
+  final Color gradientEnd = Colors.orange[500];
 
   LoginScreen({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
