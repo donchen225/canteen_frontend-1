@@ -38,7 +38,6 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
-    double dragStart = 0;
     super.build(context);
     return SafeArea(
         child: Scaffold(
