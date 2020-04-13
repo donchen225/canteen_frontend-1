@@ -41,7 +41,6 @@ class _MessageListState extends State<MessageList> {
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
     // TODO: implement build
     return BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
-      print(state);
       if (state is FetchedMessagesState) {
         print('Received Messages');
         if (state.userId == userId) {

@@ -22,7 +22,6 @@ class MatchItem extends StatelessWidget {
 
     if (match.lastMessage is TextMessage) {
       displayMessage = (match.lastMessage as TextMessage).text;
-      print(displayMessage);
     }
 
     return ListTile(

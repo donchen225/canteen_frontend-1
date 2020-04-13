@@ -70,8 +70,6 @@ class MatchRepository {
   }
 
   Future<Message> getMessage(String matchId, DateTime dateTime) {
-    print('GETTING MESSAGE');
-    print('MATCH ID: $matchId');
     try {
       return matchCollection
           .document(matchId)
@@ -80,7 +78,6 @@ class MatchRepository {
           .limit(1)
           .getDocuments()
           .then((doc) {
-        print('GOT DOCUMENTS: ${doc.documents.first}');
         return Message.fromEntity(MessageEntity.fromSnapshot(
           doc.documents.first,
         ));

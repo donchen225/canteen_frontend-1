@@ -17,10 +17,8 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
         assert(userRepository != null),
         _matchBloc = matchBloc,
         _userRepository = userRepository {
-    print('MATCH LIST CONSTRUCTOR');
     _matchSubscription = matchBloc.listen((state) {
       if (state is MatchesLoaded) {
-        print('RECEIVED MATCHESLOADED INSIDE MATCH LIST');
         add(LoadMatchList((matchBloc.state as MatchesLoaded).matches));
       }
     });
