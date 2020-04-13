@@ -50,6 +50,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     } else if (event is UpdateSkill) {
       yield* _mapUpdateTeachSkillToState(
           event.skill, event.skillType, event.skillIndex);
+    } else if (event is EditName) {
+      yield* _mapEditNameToState(event);
     } else if (event is UpdateName) {
       yield* _mapUpdateNameToState(event);
     }
@@ -70,8 +72,12 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     yield UserProfileLoaded(updatedUser);
   }
 
+  Stream<UserProfileState> _mapEditNameToState(EditName event) async* {
+    yield UserProfileEditingName(event.user);
+  }
+
   Stream<UserProfileState> _mapUpdateNameToState(UpdateName event) async* {
-    final updatedUser = _userRepository.updateAbout(event.name);
+    final updatedUser = _userRepository.updateName(event.name);
     yield UserProfileLoaded(updatedUser);
   }
 

@@ -39,18 +39,4 @@ abstract class UpdateUser extends UserEvent {
   const UpdateUser(this.id);
 }
 
-class UpdateUserDisplayName extends UpdateUser {
-  final String id;
-  final String displayName;
-
-  const UpdateUserDisplayName(this.id, this.displayName) : super(id);
-
-  @override
-  List<Object> get props => [id, displayName];
-
-  @override
-  String toString() =>
-      'UpdateUserDisplayName { id: $id, displayName: $displayName }';
-}
-
 class LogOutUser extends UserEvent {}

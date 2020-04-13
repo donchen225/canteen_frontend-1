@@ -65,6 +65,18 @@ class UpdateAboutSection extends UserProfileEvent {
       'UpdateAboutSection { user: ${user.toString()} about: $about }';
 }
 
+class EditName extends UserProfileEvent {
+  final User user;
+
+  const EditName(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'EditName { user: ${user.toString()} }';
+}
+
 class UpdateName extends UserProfileEvent {
   final User user;
   final String name;

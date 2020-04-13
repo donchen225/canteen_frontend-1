@@ -76,14 +76,6 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> updateDisplayName(String id, String name) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(id), {
-        "display_name": name,
-      });
-    });
-  }
-
   User updateAbout(String about) {
     final updatedUser = _user.updateAbout(about);
     _updateAbout(about);
@@ -95,6 +87,21 @@ class FirebaseUserRepository extends UserRepository {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "about": about,
+      });
+    });
+  }
+
+  User updateName(String name) {
+    final updatedUser = _user.updateName(name);
+    _updateDisplayName(name);
+
+    return updatedUser;
+  }
+
+  Future<void> _updateDisplayName(String name) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(userCollection.document(_firebaseUser.uid), {
+        "display_name": name,
       });
     });
   }

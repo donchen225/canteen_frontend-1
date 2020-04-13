@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
+  final String field;
 
-  EditProfileScreen({@required this.user});
+  EditProfileScreen({@required this.user, @required this.field});
 
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
@@ -14,10 +15,12 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   UserProfileBloc _userProfileBloc;
   TextEditingController _textController;
+  String fieldName;
 
   @override
   void initState() {
     super.initState();
+    fieldName = widget.field[0].toUpperCase() + widget.field.substring(1);
 
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
     _textController = TextEditingController();
@@ -25,7 +28,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _textController.text = widget.user.about;
+    if (widget.field == 'about') {
+      _textController.text = widget.user.about;
+    } else if (widget.field == 'name') {
+      _textController.text = widget.user.displayName;
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -42,14 +50,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            Text('Edit About'),
+            Text('Edit ' + fieldName),
             GestureDetector(
               onTap: () {
-                if (widget.user.about != _textController.text) {
-                  _userProfileBloc.add(
-                      UpdateAboutSection(widget.user, _textController.text));
-                } else {
-                  _userProfileBloc.add(LoadUserProfile(widget.user));
+                if (widget.field == 'about') {
+                  if (widget.user.about != _textController.text) {
+                    _userProfileBloc.add(
+                        UpdateAboutSection(widget.user, _textController.text));
+                  } else {
+                    _userProfileBloc.add(LoadUserProfile(widget.user));
+                  }
+                } else if (widget.field == 'name') {
+                  if (widget.user.displayName != _textController.text) {
+                    _userProfileBloc
+                        .add(UpdateName(widget.user, _textController.text));
+                  } else {
+                    _userProfileBloc.add(LoadUserProfile(widget.user));
+                  }
                 }
               },
               child: Text(

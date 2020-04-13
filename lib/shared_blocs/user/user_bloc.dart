@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -44,8 +43,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield* _mapInitializeUserToState(event.firebaseUser);
     } else if (event is LoadUser) {
       yield* _mapLoadUserToState(event.user);
-    } else if (event is UpdateUserDisplayName) {
-      yield* _mapUpdateUserDisplayNameToState(event.id, event.displayName);
     } else if (event is LogOutUser) {
       yield* _mapLogOutToState();
     }
@@ -66,12 +63,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   // update data if new
   Stream<UserState> _mapLoadUserToState(User user) async* {
     yield UserLoaded(user);
-  }
-
-  Stream<UserState> _mapUpdateUserDisplayNameToState(
-      String id, String name) async* {
-    await _userRepository.updateDisplayName(id, name);
-    yield UserLoaded(await _userRepository.currentUser());
   }
 
   Stream<UserState> _mapLogOutToState() async* {

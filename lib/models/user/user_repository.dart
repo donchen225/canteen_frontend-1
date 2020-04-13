@@ -31,7 +31,7 @@ abstract class UserRepository {
 
   Future<void> updateUserSignInTime(FirebaseUser user) async {}
 
-  Future<void> updateDisplayName(String id, String name) async {}
+  User updateName(String name) {}
 
   User updateAbout(String updatedText) {}
 

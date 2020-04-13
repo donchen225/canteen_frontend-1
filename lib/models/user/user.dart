@@ -85,6 +85,24 @@ class User {
     );
   }
 
+  User updateName(String updatedText) {
+    return User(
+      providerId,
+      id,
+      displayName: updatedText,
+      about: about,
+      photoUrl: photoUrl,
+      learnSkill: learnSkill,
+      teachSkill: teachSkill,
+      email: email,
+      phoneNumber: phoneNumber,
+      creationTimestamp: creationTimestamp,
+      lastSignInTimestamp: lastSignInTimestamp,
+      isAnonymous: isAnonymous,
+      isEmailVerified: isEmailVerified,
+    );
+  }
+
   User updateTeachSkill(Skill skill, int index) {
     var teachSkills = teachSkill;
     if (teachSkills.length == index) {
