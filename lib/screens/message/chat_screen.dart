@@ -38,33 +38,43 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
+    double dragStart = 0;
     super.build(context);
     return SafeArea(
         child: Scaffold(
       key: _scaffoldKey,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: Stack(
-            children: <Widget>[
-              Container(
-                color: Colors.white,
-                child: MessageList(match),
-              ),
-            ],
-          )),
-          ChatInput(),
-          // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
-          //   if (state is UnConfigState)
-          //     configMessagePeek =
-          //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
-          //   if (state is ConfigChangeState) if (state.key ==
-          //       Constants.configMessagePeek) configMessagePeek = state.value;
-          //   return GestureDetector(
-          //     child: ChatInput(),
-          //   );
-          // })
-        ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Column(
+          children: <Widget>[
+            Expanded(
+                child: Stack(
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  child: MessageList(match),
+                ),
+              ],
+            )),
+            ChatInput(),
+            // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
+            //   if (state is UnConfigState)
+            //     configMessagePeek =
+            //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
+            //   if (state is ConfigChangeState) if (state.key ==
+            //       Constants.configMessagePeek) configMessagePeek = state.value;
+            //   return GestureDetector(
+            //     child: ChatInput(),
+            //   );
+            // })
+          ],
+        ),
       ),
     ));
   }
