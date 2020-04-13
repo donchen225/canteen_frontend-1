@@ -37,7 +37,7 @@ class MatchRepository {
 
   void updateDetailedMatch(DocumentChangeType type, Match match) {
     if (type == DocumentChangeType.modified) {
-      _detailedMatches.removeWhere((match) => match.id == match.id);
+      _detailedMatches.removeWhere((m) => m.id == match.id);
       _detailedMatches.insert(0, match);
     } else if (type == DocumentChangeType.removed) {
       _detailedMatches.removeWhere((match) => match.id == match.id);

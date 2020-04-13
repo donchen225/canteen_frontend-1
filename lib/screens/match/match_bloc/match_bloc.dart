@@ -110,8 +110,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         final detailedMatch =
             DetailedMatch.fromMatch(update.item2, users, lastMessage: message);
 
-        print('CHECKING DETAILED MATCH');
-        print(detailedMatch.lastUpdated);
         if (update.item1 == DocumentChangeType.added) {
           _matchRepository.saveDetailedMatch(detailedMatch);
         } else {
