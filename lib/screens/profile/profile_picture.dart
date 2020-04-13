@@ -8,12 +8,14 @@ class ProfilePicture extends StatelessWidget {
   final ImageProvider localPicture;
   final bool editable;
   final double size;
+  final Function onTap;
 
   ProfilePicture(
       {@required this.photoUrl,
       @required this.localPicture,
       @required this.editable,
-      this.size = 160});
+      this.size = 160,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,10 @@ class ProfilePicture extends StatelessWidget {
       child: editable
           ? Align(
               alignment: Alignment.bottomRight,
-              child: AddIcon(size),
+              child: AddIcon(
+                size,
+                onTap: onTap != null ? onTap : () {},
+              ),
             )
           : Container(),
     );

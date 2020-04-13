@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
@@ -55,6 +56,64 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     setState(() => _imageFile = null);
   }
 
+  void showPopUpSheet(User user) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: Text(
+          'Change Profile Photo',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        actions: <Widget>[
+          // TODO: implement this
+          CupertinoActionSheetAction(
+            onPressed: () {},
+            child: Text(
+              'Remove Current Photo',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () =>
+                _pickImage(ImageSource.camera).then((nothing) async {
+              setState(() {
+                _profilePicture = FileImage(_imageFile);
+              });
+              CloudStorage().upload(_imageFile, user.id).then((task) async {
+                final downloadUrl = (await task.onComplete);
+                final String url = (await downloadUrl.ref.getDownloadURL());
+                widget._userRepository.updatePhoto(url);
+              });
+            }),
+            child: Text(
+              'Take Photo',
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () =>
+                _pickImage(ImageSource.gallery).then((nothing) async {
+              setState(() {
+                _profilePicture = FileImage(_imageFile);
+              });
+              CloudStorage().upload(_imageFile, user.id).then((task) async {
+                final downloadUrl = (await task.onComplete);
+                final String url = (await downloadUrl.ref.getDownloadURL());
+                widget._userRepository.updatePhoto(url);
+              });
+            }),
+            child: Text(
+              'Choose from Library',
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
@@ -103,80 +162,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
-                            showCupertinoModalPopup(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  CupertinoActionSheet(
-                                title: Text(
-                                  'Change Profile Photo',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  // TODO: implement this
-                                  CupertinoActionSheetAction(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'Remove Current Photo',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                  CupertinoActionSheetAction(
-                                    onPressed: () =>
-                                        _pickImage(ImageSource.camera)
-                                            .then((nothing) async {
-                                      setState(() {
-                                        _profilePicture = FileImage(_imageFile);
-                                      });
-                                      CloudStorage()
-                                          .upload(_imageFile, user.id)
-                                          .then((task) async {
-                                        final downloadUrl =
-                                            (await task.onComplete);
-                                        final String url = (await downloadUrl
-                                            .ref
-                                            .getDownloadURL());
-                                        widget._userRepository.updatePhoto(url);
-                                      });
-                                    }),
-                                    child: Text(
-                                      'Take Photo',
-                                    ),
-                                  ),
-                                  CupertinoActionSheetAction(
-                                    onPressed: () =>
-                                        _pickImage(ImageSource.gallery)
-                                            .then((nothing) async {
-                                      setState(() {
-                                        _profilePicture = FileImage(_imageFile);
-                                      });
-                                      CloudStorage()
-                                          .upload(_imageFile, user.id)
-                                          .then((task) async {
-                                        final downloadUrl =
-                                            (await task.onComplete);
-                                        final String url = (await downloadUrl
-                                            .ref
-                                            .getDownloadURL());
-                                        widget._userRepository.updatePhoto(url);
-                                      });
-                                    }),
-                                    child: Text(
-                                      'Choose from Library',
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
+                            showPopUpSheet(user);
                           },
                           child: ProfilePicture(
                             photoUrl: user.photoUrl,
                             localPicture: _profilePicture,
                             editable: true,
                             size: 160,
+                            onTap: () => showPopUpSheet(user),
                           ),
                         ),
                       ],

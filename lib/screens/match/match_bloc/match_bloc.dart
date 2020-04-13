@@ -122,12 +122,14 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   }
 
   Stream<MatchState> _mapClearMatchesToState() async* {
+    _matchRepository.clearMatches();
     _matchSubscription?.cancel();
     yield MatchesNotLoaded();
   }
 
   @override
   Future<void> close() {
+    _matchRepository.clearMatches();
     _matchSubscription?.cancel();
     return super.close();
   }
