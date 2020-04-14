@@ -17,8 +17,15 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
         if (state is RecommendedLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is RecommendedLoaded) {
-          final user = state.userList[0];
+          final user = state.user;
           return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                BlocProvider.of<RecommendedBloc>(context)
+                    .add(NextRecommended());
+              },
+              child: Icon(Icons.clear),
+            ),
             body: Padding(
               padding: EdgeInsets.only(top: 20),
               child: ProfileList(
@@ -28,6 +35,10 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
               ),
             ),
           );
+        } else if (state is RecommendedEmpty) {
+          return Center(child: Text('OUT OF RECOMMENDATIONS'));
+        } else if (state is RecommendedUnavailable) {
+          return Center(child: Text('NO RECOMMENDATIONS AVAILABLE'));
         }
       },
     );

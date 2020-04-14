@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     setState(() {
       if (_selectedIndex == index) {
-        if (_selectedIndex == 0) {
+        if (_selectedIndex == 1) {
           BlocProvider.of<SearchBloc>(context).add(SearchCleared());
         } else if (_selectedIndex == 2) {
           BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());

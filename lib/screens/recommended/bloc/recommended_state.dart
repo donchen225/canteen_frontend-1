@@ -11,17 +11,19 @@ abstract class RecommendedState extends Equatable {
 class RecommendedLoading extends RecommendedState {}
 
 class RecommendedLoaded extends RecommendedState {
-  final List<User> userList;
+  final User user;
 
-  const RecommendedLoaded(this.userList);
+  const RecommendedLoaded(this.user);
 
   @override
-  List<Object> get props => [userList];
+  List<Object> get props => [user];
 
   @override
   String toString() {
-    return 'RecommendedLoaded { userList: $userList }';
+    return 'RecommendedLoaded { user: $user }';
   }
 }
 
 class RecommendedEmpty extends RecommendedState {}
+
+class RecommendedUnavailable extends RecommendedState {}
