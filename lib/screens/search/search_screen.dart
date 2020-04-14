@@ -31,12 +31,14 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       );
     } else if (state is SearchShowProfile) {
-      return ProfileList(
-        state.user,
-        key: Key('search-show-profile'),
-        height: 100,
-        showName: true,
-      );
+      return CustomScrollView(slivers: <Widget>[
+        ProfileList(
+          state.user,
+          key: Key('search-show-profile'),
+          height: 100,
+          showName: true,
+        ),
+      ]);
     } else if (state is SearchCompleteNoResults) {
       return SearchEmptyResults();
     }
