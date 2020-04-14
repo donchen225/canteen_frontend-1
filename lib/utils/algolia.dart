@@ -23,7 +23,8 @@ class AlgoliaSearch {
   }
 
   static Future<AlgoliaQuerySnapshot> query(String searchTerm) async {
-    AlgoliaQuery query = _algolia.instance.index('users').search(searchTerm);
+    AlgoliaQuery query =
+        _algolia.instance.index('users_dev').search(searchTerm);
     return query.getObjects();
   }
 }

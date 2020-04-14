@@ -1,4 +1,6 @@
+import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_entity.dart';
 import 'package:meta/meta.dart';
 
@@ -18,9 +20,9 @@ class User {
   final bool isAnonymous;
   final bool isEmailVerified;
 
-  User(
+  User({
     this.providerId,
-    this.id, {
+    this.id,
     this.displayName = '',
     this.about = '',
     this.photoUrl = '',
@@ -51,8 +53,8 @@ class User {
         .toList();
 
     return User(
-      entity.providerId,
-      entity.id,
+      providerId: entity.providerId,
+      id: entity.id,
       displayName: entity.displayName,
       about: entity.about,
       photoUrl: entity.photoUrl,
@@ -67,10 +69,27 @@ class User {
     );
   }
 
+  static User fromAlgoliaSnapshot(AlgoliaObjectSnapshot snapshot) {
+    return User(
+      id: snapshot.objectID,
+      displayName: snapshot.data['display_name'],
+      photoUrl: snapshot.data['photo_url'],
+      about: snapshot.data['about'],
+      learnSkill: snapshot.data['learn_skill']
+          .map<Skill>((skill) =>
+              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .toList(),
+      teachSkill: snapshot.data['teach_skill']
+          .map<Skill>((skill) =>
+              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .toList(),
+    );
+  }
+
   User updateAbout(String updatedText) {
     return User(
-      providerId,
-      id,
+      providerId: providerId,
+      id: id,
       displayName: displayName,
       about: updatedText,
       photoUrl: photoUrl,
@@ -87,8 +106,8 @@ class User {
 
   User updateName(String updatedText) {
     return User(
-      providerId,
-      id,
+      providerId: providerId,
+      id: id,
       displayName: updatedText,
       about: about,
       photoUrl: photoUrl,
@@ -112,8 +131,8 @@ class User {
     }
 
     return User(
-      providerId,
-      id,
+      providerId: providerId,
+      id: id,
       displayName: displayName,
       about: about,
       photoUrl: photoUrl,
@@ -137,8 +156,8 @@ class User {
     }
 
     return User(
-      providerId,
-      id,
+      providerId: providerId,
+      id: id,
       displayName: displayName,
       about: about,
       photoUrl: photoUrl,

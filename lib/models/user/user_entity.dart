@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
