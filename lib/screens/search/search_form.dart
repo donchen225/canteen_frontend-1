@@ -1,17 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchForm extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  SearchForm({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
+  SearchForm({Key key}) : super(key: key);
 
   State<SearchForm> createState() => _SearchFormState();
 }

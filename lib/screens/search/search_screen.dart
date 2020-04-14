@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_event.dart';
 import 'package:canteen_frontend/screens/prospect_profile/prospect_profile_screen.dart';
@@ -8,10 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchScreen extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  SearchScreen({@required UserRepository userRepository})
-      : _userRepository = userRepository;
+  SearchScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class SearchScreen extends StatelessWidget {
             },
             child: state is SearchShowProfile
                 ? ProspectProfileScreen()
-                : SearchForm(userRepository: _userRepository),
+                : SearchForm(),
           );
         },
       ),

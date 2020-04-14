@@ -43,9 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     widgetOptions = [
       RecommendedScreen(),
-      SearchScreen(
-        userRepository: widget._userRepository,
-      ),
+      SearchScreen(),
       RequestScreen(),
       MatchListScreen(
         matchRepository: MatchRepository(),
