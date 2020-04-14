@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
+import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,7 @@ void main() async {
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
   await CachedSharedPreferences.getInstance();
+  AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 

@@ -43,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
       SearchScreen(
         userRepository: widget._userRepository,
       ),
+      SearchScreen(
+        userRepository: widget._userRepository,
+      ),
       RequestScreen(),
       MatchListScreen(
         matchRepository: MatchRepository(),
@@ -59,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_selectedIndex == index) {
         if (_selectedIndex == 0) {
           BlocProvider.of<SearchBloc>(context).add(SearchCleared());
-        } else if (_selectedIndex == 1) {
+        } else if (_selectedIndex == 2) {
           BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
         }
       }
@@ -78,25 +81,31 @@ class _HomeScreenState extends State<HomeScreen> {
           highlightColor: Colors.transparent,
         ),
         child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
           selectedFontSize: 12,
           unselectedFontSize: 12,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text(''),
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.search),
-              title: Text('Search'),
+              title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.offline_bolt),
-              title: Text('Requests'),
+              title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
-              title: Text('Matches'),
+              title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              title: Text('Profile'),
+              title: Text(''),
             ),
           ],
           currentIndex: _selectedIndex,
