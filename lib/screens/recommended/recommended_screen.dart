@@ -19,6 +19,9 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
         } else if (state is RecommendedLoaded) {
           final user = state.userList[0];
           return Scaffold(
+            appBar: AppBar(
+              title: Text(user.displayName ?? ''),
+            ),
             body: ProfileList(
               user,
               height: 100,
