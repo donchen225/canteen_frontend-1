@@ -2,6 +2,7 @@ import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_empty_results.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,11 +33,17 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else if (state is SearchShowProfile) {
       return CustomScrollView(slivers: <Widget>[
-        ProfileList(
-          state.user,
-          key: Key('search-show-profile'),
-          height: 100,
-          showName: true,
+        SliverPadding(
+          padding: EdgeInsets.only(
+              bottom: SizeConfig.instance.blockSizeVertical * 13,
+              left: SizeConfig.instance.blockSizeHorizontal * 3,
+              right: SizeConfig.instance.blockSizeHorizontal * 3),
+          sliver: ProfileList(
+            state.user,
+            key: Key('search-show-profile'),
+            height: 100,
+            showName: true,
+          ),
         ),
       ]);
     } else if (state is SearchCompleteNoResults) {
