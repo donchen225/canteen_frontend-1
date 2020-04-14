@@ -45,10 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       RecommendedScreen(),
       SearchScreen(),
       RequestScreen(),
-      MatchListScreen(
-        matchRepository: MatchRepository(),
-        userRepository: widget._userRepository,
-      ),
+      MatchListScreen(),
       UserProfileScreen(
         userRepository: widget._userRepository,
       ),
