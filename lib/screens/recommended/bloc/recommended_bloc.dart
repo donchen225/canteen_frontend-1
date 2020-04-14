@@ -28,8 +28,12 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   }
 
   Stream<RecommendedState> _mapLoadRecommendedToState() async* {
-    print('IN RECOMMENDED STATE');
-    // final user = _userRepository.currentUserNow();
+    final user = _userRepository.currentUserNow();
+
+    if (user.teachSkill.isEmpty && user.learnSkill.isEmpty) {
+      yield RecommendedUnavailable();
+    }
+
     final snapshot = await AlgoliaSearch.query('yoga');
     final recommendations = snapshot.hits
         .map((result) => User.fromAlgoliaSnapshot(result))
