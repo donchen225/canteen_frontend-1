@@ -8,16 +8,16 @@ abstract class SearchState extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchEmpty extends SearchState {
+class SearchUninitialized extends SearchState {
   final List<User> allUsers;
 
-  const SearchEmpty(this.allUsers);
+  const SearchUninitialized(this.allUsers);
 
   @override
   List<Object> get props => [allUsers];
 
   @override
-  String toString() => 'SearchEmpty { ${allUsers.toString()} }';
+  String toString() => 'SearchUninitialized';
 }
 
 class SearchLoading extends SearchState {}

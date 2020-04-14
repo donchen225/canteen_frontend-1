@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,11 @@ class _SearchFormState extends State<SearchForm> {
                       border: InputBorder.none,
                       hintText: "Search",
                     ),
+                    onSubmitted: (query) {
+                      print('SUBMITTED: $query');
+                      BlocProvider.of<SearchBloc>(context)
+                          .add(SearchStarted(query));
+                    },
                   ),
                 ),
               ),
@@ -68,7 +74,7 @@ class _SearchFormState extends State<SearchForm> {
             print('IN SEARCH FORM');
             if (state is SearchLoading) {
               return Center(child: CircularProgressIndicator());
-            } else if (state is SearchEmpty) {
+            } else if (state is SearchUninitialized) {
               return ProfileGrid(
                 state.allUsers,
                 onTap: (user) {
@@ -76,40 +82,16 @@ class _SearchFormState extends State<SearchForm> {
                       .add(SearchInspectUser(user));
                 },
               );
-            } else if (state is SearchCompleteWithResults) {
-              return ListView.builder(
-                itemCount: state.userList.length,
-                itemBuilder: (context, index) {
-                  final user = state.userList[index];
-
-                  return GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<SearchBloc>(context)
-                          .add(SearchInspectUser(user));
-                    },
-                    child: ListTile(
-                      leading: Container(
-                        width: 50, // TODO: change this to be dynamic
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: (user.photoUrl != null &&
-                                    user.photoUrl.isNotEmpty)
-                                ? CachedNetworkImageProvider(user.photoUrl)
-                                : AssetImage(
-                                    'assets/blank-profile-picture.jpeg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      title: Text(user.displayName ?? ''),
-                    ),
-                  );
-                },
+            } else if (state is SearchShowProfile) {
+              return ProfileList(
+                state.user,
+                height: 100,
+                showName: true,
               );
-            } else {
-              return Container();
+            } else if (state is SearchCompleteNoResults) {
+              return Center(
+                child: Text(state.message),
+              );
             }
           },
         ),

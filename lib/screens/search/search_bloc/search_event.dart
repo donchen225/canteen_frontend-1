@@ -11,16 +11,16 @@ abstract class SearchEvent extends Equatable {
 class SearchCleared extends SearchEvent {}
 
 class SearchStarted extends SearchEvent {
-  final String identifier;
+  final String query;
 
-  const SearchStarted(this.identifier);
+  const SearchStarted(this.query);
 
   @override
-  List<Object> get props => [identifier];
+  List<Object> get props => [query];
 
   @override
   String toString() {
-    return 'SearchStarted { identifier: $identifier }';
+    return 'SearchStarted { query: $query }';
   }
 }
 
