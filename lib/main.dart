@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -76,6 +77,13 @@ void main() async {
           create: (context) {
             return MessageBloc(
               matchRepository: matchRepository,
+              userRepository: userRepository,
+            );
+          },
+        ),
+        BlocProvider<RecommendedBloc>(
+          create: (context) {
+            return RecommendedBloc(
               userRepository: userRepository,
             );
           },

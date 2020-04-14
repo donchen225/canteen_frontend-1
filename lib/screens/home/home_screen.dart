@@ -2,6 +2,8 @@ import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/recommended_state.dart';
+import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -40,9 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _strangersButtonColor = Colors.white;
 
     widgetOptions = [
-      SearchScreen(
-        userRepository: widget._userRepository,
-      ),
+      RecommendedScreen(),
       SearchScreen(
         userRepository: widget._userRepository,
       ),

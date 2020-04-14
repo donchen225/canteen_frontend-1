@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/request/request_repository.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
