@@ -243,8 +243,10 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
 
     return collectionIndex.setSettings({
         searchableAttributes: [
-            'unordered(teach_skill.name,learn_skill.name)',
-            'teach_skill.description,learn_skill.description',
+            'teach_skill.name',
+            'learn_skill.name',
+            'teach_skill.description',
+            'learn_skill.description',
         ]
     }).then(() => {
         res.status(200).send("Algolia search attributes set successfully.");

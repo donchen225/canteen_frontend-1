@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_event.dart';
@@ -28,17 +30,26 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   }
 
   Stream<RecommendedState> _mapLoadRecommendedToState() async* {
-    final user = _userRepository.currentUserNow();
+    final user = await _userRepository.currentUser();
 
     if (user.teachSkill.isEmpty && user.learnSkill.isEmpty) {
       yield RecommendedUnavailable();
     }
 
-    final snapshot = await AlgoliaSearch.query('yoga');
-    final recommendations = snapshot.hits
-        .map((result) => User.fromAlgoliaSnapshot(result))
-        .toList();
-    _recommendations.addAll(recommendations);
+    final learnQueries = user.teachSkill
+        .map((skill) => AlgoliaSearch.queryLearnSkill(skill.name));
+    final teachQueries = user.learnSkill
+        .map((skill) => AlgoliaSearch.queryTeachSkill(skill.name));
+    final snapshots = learnQueries.followedBy(teachQueries);
+
+    final recommendations = (await Future.wait(snapshots.map((snap) async =>
+            (await snap)
+                .hits
+                .map((result) => User.fromAlgoliaSnapshot(result)))))
+        .expand((x) => x);
+    final distnctRecommendations =
+        LinkedHashSet<User>.from(recommendations).toList();
+    _recommendations.addAll(distnctRecommendations);
 
     if (_currentIndex < _recommendations.length) {
       yield RecommendedLoaded(_recommendations[_currentIndex]);

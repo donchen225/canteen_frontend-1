@@ -11,4 +11,7 @@ const double maxPhotoWidth = 200;
 const double maxPhotoHeight = 200;
 const int photoQuality = 70;
 
+// Algolia constants
+const String algoliaIndexName = 'users_dev';
+
 // Theme constants
