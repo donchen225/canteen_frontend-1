@@ -88,6 +88,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               setState(() {
                 _profilePicture = FileImage(_imageFile);
               });
+              // TODO: move this to BLoC
               CloudStorage().upload(_imageFile, user.id).then((task) async {
                 final downloadUrl = (await task.onComplete);
                 final String url = (await downloadUrl.ref.getDownloadURL());
