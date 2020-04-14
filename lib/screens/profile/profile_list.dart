@@ -17,55 +17,50 @@ class ProfileList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[100],
-      child: Padding(
-        padding: EdgeInsets.only(left: 20, right: 20),
-        child: ListView(
-          children: <Widget>[
-            Visibility(
-              visible: showName,
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Center(
-                    child: Text(
-                  user.displayName ?? '',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-                )),
-              ),
+    return SliverList(
+      delegate: SliverChildListDelegate.fixed(
+        [
+          Visibility(
+            visible: showName,
+            child: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Center(
+                  child: Text(
+                user.displayName ?? '',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+              )),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: ProfilePicture(
-                    photoUrl: user.photoUrl,
-                    localPicture:
-                        AssetImage('assets/blank-profile-picture.jpeg'),
-                    editable: false,
-                    size: 160,
-                  ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
+                child: ProfilePicture(
+                  photoUrl: user.photoUrl,
+                  localPicture: AssetImage('assets/blank-profile-picture.jpeg'),
+                  editable: false,
+                  size: 160,
                 ),
-              ],
-            ),
-            ProfileSectionTitle('About'),
-            ProfileTextCard(
-              child: Container(
-                height: height,
-                child: Text(user.about ?? ''),
               ),
+            ],
+          ),
+          ProfileSectionTitle('About'),
+          ProfileTextCard(
+            child: Container(
+              height: height,
+              child: Text(user.about ?? ''),
             ),
-            ProfileSectionTitle("I'm teaching"),
-            SkillList(
-              user.teachSkill,
-            ),
-            ProfileSectionTitle("I'm learning"),
-            SkillList(
-              user.learnSkill,
-            ),
-          ],
-        ),
+          ),
+          ProfileSectionTitle("I'm teaching"),
+          SkillList(
+            user.teachSkill,
+          ),
+          ProfileSectionTitle("I'm learning"),
+          SkillList(
+            user.learnSkill,
+          ),
+        ],
       ),
     );
   }

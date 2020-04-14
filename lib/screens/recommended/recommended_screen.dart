@@ -20,6 +20,18 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
         } else if (state is RecommendedLoaded) {
           final user = state.user;
           return Scaffold(
+            // appBar: AppBar(
+            //   backgroundColor: Colors.grey[100],
+            //   elevation: 0,
+            //   brightness: Brightness.light,
+            //   title: Text(
+            //     user.displayName ?? '',
+            //     style: TextStyle(
+            //       color: Colors.black,
+            //       fontSize: 25,
+            //     ),
+            //   ),
+            // ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 BlocProvider.of<RecommendedBloc>(context)
@@ -27,13 +39,29 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
               },
               child: Icon(Icons.clear),
             ),
-            body: Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: ProfileList(
-                user,
-                height: 100,
-                showName: true,
-              ),
+            body: Container(
+              color: Colors.grey[100],
+              child: CustomScrollView(slivers: <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  brightness: Brightness.light,
+                  backgroundColor: Colors.grey[100],
+                  title: Text(
+                    user.displayName ?? '',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(bottom: 80, left: 10, right: 10),
+                  sliver: ProfileList(
+                    user,
+                    height: 100,
+                  ),
+                ),
+              ]),
             ),
           );
         } else if (state is RecommendedEmpty) {
