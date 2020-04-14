@@ -11,6 +11,7 @@ import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -136,6 +137,7 @@ class App extends StatelessWidget {
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
+                SizeConfig.instance.init(context);
                 if (state is Uninitialized) {
                   return SplashScreen();
                 }

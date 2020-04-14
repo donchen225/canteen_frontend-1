@@ -4,7 +4,7 @@ import 'package:canteen_frontend/utils/constants.dart';
 class AlgoliaSearch {
   static Algolia _algolia;
   static AlgoliaSearch _instance;
-  static String _indexName;
+  static String _indexName = algoliaIndexName;
 
   AlgoliaSearch._();
 
@@ -13,7 +13,6 @@ class AlgoliaSearch {
       var algoliaSearch = AlgoliaSearch._();
       algoliaSearch._init();
       _instance = algoliaSearch;
-      _indexName = algoliaIndexName;
     }
     return _instance;
   }

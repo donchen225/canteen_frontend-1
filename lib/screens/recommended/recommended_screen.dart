@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,18 +21,6 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
         } else if (state is RecommendedLoaded) {
           final user = state.user;
           return Scaffold(
-            // appBar: AppBar(
-            //   backgroundColor: Colors.grey[100],
-            //   elevation: 0,
-            //   brightness: Brightness.light,
-            //   title: Text(
-            //     user.displayName ?? '',
-            //     style: TextStyle(
-            //       color: Colors.black,
-            //       fontSize: 25,
-            //     ),
-            //   ),
-            // ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 BlocProvider.of<RecommendedBloc>(context)
@@ -55,10 +44,13 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                   ),
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.only(bottom: 80, left: 10, right: 10),
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.instance.blockSizeVertical * 13,
+                      left: SizeConfig.instance.blockSizeHorizontal * 3,
+                      right: SizeConfig.instance.blockSizeHorizontal * 3),
                   sliver: ProfileList(
                     user,
-                    height: 100,
+                    height: SizeConfig.instance.blockSizeHorizontal * 30,
                   ),
                 ),
               ]),
