@@ -20,10 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _loadSearchWidget(SearchState state) {
-    if (state is SearchLoading) {
-      return Center(
-          key: Key('search-loading'), child: CircularProgressIndicator());
-    } else if (state is SearchUninitialized) {
+    if (state is SearchUninitialized) {
       return ProfileGrid(
         state.allUsers,
         key: Key('search-home-page'),
@@ -97,20 +94,24 @@ class _SearchScreenState extends State<SearchScreen> {
         },
         child: BlocBuilder<SearchBloc, SearchState>(
           builder: (context, state) {
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              switchOutCurve: Threshold(0),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0.5, 0),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-              child: _loadSearchWidget(state),
-            );
+            if (state is SearchLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return AnimatedSwitcher(
+                duration: Duration(milliseconds: 200),
+                switchOutCurve: Threshold(0),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0.5, 0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+                child: _loadSearchWidget(state),
+              );
+            }
           },
         ),
       ),
