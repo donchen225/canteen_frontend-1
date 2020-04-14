@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final UserRepository _userRepository;
+  List<User> _latestUsers = [];
   List<User> _searchResults = [];
   int _currentIndex = 0;
 
@@ -26,7 +27,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else if (event is SearchCleared) {
       yield* _mapSearchClearedToState();
     } else if (event is SearchInspectUser) {
-      yield* _mapSearchInspectUserToState(event.user);
+      yield* _mapSearchInspectUserToState(event);
     }
   }
 
@@ -57,11 +58,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   // TODO: paginate results
   Stream<SearchState> _mapSearchClearedToState() async* {
-    final users = await _userRepository.getAllUsers();
-    yield SearchUninitialized(users);
+    if (_latestUsers.length == 0) {
+      final users = await _userRepository.getAllUsers();
+      _latestUsers = users;
+    }
+
+    yield SearchUninitialized(_latestUsers);
   }
 
-  Stream<SearchState> _mapSearchInspectUserToState(User user) async* {
-    yield SearchShowProfile(user);
+  Stream<SearchState> _mapSearchInspectUserToState(
+      SearchInspectUser event) async* {
+    yield SearchShowProfile(event.user);
   }
 }

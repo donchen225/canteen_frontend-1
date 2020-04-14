@@ -12,15 +12,11 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SearchBloc, SearchState>(
-      listener: (context, state) {
-        if (state is SearchShowProfile) {
-          BlocProvider.of<ProspectProfileBloc>(context)
-              .add(LoadProspectProfile(state.user));
-        }
-      },
+      listener: (context, state) {},
       child: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
           print('IN SEARCH SCREEN');
+          print(state);
           return AnimatedSwitcher(
             duration: Duration(milliseconds: 200),
             switchOutCurve: Threshold(0),
@@ -34,9 +30,7 @@ class SearchScreen extends StatelessWidget {
                 child: child,
               );
             },
-            child: state is SearchShowProfile
-                ? ProspectProfileScreen()
-                : SearchForm(),
+            child: SearchForm(),
           );
         },
       ),

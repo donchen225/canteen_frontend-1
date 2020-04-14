@@ -169,9 +169,6 @@ class App extends StatelessWidget {
                           userBloc: BlocProvider.of<UserBloc>(context),
                         ),
                       ),
-                      BlocProvider<ProspectProfileBloc>(
-                        create: (context) => ProspectProfileBloc(),
-                      ),
                     ],
                     child: HomeScreen(userRepository: _userRepository),
                   );

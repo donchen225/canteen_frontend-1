@@ -31,7 +31,7 @@ class SearchCompleteWithResults extends SearchState {
   List<Object> get props => [userList];
 
   @override
-  String toString() => 'SearchCompleteWithResults { ${userList.toString()} }';
+  String toString() => 'SearchCompleteWithResults';
 }
 
 class SearchCompleteNoResults extends SearchState {
@@ -55,5 +55,6 @@ class SearchShowProfile extends SearchState {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'SearchShowProfile { user: $user }';
+  String toString() =>
+      'SearchShowProfile { user: ${user.id}, ${user.displayName} }';
 }

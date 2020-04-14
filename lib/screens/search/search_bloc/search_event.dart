@@ -34,7 +34,7 @@ class SearchInspectUser extends SearchEvent {
 
   @override
   String toString() {
-    return 'SearchInspectUser { user: $user }';
+    return 'SearchInspectUser { user: ${user.id}, ${user.displayName} }';
   }
 }
 
