@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 class ProfileList extends StatelessWidget {
   final User user;
   final double height;
+  final bool showName;
 
-  ProfileList(this.user, {@required this.height});
+  ProfileList(this.user, {@required this.height, this.showName = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,14 @@ class ProfileList extends StatelessWidget {
         padding: EdgeInsets.only(left: 20, right: 20),
         child: ListView(
           children: <Widget>[
+            Visibility(
+              visible: showName,
+              child: Center(
+                  child: Text(
+                user.displayName ?? '',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+              )),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
