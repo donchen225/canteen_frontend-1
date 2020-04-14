@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
     return BlocBuilder<RecommendedBloc, RecommendedState>(
       builder: (context, state) {
         if (state is RecommendedLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CupertinoActivityIndicator());
         } else if (state is RecommendedLoaded) {
           final user = state.user;
           return Scaffold(

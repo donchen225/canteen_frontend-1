@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,7 @@ class MatchList extends StatelessWidget {
     return BlocBuilder<MatchListBloc, MatchListState>(
       builder: (matchContext, matchState) {
         if (matchState is MatchListLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CupertinoActivityIndicator());
         } else if (matchState is MatchListLoaded) {
           final matches = matchState.matchList;
 

@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +43,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Registering...'),
-                    CircularProgressIndicator(),
+                    CupertinoActivityIndicator(),
                   ],
                 ),
               ),

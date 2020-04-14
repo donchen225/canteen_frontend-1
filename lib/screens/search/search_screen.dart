@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -95,7 +96,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: BlocBuilder<SearchBloc, SearchState>(
           builder: (context, state) {
             if (state is SearchLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: CupertinoActivityIndicator());
             } else {
               return AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),

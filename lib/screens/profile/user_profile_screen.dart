@@ -125,7 +125,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, state) {
       if (state is UserProfileLoading) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CupertinoActivityIndicator());
       }
 
       if (state is UserProfileLoaded) {

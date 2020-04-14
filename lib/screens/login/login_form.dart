@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/create_account_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Logging In...'),
-                    CircularProgressIndicator(),
+                    CupertinoActivityIndicator(),
                   ],
                 ),
               ),

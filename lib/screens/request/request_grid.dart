@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,7 @@ class RequestGrid extends StatelessWidget {
         builder: (context, state) {
       if (state is RequestListLoading || state is RequestListLoaded) {
         // TODO: show something when in MatchListLoaded state
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CupertinoActivityIndicator());
       } else if (state is DetailedRequestListLoaded) {
         return Scaffold(
           appBar: AppBar(

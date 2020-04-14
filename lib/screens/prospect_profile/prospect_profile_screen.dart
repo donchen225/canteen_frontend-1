@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/confirm_prospect_screen.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ class ProspectProfileScreen extends StatelessWidget {
       builder: (context, state) {
         if (state is ProspectProfileLoading) {
           print('PROSPECT PROFILE LOADING');
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CupertinoActivityIndicator());
         } else if (state is ProspectProfileLoaded) {
           final user = state.user;
 
