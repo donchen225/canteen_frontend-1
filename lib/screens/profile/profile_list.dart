@@ -25,11 +25,14 @@ class ProfileList extends StatelessWidget {
           children: <Widget>[
             Visibility(
               visible: showName,
-              child: Center(
-                  child: Text(
-                user.displayName ?? '',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-              )),
+              child: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Center(
+                    child: Text(
+                  user.displayName ?? '',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                )),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
