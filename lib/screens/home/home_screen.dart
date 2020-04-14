@@ -32,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> widgetOptions;
 
+  final _searchKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     widgetOptions = [
       RecommendedScreen(),
-      SearchScreen(),
+      SearchScreen(key: _searchKey),
       RequestScreen(),
       MatchListScreen(),
       UserProfileScreen(

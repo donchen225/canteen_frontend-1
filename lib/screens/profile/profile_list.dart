@@ -9,8 +9,11 @@ class ProfileList extends StatelessWidget {
   final User user;
   final double height;
   final bool showName;
+  final Key key;
 
-  ProfileList(this.user, {@required this.height, this.showName = false});
+  ProfileList(this.user,
+      {@required this.height, this.showName = false, this.key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
