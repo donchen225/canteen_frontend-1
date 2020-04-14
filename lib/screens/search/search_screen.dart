@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_empty_results.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,10 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
         showName: true,
       );
     } else if (state is SearchCompleteNoResults) {
-      return Center(
-        key: Key('search-no-results'),
-        child: Text(state.message),
-      );
+      return SearchEmptyResults();
     }
   }
 
