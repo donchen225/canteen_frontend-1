@@ -24,7 +24,9 @@ class ProfileList extends StatelessWidget {
           Visibility(
             visible: showName,
             child: Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.blockSizeVertical * 3,
+              ),
               child: Center(
                   child: Text(
                 user.displayName ?? '',
