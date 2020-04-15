@@ -1,6 +1,8 @@
+import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +56,33 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                   right: SizeConfig.instance.blockSizeHorizontal * 3),
               sliver: ProfileList(
                 user,
-                height: SizeConfig.instance.blockSizeHorizontal * 30,
+                height: SizeConfig.instance.blockSizeHorizontal * 33,
+                onTapLearnFunction: (skill) {
+                  BlocProvider.of<RequestBloc>(context).add(
+                    AddRequest(
+                      Request.create(
+                        skill: skill,
+                        receiverId: user.id,
+                      ),
+                    ),
+                  );
+
+                  BlocProvider.of<RecommendedBloc>(context)
+                      .add(NextRecommended());
+                },
+                onTapTeachFunction: (skill) {
+                  BlocProvider.of<RequestBloc>(context).add(
+                    AddRequest(
+                      Request.create(
+                        skill: skill,
+                        receiverId: user.id,
+                      ),
+                    ),
+                  );
+
+                  BlocProvider.of<RecommendedBloc>(context)
+                      .add(NextRecommended());
+                },
               ),
             ),
           ]),

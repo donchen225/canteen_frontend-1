@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ProfileTextCard extends StatelessWidget {
   final Widget child;
   final double height;
-  Color color;
+  final Color color;
 
   ProfileTextCard({this.child, this.height = 100, this.color = Colors.white});
 
@@ -19,7 +19,7 @@ class ProfileTextCard extends StatelessWidget {
       color: color,
       child: Container(
         height: height,
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         child: child ?? Container(),
       ),
     );

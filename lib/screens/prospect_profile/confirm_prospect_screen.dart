@@ -110,12 +110,11 @@ class _ConfirmProspectScreenState extends State<ConfirmProspectScreen> {
                   child: Text('Send Request', style: TextStyle(fontSize: 14)),
                   onPressed: currentUserId != widget.user.id
                       ? () {
-                          // TODO: add selected skill and comment
+                          // TODO: add comment to request
                           BlocProvider.of<RequestBloc>(context).add(
                             AddRequest(
                               Request.create(
                                 skill: _selectedSkill,
-                                senderId: currentUserId,
                                 receiverId: widget.user.id,
                               ),
                             ),

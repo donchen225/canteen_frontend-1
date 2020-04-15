@@ -11,9 +11,15 @@ class ProfileList extends StatelessWidget {
   final double height;
   final bool showName;
   final Key key;
+  final Function onTapTeachFunction;
+  final Function onTapLearnFunction;
 
   ProfileList(this.user,
-      {@required this.height, this.showName = false, this.key})
+      {@required this.height,
+      this.showName = false,
+      this.onTapTeachFunction,
+      this.onTapLearnFunction,
+      this.key})
       : super(key: key);
 
   @override
@@ -51,18 +57,22 @@ class ProfileList extends StatelessWidget {
           ),
           ProfileSectionTitle('About'),
           ProfileTextCard(
+            height: height,
             child: Container(
-              height: height,
               child: Text(user.about ?? ''),
             ),
           ),
           ProfileSectionTitle("I'm teaching"),
           SkillList(
             user.teachSkill,
+            onTapExtraButton: onTapTeachFunction,
+            height: height,
           ),
           ProfileSectionTitle("I'm learning"),
           SkillList(
             user.learnSkill,
+            onTapExtraButton: onTapLearnFunction,
+            height: height,
           ),
         ],
       ),

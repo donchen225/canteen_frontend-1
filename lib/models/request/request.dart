@@ -15,21 +15,20 @@ class Request {
   final DateTime createdOn;
 
   Request({
-    @required this.senderId,
     @required this.receiverId,
     @required this.status,
+    this.senderId,
     this.createdOn,
     this.id,
     this.skill,
     this.comment,
   });
 
-  static Request create({Skill skill, String senderId, String receiverId}) {
+  static Request create({Skill skill, String receiverId}) {
     return Request(
       skill: skill != null
           ? (skill.name + ' - ' + '\$${(skill.price).toString()}')
           : '',
-      senderId: senderId,
       receiverId: receiverId,
       status: RequestStatus.initialized,
     );
