@@ -3,6 +3,7 @@ import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_empty_results.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -27,13 +28,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _loadSearchWidget(SearchState state) {
     if (state is SearchUninitialized) {
-      return ProfileGrid(
-        state.allUsers,
-        key: Key('search-home-page'),
-        onTap: (user) {
-          BlocProvider.of<SearchBloc>(context).add(SearchInspectUser(user));
-        },
-      );
+      return DiscoverScreen(state.allUsers);
+      // return ProfileGrid(
+      //   state.allUsers,
+      //   key: Key('search-home-page'),
+      //   onTap: (user) {
+      //     BlocProvider.of<SearchBloc>(context).add(SearchInspectUser(user));
+      //   },
+      // );
     } else if (state is SearchShowProfile) {
       return Scaffold(
         key: UniqueKey(),
