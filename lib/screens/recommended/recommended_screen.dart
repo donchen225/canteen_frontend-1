@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
+import 'package:canteen_frontend/screens/recommended/recommended_unavailable.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -83,12 +84,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
     } else if (state is RecommendedEmpty) {
       return RecommendedEmptyScreen();
     } else if (state is RecommendedUnavailable) {
-      return Container(
-        color: Colors.grey[100],
-        child: Center(
-          child: Text('NO RECOMMENDATIONS AVAILABLE'),
-        ),
-      );
+      return RecommendedUnavailableScreen();
     }
   }
 
