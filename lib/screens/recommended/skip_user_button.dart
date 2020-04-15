@@ -14,8 +14,13 @@ class SkipUserFloatingActionButton extends StatelessWidget {
         padding:
             EdgeInsets.only(left: SizeConfig.instance.blockSizeHorizontal * 9),
         child: FloatingActionButton(
+          backgroundColor: Colors.grey[100],
           onPressed: onTap,
-          child: Icon(Icons.clear),
+          child: Icon(
+            Icons.clear,
+            color: Colors.black38,
+            size: 33,
+          ),
         ),
       ),
     );
