@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_empty_results.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -43,8 +45,28 @@ class _SearchScreenState extends State<SearchScreen> {
             sliver: ProfileList(
               state.user,
               key: Key('search-show-profile'),
-              height: 100,
+              height: SizeConfig.instance.blockSizeHorizontal * 33,
               showName: true,
+              onTapLearnFunction: (skill) {
+                BlocProvider.of<RequestBloc>(context).add(
+                  AddRequest(
+                    Request.create(
+                      skill: skill,
+                      receiverId: state.user.id,
+                    ),
+                  ),
+                );
+              },
+              onTapTeachFunction: (skill) {
+                BlocProvider.of<RequestBloc>(context).add(
+                  AddRequest(
+                    Request.create(
+                      skill: skill,
+                      receiverId: state.user.id,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ]),
