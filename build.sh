@@ -1,1 +1,1 @@
-flutter build ios
+flutter build ios --release
