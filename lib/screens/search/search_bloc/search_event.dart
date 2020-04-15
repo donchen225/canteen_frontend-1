@@ -38,4 +38,12 @@ class SearchInspectUser extends SearchEvent {
   }
 }
 
-class ShowSearchResults extends SearchEvent {}
+class SearchNextUser extends SearchEvent {
+  const SearchNextUser();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'SearchNextUser';
+}

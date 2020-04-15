@@ -35,15 +35,13 @@ class SearchCompleteWithResults extends SearchState {
 }
 
 class SearchCompleteNoResults extends SearchState {
-  final String message;
-
-  const SearchCompleteNoResults(this.message);
+  const SearchCompleteNoResults();
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [];
 
   @override
-  String toString() => 'SearchCompleteNoResults { message: $message }';
+  String toString() => 'SearchCompleteNoResults { }';
 }
 
 class SearchShowProfile extends SearchState {
@@ -57,4 +55,14 @@ class SearchShowProfile extends SearchState {
   @override
   String toString() =>
       'SearchShowProfile { user: ${user.id}, ${user.displayName} }';
+}
+
+class SearchResultsEnd extends SearchState {
+  const SearchResultsEnd();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'SearchResultsEnd { }';
 }

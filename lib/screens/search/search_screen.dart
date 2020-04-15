@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -34,42 +35,49 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       );
     } else if (state is SearchShowProfile) {
-      return Container(
-        color: Colors.grey[100],
-        child: CustomScrollView(slivers: <Widget>[
-          SliverPadding(
-            padding: EdgeInsets.only(
-                bottom: SizeConfig.instance.blockSizeVertical * 13,
-                left: SizeConfig.instance.blockSizeHorizontal * 3,
-                right: SizeConfig.instance.blockSizeHorizontal * 3),
-            sliver: ProfileList(
-              state.user,
-              key: Key('search-show-profile'),
-              height: SizeConfig.instance.blockSizeHorizontal * 33,
-              showName: true,
-              onTapLearnFunction: (skill) {
-                BlocProvider.of<RequestBloc>(context).add(
-                  AddRequest(
-                    Request.create(
-                      skill: skill,
-                      receiverId: state.user.id,
+      return Scaffold(
+        floatingActionButton: SkipUserFloatingActionButton(
+          onTap: () {
+            BlocProvider.of<SearchBloc>(context).add(SearchNextUser());
+          },
+        ),
+        body: Container(
+          color: Colors.grey[100],
+          child: CustomScrollView(slivers: <Widget>[
+            SliverPadding(
+              padding: EdgeInsets.only(
+                  bottom: SizeConfig.instance.blockSizeVertical * 13,
+                  left: SizeConfig.instance.blockSizeHorizontal * 3,
+                  right: SizeConfig.instance.blockSizeHorizontal * 3),
+              sliver: ProfileList(
+                state.user,
+                key: Key('search-show-profile'),
+                height: SizeConfig.instance.blockSizeHorizontal * 33,
+                showName: true,
+                onTapLearnFunction: (skill) {
+                  BlocProvider.of<RequestBloc>(context).add(
+                    AddRequest(
+                      Request.create(
+                        skill: skill,
+                        receiverId: state.user.id,
+                      ),
                     ),
-                  ),
-                );
-              },
-              onTapTeachFunction: (skill) {
-                BlocProvider.of<RequestBloc>(context).add(
-                  AddRequest(
-                    Request.create(
-                      skill: skill,
-                      receiverId: state.user.id,
+                  );
+                },
+                onTapTeachFunction: (skill) {
+                  BlocProvider.of<RequestBloc>(context).add(
+                    AddRequest(
+                      Request.create(
+                        skill: skill,
+                        receiverId: state.user.id,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       );
     } else if (state is SearchCompleteNoResults) {
       return SearchEmptyResults();

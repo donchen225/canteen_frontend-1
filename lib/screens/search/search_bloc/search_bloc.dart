@@ -28,6 +28,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _mapSearchClearedToState();
     } else if (event is SearchInspectUser) {
       yield* _mapSearchInspectUserToState(event);
+    } else if (event is SearchNextUser) {
+      yield* _mapSearchNextUserToState();
     }
   }
 
@@ -44,7 +46,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       print(results);
 
       if (results.length == 0) {
-        yield SearchCompleteNoResults('No results found.');
+        yield SearchCompleteNoResults();
       } else {
         _searchResults = results;
         yield SearchShowProfile(_searchResults[_currentIndex]);
@@ -52,7 +54,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } catch (e) {
       print(e);
       print('SEARCH FAILED');
-      yield SearchCompleteNoResults('No results found.');
+      yield SearchCompleteNoResults();
     }
   }
 
@@ -69,5 +71,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Stream<SearchState> _mapSearchInspectUserToState(
       SearchInspectUser event) async* {
     yield SearchShowProfile(event.user);
+  }
+
+  Stream<SearchState> _mapSearchNextUserToState() async* {
+    yield SearchLoading();
+    _currentIndex += 1;
+
+    if (_currentIndex < _searchResults.length) {
+      yield SearchShowProfile(_searchResults[_currentIndex]);
+    } else {
+      yield SearchResultsEnd();
+    }
   }
 }

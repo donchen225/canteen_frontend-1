@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
+import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,19 +21,10 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
       final user = state.user;
       return Scaffold(
         key: UniqueKey(),
-        floatingActionButton: Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: EdgeInsets.only(
-                left: SizeConfig.instance.blockSizeHorizontal * 9),
-            child: FloatingActionButton(
-              onPressed: () {
-                BlocProvider.of<RecommendedBloc>(context)
-                    .add(NextRecommended());
-              },
-              child: Icon(Icons.clear),
-            ),
-          ),
+        floatingActionButton: SkipUserFloatingActionButton(
+          onTap: () {
+            BlocProvider.of<RecommendedBloc>(context).add(NextRecommended());
+          },
         ),
         body: Container(
           color: Colors.grey[100],
