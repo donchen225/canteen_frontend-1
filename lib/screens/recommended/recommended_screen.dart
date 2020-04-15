@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,12 +61,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
         ),
       );
     } else if (state is RecommendedEmpty) {
-      return Container(
-        color: Colors.grey[100],
-        child: Center(
-          child: Text('OUT OF RECOMMENDATIONS'),
-        ),
-      );
+      return RecommendedEmptyScreen();
     } else if (state is RecommendedUnavailable) {
       return Container(
         color: Colors.grey[100],
