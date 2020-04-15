@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,77 +73,90 @@ class _SignUpFormState extends State<SignUpForm> {
       },
       child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.all(20),
-            child: Form(
-              child: ListView(
-                padding: EdgeInsets.only(top: 20, left: 15, right: 15),
-                children: <Widget>[
-                  Center(
-                      child: Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text('Sign Up',
-                        style: TextStyle(
-                          fontSize: 40,
-                        )),
-                  )),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
+          return Form(
+            child: ListView(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.instance.blockSizeVertical * 9,
+                  left: SizeConfig.instance.blockSizeHorizontal * 9,
+                  right: SizeConfig.instance.blockSizeHorizontal * 9),
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical * 3,
+                        bottom: SizeConfig.instance.blockSizeVertical * 3),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontSize: 40,
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      autocorrect: false,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                      ),
-                      obscureText: true,
-                      autocorrect: false,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
                     ),
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
                   ),
-                  SignUpButton(
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.blockSizeVertical * 3),
+                  child: SignUpButton(
                     onPressed: isRegisterButtonEnabled(state)
                         ? _onFormSubmitted
                         : null,
                   ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Text(
-                      state.isFailure ? state.error.message : '',
-                      style: TextStyle(color: Colors.red),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  child: Text(
+                    state.isFailure ? state.error.message : '',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Already have an account? ',
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Already have an account? ',
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.maybePop(context);
-                          },
-                          child: Text(
-                            'Sign in.',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ))
-                    ],
-                  ),
-                ],
-              ),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.maybePop(context);
+                        },
+                        child: Text(
+                          'Sign in.',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ))
+                  ],
+                ),
+              ],
             ),
           );
         },

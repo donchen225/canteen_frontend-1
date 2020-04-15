@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/create_account_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,81 +81,88 @@ class _LoginFormState extends State<LoginForm> {
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Form(
-              child: ListView(
-                padding: EdgeInsets.only(top: 20, left: 15, right: 15),
-                children: <Widget>[
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
-                        'Canteen',
-                        style: TextStyle(
-                          color: _textColor,
-                          fontSize: 40,
-                        ),
+          return Form(
+            child: ListView(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.instance.blockSizeVertical * 9,
+                  left: SizeConfig.instance.blockSizeHorizontal * 9,
+                  right: SizeConfig.instance.blockSizeHorizontal * 9),
+              children: <Widget>[
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical * 3,
+                        bottom: SizeConfig.instance.blockSizeVertical * 3),
+                    child: Text(
+                      'Canteen',
+                      style: TextStyle(
+                        color: _textColor,
+                        fontSize: 40,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: TextFormField(
-                      controller: _emailController,
-                      style: TextStyle(color: _textColor),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelText: 'Email',
-                        labelStyle: TextStyle(color: _textColor),
-                        fillColor: Colors.white.withOpacity(0.1),
-                        filled: true,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical),
+                  child: TextFormField(
+                    controller: _emailController,
+                    style: TextStyle(color: _textColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Email',
+                      labelStyle: TextStyle(color: _textColor),
+                      fillColor: Colors.white.withOpacity(0.1),
+                      filled: true,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical),
+                  child: TextFormField(
+                    style: TextStyle(color: _textColor),
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Password',
+                      labelStyle: TextStyle(color: _textColor),
+                      fillColor: Colors.white.withOpacity(0.1),
+                      filled: true,
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                  ),
+                ),
+                // TODO: change this error to a pop up
+                state.isFailure
+                    ? Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          state.error.message,
+                          style: TextStyle(color: Colors.red),
+                        ))
+                    : Container(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.blockSizeVertical * 3),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      LoginButton(
+                        onPressed: isLoginButtonEnabled(state)
+                            ? _onFormSubmitted
+                            : null,
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      autocorrect: false,
-                    ),
+                      CreateAccountButton(userRepository: _userRepository),
+                    ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: TextFormField(
-                      style: TextStyle(color: _textColor),
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelText: 'Password',
-                        labelStyle: TextStyle(color: _textColor),
-                        fillColor: Colors.white.withOpacity(0.1),
-                        filled: true,
-                      ),
-                      obscureText: true,
-                      autocorrect: false,
-                    ),
-                  ),
-                  // TODO: change this error to a pop up
-                  state.isFailure
-                      ? Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            state.error.message,
-                            style: TextStyle(color: Colors.red),
-                          ))
-                      : Container(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        LoginButton(
-                          onPressed: isLoginButtonEnabled(state)
-                              ? _onFormSubmitted
-                              : null,
-                        ),
-                        CreateAccountButton(userRepository: _userRepository),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
