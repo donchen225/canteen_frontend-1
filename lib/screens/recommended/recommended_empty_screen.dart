@@ -17,7 +17,7 @@ class RecommendedEmptyScreen extends StatelessWidget {
                   top: SizeConfig.instance.blockSizeVertical * 9),
               child: Center(
                 child: Text(
-                  'Congrats on swiping your daily batch!',
+                  'Congrats on picking your daily batch!',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
                   textAlign: TextAlign.center,
                 ),
