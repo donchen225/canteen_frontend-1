@@ -63,16 +63,14 @@ class _SearchScreenState extends State<SearchScreen> {
           height: 40,
           color: Colors.grey[300],
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+                  padding: EdgeInsets.only(left: 10),
                   child: TextField(
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 13,
+                      fontSize: 16,
                     ),
                     decoration: InputDecoration(
                       icon: Icon(

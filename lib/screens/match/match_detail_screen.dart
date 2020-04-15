@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +56,17 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         user: prospect,
         match: widget.match,
       ),
-      ProfileList(prospect, height: 100),
+      CustomScrollView(
+        slivers: <Widget>[
+          SliverPadding(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.instance.blockSizeVertical * 3,
+                  left: SizeConfig.instance.blockSizeHorizontal * 3,
+                  right: SizeConfig.instance.blockSizeHorizontal * 3,
+                  bottom: SizeConfig.instance.blockSizeVertical * 13),
+              sliver: ProfileList(prospect, height: 100))
+        ],
+      ),
     ];
 
     return Scaffold(
