@@ -12,54 +12,91 @@ class RecommendedScreen extends StatefulWidget {
 }
 
 class _RecommendedScreenState extends State<RecommendedScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<RecommendedBloc, RecommendedState>(
-      builder: (context, state) {
-        if (state is RecommendedLoading) {
-          return Center(child: CupertinoActivityIndicator());
-        } else if (state is RecommendedLoaded) {
-          final user = state.user;
-          return Scaffold(
-            floatingActionButton: FloatingActionButton(
+  Widget _getRecommendedWidget(RecommendedState state) {
+    if (state is RecommendedLoaded) {
+      final user = state.user;
+      return Scaffold(
+        key: UniqueKey(),
+        floatingActionButton: Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: EdgeInsets.only(
+                left: SizeConfig.instance.blockSizeHorizontal * 9),
+            child: FloatingActionButton(
               onPressed: () {
                 BlocProvider.of<RecommendedBloc>(context)
                     .add(NextRecommended());
               },
               child: Icon(Icons.clear),
             ),
-            body: Container(
-              color: Colors.grey[100],
-              child: CustomScrollView(slivers: <Widget>[
-                SliverAppBar(
-                  pinned: true,
-                  brightness: Brightness.light,
-                  backgroundColor: Colors.grey[100],
-                  title: Text(
-                    user.displayName ?? '',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                    ),
-                  ),
+          ),
+        ),
+        body: Container(
+          color: Colors.grey[100],
+          child: CustomScrollView(slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              brightness: Brightness.light,
+              backgroundColor: Colors.grey[100],
+              title: Text(
+                user.displayName ?? '',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
                 ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.blockSizeVertical * 13,
-                      left: SizeConfig.instance.blockSizeHorizontal * 3,
-                      right: SizeConfig.instance.blockSizeHorizontal * 3),
-                  sliver: ProfileList(
-                    user,
-                    height: SizeConfig.instance.blockSizeHorizontal * 30,
-                  ),
-                ),
-              ]),
+              ),
             ),
+            SliverPadding(
+              padding: EdgeInsets.only(
+                  bottom: SizeConfig.instance.blockSizeVertical * 13,
+                  left: SizeConfig.instance.blockSizeHorizontal * 3,
+                  right: SizeConfig.instance.blockSizeHorizontal * 3),
+              sliver: ProfileList(
+                user,
+                height: SizeConfig.instance.blockSizeHorizontal * 30,
+              ),
+            ),
+          ]),
+        ),
+      );
+    } else if (state is RecommendedEmpty) {
+      return Container(
+        color: Colors.grey[100],
+        child: Center(
+          child: Text('OUT OF RECOMMENDATIONS'),
+        ),
+      );
+    } else if (state is RecommendedUnavailable) {
+      return Container(
+        color: Colors.grey[100],
+        child: Center(
+          child: Text('NO RECOMMENDATIONS AVAILABLE'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RecommendedBloc, RecommendedState>(
+      builder: (context, state) {
+        if (state is RecommendedLoading) {
+          return Center(child: CupertinoActivityIndicator());
+        } else {
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            switchOutCurve: Threshold(0),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.5, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+            child: _getRecommendedWidget(state),
           );
-        } else if (state is RecommendedEmpty) {
-          return Center(child: Text('OUT OF RECOMMENDATIONS'));
-        } else if (state is RecommendedUnavailable) {
-          return Center(child: Text('NO RECOMMENDATIONS AVAILABLE'));
         }
       },
     );
