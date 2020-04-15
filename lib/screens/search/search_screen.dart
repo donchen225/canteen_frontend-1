@@ -32,20 +32,23 @@ class _SearchScreenState extends State<SearchScreen> {
         },
       );
     } else if (state is SearchShowProfile) {
-      return CustomScrollView(slivers: <Widget>[
-        SliverPadding(
-          padding: EdgeInsets.only(
-              bottom: SizeConfig.instance.blockSizeVertical * 13,
-              left: SizeConfig.instance.blockSizeHorizontal * 3,
-              right: SizeConfig.instance.blockSizeHorizontal * 3),
-          sliver: ProfileList(
-            state.user,
-            key: Key('search-show-profile'),
-            height: 100,
-            showName: true,
+      return Container(
+        color: Colors.grey[100],
+        child: CustomScrollView(slivers: <Widget>[
+          SliverPadding(
+            padding: EdgeInsets.only(
+                bottom: SizeConfig.instance.blockSizeVertical * 13,
+                left: SizeConfig.instance.blockSizeHorizontal * 3,
+                right: SizeConfig.instance.blockSizeHorizontal * 3),
+            sliver: ProfileList(
+              state.user,
+              key: Key('search-show-profile'),
+              height: 100,
+              showName: true,
+            ),
           ),
-        ),
-      ]);
+        ]),
+      );
     } else if (state is SearchCompleteNoResults) {
       return SearchEmptyResults();
     }
@@ -106,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
               return Center(child: CupertinoActivityIndicator());
             } else {
               return AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
+                duration: Duration(milliseconds: 300),
                 switchOutCurve: Threshold(0),
                 transitionBuilder: (Widget child, Animation<double> animation) {
                   return SlideTransition(
