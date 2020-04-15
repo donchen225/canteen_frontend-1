@@ -2,7 +2,6 @@ import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
-import 'package:canteen_frontend/screens/prospect_profile/bloc/prospect_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -163,7 +162,7 @@ class App extends StatelessWidget {
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(
                           userRepository: _userRepository,
-                        )..add(SearchCleared()),
+                        )..add(SearchHome()),
                       ),
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(

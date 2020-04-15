@@ -29,19 +29,14 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _loadSearchWidget(SearchState state) {
     if (state is SearchUninitialized) {
       return DiscoverScreen(state.allUsers);
-      // return ProfileGrid(
-      //   state.allUsers,
-      //   key: Key('search-home-page'),
-      //   onTap: (user) {
-      //     BlocProvider.of<SearchBloc>(context).add(SearchInspectUser(user));
-      //   },
-      // );
     } else if (state is SearchShowProfile) {
       return Scaffold(
         key: UniqueKey(),
         floatingActionButton: SkipUserFloatingActionButton(
           onTap: () {
-            BlocProvider.of<SearchBloc>(context).add(SearchNextUser());
+            state.isSearchResult
+                ? BlocProvider.of<SearchBloc>(context).add(SearchNextUser())
+                : BlocProvider.of<SearchBloc>(context).add(SearchHome());
           },
         ),
         body: Container(

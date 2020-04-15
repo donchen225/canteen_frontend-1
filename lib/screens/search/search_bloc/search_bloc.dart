@@ -24,8 +24,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async* {
     if (event is SearchStarted) {
       yield* _mapSearchStartedToState(event);
-    } else if (event is SearchCleared) {
-      yield* _mapSearchClearedToState();
+    } else if (event is SearchHome) {
+      yield* _mapSearchHomeToState();
     } else if (event is SearchInspectUser) {
       yield* _mapSearchInspectUserToState(event);
     } else if (event is SearchNextUser) {
@@ -49,7 +49,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         yield SearchCompleteNoResults();
       } else {
         _searchResults = results;
-        yield SearchShowProfile(_searchResults[_currentIndex]);
+        yield SearchShowProfile(_searchResults[_currentIndex], true);
       }
     } catch (e) {
       print(e);
@@ -59,7 +59,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   // TODO: paginate results
-  Stream<SearchState> _mapSearchClearedToState() async* {
+  Stream<SearchState> _mapSearchHomeToState() async* {
     if (_latestUsers.length == 0) {
       final users = await _userRepository.getAllUsers();
       _latestUsers = users;
@@ -70,7 +70,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<SearchState> _mapSearchInspectUserToState(
       SearchInspectUser event) async* {
-    yield SearchShowProfile(event.user);
+    yield SearchShowProfile(event.user, false);
   }
 
   Stream<SearchState> _mapSearchNextUserToState() async* {
@@ -78,7 +78,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     _currentIndex += 1;
 
     if (_currentIndex < _searchResults.length) {
-      yield SearchShowProfile(_searchResults[_currentIndex]);
+      yield SearchShowProfile(_searchResults[_currentIndex], true);
     } else {
       yield SearchResultsEnd();
     }

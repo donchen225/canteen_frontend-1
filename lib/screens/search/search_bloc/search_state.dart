@@ -46,15 +46,16 @@ class SearchCompleteNoResults extends SearchState {
 
 class SearchShowProfile extends SearchState {
   final User user;
+  final bool isSearchResult;
 
-  const SearchShowProfile(this.user);
+  const SearchShowProfile(this.user, this.isSearchResult);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, isSearchResult];
 
   @override
   String toString() =>
-      'SearchShowProfile { user: ${user.id}, ${user.displayName} }';
+      'SearchShowProfile { user: ${user.id}, ${user.displayName} isSearchResult: $isSearchResult }';
 }
 
 class SearchResultsEnd extends SearchState {
