@@ -36,6 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else if (state is SearchShowProfile) {
       return Scaffold(
+        key: UniqueKey(),
         floatingActionButton: SkipUserFloatingActionButton(
           onTap: () {
             BlocProvider.of<SearchBloc>(context).add(SearchNextUser());
@@ -81,6 +82,13 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else if (state is SearchCompleteNoResults) {
       return SearchEmptyResults();
+    } else if (state is SearchResultsEnd) {
+      return Container(
+        color: Colors.grey[100],
+        child: Center(
+          child: Text('No more results!'),
+        ),
+      );
     }
   }
 
