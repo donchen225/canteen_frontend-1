@@ -254,6 +254,18 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
     });
 });
 
+const ZOOM_BASE_URL = 'https://api.zoom.us/v2/';
+const ZOOM_USER_ID = 'D3HzE_hfR5yJ6Kyv5QqaDA';
+
+// Video chat functions
+// exports.createRoom = functions.https.onRequest(async (req, res) => {
+
+//     // Check if user is authenticated
+//     // Check if user has paid
+
+// });
+
+
 exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate((snapshot, context) => {
 
     if (snapshot.exists) {
