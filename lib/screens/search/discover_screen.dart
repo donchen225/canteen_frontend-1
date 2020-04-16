@@ -154,7 +154,10 @@ class DiscoverScreen extends StatelessWidget {
                                         child: Text(
                                           skill.name +
                                               ' - ' +
-                                              '\$${skill.price}',
+                                              '\$${(skill.price).toString()}' +
+                                              (skill.duration != null
+                                                  ? ' / ${skill.duration} minutes'
+                                                  : ''),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800),
                                         ),
