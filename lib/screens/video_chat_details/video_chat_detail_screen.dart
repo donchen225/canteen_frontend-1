@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
   final double _kPickerSheetHeight = 216.0;
   final double _kPickerItemHeight = 32.0;
 
-  DateTime dateTime = DateTime.now();
+  DateTime dateTime = roundUpHour(DateTime.now(), Duration(hours: 1));
 
   Widget _buildMenu(List<Widget> children) {
     return Container(
