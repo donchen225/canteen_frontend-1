@@ -145,6 +145,8 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController.text = skill.price.toString();
     _skillDescriptionController.text = skill.description;
     _initialDurationIndex = durationOptions.indexOf(skill.duration);
+    _initialDurationIndex =
+        _initialDurationIndex != -1 ? _initialDurationIndex : 0;
 
     return Scaffold(
       appBar: AppBar(
