@@ -76,7 +76,12 @@ class _SkillListState extends State<SkillList> {
                   Expanded(
                     child: Container(
                       child: Text(
-                        skill.name + ' - ' + '\$${(skill.price).toString()}',
+                        skill.name +
+                            ' - ' +
+                            '\$${(skill.price).toString()}' +
+                            (skill.duration != null
+                                ? ' / ${skill.duration} minutes'
+                                : ''),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),

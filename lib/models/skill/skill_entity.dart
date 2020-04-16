@@ -5,11 +5,13 @@ class SkillEntity extends Equatable {
   final String name;
   final String description;
   final int price;
+  final int duration;
 
   const SkillEntity(
     this.name,
     this.description,
     this.price,
+    this.duration,
   );
 
   @override
@@ -17,6 +19,7 @@ class SkillEntity extends Equatable {
         name,
         description,
         price,
+        duration,
       ];
 
   static SkillEntity fromSnapshot(DocumentSnapshot snap) {
@@ -24,6 +27,7 @@ class SkillEntity extends Equatable {
       snap.data["name"],
       snap.data["description"],
       snap.data["price"],
+      snap.data["duration"],
     );
   }
 
@@ -32,6 +36,7 @@ class SkillEntity extends Equatable {
       data['name'],
       data['description'],
       data['price'],
+      data['duration'],
     );
   }
 
@@ -40,6 +45,7 @@ class SkillEntity extends Equatable {
       "name": name,
       "description": description,
       "price": price,
+      "duration": duration,
     };
   }
 }

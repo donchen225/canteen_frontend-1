@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,14 @@ class MatchDetailScreen extends StatefulWidget {
 class _MatchDetailScreenState extends State<MatchDetailScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  // final _myTabbedPageKey = new GlobalKey<_MatchDetailScreenState>();
 
   List<Text> tabChoices = [
     Text('CHAT',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        )),
+    Text('DETAILS',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
@@ -56,6 +61,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         user: prospect,
         match: widget.match,
       ),
+      VideoChatDetailScreen(),
       CustomScrollView(
         slivers: <Widget>[
           SliverPadding(
