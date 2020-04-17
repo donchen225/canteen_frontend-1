@@ -116,8 +116,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          textTheme: GoogleFonts.montserratTextTheme(),
-          primaryColor: Color.fromARGB(255, 34, 145, 133)),
+        textTheme: GoogleFonts.montserratTextTheme(),
+        primaryColor: Color.fromARGB(255, 34, 145, 133),
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+      ),
       routes: {
         '/': (context) {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
