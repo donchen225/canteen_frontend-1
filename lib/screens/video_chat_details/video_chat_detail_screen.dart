@@ -62,6 +62,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
 
   Widget _buildDateAndTimePicker(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         GestureDetector(
           onTap: () {
@@ -102,18 +103,42 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: <Widget>[
-        Container(
-          height: SizeConfig.instance.blockSizeVertical * 30,
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Text('Your proposed times'),
-                _buildDateAndTimePicker(context),
-                _buildDateAndTimePicker(context),
-                _buildDateAndTimePicker(context),
-                Text("User's proposed times"),
-              ],
-            ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: SizeConfig.instance.safeBlockVertical * 3,
+              bottom: SizeConfig.instance.safeBlockVertical * 3),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Your proposed times'),
+              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: SizeConfig.instance.safeBlockVertical * 3,
+              bottom: SizeConfig.instance.safeBlockVertical * 3),
+          child: Column(
+            children: <Widget>[
+              Text("User's proposed times"),
+              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: SizeConfig.instance.safeBlockVertical * 3,
+              bottom: SizeConfig.instance.safeBlockVertical * 3),
+          child: Column(
+            children: <Widget>[
+              Text('Video Chat Details'),
+              RaisedButton(child: Text('Get Video Chat'))
+            ],
           ),
         ),
       ]),
