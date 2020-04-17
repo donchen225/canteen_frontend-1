@@ -61,7 +61,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         user: prospect,
         match: widget.match,
       ),
-      VideoChatDetailScreen(),
+      VideoChatDetailScreen(
+        user: prospect,
+      ),
       CustomScrollView(
         slivers: <Widget>[
           SliverPadding(

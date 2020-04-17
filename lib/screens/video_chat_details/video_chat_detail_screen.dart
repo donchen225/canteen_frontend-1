@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,10 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class VideoChatDetailScreen extends StatefulWidget {
+  final User user;
+
+  VideoChatDetailScreen({@required this.user}) : assert(user != null);
+
   _VideoChatDetailScreenState createState() => _VideoChatDetailScreenState();
 }
 
 class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
+  String videoChatUrl;
+
   final double _kPickerSheetHeight = 216.0;
   final double _kPickerItemHeight = 32.0;
 
@@ -92,12 +99,11 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
             ],
           ),
         ),
-        RaisedButton(
-          child: Text('Accept'),
-        ),
       ],
     );
   }
+
+  Widget _buildProposedTimeRow(BuildContext context) {}
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +120,9 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
               _buildDateAndTimePicker(context),
               _buildDateAndTimePicker(context),
               _buildDateAndTimePicker(context),
+              RaisedButton(
+                child: Text('Submit'),
+              )
             ],
           ),
         ),
@@ -123,7 +132,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
               bottom: SizeConfig.instance.safeBlockVertical * 3),
           child: Column(
             children: <Widget>[
-              Text("User's proposed times"),
+              Text("${widget.user.displayName}'s proposed times"),
               _buildDateAndTimePicker(context),
               _buildDateAndTimePicker(context),
               _buildDateAndTimePicker(context),
@@ -137,7 +146,18 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
           child: Column(
             children: <Widget>[
               Text('Video Chat Details'),
-              RaisedButton(child: Text('Get Video Chat'))
+              RaisedButton(
+                onPressed: () {
+                  setState(() {
+                    videoChatUrl = 'VIDEO CHAT URL';
+                  });
+                },
+                child: Text('Get Video Chat'),
+              ),
+              Visibility(
+                visible: videoChatUrl != null,
+                child: Text(videoChatUrl ?? ''),
+              )
             ],
           ),
         ),
