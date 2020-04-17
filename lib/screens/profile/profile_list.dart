@@ -62,13 +62,18 @@ class ProfileList extends StatelessWidget {
               child: Text(user.about ?? ''),
             ),
           ),
-          ProfileSectionTitle("I'm teaching"),
+          Visibility(
+            visible: user.teachSkill.length != 0,
+            child: ProfileSectionTitle("I'm teaching"),
+          ),
           SkillList(
             user.teachSkill,
             onTapExtraButton: onTapTeachFunction,
             height: height,
           ),
-          ProfileSectionTitle("I'm learning"),
+          Visibility(
+              visible: user.learnSkill.length != 0,
+              child: ProfileSectionTitle("I'm learning")),
           SkillList(
             user.learnSkill,
             onTapExtraButton: onTapLearnFunction,
