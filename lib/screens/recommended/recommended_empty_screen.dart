@@ -15,12 +15,25 @@ class RecommendedEmptyScreen extends StatelessWidget {
                   left: SizeConfig.instance.blockSizeHorizontal * 9,
                   right: SizeConfig.instance.blockSizeHorizontal * 9,
                   top: SizeConfig.instance.blockSizeVertical * 9),
-              child: Center(
-                child: Text(
-                  'Congrats on picking your daily batch!',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
-                  textAlign: TextAlign.center,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.blockSizeVertical * 3),
+                    child: Text(
+                      'Congrats on picking your daily batch!',
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Text(
+                    'Check back tomorrow for more recommendations.',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ),
@@ -36,7 +49,7 @@ class RecommendedEmptyScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.instance.blockSizeVertical),
                       child: Text(
-                        "Didn't love your suggestions?",
+                        "Didn't love your recommendations?",
                         style: TextStyle(fontWeight: FontWeight.w700),
                       ),
                     ),

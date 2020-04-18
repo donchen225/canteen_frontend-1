@@ -42,11 +42,10 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
       yield RecommendedUnavailable();
     }
 
-    final recommendations = (await _recommendationRepository
-        .getRecommendations())
-      ..retainWhere((rec) => rec.status == 0);
+    final recs = await _recommendationRepository.getRecommendations();
+    final newRecs = recs.where((rec) => rec.status == 0);
 
-    recommendations.forEach((rec) {
+    newRecs.forEach((rec) {
       final exists = (_recommendations.firstWhere((r) => r.userId == rec.userId,
           orElse: () => null));
       if (exists == null) {
@@ -59,6 +58,8 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
       final recUser = User.fromRecommendation(rec);
 
       yield RecommendedLoaded(rec, recUser);
+    } else if (recs.length > 0) {
+      yield RecommendedEmpty();
     } else {
       yield RecommendedUnavailable();
     }
@@ -66,6 +67,10 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
 
   Stream<RecommendedState> _mapNextRecommendedToState() async* {
     yield RecommendedLoading();
+
+    final currentRec = _recommendations[_currentIndex];
+    _recommendationRepository.declineRecommendation(currentRec.id);
+
     _currentIndex += 1;
 
     if (_currentIndex < _recommendations.length) {

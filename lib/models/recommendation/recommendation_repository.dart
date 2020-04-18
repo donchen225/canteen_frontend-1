@@ -19,6 +19,17 @@ class RecommendationRepository {
     return recommendationCollection.document(userId).get();
   }
 
+  Future<void> declineRecommendation(String id) async {
+    return CloudFunctionManager.declineRecommendation.call({
+      "id": id,
+    }).then((result) {
+      print(result.data);
+      return result.data;
+    }, onError: (error) {
+      print('Error declining recommendation: $error');
+    });
+  }
+
   Future<List<Recommendation>> getRecommendations() async {
     return CloudFunctionManager.getRecommendations.call().then((result) {
       return result.data

@@ -558,6 +558,23 @@ exports.declineRecommendation = functions.https.onCall(async (data, context) => 
     const recommendationDocReference = firestore.collection(RECOMMENDATION_COLLECTION).doc(uid);
     const profilesReference = recommendationDocReference.collection('profiles');
 
-    //
+    const recommendationId = data.id;
 
+    // Checking attribute.
+    if (!(typeof recommendationId === 'string') || recommendationId.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "id" containing the recommendation to update.');
+    }
+
+    return profilesReference.doc(recommendationId).update({
+        "status": 2,
+    }).then(() => {
+        return {
+            "id": recommendationId,
+            "status": 2
+        }
+    }).catch((error) => {
+        console.log(`Error - Failed to update recommendation: ${error}`)
+    });
 });
