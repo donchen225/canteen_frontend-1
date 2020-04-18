@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/components/confirmation_dialog.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_unavailable.dart';
@@ -17,6 +19,29 @@ class RecommendedScreen extends StatefulWidget {
 }
 
 class _RecommendedScreenState extends State<RecommendedScreen> {
+  void _onTapSkillFunction(
+      BuildContext context, RecommendedLoaded state, Skill skill) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => ConfirmationDialog(
+        user: state.user,
+        skill: skill,
+        onConfirm: (comment) {
+          BlocProvider.of<RequestBloc>(context).add(
+            AddRequest(
+              Request.create(
+                skill: skill,
+                comment: comment,
+                receiverId: state.user.id,
+              ),
+            ),
+          );
+          BlocProvider.of<RecommendedBloc>(context).add(AcceptRecommended());
+        },
+      ),
+    );
+  }
+
   Widget _getRecommendedWidget(RecommendedState state) {
     if (state is RecommendedLoaded) {
       final user = state.user;
@@ -50,32 +75,10 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
               sliver: ProfileList(
                 user,
                 height: SizeConfig.instance.blockSizeHorizontal * 33,
-                onTapLearnFunction: (skill) {
-                  BlocProvider.of<RequestBloc>(context).add(
-                    AddRequest(
-                      Request.create(
-                        skill: skill,
-                        receiverId: user.id,
-                      ),
-                    ),
-                  );
-
-                  BlocProvider.of<RecommendedBloc>(context)
-                      .add(AcceptRecommended());
-                },
-                onTapTeachFunction: (skill) {
-                  BlocProvider.of<RequestBloc>(context).add(
-                    AddRequest(
-                      Request.create(
-                        skill: skill,
-                        receiverId: user.id,
-                      ),
-                    ),
-                  );
-
-                  BlocProvider.of<RecommendedBloc>(context)
-                      .add(AcceptRecommended());
-                },
+                onTapLearnFunction: (skill) =>
+                    _onTapSkillFunction(context, state, skill),
+                onTapTeachFunction: (skill) =>
+                    _onTapSkillFunction(context, state, skill),
               ),
             ),
           ]),
