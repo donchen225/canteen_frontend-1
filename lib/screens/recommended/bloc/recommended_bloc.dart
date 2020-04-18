@@ -30,6 +30,8 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
       yield* _mapLoadRecommendedToState();
     } else if (event is NextRecommended) {
       yield* _mapNextRecommendedToState();
+    } else if (event is AcceptRecommended) {
+      yield* _mapAcceptRecommendedToState();
     }
   }
 
@@ -70,6 +72,23 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
 
     final currentRec = _recommendations[_currentIndex];
     _recommendationRepository.declineRecommendation(currentRec.id);
+
+    _currentIndex += 1;
+
+    if (_currentIndex < _recommendations.length) {
+      final rec = _recommendations[_currentIndex];
+      final recUser = User.fromRecommendation(rec);
+      yield RecommendedLoaded(rec, recUser);
+    } else {
+      yield RecommendedEmpty();
+    }
+  }
+
+  Stream<RecommendedState> _mapAcceptRecommendedToState() async* {
+    yield RecommendedLoading();
+
+    final currentRec = _recommendations[_currentIndex];
+    _recommendationRepository.acceptRecommendation(currentRec.id);
 
     _currentIndex += 1;
 

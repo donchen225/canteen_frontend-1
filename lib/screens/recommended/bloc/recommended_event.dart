@@ -23,3 +23,13 @@ class NextRecommended extends RecommendedEvent {
   @override
   String toString() => 'NextRecommended';
 }
+
+class AcceptRecommended extends RecommendedEvent {
+  const AcceptRecommended();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'AcceptRecommended';
+}

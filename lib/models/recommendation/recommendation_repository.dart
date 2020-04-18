@@ -30,6 +30,17 @@ class RecommendationRepository {
     });
   }
 
+  Future<void> acceptRecommendation(String id) async {
+    return CloudFunctionManager.acceptRecommendation.call({
+      "id": id,
+    }).then((result) {
+      print(result.data);
+      return result.data;
+    }, onError: (error) {
+      print('Error accepting recommendation: $error');
+    });
+  }
+
   Future<List<Recommendation>> getRecommendations() async {
     return CloudFunctionManager.getRecommendations.call().then((result) {
       return result.data

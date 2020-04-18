@@ -61,7 +61,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                   );
 
                   BlocProvider.of<RecommendedBloc>(context)
-                      .add(NextRecommended());
+                      .add(AcceptRecommended());
                 },
                 onTapTeachFunction: (skill) {
                   BlocProvider.of<RequestBloc>(context).add(
@@ -74,7 +74,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                   );
 
                   BlocProvider.of<RecommendedBloc>(context)
-                      .add(NextRecommended());
+                      .add(AcceptRecommended());
                 },
               ),
             ),

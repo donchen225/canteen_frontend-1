@@ -12,4 +12,8 @@ class CloudFunctionManager {
   static final HttpsCallable declineRecommendation = CloudFunctions.instance
       .getHttpsCallable(functionName: 'declineRecommendation')
         ..timeout = Duration(seconds: 30);
+
+  static final HttpsCallable acceptRecommendation = CloudFunctions.instance
+      .getHttpsCallable(functionName: 'acceptRecommendation')
+        ..timeout = Duration(seconds: 30);
 }
