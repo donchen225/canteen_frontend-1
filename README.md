@@ -13,10 +13,10 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 
 1. Clone the repo.
 2. Set environment variables in `.env`.
-2. Start the iOS simulator.
-3. Run in debug mode in your IDE of choice.
+3. Start the iOS simulator.
+4. Run in debug mode in your IDE of choice.
     * In VSCode, press F5.
-4. Create your own account in the app.
+5. Create your own account in the app.
 
 ## Firestore collections
 
@@ -46,6 +46,11 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 ## Setting up algolia
 1. Get `ALGOLIA_APP_ID` and `ALGOLIA_ADMIN_API_KEY` from Algolia and set in `.env`.
 2. Create index on algolia.
+
+## Developing functions locally
+
+1. Set `.env` file.
+2. Export environment variables from `.env` file `source .en
 
 ## Notes
 

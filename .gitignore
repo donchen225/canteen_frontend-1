@@ -1,4 +1,5 @@
 .env
+get-canteen-*
 
 # Miscellaneous
 *.class
