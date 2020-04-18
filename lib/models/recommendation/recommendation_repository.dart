@@ -20,10 +20,11 @@ class RecommendationRepository {
   }
 
   Future<List<Recommendation>> getRecommendations() async {
-    return CloudFunctionManager.getRecommendations.call().then(
-        (result) => result.data
-            .map<Recommendation>((rec) => Recommendation.fromJSON(rec))
-            .toList(), onError: (error) {
+    return CloudFunctionManager.getRecommendations.call().then((result) {
+      return result.data
+          .map<Recommendation>((rec) => Recommendation.fromJSON(rec))
+          .toList();
+    }, onError: (error) {
       print('ERROR GETTING RECOMMENDATIONS: $error');
     });
   }

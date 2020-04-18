@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class Recommendation extends Equatable {
+  final String id;
   final String userId;
   final String displayName;
   final String about;
@@ -14,6 +15,7 @@ class Recommendation extends Equatable {
   final DateTime createdOn;
 
   Recommendation({
+    this.id,
     this.userId,
     this.displayName = '',
     this.about = '',
@@ -27,6 +29,7 @@ class Recommendation extends Equatable {
 
   static Recommendation fromJSON(Map<dynamic, dynamic> json) {
     return Recommendation(
+      id: json['id'] as String,
       userId: json['user_id'] as String,
       displayName: json['display_name'] as String,
       about: json['about'] as String,

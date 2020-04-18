@@ -34,6 +34,8 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   }
 
   Stream<RecommendedState> _mapLoadRecommendedToState() async* {
+    yield RecommendedLoading();
+
     final user = await _userRepository.currentUser();
 
     if (user.teachSkill.isEmpty && user.learnSkill.isEmpty) {

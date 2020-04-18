@@ -17,6 +17,10 @@ service cloud.firestore {
       allow update: if request.resource.data.receiver_id == request.auth.uid;
     }
 
+    match /recommendations/{userId} {
+      allow update: if isOwner(userId);
+    }
+
   }
 
   function isAuthenticated() {

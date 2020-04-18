@@ -91,7 +91,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         "created_on": admin.firestore.Timestamp.now(),
     };
 
-    return firestore.collection(REQUEST_COLLECTION).doc().set(doc).then(() => {
+    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -113,7 +113,7 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
         "last_updated": time,
     };
 
-    return firestore.collection(REQUEST_COLLECTION).doc().set(doc).then(() => {
+    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -197,7 +197,7 @@ exports.addMatch = functions.https.onCall(async (data, context) => {
         "created_on": admin.firestore.Timestamp.now(),
     };
 
-    return firestore.collection(REQUEST_COLLECTION).doc().set(doc).then((d) => {
+    return firestore.collection(REQUEST_COLLECTION).add(doc).then((d) => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -409,7 +409,11 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
     const [startDate, endDate] = dates.getStartAndEndDate(date);
 
     const existingRecommendations = await profilesReference.where('created_on', '>=', startDate).where('created_on', '<', endDate).get().then((querySnapshot) => {
-        return querySnapshot.docs.map((doc) => doc.data());
+        return querySnapshot.docs.map((doc) => {
+            const recDoc = doc.data();
+            recDoc['id'] = doc.id;
+            return recDoc;
+        });
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     })
@@ -483,7 +487,7 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
         newRecommendations = newRecommendations.concat(results);
 
         q['num_results'] = results.length;
-        queriesReference.doc().set(q).then(() => {
+        queriesReference.add(q).then(() => {
             console.log(q);
             return q
         }).catch((error) => {
@@ -501,7 +505,7 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
     })
 
     var recFlags = {};
-    var newRecsUnique = newRecommendations.filter(function (entry) {
+    var newRecsUnique = newRecommendations.filter((entry) => {
         if (recFlags[entry.user_id]) {
             return false;
         }
@@ -517,7 +521,8 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
 
     const recsToAdd = (newRecsUnique.length <= diff) ? newRecsUnique : utils.getRandom(newRecsUnique, diff);
     var allRecs = [];
-    recsToAdd.forEach((rec) => {
+
+    await Promise.all(recsToAdd.map(async (rec) => {
 
         rec['created_on'] = timestamp;
         rec['last_updated'] = timestamp;
@@ -525,16 +530,34 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
         delete rec['objectID'];
         delete rec['_highlightResult'];
 
-        profilesReference.doc().set(rec).then(() => {
+        return profilesReference.add(rec).then((docRef) => {
+            rec['id'] = docRef.id;
             allRecs.push(rec);
             console.log(rec);
             return rec;
         }).catch((error) => {
             throw new functions.https.HttpsError('unknown', error.message, error);
         })
-    })
+    }));
 
     allRecs = allRecs.concat(existingRecommendations);
 
     return allRecs;
 })
+
+exports.declineRecommendation = functions.https.onCall(async (data, context) => {
+
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+
+    const uid = context.auth.uid;
+
+    const recommendationDocReference = firestore.collection(RECOMMENDATION_COLLECTION).doc(uid);
+    const profilesReference = recommendationDocReference.collection('profiles');
+
+    //
+
+});
