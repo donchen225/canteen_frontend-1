@@ -7,6 +7,7 @@ const dates = require('./date');
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
+const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const USER_COLLECTION = 'users';
 
@@ -103,102 +104,25 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
     const newValue = change.after.data();
     const previousValue = change.before.data();
 
-    const status = previousValue.status;
+    const oldStatus = previousValue.status;
+    const newStatus = newValue.status;
+
+    if (oldStatus === newStatus || newStatus !== 1) {
+        return { 'status': 'SKIPPED', 'message': 'Status condition not met.' };
+    }
 
     const time = admin.firestore.Timestamp.now();
+
+    const matchId = (utils.hashCode(previousValue.sender_id) < utils.hashCode(previousValue.receiver_id)) ? previousValue.sender_id + previousValue.receiver_id : previousValue.receiver_id + previousValue.sender_id;
     const match = {
-        "user_id": [],
+        "user_id": [previousValue.sender_id, previousValue.receiver_id],
         "status": 0,
         "created_on": time,
         "last_updated": time,
     };
 
-    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
-        return doc;
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
-    });
-});
-
-
-exports.addMatch = functions.https.onCall(async (data, context) => {
-
-    // Checking that the user is authenticated.
-    if (!context.auth) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-            'while authenticated.');
-    }
-
-    const receiverId = data.receiver_id;
-    const skill = data.skill;
-    const comment = data.comment;
-
-    // Checking attribute.
-    if (!(typeof receiverId === 'string') || receiverId.length === 0) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
-    }
-
-    if (skill && !(typeof skill === 'string')) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
-    }
-
-    if (comment && !(typeof comment === 'string')) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
-    }
-
-    // [START authIntegration]
-    // Authentication / user information is automatically added to the request.
-    const uid = context.auth.uid;
-    const name = context.auth.token.name || null;
-    const picture = context.auth.token.picture || null;
-    const email = context.auth.token.email || null;
-    // [END authIntegration]
-
-    // [START returnMessageAsync]
-    if (receiverId === uid) {
-        throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
-    }
-
-    await firestore.collection('users').doc(receiverId).get().then((doc) => {
-        if (!doc.exists) {
-            throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
-        }
-        return;
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
-    });
-
-    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.exists) {
-                throw new functions.https.HttpsError('already-exists', 'Request already exists.');
-            }
-        });
-        return;
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
-    });
-
-
-    // Create document
-    const doc = {
-        "sender_id": uid,
-        "receiver_id": receiverId,
-        "skill": skill,
-        "status": 0,
-        "comment": comment,
-        "created_on": admin.firestore.Timestamp.now(),
-    };
-
-    return firestore.collection(REQUEST_COLLECTION).add(doc).then((d) => {
-        return doc;
+    return firestore.collection(MATCH_COLLECTION).doc(matchId).set(match).then(() => {
+        return match;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
