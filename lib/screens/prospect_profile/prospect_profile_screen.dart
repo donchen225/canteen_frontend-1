@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/prospect_profile/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/prospect_profile/confirm_prospect_screen.dart';
 import 'package:flutter/cupertino.dart';

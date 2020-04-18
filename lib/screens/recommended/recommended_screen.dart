@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/models/request/request.dart';
-import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_unavailable.dart';

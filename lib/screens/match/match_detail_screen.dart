@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
-import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';

@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/models/request/request.dart';
-import 'package:canteen_frontend/screens/profile/profile_list.dart';
+import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
-import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
