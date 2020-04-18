@@ -109,10 +109,15 @@ class _SkillListState extends State<SkillList> {
                                   child: SizedBox(
                                     width: 33,
                                     height: 33,
-                                    child: Icon(
-                                      Icons.send,
-                                      size: 20,
-                                      color: Colors.white,
+                                    child: Center(
+                                      child: Icon(
+                                        IconData(0xf474,
+                                            fontFamily: CupertinoIcons.iconFont,
+                                            fontPackage:
+                                                CupertinoIcons.iconFontPackage),
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   onTap: () {
