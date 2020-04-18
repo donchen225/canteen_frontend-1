@@ -388,15 +388,15 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
         console.log(error);
     });
 
-    var recomendationData = {
+    var recommendationData = {
         "limit": RECOMMENDATION_LIMIT,
         "last_updated": timestamp,
     };
 
     if (!recommendationSnapshot.exists) {
 
-        return recommendationDocReference.set(recomendationData).then(() => {
-            return recomendationData;
+        return recommendationDocReference.set(recommendationData).then(() => {
+            return recommendationData;
         }).catch((error) => {
             throw new functions.https.HttpsError('unknown', error.message, error);
         });
@@ -500,13 +500,22 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     })
 
-    if (newRecommendations.length === 0) {
+    var recFlags = {};
+    var newRecsUnique = newRecommendations.filter(function (entry) {
+        if (recFlags[entry.user_id]) {
+            return false;
+        }
+        recFlags[entry.user_id] = true;
+        return true;
+    });
+
+    if (newRecsUnique.length === 0) {
         return existingRecommendations;
     }
 
     const diff = limit - existingRecommendations.length;
 
-    const recsToAdd = (newRecommendations.length <= diff) ? newRecommendations : utils.getRandom(newRecommendations, diff);
+    const recsToAdd = (newRecsUnique.length <= diff) ? newRecsUnique : utils.getRandom(newRecsUnique, diff);
     var allRecs = [];
     recsToAdd.forEach((rec) => {
 

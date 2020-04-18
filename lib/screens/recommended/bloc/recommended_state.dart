@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,16 +12,17 @@ abstract class RecommendedState extends Equatable {
 class RecommendedLoading extends RecommendedState {}
 
 class RecommendedLoaded extends RecommendedState {
+  final Recommendation rec;
   final User user;
 
-  const RecommendedLoaded(this.user);
+  const RecommendedLoaded(this.rec, this.user);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, rec];
 
   @override
   String toString() {
-    return 'RecommendedLoaded { user: $user }';
+    return 'RecommendedLoaded { user: $user, rec: $rec }';
   }
 }
 

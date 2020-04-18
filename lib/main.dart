@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
@@ -36,6 +37,8 @@ void main() async {
   final UserRepository userRepository = FirebaseUserRepository();
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
+  final RecommendationRepository recommendationRepository =
+      RecommendationRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
@@ -86,6 +89,7 @@ void main() async {
           create: (context) {
             return RecommendedBloc(
               userRepository: userRepository,
+              recommendationRepository: recommendationRepository,
             );
           },
         ),

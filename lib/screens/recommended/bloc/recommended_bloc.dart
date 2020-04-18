@@ -1,21 +1,25 @@
-import 'dart:collection';
-
+import 'package:canteen_frontend/models/recommendation/recommendation.dart';
+import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_event.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_state.dart';
-import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   final UserRepository _userRepository;
+  final RecommendationRepository _recommendationRepository;
   int _currentIndex = 0;
-  List<User> _recommendations = [];
+  List<Recommendation> _recommendations = [];
 
-  RecommendedBloc({@required UserRepository userRepository})
+  RecommendedBloc(
+      {@required UserRepository userRepository,
+      @required RecommendationRepository recommendationRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository;
+        assert(recommendationRepository != null),
+        _userRepository = userRepository,
+        _recommendationRepository = recommendationRepository;
 
   @override
   RecommendedState get initialState => RecommendedLoading();
@@ -36,23 +40,23 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
       yield RecommendedUnavailable();
     }
 
-    final learnQueries = user.teachSkill
-        .map((skill) => AlgoliaSearch.queryLearnSkill(skill.name));
-    final teachQueries = user.learnSkill
-        .map((skill) => AlgoliaSearch.queryTeachSkill(skill.name));
-    final snapshots = learnQueries.followedBy(teachQueries);
+    final recommendations = (await _recommendationRepository
+        .getRecommendations())
+      ..retainWhere((rec) => rec.status == 0);
 
-    final recommendations = (await Future.wait(snapshots.map((snap) async =>
-            (await snap)
-                .hits
-                .map((result) => User.fromAlgoliaSnapshot(result)))))
-        .expand((x) => x);
-    final distnctRecommendations =
-        LinkedHashSet<User>.from(recommendations).toList();
-    _recommendations.addAll(distnctRecommendations);
+    recommendations.forEach((rec) {
+      final exists = (_recommendations.firstWhere((r) => r.userId == rec.userId,
+          orElse: () => null));
+      if (exists == null) {
+        _recommendations.add(rec);
+      }
+    });
 
     if (_currentIndex < _recommendations.length) {
-      yield RecommendedLoaded(_recommendations[_currentIndex]);
+      final rec = _recommendations[_currentIndex];
+      final recUser = User.fromRecommendation(rec);
+
+      yield RecommendedLoaded(rec, recUser);
     } else {
       yield RecommendedUnavailable();
     }
@@ -63,7 +67,9 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
     _currentIndex += 1;
 
     if (_currentIndex < _recommendations.length) {
-      yield RecommendedLoaded(_recommendations[_currentIndex]);
+      final rec = _recommendations[_currentIndex];
+      final recUser = User.fromRecommendation(rec);
+      yield RecommendedLoaded(rec, recUser);
     } else {
       yield RecommendedEmpty();
     }

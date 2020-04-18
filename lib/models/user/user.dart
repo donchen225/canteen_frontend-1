@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_entity.dart';
@@ -83,6 +84,17 @@ class User {
           .map<Skill>((skill) =>
               Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
           .toList(),
+    );
+  }
+
+  static User fromRecommendation(Recommendation rec) {
+    return User(
+      id: rec.userId,
+      displayName: rec.displayName,
+      about: rec.about,
+      photoUrl: rec.photoUrl,
+      learnSkill: rec.learnSkill,
+      teachSkill: rec.teachSkill,
     );
   }
 

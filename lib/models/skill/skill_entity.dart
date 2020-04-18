@@ -31,7 +31,7 @@ class SkillEntity extends Equatable {
     );
   }
 
-  static SkillEntity fromAlgoliaSnapshot(Map<String, dynamic> data) {
+  static SkillEntity fromAlgoliaSnapshot(Map<dynamic, dynamic> data) {
     return SkillEntity(
       data['name'],
       data['description'],
