@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -96,8 +95,12 @@ class DiscoverScreen extends StatelessWidget {
                                   child: ListView.builder(
                                     padding: EdgeInsets.only(
                                         bottom: SizeConfig
-                                            .instance.blockSizeVertical,
+                                                .instance.blockSizeVertical *
+                                            3,
                                         left: SizeConfig
+                                                .instance.blockSizeHorizontal *
+                                            6,
+                                        right: SizeConfig
                                                 .instance.blockSizeHorizontal *
                                             6),
                                     physics: NeverScrollableScrollPhysics(),
@@ -139,8 +142,12 @@ class DiscoverScreen extends StatelessWidget {
                                   child: ListView.builder(
                                     padding: EdgeInsets.only(
                                         bottom: SizeConfig
-                                            .instance.blockSizeVertical,
+                                                .instance.blockSizeVertical *
+                                            3,
                                         left: SizeConfig
+                                                .instance.blockSizeHorizontal *
+                                            6,
+                                        right: SizeConfig
                                                 .instance.blockSizeHorizontal *
                                             6),
                                     physics: NeverScrollableScrollPhysics(),
@@ -165,54 +172,58 @@ class DiscoverScreen extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig
-                                              .instance.blockSizeHorizontal *
-                                          3,
-                                      right: SizeConfig
-                                              .instance.blockSizeHorizontal *
-                                          3),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      ClipOval(
-                                        child: Material(
-                                          color: Colors.orange[400],
-                                          elevation: 4,
-                                          child: InkWell(
-                                            child: SizedBox(
-                                              width: SizeConfig.instance
-                                                      .blockSizeHorizontal *
-                                                  10,
-                                              height: SizeConfig.instance
-                                                      .blockSizeHorizontal *
-                                                  10,
-                                              child: Icon(
-                                                Icons.send,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              // TODO: add animation
-                                              BlocProvider.of<RequestBloc>(
-                                                      context)
-                                                  .add(
-                                                AddRequest(
-                                                  Request.create(
-                                                    receiverId: user.id,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // Container(
+                                //   padding: EdgeInsets.only(
+                                //       bottom: SizeConfig
+                                //               .instance.blockSizeHorizontal *
+                                //           3,
+                                //       right: SizeConfig
+                                //               .instance.blockSizeHorizontal *
+                                //           3),
+                                //   child: Row(
+                                //     mainAxisAlignment: MainAxisAlignment.end,
+                                //     crossAxisAlignment: CrossAxisAlignment.end,
+                                //     children: <Widget>[
+                                //       ClipOval(
+                                //         child: Material(
+                                //           color: Colors.orange[400],
+                                //           elevation: 4,
+                                //           child: InkWell(
+                                //             child: SizedBox(
+                                //               width: SizeConfig.instance
+                                //                       .blockSizeHorizontal *
+                                //                   10,
+                                //               height: SizeConfig.instance
+                                //                       .blockSizeHorizontal *
+                                //                   10,
+                                //               child: Icon(
+                                //                 IconData(0xf474,
+                                //                     fontFamily:
+                                //                         CupertinoIcons.iconFont,
+                                //                     fontPackage: CupertinoIcons
+                                //                         .iconFontPackage),
+                                //                 size: 25,
+                                //                 color: Colors.white,
+                                //               ),
+                                //             ),
+                                //             onTap: () {
+                                //               // TODO: add animation
+                                //               showDialog(
+                                //                 context: context,
+                                //                 builder:
+                                //                     (BuildContext context) =>
+                                //                         ConfirmationDialog(
+                                //                   user: user,
+                                //                   onConfirm: () {},
+                                //                 ),
+                                //               );
+                                //             },
+                                //           ),
+                                //         ),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

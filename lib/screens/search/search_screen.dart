@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/components/confirmation_dialog.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
@@ -25,12 +27,38 @@ class _SearchScreenState extends State<SearchScreen> {
     _searchBloc = BlocProvider.of<SearchBloc>(context);
   }
 
-  Widget _loadSearchWidget(SearchState state) {
+  void _onTapSkillFunction(
+      BuildContext context, SearchShowProfile state, Skill skill) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => ConfirmationDialog(
+        user: state.user,
+        skill: skill,
+        onConfirm: (comment) {
+          BlocProvider.of<RequestBloc>(context).add(
+            AddRequest(
+              Request.create(
+                skill: skill,
+                comment: comment,
+                receiverId: state.user.id,
+              ),
+            ),
+          );
+
+          state.isSearchResult
+              ? BlocProvider.of<SearchBloc>(context).add(SearchNextUser())
+              : BlocProvider.of<SearchBloc>(context).add(SearchHome());
+        },
+      ),
+    );
+  }
+
+  Widget _loadSearchWidget(BuildContext context, SearchState state) {
     if (state is SearchUninitialized) {
       return DiscoverScreen(state.allUsers);
     } else if (state is SearchShowProfile) {
       return Scaffold(
-        key: UniqueKey(),
+        key: Key(state.user.id),
         floatingActionButton: SkipUserFloatingActionButton(
           onTap: () {
             state.isSearchResult
@@ -51,26 +79,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 key: Key('search-show-profile'),
                 height: SizeConfig.instance.blockSizeHorizontal * 33,
                 showName: true,
-                onTapLearnFunction: (skill) {
-                  BlocProvider.of<RequestBloc>(context).add(
-                    AddRequest(
-                      Request.create(
-                        skill: skill,
-                        receiverId: state.user.id,
-                      ),
-                    ),
-                  );
-                },
-                onTapTeachFunction: (skill) {
-                  BlocProvider.of<RequestBloc>(context).add(
-                    AddRequest(
-                      Request.create(
-                        skill: skill,
-                        receiverId: state.user.id,
-                      ),
-                    ),
-                  );
-                },
+                onTapLearnFunction: (skill) =>
+                    _onTapSkillFunction(context, state, skill),
+                onTapTeachFunction: (skill) =>
+                    _onTapSkillFunction(context, state, skill),
               ),
             ),
           ]),
@@ -152,7 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: child,
                   );
                 },
-                child: _loadSearchWidget(state),
+                child: _loadSearchWidget(context, state),
               );
             }
           },

@@ -93,6 +93,11 @@ void main() async {
             );
           },
         ),
+        BlocProvider<SearchBloc>(
+          create: (context) => SearchBloc(
+            userRepository: userRepository,
+          )..add(SearchHome()),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -165,11 +170,6 @@ class App extends StatelessWidget {
                           userRepository: _userRepository,
                           requestRepository: _requestRepository,
                         ),
-                      ),
-                      BlocProvider<SearchBloc>(
-                        create: (context) => SearchBloc(
-                          userRepository: _userRepository,
-                        )..add(SearchHome()),
                       ),
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(

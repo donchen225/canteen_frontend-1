@@ -24,11 +24,13 @@ class Request {
     this.comment,
   });
 
-  static Request create({Skill skill, String receiverId}) {
+  static Request create({Skill skill, String receiverId, String comment}) {
+    print('COMMENT: $comment');
     return Request(
       skill: skill != null
           ? (skill.name + ' - ' + '\$${(skill.price).toString()}')
           : '',
+      comment: comment,
       receiverId: receiverId,
       status: RequestStatus.initialized,
     );

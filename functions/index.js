@@ -29,6 +29,9 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     const skill = data.skill;
     const comment = data.comment;
 
+    var output = {};
+    var terminate = false;
+
     // Checking attribute.
     if (!(typeof receiverId === 'string') || receiverId.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
@@ -73,13 +76,19 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             if (doc.exists) {
-                throw new functions.https.HttpsError('already-exists', 'Request already exists.');
+                terminate = true;
+                output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+                return;
             }
         });
         return;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
+
+    if (terminate) {
+        return output;
+    }
 
 
     // Create document
