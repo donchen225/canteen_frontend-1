@@ -3,6 +3,7 @@ import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,7 +85,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
           prospect.displayName ?? prospect.email,
           style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
         ),
-        backgroundColor: Colors.white.withOpacity(0.8),
+        backgroundColor: Palette.appBarBackgroundColor,
         elevation: 6,
         leading: BackButton(
           color: Colors.black,
