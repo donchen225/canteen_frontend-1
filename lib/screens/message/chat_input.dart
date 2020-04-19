@@ -51,7 +51,7 @@ class _ChatInputState extends State<ChatInput> {
                       child: IconButton(
                         icon: Icon(Icons.send),
                         onPressed: () => sendMessage(context),
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.blue.withOpacity(0.8),
                       ),
                     ),
                     color: Colors.white,
