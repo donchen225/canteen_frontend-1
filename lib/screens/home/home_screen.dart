@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -83,23 +84,43 @@ class _HomeScreenState extends State<HomeScreen> {
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(
+                IconData(0xf38f,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+              ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
+              icon: Icon(
+                IconData(0xf2f5,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+              ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.offline_bolt),
+              icon: Icon(
+                IconData(0xf2eb,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+              ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.message),
+              icon: Icon(
+                IconData(0xf3b2,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+              ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(
+                IconData(0xf3a0,
+                    fontFamily: CupertinoIcons.iconFont,
+                    fontPackage: CupertinoIcons.iconFontPackage),
+              ),
               title: Text(''),
             ),
           ],
