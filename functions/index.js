@@ -4,6 +4,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const algoliasearch = require('algoliasearch');
 const dates = require('./date');
+const zoom = require('./zoom');
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
@@ -199,12 +200,19 @@ const ZOOM_BASE_URL = 'https://api.zoom.us/v2/';
 const ZOOM_USER_ID = 'D3HzE_hfR5yJ6Kyv5QqaDA';
 
 // Video chat functions
-// exports.createRoom = functions.https.onRequest(async (req, res) => {
+exports.createVideoChatRoom = functions.https.onRequest(async (data, context) => {
 
-//     // Check if user is authenticated
-//     // Check if user has paid
+    // Check if user is authenticated
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
 
-// });
+    // Check if user has paid
+
+
+});
 
 
 exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate((snapshot, context) => {
@@ -328,7 +336,7 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
 
     if (!recommendationSnapshot.exists) {
 
-        return recommendationDocReference.set(recommendationData).then(() => {
+        recommendationDocReference.set(recommendationData).then(() => {
             return recommendationData;
         }).catch((error) => {
             throw new functions.https.HttpsError('unknown', error.message, error);
@@ -361,9 +369,9 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
     const learnSkills = Object.values(user['learn_skill']).map(x => x['name']);
     const allSkills = teachSkills.concat(learnSkills);
 
-    const existingQueries = await queriesReference.where('queried_on', '>=', startDate).where('queried_on', '<', endDate).where('term', 'in', allSkills).get().then((querySnapshot) => {
+    const existingQueries = (allSkills.length !== 0) ? await queriesReference.where('queried_on', '>=', startDate).where('queried_on', '<', endDate).where('term', 'in', allSkills).get().then((querySnapshot) => {
         return querySnapshot.docs.map((doc) => doc.data());
-    });
+    }) : [];
 
     var unexecutedQueries = []
     teachSkills.forEach((query) => {
