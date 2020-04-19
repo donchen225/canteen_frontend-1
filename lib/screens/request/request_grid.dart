@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/request/profile_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class RequestGrid extends StatelessWidget {
                 color: Color(0xFF303030),
               ),
             ),
-            backgroundColor: Color(0xFFFFFFFF),
+            backgroundColor: Palette.appBarBackgroundColor,
             elevation: 1,
           ),
           body: ProfileGrid(

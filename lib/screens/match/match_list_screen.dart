@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/match/match_list.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class MatchListScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class MatchListScreen extends StatelessWidget {
             color: Color(0xFF303030),
           ),
         ),
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: Palette.appBarBackgroundColor,
         automaticallyImplyLeading: false,
         elevation: 1,
       ),

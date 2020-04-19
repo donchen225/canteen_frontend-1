@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_empty_results.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -105,10 +106,11 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Palette.appBarBackgroundColor,
+        elevation: 1,
         title: Container(
           height: 40,
-          color: Colors.grey[300],
+          color: Colors.grey[200],
           child: Row(
             children: <Widget>[
               Flexible(

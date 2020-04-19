@@ -14,6 +14,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,8 +138,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             brightness: Brightness.light,
             title: Text(
               'Profile',
+              style: TextStyle(
+                color: Color(0xFF303030),
+              ),
             ),
-            elevation: 2,
+            backgroundColor: Palette.appBarBackgroundColor,
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
