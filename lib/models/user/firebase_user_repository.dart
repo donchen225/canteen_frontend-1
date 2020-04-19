@@ -184,36 +184,11 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(_userMap[id]);
     }
 
-    try {
-      return _getLocalUser(id);
-    } catch (e) {
-      print('GET LOCAL USER FAILED');
-      print(e);
-      return userCollection.document(id).get().then((snapshot) {
-        return UserEntity.fromSnapshot(snapshot);
-      }).then((userEntity) {
-        final user = User.fromEntity(userEntity);
-        saveUser(user);
-        return user;
-      });
-    }
-  }
-
-  Future<User> _getLocalUser(String id) async {
-    return userCollection
-        .document(id)
-        .get(source: Source.cache)
-        .then((snapshot) {
+    return userCollection.document(id).get().then((snapshot) {
       return UserEntity.fromSnapshot(snapshot);
     }).then((userEntity) {
       final user = User.fromEntity(userEntity);
-
-      saveUserMap(user);
-
-      if (id == _user.id) {
-        saveUser(user);
-      }
-
+      saveUser(user);
       return user;
     });
   }
@@ -223,11 +198,10 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(_user);
     }
     try {
-      return _getLocalUser((await getFirebaseUser()).uid);
-    } catch (e) {
-      print('GET LOCAL USER FAILED');
-      print(e);
       return getUser((await getFirebaseUser()).uid);
+    } catch (e) {
+      print('GET USER FAILED');
+      print(e);
     }
   }
 

@@ -43,6 +43,8 @@ class RecommendationRepository {
 
   Future<List<Recommendation>> getRecommendations() async {
     return CloudFunctionManager.getRecommendations.call().then((result) {
+      print('GETTING RECOMMENDATIONS');
+      print(result.data);
       return result.data
           .map<Recommendation>((rec) => Recommendation.fromJSON(rec))
           .toList();
