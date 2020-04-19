@@ -29,7 +29,7 @@ class RequestGrid extends StatelessWidget {
               ),
             ),
             backgroundColor: Color(0xFFFFFFFF),
-            elevation: 2,
+            elevation: 1,
           ),
           body: ProfileGrid(
             state.requestList.map((request) => request.sender).toList(),

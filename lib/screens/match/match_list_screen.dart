@@ -17,7 +17,7 @@ class MatchListScreen extends StatelessWidget {
         ),
         backgroundColor: Color(0xFFFFFFFF),
         automaticallyImplyLeading: false,
-        elevation: 2,
+        elevation: 1,
       ),
       body: MatchList(),
     );
