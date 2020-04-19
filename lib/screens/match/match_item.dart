@@ -14,6 +14,12 @@ class MatchItem extends StatelessWidget {
   MatchItem({Key key, @required this.onTap, @required this.match})
       : super(key: key);
 
+  String formatTime(DateTime time) {
+    String t = timeago.format(time, locale: 'en_short').replaceFirst(' ', '');
+
+    return t == 'now' ? t : '$t ago';
+  }
+
   @override
   Widget build(BuildContext context) {
     final user =
@@ -100,10 +106,7 @@ class MatchItem extends StatelessWidget {
                     vertical: SizeConfig.instance.blockSizeVertical * 2),
                 child: Column(
                   children: <Widget>[
-                    Text(timeago
-                            .format(match.lastUpdated, locale: 'en_short')
-                            .replaceFirst(' ', '') +
-                        ' ago'),
+                    Text(formatTime(match.lastUpdated)),
                   ],
                 ),
               ),
