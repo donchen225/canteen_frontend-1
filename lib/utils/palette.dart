@@ -8,5 +8,5 @@ class Palette {
   static Color otherMessageColor = Color(0xff3f3f3f);
 
   static Color appBarBackgroundColor = Color(0xFFFFFFFF);
-  // static Color backgroundColor = Color();
+  static Color backgroundColor = Color(0xFFF8F8F8);
 }

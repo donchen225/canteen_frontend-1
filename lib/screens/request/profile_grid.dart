@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class ProfileGrid extends StatelessWidget {
@@ -19,7 +20,7 @@ class ProfileGrid extends StatelessWidget {
     }
 
     return Container(
-      color: Colors.grey[100],
+      color: Palette.backgroundColor,
       child: GridView.builder(
         padding: EdgeInsets.only(top: 20),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,7 @@ class RecommendedUnavailableScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[100],
+      color: Palette.backgroundColor,
       child: Column(
         children: <Widget>[
           Expanded(

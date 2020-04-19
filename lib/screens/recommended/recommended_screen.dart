@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.da
 import 'package:canteen_frontend/screens/recommended/recommended_unavailable.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,12 +54,12 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
           },
         ),
         body: Container(
-          color: Colors.grey[100],
+          color: Palette.backgroundColor,
           child: CustomScrollView(slivers: <Widget>[
             SliverAppBar(
               pinned: true,
               brightness: Brightness.light,
-              backgroundColor: Colors.grey[100],
+              backgroundColor: Palette.backgroundColor,
               title: Text(
                 user.displayName ?? '',
                 style: TextStyle(

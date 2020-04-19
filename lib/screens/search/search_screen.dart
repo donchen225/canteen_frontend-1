@@ -68,7 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
           },
         ),
         body: Container(
-          color: Colors.grey[100],
+          color: Palette.backgroundColor,
           child: CustomScrollView(slivers: <Widget>[
             SliverPadding(
               padding: EdgeInsets.only(
@@ -93,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
       return SearchEmptyResults();
     } else if (state is SearchResultsEnd) {
       return Container(
-        color: Colors.grey[100],
+        color: Palette.backgroundColor,
         child: Center(
           child: Text('No more results!'),
         ),

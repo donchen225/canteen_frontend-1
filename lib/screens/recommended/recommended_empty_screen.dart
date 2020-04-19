@@ -5,7 +5,7 @@ class RecommendedEmptyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[100],
+      color: Color(0xFFF8F8F8),
       child: Column(
         children: <Widget>[
           Expanded(
