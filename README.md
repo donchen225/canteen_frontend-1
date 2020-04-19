@@ -52,6 +52,10 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 1. Set `.env` file.
 2. Export environment variables from `.env` file `source .en
 
+## Generate URL launcher icon
+
+`flutter pub run flutter_launcher_icons:main`
+
 ## Notes
 
 * If using the Firebase Admin SDK in cloud functions, Firestore security rules are ignored.
