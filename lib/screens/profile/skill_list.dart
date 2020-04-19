@@ -110,7 +110,7 @@ class _SkillListState extends State<SkillList> {
                                     width: 33,
                                     height: 33,
                                     child: Center(
-                                      child: Icon(
+                                      child: const Icon(
                                         IconData(0xf474,
                                             fontFamily: CupertinoIcons.iconFont,
                                             fontPackage:

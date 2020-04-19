@@ -143,6 +143,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             backgroundColor: Palette.appBarBackgroundColor,
+            elevation: 1,
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
