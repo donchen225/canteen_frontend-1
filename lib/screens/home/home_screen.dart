@@ -6,7 +6,6 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,10 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex;
 
-  Color _partyButtonColor;
-  Color _friendsButtonColor;
-  Color _strangersButtonColor;
-
   List<Widget> widgetOptions;
 
   final _searchKey = GlobalKey();
@@ -38,9 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     _selectedIndex = 0;
-    _partyButtonColor = Colors.white;
-    _friendsButtonColor = Colors.white;
-    _strangersButtonColor = Colors.white;
 
     widgetOptions = [
       RecommendedScreen(),
@@ -85,41 +77,31 @@ class _HomeScreenState extends State<HomeScreen> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(
-                IconData(0xf38f,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
+                Icons.home,
               ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                IconData(0xf2f5,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
+                Icons.search,
               ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                IconData(0xf2eb,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
+                Icons.email,
               ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                IconData(0xf3b2,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
+                Icons.sms,
               ),
               title: Text(''),
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                IconData(0xf3a0,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
+                Icons.person,
               ),
               title: Text(''),
             ),

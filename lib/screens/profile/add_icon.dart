@@ -24,9 +24,9 @@ class AddIcon extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Icon(
-          CupertinoIcons.add,
+          Icons.add,
           color: Colors.white,
-          size: size / 5,
+          size: size / 6,
         ),
       ),
     );
