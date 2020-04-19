@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,10 +12,28 @@ class _ChatInputState extends State<ChatInput> {
   final TextEditingController textEditingController = TextEditingController();
   MessageBloc _messageBloc;
   bool showEmojiKeyboard = false;
+  Color _sendButtonColor = Colors.orange[100];
+
   @override
   void initState() {
     super.initState();
     _messageBloc = BlocProvider.of<MessageBloc>(context);
+
+    textEditingController.addListener(_setColor);
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  void _setColor() {
+    setState(() {
+      _sendButtonColor = textEditingController.text.isEmpty
+          ? Colors.orange[100]
+          : Colors.orange[800];
+    });
   }
 
   @override
@@ -36,7 +55,7 @@ class _ChatInputState extends State<ChatInput> {
                         controller: textEditingController,
                         autofocus: true,
                         decoration: InputDecoration.collapsed(
-                          hintText: 'Send a message',
+                          hintText: 'Send a message...',
                           hintStyle:
                               TextStyle(color: Theme.of(context).hintColor),
                         ),
@@ -48,10 +67,20 @@ class _ChatInputState extends State<ChatInput> {
                   Material(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () => sendMessage(context),
-                        color: Colors.blue.withOpacity(0.8),
+                      child: SizedBox(
+                        width: SizeConfig.instance.safeBlockHorizontal * 16,
+                        child: FlatButton(
+                          // color: Colors.red,
+                          padding: EdgeInsets.all(0),
+                          onPressed: () => sendMessage(context),
+                          child: Text(
+                            'Send',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: _sendButtonColor,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     color: Colors.white,
