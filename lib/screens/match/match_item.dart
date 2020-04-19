@@ -15,7 +15,10 @@ class MatchItem extends StatelessWidget {
       : super(key: key);
 
   String formatTime(DateTime time) {
-    String t = timeago.format(time, locale: 'en_short').replaceFirst(' ', '');
+    String t = timeago
+        .format(time, locale: 'en_short')
+        .replaceFirst(' ', '')
+        .replaceFirst('~', '');
 
     return t == 'now' ? t : '$t ago';
   }
