@@ -86,7 +86,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
           style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
         ),
         backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 6,
+        elevation: 1,
         leading: BackButton(
           color: Colors.black,
         ),
