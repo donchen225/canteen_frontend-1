@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class AddIcon extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,
-            color: Colors.white,
+            color: Palette.backgroundColor,
           ),
           color: Colors.blue[500],
           shape: BoxShape.circle,
