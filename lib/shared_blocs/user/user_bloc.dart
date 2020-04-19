@@ -59,8 +59,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
   }
 
-  // TODO: add logic to check local user data once implemented and
-  // update data if new
   Stream<UserState> _mapLoadUserToState(User user) async* {
     yield UserLoaded(user);
   }

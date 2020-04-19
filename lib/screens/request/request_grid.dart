@@ -17,7 +17,6 @@ class RequestGrid extends StatelessWidget {
     return BlocBuilder<RequestListBloc, RequestListState>(
         builder: (context, state) {
       if (state is RequestListLoading || state is RequestListLoaded) {
-        // TODO: show something when in MatchListLoaded state
         return Center(child: CupertinoActivityIndicator());
       } else if (state is DetailedRequestListLoaded) {
         return Scaffold(

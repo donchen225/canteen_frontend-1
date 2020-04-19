@@ -8,9 +8,9 @@ class CachedSharedPreferences {
   static SharedPreferences _preferences;
   static CachedSharedPreferences _instance;
   static Map<String, dynamic> _memoryCache = {};
-  static final cacheKeyList = {
+  static final cacheKeyList = [
     PreferenceConstants.userId,
-  };
+  ];
 
   static Future getInstance() async {
     if (_instance == null) {

@@ -9,14 +9,11 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 
 class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   final MatchBloc _matchBloc;
-  final UserRepository _userRepository;
   StreamSubscription _matchSubscription;
 
-  MatchListBloc({@required matchBloc, @required userRepository})
+  MatchListBloc({@required matchBloc})
       : assert(matchBloc != null),
-        assert(userRepository != null),
-        _matchBloc = matchBloc,
-        _userRepository = userRepository {
+        _matchBloc = matchBloc {
     _matchSubscription = matchBloc.listen((state) {
       if (state is MatchesLoaded) {
         add(LoadMatchList((matchBloc.state as MatchesLoaded).matches));

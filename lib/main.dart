@@ -161,7 +161,6 @@ class App extends StatelessWidget {
                       BlocProvider<MatchListBloc>(
                         create: (context) => MatchListBloc(
                           matchBloc: BlocProvider.of<MatchBloc>(context),
-                          userRepository: _userRepository,
                         ),
                       ),
                       BlocProvider<RequestListBloc>(

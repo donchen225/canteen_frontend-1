@@ -39,7 +39,6 @@ class _MessageListState extends State<MessageList> {
   Widget build(BuildContext context) {
     final userId = match.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
-    // TODO: implement build
     return BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
       if (state is FetchedMessagesState) {
         print('Received Messages');
