@@ -8,9 +8,14 @@ class MatchListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         title: Text(
           'Matches',
+          style: TextStyle(
+            color: Color(0xFF303030),
+          ),
         ),
+        backgroundColor: Color(0xFFFFFFFF),
         automaticallyImplyLeading: false,
         elevation: 2,
       ),

@@ -150,6 +150,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
 
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

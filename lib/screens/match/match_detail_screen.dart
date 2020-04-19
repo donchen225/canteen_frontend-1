@@ -79,6 +79,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
 
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         title: Text(
           prospect.displayName ?? prospect.email,
           style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),

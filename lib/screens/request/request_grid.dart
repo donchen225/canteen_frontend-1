@@ -21,7 +21,15 @@ class RequestGrid extends StatelessWidget {
       } else if (state is DetailedRequestListLoaded) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Requests'),
+            brightness: Brightness.light,
+            title: Text(
+              'Requests',
+              style: TextStyle(
+                color: Color(0xFF303030),
+              ),
+            ),
+            backgroundColor: Color(0xFFFFFFFF),
+            elevation: 2,
           ),
           body: ProfileGrid(
             state.requestList.map((request) => request.sender).toList(),
@@ -35,6 +43,7 @@ class RequestGrid extends StatelessWidget {
       } else if (state is IndividualDetailedRequestLoaded) {
         return Scaffold(
             appBar: AppBar(
+              brightness: Brightness.light,
               title: Text(state.request.sender.displayName ?? ''),
             ),
             body: Stack(

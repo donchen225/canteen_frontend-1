@@ -134,6 +134,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         return Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
+            brightness: Brightness.light,
             title: Text(
               'Profile',
             ),
