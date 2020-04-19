@@ -4,6 +4,7 @@ import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/bloc.dart';
@@ -43,38 +44,39 @@ class _LoginFormState extends State<LoginForm> {
     _passwordController.addListener(_onPasswordChanged);
   }
 
+  String getErrorMessage(PlatformException error) {
+    if (error == null) {
+      return '';
+    }
+
+    if (error.code == 'ERROR_WRONG_PASSWORD') {
+      return 'The password is incorrect.';
+    } else if (error.code == 'ERROR_USER_NOT_FOUND') {
+      return 'The username does not exist.';
+    } else {
+      return error.message;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.isFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Login Failure'), Icon(Icons.error)],
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-        }
-        if (state.isSubmitting) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Logging In...'),
-                    CupertinoActivityIndicator(),
-                  ],
-                ),
-              ),
-            );
-        }
+        // if (state.isSubmitting) {
+        //   Scaffold.of(context)
+        //     ..hideCurrentSnackBar()
+        //     ..showSnackBar(
+        //       SnackBar(
+        //         content: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             Text('Logging In...'),
+        //             CupertinoActivityIndicator(),
+        //           ],
+        //         ),
+        //       ),
+        //     );
+        // }
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
         }
@@ -139,14 +141,15 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
                 // TODO: change this error to a pop up
-                state.isFailure
-                    ? Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          state.error.message,
-                          style: TextStyle(color: Colors.red),
-                        ))
-                    : Container(),
+                Visibility(
+                  visible: state.isFailure,
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        getErrorMessage(state.error),
+                        style: TextStyle(color: Colors.red),
+                      )),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.blockSizeVertical * 3),
