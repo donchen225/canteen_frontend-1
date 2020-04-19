@@ -33,10 +33,10 @@ class MatchItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.instance.blockSizeVertical * 16,
+        height: SizeConfig.instance.blockSizeVertical * 13,
         padding: EdgeInsets.only(
-          top: SizeConfig.instance.blockSizeVertical * 2,
-          bottom: SizeConfig.instance.blockSizeVertical * 2,
+          top: SizeConfig.instance.blockSizeVertical * 1,
+          bottom: SizeConfig.instance.blockSizeVertical * 1,
           left: SizeConfig.instance.blockSizeHorizontal * 4,
           right: SizeConfig.instance.blockSizeHorizontal * 4,
         ),
