@@ -7,45 +7,75 @@ import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 
 class OnboardingSignUpScreens extends StatelessWidget {
-  final page = new PageViewModel(
+  final namePage = new PageViewModel(
     pageColor: Palette.backgroundColor,
     // iconImageAssetPath: 'assets/taxi-driver.png',
     iconColor: null,
     bubbleBackgroundColor: Palette.orangeColor,
-    body: Visibility(
-      visible: false,
-      child: Container(
-        color: Colors.red,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Row(
           children: <Widget>[
-            Text(
-              'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
+            Container(
+              child: Text("What's your name?"),
             ),
           ],
         ),
-      ),
-    ),
-    title: Visibility(visible: false, child: Container()),
-    mainImage: Container(
-      color: Colors.red,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Text(
-            'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
+        TextField(
+          style: TextStyle(
+              fontSize: 25,
+              color: Palette.orangeColor,
+              fontWeight: FontWeight.w700,
+              decoration: TextDecoration.none),
+          decoration: InputDecoration(
+            counterText: "",
+            contentPadding: EdgeInsets.all(0),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
           ),
-        ],
-      ),
+          maxLines: 1,
+          minLines: 1,
+        ),
+      ],
     ),
-    titleTextStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
-    bodyTextStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
+    bodyTextStyle: TextStyle(
+        fontFamily: 'MyFont', color: Colors.black, fontWeight: FontWeight.w700),
+  );
+  final skillPage = new PageViewModel(
+    pageColor: Palette.backgroundColor,
+    // iconImageAssetPath: 'assets/taxi-driver.png',
+    iconColor: null,
+    bubbleBackgroundColor: Palette.orangeColor,
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 6,
+              ),
+              child: Text(
+                "What are your skills?",
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    bodyTextStyle: TextStyle(
+        fontFamily: 'MyFont', color: Colors.black, fontWeight: FontWeight.w700),
   );
 
   @override
   Widget build(BuildContext context) {
     return IntroViewsFlutter(
-      [page, page, page, page, page, page],
+      [namePage, skillPage],
       onTapDoneButton: () {
         BlocProvider.of<HomeBloc>(context).add(PageTapped(index: 0));
       },

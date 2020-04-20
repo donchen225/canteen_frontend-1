@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:flutter/material.dart';
