@@ -27,6 +27,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   @override
+  void initStat() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.field == 'about') {
       _textController.text = widget.user.about;

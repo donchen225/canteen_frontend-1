@@ -48,6 +48,14 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     skill = Skill('', '', 0, 30);
   }
 
+  @override
+  void dispose() {
+    _skillNameController.dispose();
+    _skillPriceController.dispose();
+    _skillDescriptionController.dispose();
+    super.dispose();
+  }
+
   Widget _buildDurationPicker(BuildContext context) {
     final FixedExtentScrollController scrollController =
         FixedExtentScrollController(

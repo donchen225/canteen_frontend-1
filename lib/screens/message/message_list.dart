@@ -36,6 +36,12 @@ class _MessageListState extends State<MessageList> {
   }
 
   @override
+  void dispose() {
+    listScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userId = match.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));

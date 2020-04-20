@@ -26,7 +26,6 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     commentController.dispose();
     super.dispose();
   }
