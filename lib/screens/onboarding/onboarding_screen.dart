@@ -1,59 +1,40 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intro_views_flutter/Models/page_view_model.dart';
-import 'package:intro_views_flutter/intro_views_flutter.dart';
+
+import 'onboarding_sign_up_screens.dart';
 
 class OnboardingScreen extends StatelessWidget {
-  final page = new PageViewModel(
-    pageColor: const Color(0xFF607D8B),
-    // iconImageAssetPath: 'assets/taxi-driver.png',
-    iconColor: null,
-    bubbleBackgroundColor: Colors.red,
-    body: Visibility(
-      visible: false,
-      child: Container(
-        color: Colors.red,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Text(
-              'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
-            ),
-          ],
-        ),
-      ),
-    ),
-    title: Visibility(visible: false, child: Container()),
-    mainImage: Container(
-      color: Colors.red,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Text(
-            'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
-          ),
-        ],
-      ),
-    ),
-    titleTextStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
-    bodyTextStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
-  );
+  Widget _buildOnboardingWidget(BuildContext context, OnboardingState state) {
+    if (state is WelcomeScreenLoaded) {
+      return WelcomeScreen();
+    } else if (state is OnboardingSignUpScreensLoaded) {
+      return OnboardingSignUpScreens();
+    }
+
+    return Container();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IntroViewsFlutter(
-      [page, page, page, page, page, page],
-      onTapDoneButton: () {
-        BlocProvider.of<HomeBloc>(context).add(PageTapped(index: 0));
-      },
-      showNextButton: true,
-      showSkipButton: false,
-      pageButtonTextStyles: TextStyle(
-        color: Colors.white,
-        fontSize: 18.0,
-        fontFamily: "Regular",
-      ),
-    );
+    return BlocBuilder<OnboardingBloc, OnboardingState>(
+        builder: (BuildContext context, OnboardingState state) {
+      return AnimatedSwitcher(
+        duration: Duration(milliseconds: 200),
+        switchOutCurve: Threshold(0),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.3, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        child: _buildOnboardingWidget(context, state),
+      );
+    });
   }
 }

@@ -1,7 +1,9 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
@@ -142,7 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
           if (state is OnboardScreenLoaded) {
             print('ONBOARDSCREEN LOADED');
-            return OnboardingScreen();
+            return BlocProvider<OnboardingBloc>(
+              create: (context) => OnboardingBloc(),
+              child: OnboardingScreen(),
+            );
           }
           print('WHY AM I HERE?');
           return Container();
