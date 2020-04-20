@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
@@ -6,7 +7,7 @@ import 'package:intro_views_flutter/intro_views_flutter.dart';
 
 class OnboardingSignUpScreens extends StatelessWidget {
   final page = new PageViewModel(
-    pageColor: const Color(0xFF607D8B),
+    pageColor: Palette.backgroundColor,
     // iconImageAssetPath: 'assets/taxi-driver.png',
     iconColor: null,
     bubbleBackgroundColor: Colors.red,
