@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
@@ -10,7 +11,7 @@ class OnboardingSignUpScreens extends StatelessWidget {
     pageColor: Palette.backgroundColor,
     // iconImageAssetPath: 'assets/taxi-driver.png',
     iconColor: null,
-    bubbleBackgroundColor: Colors.red,
+    bubbleBackgroundColor: Palette.orangeColor,
     body: Visibility(
       visible: false,
       child: Container(
@@ -50,6 +51,19 @@ class OnboardingSignUpScreens extends StatelessWidget {
       },
       showNextButton: true,
       showSkipButton: false,
+      nextText: Container(
+          margin: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 3),
+          height: SizeConfig.instance.blockSizeHorizontal * 12,
+          width: SizeConfig.instance.blockSizeHorizontal * 12,
+          decoration: BoxDecoration(
+            color: Palette.orangeColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.arrow_forward_ios,
+            size: SizeConfig.instance.blockSizeHorizontal * 5,
+            color: Palette.whiteColor,
+          )),
       pageButtonTextStyles: TextStyle(
         color: Colors.white,
         fontSize: 18.0,
