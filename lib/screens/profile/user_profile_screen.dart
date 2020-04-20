@@ -119,224 +119,239 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  Widget _buildUserProfile(UserProfileState state) {
+    if (state is UserProfileLoaded) {
+      final user = state.user;
+
+      return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          brightness: Brightness.light,
+          title: Text(
+            'Profile',
+            style: TextStyle(
+              color: Palette.appBarTextColor,
+            ),
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              color: Palette.appBarTextColor,
+              onPressed: () {
+                BlocProvider.of<UserProfileBloc>(context).add(ShowSettings());
+              },
+            )
+          ],
+        ),
+        body: ListView(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
+                  child: Row(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          showPopUpSheet(user);
+                        },
+                        child: ProfilePicture(
+                          photoUrl: user.photoUrl,
+                          localPicture: _profilePicture,
+                          editable: true,
+                          size: 160,
+                          onTap: () => showPopUpSheet(user),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              child: ProfileSectionTitle('About'),
+            ),
+            GestureDetector(
+              onTap: () {
+                _userProfileBloc.add(EditAboutSection(user));
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: listPadding, right: listPadding),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey[200]),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  margin: EdgeInsets.all(0),
+                  elevation: 0.3,
+                  color: Colors.white,
+                  child: Container(
+                    height: 100,
+                    padding: EdgeInsets.all(15),
+                    child: Text(user.about ?? ''),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              child: ProfileSectionTitle("I'm teaching"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              child: SkillList(
+                user.teachSkill,
+                onTap: (int index) =>
+                    _userProfileBloc.add(EditSkill(user, 'teach', index)),
+              ),
+            ),
+            user.teachSkill.length < 3
+                ? AddIcon(
+                    160,
+                    onTap: () {
+                      _userProfileBloc.add(
+                          EditSkill(user, 'teach', user.teachSkill.length));
+                    },
+                  )
+                : Container(),
+            Padding(
+              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              child: ProfileSectionTitle("I'm learning"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              child: SkillList(
+                user.learnSkill,
+                onTap: (int index) =>
+                    _userProfileBloc.add(EditSkill(user, 'learn', index)),
+              ),
+            ),
+            user.learnSkill.length < 3
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: AddIcon(
+                      160,
+                      onTap: () {
+                        _userProfileBloc.add(
+                            EditSkill(user, 'learn', user.learnSkill.length));
+                      },
+                    ),
+                  )
+                : Container(),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: listPadding, right: listPadding, top: 5, bottom: 10),
+              child: Text('Basic Info'),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 40),
+              child: GestureDetector(
+                onTapDown: (_) {
+                  setState(() {
+                    nameSelected = true;
+                  });
+                },
+                onTapCancel: () {
+                  setState(() {
+                    nameSelected = false;
+                  });
+                },
+                onTap: () {
+                  setState(() {
+                    nameSelected = false;
+                  });
+                  _userProfileBloc.add(EditName(user));
+                },
+                child: Container(
+                  padding: EdgeInsets.only(
+                      left: listPadding,
+                      right: listPadding + 5,
+                      top: 5,
+                      bottom: 5),
+                  decoration: BoxDecoration(
+                    color: nameSelected
+                        ? Colors.grey[500].withOpacity(0.6)
+                        : Colors.white,
+                    border: Border(
+                      top: BorderSide(width: 1, color: Colors.grey[400]),
+                      bottom: BorderSide(width: 1, color: Colors.grey[400]),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Name',
+                              style: TextStyle(fontWeight: FontWeight.w600)),
+                          Text(user.displayName ?? '',
+                              style: TextStyle(fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                      Icon(Icons.keyboard_arrow_right)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state is UserProfileEditingAbout) {
+      return EditProfileScreen(
+        user: state.user,
+        field: 'about',
+      );
+    }
+
+    if (state is UserProfileEditingSkill) {
+      return EditProfileSkill(
+          user: state.user,
+          skillType: state.skillType,
+          skillIndex: state.skillIndex);
+    }
+
+    if (state is UserProfileEditingName) {
+      return EditProfileScreen(
+        user: state.user,
+        field: 'name',
+      );
+    }
+
+    if (state is SettingsMenu) {
+      return SettingsScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, state) {
       if (state is UserProfileLoading) {
         return Center(child: CupertinoActivityIndicator());
-      }
-
-      if (state is UserProfileLoaded) {
-        final user = state.user;
-
-        return Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            brightness: Brightness.light,
-            title: Text(
-              'Profile',
-              style: TextStyle(
-                color: Palette.appBarTextColor,
-              ),
-            ),
-            backgroundColor: Palette.appBarBackgroundColor,
-            elevation: 1,
-            automaticallyImplyLeading: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.settings),
-                color: Palette.appBarTextColor,
-                onPressed: () {
-                  BlocProvider.of<UserProfileBloc>(context).add(ShowSettings());
-                },
-              )
-            ],
-          ),
-          body: ListView(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
-                    child: Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            showPopUpSheet(user);
-                          },
-                          child: ProfilePicture(
-                            photoUrl: user.photoUrl,
-                            localPicture: _profilePicture,
-                            editable: true,
-                            size: 160,
-                            onTap: () => showPopUpSheet(user),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
-                child: ProfileSectionTitle('About'),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _userProfileBloc.add(EditAboutSection(user));
-                },
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: listPadding, right: listPadding),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.grey[200]),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    margin: EdgeInsets.all(0),
-                    elevation: 0.3,
-                    color: Colors.white,
-                    child: Container(
-                      height: 100,
-                      padding: EdgeInsets.all(15),
-                      child: Text(user.about ?? ''),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
-                child: ProfileSectionTitle("I'm teaching"),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
-                child: SkillList(
-                  user.teachSkill,
-                  onTap: (int index) =>
-                      _userProfileBloc.add(EditSkill(user, 'teach', index)),
-                ),
-              ),
-              user.teachSkill.length < 3
-                  ? AddIcon(
-                      160,
-                      onTap: () {
-                        _userProfileBloc.add(
-                            EditSkill(user, 'teach', user.teachSkill.length));
-                      },
-                    )
-                  : Container(),
-              Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
-                child: ProfileSectionTitle("I'm learning"),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
-                child: SkillList(
-                  user.learnSkill,
-                  onTap: (int index) =>
-                      _userProfileBloc.add(EditSkill(user, 'learn', index)),
-                ),
-              ),
-              user.learnSkill.length < 3
-                  ? Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: AddIcon(
-                        160,
-                        onTap: () {
-                          _userProfileBloc.add(
-                              EditSkill(user, 'learn', user.learnSkill.length));
-                        },
-                      ),
-                    )
-                  : Container(),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: listPadding, right: listPadding, top: 5, bottom: 10),
-                child: Text('Basic Info'),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 40),
-                child: GestureDetector(
-                  onTapDown: (_) {
-                    setState(() {
-                      nameSelected = true;
-                    });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      nameSelected = false;
-                    });
-                  },
-                  onTap: () {
-                    setState(() {
-                      nameSelected = false;
-                    });
-                    _userProfileBloc.add(EditName(user));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        left: listPadding,
-                        right: listPadding + 5,
-                        top: 5,
-                        bottom: 5),
-                    decoration: BoxDecoration(
-                      color: nameSelected
-                          ? Colors.grey[500].withOpacity(0.6)
-                          : Colors.white,
-                      border: Border(
-                        top: BorderSide(width: 1, color: Colors.grey[400]),
-                        bottom: BorderSide(width: 1, color: Colors.grey[400]),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Name',
-                                style: TextStyle(fontWeight: FontWeight.w600)),
-                            Text(user.displayName ?? '',
-                                style: TextStyle(fontWeight: FontWeight.w400)),
-                          ],
-                        ),
-                        Icon(Icons.keyboard_arrow_right)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      } else {
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          switchOutCurve: Threshold(0),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.3, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+          child: _buildUserProfile(state),
         );
-      }
-
-      if (state is UserProfileEditingAbout) {
-        return EditProfileScreen(
-          user: state.user,
-          field: 'about',
-        );
-      }
-
-      if (state is UserProfileEditingSkill) {
-        return EditProfileSkill(
-            user: state.user,
-            skillType: state.skillType,
-            skillIndex: state.skillIndex);
-      }
-
-      if (state is UserProfileEditingName) {
-        return EditProfileScreen(
-          user: state.user,
-          field: 'name',
-        );
-      }
-
-      if (state is SettingsMenu) {
-        print('SETTINGS SCREEN');
-        return SettingsScreen();
       }
     });
   }
