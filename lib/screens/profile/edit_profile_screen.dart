@@ -27,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   @override
-  void initStat() {
+  void dispose() {
     _textController.dispose();
     super.dispose();
   }
