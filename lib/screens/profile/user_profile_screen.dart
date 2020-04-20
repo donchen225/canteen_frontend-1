@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
@@ -10,9 +9,8 @@ import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
-import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
@@ -139,7 +137,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title: Text(
               'Profile',
               style: TextStyle(
-                color: Color(0xFF303030),
+                color: Palette.appBarTextColor,
               ),
             ),
             backgroundColor: Palette.appBarBackgroundColor,
@@ -147,20 +145,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.exit_to_app),
-                color: Colors.black,
+                icon: Icon(Icons.settings),
+                color: Palette.appBarTextColor,
                 onPressed: () {
-                  BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-                  BlocProvider.of<MatchBloc>(context).add(ClearMatches());
-                  BlocProvider.of<RequestBloc>(context).add(ClearRequests());
+                  BlocProvider.of<UserProfileBloc>(context).add(ShowSettings());
                 },
               )
-              // IconButton(
-              //   icon: Icon(Icons.settings),
-              //   onPressed: () {
-              //     _scaffoldKey.currentState.openEndDrawer();
-              //   },
-              // )
             ],
           ),
           body: ListView(
@@ -342,6 +332,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           user: state.user,
           field: 'name',
         );
+      }
+
+      if (state is SettingsMenu) {
+        print('SETTINGS SCREEN');
+        return SettingsScreen();
       }
     });
   }

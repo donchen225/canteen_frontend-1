@@ -62,3 +62,5 @@ class UserProfileEditingName extends UserProfileState {
   @override
   String toString() => 'UserProfileEditingName { user: ${user.toString()}  }';
 }
+
+class SettingsMenu extends UserProfileState {}

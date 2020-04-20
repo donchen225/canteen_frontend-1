@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
@@ -52,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocProvider.of<SearchBloc>(context).add(SearchHome());
         } else if (_selectedIndex == 2) {
           BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
+        } else if (_selectedIndex == 4) {
+          BlocProvider.of<UserProfileBloc>(context).add(ShowUserProfile());
         }
       }
       _selectedIndex = index;

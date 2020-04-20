@@ -23,6 +23,16 @@ class LoadUserProfile extends UserProfileEvent {
 
 class ClearProfile extends UserProfileEvent {}
 
+class ShowUserProfile extends UserProfileEvent {
+  const ShowUserProfile();
+
+  @override
+  List<Object> get props => null;
+
+  @override
+  String toString() => 'LoadUserProfile';
+}
+
 class EditAboutSection extends UserProfileEvent {
   final User user;
 
@@ -105,3 +115,5 @@ class UpdateSkill extends UserProfileEvent {
   String toString() =>
       'UpdateSkill { user: ${user.toString()} skill: ${skill.toString()} skillType: $skillType skillIndex: $skillIndex }';
 }
+
+class ShowSettings extends UserProfileEvent {}

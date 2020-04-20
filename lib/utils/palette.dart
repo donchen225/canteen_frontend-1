@@ -9,4 +9,5 @@ class Palette {
 
   static Color appBarBackgroundColor = const Color(0xFFFFFFFF);
   static Color backgroundColor = const Color(0xFFF8F8F8);
+  static Color appBarTextColor = const Color(0xFF303030);
 }
