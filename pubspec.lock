@@ -286,8 +286,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: ec20f32fe08119b7b8c15cd2943fc5f8044b5c0c
+      ref: master
+      resolved-ref: d154744bffb2e64186cbc6cc05541fb739c1dd3b
       url: "git://github.com/Get-Canteen/IntroViews-Flutter.git"
     source: git
     version: "2.8.1"

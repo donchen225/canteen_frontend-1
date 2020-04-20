@@ -15,11 +15,16 @@ class OnboardingSignUpScreens extends StatefulWidget {
 
 class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   TextEditingController _nameController;
+  bool _namePageValidated;
+  bool _pageValidated;
+  PageViewModel _currentPage;
 
   void initState() {
     super.initState();
 
+    _namePageValidated = false;
     _nameController = TextEditingController();
+    _nameController.addListener(_validateNamePage);
   }
 
   final skillPage = new PageViewModel(
@@ -48,11 +53,18 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         fontFamily: 'MyFont', color: Colors.black, fontWeight: FontWeight.w700),
   );
 
+  void _validateNamePage() {
+    setState(() {
+      _namePageValidated = _nameController.text != '' ? true : false;
+    });
+  }
+
   PageViewModel _buildNamePage(TextEditingController controller) {
-    return PageViewModel(
+    _currentPage = PageViewModel(
       pageColor: Palette.backgroundColor,
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
+      nextValidated: _namePageValidated,
       bubbleBackgroundColor: Palette.orangeColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -91,6 +103,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           color: Colors.black,
           fontWeight: FontWeight.w700),
     );
+    return _currentPage;
   }
 
   @override
@@ -106,12 +119,17 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         _buildNamePage(_nameController),
         skillPage,
       ],
+      onTapNextButton: () {
+        print('PRESSED NEXT');
+      },
       onTapDoneButton: () {
-        BlocProvider.of<HomeBloc>(context).add(PageTapped(index: 0));
+        BlocProvider.of<HomeBloc>(context).add(
+          PageTapped(index: 0),
+        );
       },
       showNextButton: true,
       showSkipButton: false,
-      nextText: Container(
+      doneText: Container(
           margin: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 3),
           height: SizeConfig.instance.blockSizeHorizontal * 12,
           width: SizeConfig.instance.blockSizeHorizontal * 12,
@@ -123,6 +141,23 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             Icons.arrow_forward_ios,
             size: SizeConfig.instance.blockSizeHorizontal * 5,
             color: Palette.whiteColor,
+          )),
+      nextText: Container(
+          margin: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 3),
+          height: SizeConfig.instance.blockSizeHorizontal * 12,
+          width: SizeConfig.instance.blockSizeHorizontal * 12,
+          decoration: BoxDecoration(
+            color: (_currentPage != null && _currentPage.nextValidated)
+                ? Palette.orangeColor
+                : Palette.buttonInvalidBackgroundColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.arrow_forward_ios,
+            size: SizeConfig.instance.blockSizeHorizontal * 5,
+            color: (_currentPage != null && _currentPage.nextValidated)
+                ? Palette.whiteColor
+                : Palette.buttonInvalidTextColor,
           )),
       pageButtonTextStyles: TextStyle(
         color: Colors.white,
