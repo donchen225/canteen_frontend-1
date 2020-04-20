@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
+import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
@@ -98,6 +99,9 @@ void main() async {
             userRepository: userRepository,
           )..add(SearchHome()),
         ),
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc(),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -135,6 +139,7 @@ class App extends StatelessWidget {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is Authenticated) {
+                print('IN AUTHENTICATION BLOC LISTENER');
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
 
@@ -144,10 +149,16 @@ class App extends StatelessWidget {
 
                 BlocProvider.of<RecommendedBloc>(context)
                     .add(LoadRecommended());
+
+                BlocProvider.of<RecommendedBloc>(context)
+                    .add(LoadRecommended());
+
+                BlocProvider.of<HomeBloc>(context).add(PageTapped(index: 0));
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
+                print('IN AUTHENTICATION BLOC BUILDER');
                 SizeConfig.instance.init(context);
                 if (state is Uninitialized) {
                   return SplashScreen();
@@ -156,6 +167,11 @@ class App extends StatelessWidget {
                   return LoginScreen(userRepository: _userRepository);
                 }
                 if (state is Authenticated) {
+                  print('IN AUTHENTICATION BLOC BUILDER - AUTHENTICATED');
+                  final onBoarded = 0;
+                  print('USER STATE');
+                  print('KJGNLJDHGBDHGB');
+                  print(BlocProvider.of<UserBloc>(context).state);
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider<MatchListBloc>(
