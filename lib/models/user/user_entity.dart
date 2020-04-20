@@ -1,4 +1,3 @@
-import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +13,7 @@ class UserEntity extends Equatable {
   final Map<String, Skill> teachSkills;
   final String email;
   final String phoneNumber;
+  final int onBoarded;
   final DateTime creationTimestamp;
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
@@ -29,6 +29,7 @@ class UserEntity extends Equatable {
     this.teachSkills = const {},
     this.email = '',
     this.phoneNumber = '',
+    this.onBoarded = 0,
     this.creationTimestamp,
     this.lastSignInTimestamp,
     this.isAnonymous,
@@ -46,6 +47,7 @@ class UserEntity extends Equatable {
         teachSkills,
         email,
         phoneNumber,
+        onBoarded,
         creationTimestamp,
         lastSignInTimestamp,
         isAnonymous,
@@ -67,6 +69,7 @@ class UserEntity extends Equatable {
           {},
       email: snap.data["email"],
       phoneNumber: snap.data["phone_number"],
+      onBoarded: snap.data["onboarded"],
       creationTimestamp: snap.data["creation_time"].toDate(),
       lastSignInTimestamp: snap.data["last_sign_in_time"].toDate(),
       isAnonymous: snap.data["is_anonymous"],
@@ -99,6 +102,7 @@ class UserEntity extends Equatable {
       "teach_skill": teachSkills,
       "email": email,
       "phone_number": phoneNumber,
+      "onboarded": onBoarded,
       "creation_time": creationTimestamp,
       "last_sign_in_time": lastSignInTimestamp,
       "is_anonymous": isAnonymous,

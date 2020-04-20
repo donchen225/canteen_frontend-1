@@ -1,11 +1,16 @@
+import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta/meta.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final UserRepository _userRepository;
   int currentIndex = 0;
 
-  HomeBloc();
+  HomeBloc({@required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository;
 
   @override
   HomeState get initialState => PageLoading();
@@ -13,27 +18,43 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     if (event is PageTapped) {
-      this.currentIndex = event.index;
-      yield CurrentIndexChanged(currentIndex: this.currentIndex);
-      yield PageLoading();
+      yield* _mapPageTappedToState(event);
+    } else if (event is CheckOnboardStatus) {
+      yield* _mapCheckOnboardStatusToState();
+    }
+  }
 
-      switch (this.currentIndex) {
-        case 0:
-          yield RecommendedScreenLoaded();
-          break;
-        case 1:
-          yield SearchScreenLoaded();
-          break;
-        case 2:
-          yield RequestScreenLoaded();
-          break;
-        case 3:
-          yield MatchScreenLoaded();
-          break;
-        case 4:
-          yield UserProfileScreenLoaded();
-          break;
-      }
+  Stream<HomeState> _mapPageTappedToState(PageTapped event) async* {
+    currentIndex = event.index;
+    yield CurrentIndexChanged(currentIndex: currentIndex);
+    yield PageLoading();
+
+    switch (this.currentIndex) {
+      case 0:
+        yield RecommendedScreenLoaded();
+        break;
+      case 1:
+        yield SearchScreenLoaded();
+        break;
+      case 2:
+        yield RequestScreenLoaded();
+        break;
+      case 3:
+        yield MatchScreenLoaded();
+        break;
+      case 4:
+        yield UserProfileScreenLoaded();
+        break;
+    }
+  }
+
+  Stream<HomeState> _mapCheckOnboardStatusToState() async* {
+    final user = await _userRepository.currentUser();
+
+    if (user.onBoarded != null && user.onBoarded == 1) {
+      yield RecommendedScreenLoaded();
+    } else {
+      yield OnboardScreenLoaded();
     }
   }
 }

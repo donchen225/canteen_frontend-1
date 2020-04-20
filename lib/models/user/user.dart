@@ -16,6 +16,7 @@ class User {
   final List<Skill> teachSkill;
   final String email;
   final String phoneNumber;
+  final int onBoarded;
   final DateTime creationTimestamp;
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
@@ -31,6 +32,7 @@ class User {
     this.teachSkill = const [],
     this.email = '',
     this.phoneNumber = '',
+    this.onBoarded = 0,
     this.creationTimestamp,
     this.lastSignInTimestamp,
     this.isAnonymous,
@@ -39,7 +41,7 @@ class User {
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, about: $about, photoUrl: $photoUrl, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, about: $about, photoUrl: $photoUrl, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
   }
 
   static User fromEntity(UserEntity entity) {
@@ -63,6 +65,7 @@ class User {
       teachSkill: teachSkillList,
       email: entity.email,
       phoneNumber: entity.phoneNumber,
+      onBoarded: entity.onBoarded,
       creationTimestamp: entity.creationTimestamp,
       lastSignInTimestamp: entity.lastSignInTimestamp,
       isAnonymous: entity.isAnonymous,

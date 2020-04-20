@@ -16,3 +16,10 @@ class PageTapped extends HomeEvent {
   @override
   String toString() => 'PageTapped: $index';
 }
+
+class CheckOnboardStatus extends HomeEvent {
+  CheckOnboardStatus();
+
+  @override
+  String toString() => 'CheckOnboardStatus';
+}

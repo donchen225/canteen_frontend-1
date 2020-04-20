@@ -57,3 +57,10 @@ class UserProfileScreenLoaded extends HomeState {
   @override
   String toString() => 'UserProfileScreenLoaded';
 }
+
+class OnboardScreenLoaded extends HomeState {
+  OnboardScreenLoaded();
+
+  @override
+  String toString() => 'OnboardScreenLoaded';
+}

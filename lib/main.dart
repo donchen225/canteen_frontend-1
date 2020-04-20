@@ -100,7 +100,9 @@ void main() async {
           )..add(SearchHome()),
         ),
         BlocProvider<HomeBloc>(
-          create: (context) => HomeBloc(),
+          create: (context) => HomeBloc(
+            userRepository: userRepository,
+          ),
         ),
       ],
       child: App(
@@ -153,12 +155,11 @@ class App extends StatelessWidget {
                 BlocProvider.of<RecommendedBloc>(context)
                     .add(LoadRecommended());
 
-                BlocProvider.of<HomeBloc>(context).add(PageTapped(index: 0));
+                BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
-                print('IN AUTHENTICATION BLOC BUILDER');
                 SizeConfig.instance.init(context);
                 if (state is Uninitialized) {
                   return SplashScreen();
@@ -167,11 +168,6 @@ class App extends StatelessWidget {
                   return LoginScreen(userRepository: _userRepository);
                 }
                 if (state is Authenticated) {
-                  print('IN AUTHENTICATION BLOC BUILDER - AUTHENTICATED');
-                  final onBoarded = 0;
-                  print('USER STATE');
-                  print('KJGNLJDHGBDHGB');
-                  print(BlocProvider.of<UserBloc>(context).state);
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider<MatchListBloc>(

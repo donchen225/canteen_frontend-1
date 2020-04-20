@@ -21,6 +21,8 @@ dependencies:
     sdk: flutter
   
   tuple: ^1.0.3
+
+  # Formatting
   intl: ^0.16.1
   google_fonts: ^0.3.9
   timeago: ^2.0.26
@@ -47,6 +49,9 @@ dependencies:
 
   # Search
   algolia: ^0.1.7
+
+  # Onboarding
+  intro_views_flutter: ^2.8.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

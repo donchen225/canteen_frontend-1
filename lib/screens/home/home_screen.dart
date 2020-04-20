@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
@@ -64,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocBuilder<HomeBloc, HomeState>(
           bloc: _homeBloc,
           builder: (BuildContext context, HomeState state) {
+            if (state is OnboardScreenLoaded) {
+              return Visibility(visible: false, child: Container());
+            }
+
             return BottomNavigationBar(
               currentIndex: _homeBloc.currentIndex,
               showSelectedLabels: false,
@@ -112,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
           print('IN HOME PAGE BLOC BUILDER');
+
           if (state is PageLoading) {
             print('IN PAGE LOADING SCREEN');
             return Center(child: CupertinoActivityIndicator());
@@ -133,6 +139,12 @@ class _HomeScreenState extends State<HomeScreen> {
               userRepository: widget._userRepository,
             );
           }
+
+          if (state is OnboardScreenLoaded) {
+            print('ONBOARDSCREEN LOADED');
+            return OnboardingScreen();
+          }
+          print('WHY AM I HERE?');
           return Container();
         },
       ),
