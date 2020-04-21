@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
@@ -30,11 +31,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   List<bool> _pageValidated;
   bool _teachSkillSelected;
   bool _learnSkillSelected;
+  String _skillType;
 
   int _selectedDurationIndex;
-
-  // final FixedExtentScrollController _scrollController =
-  //     FixedExtentScrollController();
 
   void initState() {
     super.initState();
@@ -51,7 +50,6 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     _learnSkillPriceController = TextEditingController();
     _teachSkillDescriptionController = TextEditingController();
     _learnSkillDescriptionController = TextEditingController();
-    // _scrollController = FixedExtentScrollController();
 
     pages = [
       _buildNamePage(_nameController),
@@ -60,7 +58,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ? _teachSkillNameController
           : _learnSkillNameController),
       _buildSkillDurationPage(),
-      // _buildSkillPricePage(_pageValidated[4]),
+      _buildSkillPricePage(_teachSkillSelected
+          ? _teachSkillPriceController
+          : _learnSkillPriceController),
       _buildSkillDescriptionPage(_teachSkillSelected
           ? _teachSkillDescriptionController
           : _learnSkillDescriptionController),
@@ -69,6 +69,8 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     _nameController.addListener(_validateNamePage);
     _teachSkillNameController.addListener(_validateSkillNamePage);
     _learnSkillNameController.addListener(_validateSkillNamePage);
+    _teachSkillPriceController.addListener(_validateSkillPricePage);
+    _learnSkillPriceController.addListener(_validateSkillPricePage);
     _teachSkillDescriptionController.addListener(_validateSkillDescriptionPage);
     _learnSkillDescriptionController.addListener(_validateSkillDescriptionPage);
 
@@ -123,6 +125,18 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       pages[2] = _buildSkillNamePage(_teachSkillSelected
           ? _teachSkillNameController
           : _learnSkillNameController);
+    });
+  }
+
+  void _validateSkillPricePage() {
+    setState(() {
+      _pageValidated[4] = _teachSkillSelected
+          ? (_teachSkillPriceController.text != '' ? true : false)
+          : (_learnSkillPriceController.text != '' ? true : false);
+
+      pages[4] = _buildSkillPricePage(_teachSkillSelected
+          ? _teachSkillPriceController
+          : _learnSkillPriceController);
     });
   }
 
@@ -271,54 +285,56 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                child: Text("Do you want to learn or teach?"),
-              ),
-            ],
+          Container(
+            child: Text("Do you want to learn or teach?"),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RaisedButton(
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.blockSizeVertical * 3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text('Teach'),
+                  color: (_teachSkillSelected)
+                      ? Palette.orangeColor
+                      : Palette.buttonInvalidBackgroundColor,
+                  onPressed: () {
+                    setState(() {
+                      _teachSkillSelected = true;
+                      _learnSkillSelected = false;
+                      _pageValidated[1] = true;
+                      _skillType = 'teach';
+                      pages[1] = _buildSkillPage();
+                    });
+                  },
                 ),
-                child: Text('Teach'),
-                color: (_teachSkillSelected)
-                    ? Palette.orangeColor
-                    : Palette.buttonInvalidBackgroundColor,
-                onPressed: () {
-                  setState(() {
-                    _teachSkillSelected = true;
-                    _learnSkillSelected = false;
-                    _pageValidated[1] = true;
-                    pages[1] = _buildSkillPage();
-                  });
-                },
-              ),
-              RaisedButton(
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Text('Learn'),
-                color: _learnSkillSelected
-                    ? Palette.orangeColor
-                    : Palette.buttonInvalidBackgroundColor,
-                onPressed: () {
-                  setState(() {
-                    _learnSkillSelected = true;
-                    _teachSkillSelected = false;
-                    _pageValidated[1] = true;
+                RaisedButton(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text('Learn'),
+                  color: _learnSkillSelected
+                      ? Palette.orangeColor
+                      : Palette.buttonInvalidBackgroundColor,
+                  onPressed: () {
+                    setState(() {
+                      _learnSkillSelected = true;
+                      _teachSkillSelected = false;
+                      _pageValidated[1] = true;
+                      _skillType = 'learn';
 
-                    pages[1] = _buildSkillPage();
-                  });
-                },
-              ),
-            ],
+                      pages[1] = _buildSkillPage();
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -340,6 +356,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
+            alignment: Alignment.centerLeft,
             child: Text(
               "What's your name?",
               textAlign: TextAlign.start,
@@ -386,8 +403,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
+            alignment: Alignment.centerLeft,
             child: Text(
-              "What is the name of the skill?",
+              "What is the name of the skill you want to $_skillType?",
               textAlign: TextAlign.start,
             ),
           ),
@@ -442,8 +460,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
+            alignment: Alignment.centerLeft,
             child: Text(
-              "How long do you want to teach/learn for?",
+              "How long do you want to $_skillType for?",
               textAlign: TextAlign.start,
             ),
           ),
@@ -461,6 +480,63 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     );
   }
 
+  PageViewModel _buildSkillPricePage(TextEditingController controller) {
+    return PageViewModel(
+      pageColor: Palette.backgroundColor,
+      // iconImageAssetPath: 'assets/taxi-driver.png',
+      iconColor: null,
+      nextValidated: _pageValidated[4],
+      bubbleBackgroundColor: Palette.orangeColor,
+      body: Column(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "How much do you want to $_skillType for?",
+              textAlign: TextAlign.start,
+            ),
+          ),
+          Container(
+            width: SizeConfig.instance.blockSizeHorizontal * 33,
+            child: TextField(
+              controller: controller,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              cursorColor: Palette.orangeColor,
+              style: TextStyle(
+                  fontSize: 25,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.none),
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
+              decoration: InputDecoration(
+                icon: Text("\$"),
+                counterText: "",
+                contentPadding: EdgeInsets.all(0),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
+              maxLines: 1,
+              minLines: 1,
+              maxLength: 4,
+            ),
+          ),
+        ],
+      ),
+      bodyTextStyle: TextStyle(
+          fontFamily: 'MyFont',
+          color: Colors.black,
+          fontWeight: FontWeight.w700),
+    );
+  }
+
   PageViewModel _buildSkillDescriptionPage(TextEditingController controller) {
     return PageViewModel(
       pageColor: Palette.backgroundColor,
@@ -469,11 +545,11 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       nextValidated: _pageValidated[5],
       bubbleBackgroundColor: Palette.orangeColor,
       body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Container(
+            alignment: Alignment.centerLeft,
             child: Text(
-              "What is the description of the skill?",
+              "What is the description of the skill you want to $_skillType?",
               textAlign: TextAlign.start,
             ),
           ),
@@ -535,10 +611,22 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     return IntroViewsFlutter(
       pages,
       onTapNextButton: () {
-        print('PRESSED NEXT');
-
         setState(() {
           _currentIndex += 1;
+
+          if (_currentIndex == 2) {
+            print('SHOULD BE REBUILDING PAGES NOW');
+            pages[2] = _buildSkillNamePage(_teachSkillSelected
+                ? _teachSkillNameController
+                : _learnSkillNameController);
+            pages[3] = _buildSkillDurationPage();
+            pages[4] = _buildSkillPricePage(_teachSkillSelected
+                ? _teachSkillPriceController
+                : _learnSkillPriceController);
+            pages[5] = _buildSkillDescriptionPage(_teachSkillSelected
+                ? _teachSkillDescriptionController
+                : _learnSkillDescriptionController);
+          }
         });
       },
       onTapDoneButton: validateSkillPage()
