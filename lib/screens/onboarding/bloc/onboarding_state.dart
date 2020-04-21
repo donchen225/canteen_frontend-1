@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class OnboardingState extends Equatable {
@@ -9,6 +10,13 @@ abstract class OnboardingState extends Equatable {
 
 class WelcomeScreenLoaded extends OnboardingState {}
 
-class OnboardingSignUpScreensLoaded extends OnboardingState {}
+class OnboardingSignUpScreensLoaded extends OnboardingState {
+  final User user;
+
+  const OnboardingSignUpScreensLoaded(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
 
 class OnboardingCompleteScreenLoaded extends OnboardingState {}

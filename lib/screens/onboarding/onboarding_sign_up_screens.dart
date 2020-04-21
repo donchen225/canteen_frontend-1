@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -7,7 +8,9 @@ import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 
 class OnboardingSignUpScreens extends StatefulWidget {
-  OnboardingSignUpScreens();
+  final User user;
+
+  OnboardingSignUpScreens(this.user);
 
   _OnboardingSignUpScreensState createState() =>
       _OnboardingSignUpScreensState();
@@ -27,13 +30,15 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     super.initState();
 
     _currentIndex = 0;
-    _pageValidated = [false];
+    _pageValidated = [false, false];
     _nameController = TextEditingController();
     _teachSkillNameController = TextEditingController();
     _learnSkillNameController = TextEditingController();
     _teachSkillDescriptionController = TextEditingController();
     _learnSkillDescriptionController = TextEditingController();
     _nameController.addListener(_validateNamePage);
+
+    _nameController.text = widget.user.displayName ?? '';
   }
 
   @override
@@ -210,12 +215,18 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       pages,
       onTapNextButton: () {
         print('PRESSED NEXT');
+
+        setState(() {
+          _currentIndex += 1;
+        });
       },
-      onTapDoneButton: () {
-        BlocProvider.of<HomeBloc>(context).add(
-          PageTapped(index: 0),
-        );
-      },
+      onTapDoneButton: (_pageValidated[_currentIndex])
+          ? () {
+              BlocProvider.of<HomeBloc>(context).add(
+                PageTapped(index: 0),
+              );
+            }
+          : () {},
       showNextButton: true,
       showSkipButton: false,
       doneText: Container(
@@ -223,13 +234,17 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           height: SizeConfig.instance.blockSizeHorizontal * 12,
           width: SizeConfig.instance.blockSizeHorizontal * 12,
           decoration: BoxDecoration(
-            color: Palette.orangeColor,
+            color: (_pageValidated[_currentIndex])
+                ? Palette.orangeColor
+                : Palette.buttonInvalidBackgroundColor,
             shape: BoxShape.circle,
           ),
           child: Icon(
             Icons.arrow_forward_ios,
             size: SizeConfig.instance.blockSizeHorizontal * 5,
-            color: Palette.whiteColor,
+            color: (_pageValidated[_currentIndex])
+                ? Palette.whiteColor
+                : Palette.buttonInvalidTextColor,
           )),
       nextText: Container(
           margin: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 3),

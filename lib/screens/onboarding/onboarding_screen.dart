@@ -10,7 +10,7 @@ class OnboardingScreen extends StatelessWidget {
     if (state is WelcomeScreenLoaded) {
       return WelcomeScreen();
     } else if (state is OnboardingSignUpScreensLoaded) {
-      return OnboardingSignUpScreens();
+      return OnboardingSignUpScreens(state.user);
     }
 
     return Container();

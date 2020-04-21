@@ -145,7 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is OnboardScreenLoaded) {
             print('ONBOARDSCREEN LOADED');
             return BlocProvider<OnboardingBloc>(
-              create: (context) => OnboardingBloc(),
+              create: (context) =>
+                  OnboardingBloc(userRepository: widget._userRepository),
               child: OnboardingScreen(),
             );
           }
