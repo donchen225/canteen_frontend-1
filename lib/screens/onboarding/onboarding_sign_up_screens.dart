@@ -19,14 +19,15 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   TextEditingController _teachSkillDescriptionController;
   TextEditingController _learnSkillNameController;
   TextEditingController _learnSkillDescriptionController;
-  bool _namePageValidated;
-  bool _pageValidated;
-  PageViewModel _currentPage;
+  int _currentIndex;
+  List<PageViewModel> pages;
+  List<bool> _pageValidated;
 
   void initState() {
     super.initState();
 
-    _namePageValidated = false;
+    _currentIndex = 0;
+    _pageValidated = [false];
     _nameController = TextEditingController();
     _teachSkillNameController = TextEditingController();
     _learnSkillNameController = TextEditingController();
@@ -47,14 +48,15 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
 
   void _validateNamePage() {
     setState(() {
-      _namePageValidated = _nameController.text != '' ? true : false;
+      // pages[0].nextValidated = _nameController.text != '' ? true : false;
+      _pageValidated[0] = _nameController.text != '' ? true : false;
     });
   }
 
   PageViewModel _buildProfilePicturePage() {}
 
   PageViewModel _buildSkillPage() {
-    _currentPage = PageViewModel(
+    return PageViewModel(
       pageColor: Palette.backgroundColor,
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
@@ -145,15 +147,15 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           color: Colors.black,
           fontWeight: FontWeight.w700),
     );
-    return _currentPage;
   }
 
-  PageViewModel _buildNamePage(TextEditingController controller) {
-    _currentPage = PageViewModel(
+  PageViewModel _buildNamePage(
+      TextEditingController controller, bool pageValidation) {
+    return PageViewModel(
       pageColor: Palette.backgroundColor,
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
-      nextValidated: _namePageValidated,
+      nextValidated: pageValidation,
       bubbleBackgroundColor: Palette.orangeColor,
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.end,
@@ -193,16 +195,19 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           color: Colors.black,
           fontWeight: FontWeight.w700),
     );
-    return _currentPage;
   }
 
   @override
   Widget build(BuildContext context) {
+    pages = [
+      _buildNamePage(_nameController, _pageValidated[0]),
+      _buildSkillPage(),
+    ];
+
+    print(_pageValidated[_currentIndex]);
+
     return IntroViewsFlutter(
-      [
-        _buildNamePage(_nameController),
-        _buildSkillPage(),
-      ],
+      pages,
       onTapNextButton: () {
         print('PRESSED NEXT');
       },
@@ -231,7 +236,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           height: SizeConfig.instance.blockSizeHorizontal * 12,
           width: SizeConfig.instance.blockSizeHorizontal * 12,
           decoration: BoxDecoration(
-            color: (_currentPage != null && _currentPage.nextValidated)
+            color: (_pageValidated[_currentIndex])
                 ? Palette.orangeColor
                 : Palette.buttonInvalidBackgroundColor,
             shape: BoxShape.circle,
@@ -239,7 +244,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           child: Icon(
             Icons.arrow_forward_ios,
             size: SizeConfig.instance.blockSizeHorizontal * 5,
-            color: (_currentPage != null && _currentPage.nextValidated)
+            color: (_pageValidated[_currentIndex])
                 ? Palette.whiteColor
                 : Palette.buttonInvalidTextColor,
           )),
