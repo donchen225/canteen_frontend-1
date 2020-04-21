@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocBuilder<HomeBloc, HomeState>(
           bloc: _homeBloc,
           builder: (BuildContext context, HomeState state) {
-            if (state is OnboardScreenLoaded) {
+            if (state is HomeUninitialized || state is OnboardScreenLoaded) {
               return Visibility(visible: false, child: Container());
             }
 

@@ -13,7 +13,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _userRepository = userRepository;
 
   @override
-  HomeState get initialState => PageLoading();
+  HomeState get initialState => HomeUninitialized();
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {

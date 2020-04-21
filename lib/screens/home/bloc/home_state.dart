@@ -9,6 +9,8 @@ abstract class HomeState extends Equatable {
   List<Object> get props => [];
 }
 
+class HomeUninitialized extends HomeState {}
+
 class CurrentIndexChanged extends HomeState {
   final int currentIndex;
 
