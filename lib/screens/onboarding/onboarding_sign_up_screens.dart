@@ -15,6 +15,10 @@ class OnboardingSignUpScreens extends StatefulWidget {
 
 class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   TextEditingController _nameController;
+  TextEditingController _teachSkillNameController;
+  TextEditingController _teachSkillDescriptionController;
+  TextEditingController _learnSkillNameController;
+  TextEditingController _learnSkillDescriptionController;
   bool _namePageValidated;
   bool _pageValidated;
   PageViewModel _currentPage;
@@ -24,39 +28,124 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
 
     _namePageValidated = false;
     _nameController = TextEditingController();
+    _teachSkillNameController = TextEditingController();
+    _learnSkillNameController = TextEditingController();
+    _teachSkillDescriptionController = TextEditingController();
+    _learnSkillDescriptionController = TextEditingController();
     _nameController.addListener(_validateNamePage);
   }
 
-  final skillPage = new PageViewModel(
-    pageColor: Palette.backgroundColor,
-    // iconImageAssetPath: 'assets/taxi-driver.png',
-    iconColor: null,
-    bubbleBackgroundColor: Palette.orangeColor,
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.blockSizeHorizontal * 6,
-              ),
-              child: Text(
-                "What are your skills?",
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-    bodyTextStyle: TextStyle(
-        fontFamily: 'MyFont', color: Colors.black, fontWeight: FontWeight.w700),
-  );
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _teachSkillNameController.dispose();
+    _learnSkillNameController.dispose();
+    _teachSkillDescriptionController.dispose();
+    _learnSkillDescriptionController.dispose();
+    super.dispose();
+  }
 
   void _validateNamePage() {
     setState(() {
       _namePageValidated = _nameController.text != '' ? true : false;
     });
+  }
+
+  PageViewModel _buildProfilePicturePage() {}
+
+  PageViewModel _buildSkillPage() {
+    _currentPage = PageViewModel(
+      pageColor: Palette.backgroundColor,
+      // iconImageAssetPath: 'assets/taxi-driver.png',
+      iconColor: null,
+      bubbleBackgroundColor: Palette.orangeColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                "What are your skills?",
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: SizeConfig.instance.blockSizeVertical,
+              bottom: SizeConfig.instance.blockSizeVertical,
+              left: SizeConfig.instance.blockSizeHorizontal * 12,
+              right: SizeConfig.instance.blockSizeHorizontal * 12,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text('Teach'),
+                ),
+                RaisedButton(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text('Learn'),
+                ),
+              ],
+            ),
+          ),
+          TextField(
+            controller: _teachSkillNameController,
+            cursorColor: Palette.orangeColor,
+            style: TextStyle(
+                fontSize: 25,
+                color: Palette.orangeColor,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.all(0),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+            ),
+            maxLines: 1,
+            minLines: 1,
+          ),
+          TextField(
+            controller: _teachSkillNameController,
+            cursorColor: Palette.orangeColor,
+            style: TextStyle(
+                fontSize: 25,
+                color: Palette.orangeColor,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.all(0),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+            ),
+            maxLines: 1,
+            minLines: 1,
+          ),
+        ],
+      ),
+      bodyTextStyle: TextStyle(
+          fontFamily: 'MyFont',
+          color: Colors.black,
+          fontWeight: FontWeight.w700),
+    );
+    return _currentPage;
   }
 
   PageViewModel _buildNamePage(TextEditingController controller) {
@@ -67,7 +156,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       nextValidated: _namePageValidated,
       bubbleBackgroundColor: Palette.orangeColor,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        // crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -78,6 +167,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ),
           TextField(
             controller: controller,
+            cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 25,
                 color: Palette.orangeColor,
@@ -107,17 +197,11 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   }
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return IntroViewsFlutter(
       [
         _buildNamePage(_nameController),
-        skillPage,
+        _buildSkillPage(),
       ],
       onTapNextButton: () {
         print('PRESSED NEXT');
