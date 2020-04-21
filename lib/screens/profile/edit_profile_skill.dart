@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
@@ -28,7 +29,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   int _selectedDurationIndex;
   int _initialDurationIndex = 0;
   final double _kPickerSheetHeight = 216.0;
-  final double _kPickerItemHeight = 32.0;
   final List<int> durationOptions = <int>[
     30,
     60,
@@ -57,33 +57,18 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   }
 
   Widget _buildDurationPicker(BuildContext context) {
-    final FixedExtentScrollController scrollController =
-        FixedExtentScrollController(
-            initialItem: _selectedDurationIndex ?? _initialDurationIndex);
-
     return GestureDetector(
       onTap: () async {
         await showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) {
-            return _buildBottomPicker(
-              CupertinoPicker(
-                magnification: 1.0,
-                scrollController: scrollController,
-                itemExtent: _kPickerItemHeight,
-                backgroundColor: CupertinoColors.white,
-                onSelectedItemChanged: (int index) {
-                  if (mounted) {
-                    setState(() => _selectedDurationIndex = index);
-                  }
-                },
-                children:
-                    List<Widget>.generate(durationOptions.length, (int index) {
-                  return Center(
-                    child: Text('${durationOptions[index]} minutes'),
-                  );
-                }),
-              ),
+            return DurationPicker(
+              durationOptions: durationOptions,
+              onChanged: (index) {
+                setState(() {
+                  _selectedDurationIndex = index;
+                });
+              },
             );
           },
         );
@@ -111,28 +96,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             top: false,
             bottom: false,
             child: child,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomPicker(Widget picker) {
-    return Container(
-      height: _kPickerSheetHeight,
-      padding: EdgeInsets.only(top: 6.0),
-      color: CupertinoColors.white,
-      child: DefaultTextStyle(
-        style: TextStyle(
-          color: CupertinoColors.black,
-          fontSize: 22.0,
-        ),
-        child: GestureDetector(
-          // Blocks taps from propagating to the modal sheet and popping.
-          onTap: () {},
-          child: SafeArea(
-            top: false,
-            child: picker,
           ),
         ),
       ),
