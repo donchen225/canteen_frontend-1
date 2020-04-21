@@ -615,7 +615,6 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           _currentIndex += 1;
 
           if (_currentIndex == 2) {
-            print('SHOULD BE REBUILDING PAGES NOW');
             pages[2] = _buildSkillNamePage(_teachSkillSelected
                 ? _teachSkillNameController
                 : _learnSkillNameController);
