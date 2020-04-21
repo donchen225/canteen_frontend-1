@@ -28,13 +28,15 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   List<PageViewModel> pages;
   List<bool> _pageValidated;
   bool _teachSkillSelected;
+  bool _learnSkillSelected;
 
   void initState() {
     super.initState();
 
     _currentIndex = 0;
-    _pageValidated = [false, false];
-    _teachSkillSelected = true;
+    _pageValidated = [false, false, false, false, false, false];
+    _teachSkillSelected = false;
+    _learnSkillSelected = false;
     _nameController = TextEditingController();
     _teachSkillNameController = TextEditingController();
     _learnSkillNameController = TextEditingController();
@@ -44,12 +46,29 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     _learnSkillDescriptionController = TextEditingController();
     _nameController.addListener(_validateNamePage);
     _teachSkillNameController.addListener(_validateSkillNamePage);
+    _learnSkillNameController.addListener(_validateSkillNamePage);
+    _teachSkillDescriptionController.addListener(_validateSkillDescriptionPage);
+    _learnSkillDescriptionController.addListener(_validateSkillDescriptionPage);
 
     _nameController.text = widget.user.displayName ?? '';
     _teachSkillNameController.text =
         widget.user.teachSkill.length > 0 ? widget.user.teachSkill[0].name : '';
     _learnSkillNameController.text =
         widget.user.learnSkill.length > 0 ? widget.user.learnSkill[0].name : '';
+
+    _teachSkillPriceController.text = widget.user.teachSkill.length > 0
+        ? widget.user.teachSkill[0].price.toString()
+        : '0';
+    _learnSkillPriceController.text = widget.user.learnSkill.length > 0
+        ? widget.user.learnSkill[0].price.toString()
+        : '0';
+
+    _teachSkillDescriptionController.text = widget.user.teachSkill.length > 0
+        ? widget.user.teachSkill[0].description
+        : '';
+    _learnSkillDescriptionController.text = widget.user.learnSkill.length > 0
+        ? widget.user.learnSkill[0].description
+        : '';
   }
 
   @override
@@ -73,7 +92,17 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
 
   void _validateSkillNamePage() {
     setState(() {
-      _pageValidated[1] = _teachSkillNameController.text != '' ? true : false;
+      _pageValidated[2] = _teachSkillSelected
+          ? (_teachSkillNameController.text != '' ? true : false)
+          : (_learnSkillNameController.text != '' ? true : false);
+    });
+  }
+
+  void _validateSkillDescriptionPage() {
+    setState(() {
+      _pageValidated[5] = _teachSkillSelected
+          ? (_teachSkillDescriptionController.text != '' ? true : false)
+          : (_learnSkillDescriptionController.text != '' ? true : false);
     });
   }
 
@@ -109,7 +138,34 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             maxLines: 1,
             minLines: 1,
           ),
-          Row(),
+          Row(
+            children: <Widget>[
+              Container(
+                width: SizeConfig.instance.blockSizeHorizontal * 30,
+                child: TextField(
+                  controller: priceController,
+                  cursorColor: Palette.orangeColor,
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Palette.orangeColor,
+                      fontWeight: FontWeight.w700,
+                      decoration: TextDecoration.none),
+                  decoration: InputDecoration(
+                    counterText: "",
+                    contentPadding: EdgeInsets.all(0),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                  maxLines: 1,
+                  minLines: 1,
+                ),
+              ),
+            ],
+          ),
           TextField(
             controller: descriptionController,
             cursorColor: Palette.orangeColor,
@@ -136,7 +192,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     );
   }
 
-  PageViewModel _buildSkillPage(
+  PageViewModel _buildSkillPageOld(
     TextEditingController nameController,
     TextEditingController priceController,
     TextEditingController descriptionController,
@@ -165,41 +221,6 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
               left: SizeConfig.instance.blockSizeHorizontal * 12,
               right: SizeConfig.instance.blockSizeHorizontal * 12,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text('Teach'),
-                  color: _teachSkillSelected
-                      ? Palette.orangeColor
-                      : Palette.buttonInvalidBackgroundColor,
-                  onPressed: () {
-                    setState(() {
-                      _teachSkillSelected = true;
-                    });
-                  },
-                ),
-                RaisedButton(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text('Learn'),
-                  color: _teachSkillSelected
-                      ? Palette.buttonInvalidBackgroundColor
-                      : Palette.orangeColor,
-                  onPressed: () {
-                    setState(() {
-                      _teachSkillSelected = false;
-                    });
-                  },
-                ),
-              ],
-            ),
           ),
           _buildSkillSection(nameController, priceController,
               descriptionController, _teachSkillSelected),
@@ -212,13 +233,12 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     );
   }
 
-  PageViewModel _buildNamePage(
-      TextEditingController controller, bool pageValidation) {
+  PageViewModel _buildSkillPage() {
     return PageViewModel(
       pageColor: Palette.backgroundColor,
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
-      nextValidated: pageValidation,
+      nextValidated: _pageValidated[1],
       bubbleBackgroundColor: Palette.orangeColor,
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.end,
@@ -226,9 +246,73 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           Row(
             children: <Widget>[
               Container(
-                child: Text("What's your name?"),
+                child: Text("Do you want to learn or teach?"),
               ),
             ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text('Teach'),
+                color: (_teachSkillSelected)
+                    ? Palette.orangeColor
+                    : Palette.buttonInvalidBackgroundColor,
+                onPressed: () {
+                  setState(() {
+                    _teachSkillSelected = true;
+                    _learnSkillSelected = false;
+                    _pageValidated[1] = true;
+                  });
+                },
+              ),
+              RaisedButton(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text('Learn'),
+                color: _learnSkillSelected
+                    ? Palette.orangeColor
+                    : Palette.buttonInvalidBackgroundColor,
+                onPressed: () {
+                  setState(() {
+                    _learnSkillSelected = true;
+                    _teachSkillSelected = false;
+                    _pageValidated[1] = true;
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      bodyTextStyle: TextStyle(
+          fontFamily: 'MyFont',
+          color: Colors.black,
+          fontWeight: FontWeight.w700),
+    );
+  }
+
+  PageViewModel _buildNamePage(TextEditingController controller) {
+    return PageViewModel(
+      pageColor: Palette.backgroundColor,
+      // iconImageAssetPath: 'assets/taxi-driver.png',
+      iconColor: null,
+      nextValidated: _pageValidated[0],
+      bubbleBackgroundColor: Palette.orangeColor,
+      body: Column(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            child: Text(
+              "What's your name?",
+              textAlign: TextAlign.start,
+            ),
           ),
           TextField(
             controller: controller,
@@ -260,6 +344,99 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
     );
   }
 
+  PageViewModel _buildSkillNamePage(TextEditingController controller) {
+    return PageViewModel(
+      pageColor: Palette.backgroundColor,
+      // iconImageAssetPath: 'assets/taxi-driver.png',
+      iconColor: null,
+      nextValidated: _pageValidated[2],
+      bubbleBackgroundColor: Palette.orangeColor,
+      body: Column(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            child: Text(
+              "What is the name of the skill?",
+              textAlign: TextAlign.start,
+            ),
+          ),
+          TextField(
+            controller: controller,
+            cursorColor: Palette.orangeColor,
+            style: TextStyle(
+                fontSize: 25,
+                color: Palette.orangeColor,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.all(0),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+            ),
+            maxLines: 1,
+            minLines: 1,
+          ),
+        ],
+      ),
+      bodyTextStyle: TextStyle(
+          fontFamily: 'MyFont',
+          color: Colors.black,
+          fontWeight: FontWeight.w700),
+    );
+  }
+
+  PageViewModel _buildSkillDescriptionPage(TextEditingController controller) {
+    return PageViewModel(
+      pageColor: Palette.backgroundColor,
+      // iconImageAssetPath: 'assets/taxi-driver.png',
+      iconColor: null,
+      nextValidated: _pageValidated[5],
+      bubbleBackgroundColor: Palette.orangeColor,
+      body: Column(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            child: Text(
+              "What is the description of the skill?",
+              textAlign: TextAlign.start,
+            ),
+          ),
+          TextField(
+            controller: controller,
+            cursorColor: Palette.orangeColor,
+            style: TextStyle(
+                fontSize: 14,
+                color: Palette.orangeColor,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              counterText: "",
+              contentPadding: EdgeInsets.all(0),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+            ),
+            maxLines: 6,
+            minLines: 1,
+          ),
+        ],
+      ),
+      bodyTextStyle: TextStyle(
+        fontFamily: 'MyFont',
+        color: Colors.black,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
   bool validateSkillPage() {
     if (_teachSkillSelected) {
       if (_teachSkillNameController.text != '' &&
@@ -283,18 +460,16 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   @override
   Widget build(BuildContext context) {
     pages = [
-      _buildNamePage(_nameController, _pageValidated[0]),
-      _buildSkillPage(
-          _teachSkillSelected
-              ? _teachSkillNameController
-              : _learnSkillNameController,
-          _teachSkillSelected
-              ? _teachSkillPriceController
-              : _learnSkillPriceController,
-          _teachSkillSelected
-              ? _teachSkillDescriptionController
-              : _learnSkillDescriptionController,
-          _pageValidated[1]),
+      _buildNamePage(_nameController),
+      _buildSkillPage(),
+      _buildSkillNamePage(_teachSkillSelected
+          ? _teachSkillNameController
+          : _learnSkillNameController),
+      // _buildSkillDurationPage(_pageValidated[3]),
+      // _buildSkillPricePage(_pageValidated[4]),
+      _buildSkillDescriptionPage(_teachSkillSelected
+          ? _teachSkillDescriptionController
+          : _learnSkillDescriptionController),
     ];
 
     print(_pageValidated[_currentIndex]);
