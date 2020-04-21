@@ -299,25 +299,6 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Text('Teach'),
-                  color: (_teachSkillSelected)
-                      ? Palette.orangeColor
-                      : Palette.buttonInvalidBackgroundColor,
-                  onPressed: () {
-                    setState(() {
-                      _teachSkillSelected = true;
-                      _learnSkillSelected = false;
-                      _pageValidated[1] = true;
-                      _skillType = 'teach';
-                      pages[1] = _buildSkillPage();
-                    });
-                  },
-                ),
-                RaisedButton(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
                   child: Text('Learn'),
                   color: _learnSkillSelected
                       ? Palette.orangeColor
@@ -329,6 +310,25 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                       _pageValidated[1] = true;
                       _skillType = 'learn';
 
+                      pages[1] = _buildSkillPage();
+                    });
+                  },
+                ),
+                RaisedButton(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text('Teach'),
+                  color: (_teachSkillSelected)
+                      ? Palette.orangeColor
+                      : Palette.buttonInvalidBackgroundColor,
+                  onPressed: () {
+                    setState(() {
+                      _teachSkillSelected = true;
+                      _learnSkillSelected = false;
+                      _pageValidated[1] = true;
+                      _skillType = 'teach';
                       pages[1] = _buildSkillPage();
                     });
                   },
@@ -630,6 +630,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       },
       onTapDoneButton: validateSkillPage()
           ? () {
+              // Update user information and onboarding information here
               BlocProvider.of<HomeBloc>(context).add(
                 PageTapped(index: 0),
               );

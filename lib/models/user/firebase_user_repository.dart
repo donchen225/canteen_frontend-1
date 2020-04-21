@@ -17,7 +17,6 @@ class FirebaseUserRepository extends UserRepository {
   FirebaseUserRepository({FirebaseAuth firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
-  // TODO: apparently you have to wait a short period of time (~1-2 mins) between firestore updates, look into this
   /// Sign in a user to Firebase Authentication with email/password,
   /// and updates the last sign in time in the Firestore "user" collection
   /// If the user exists in Firebase Authentication and not in the useres collection,
@@ -59,9 +58,9 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> addLearnSkill(String id, int position, SkillEntity skill) {
+  Future<void> addLearnSkill(int position, SkillEntity skill) {
     return Firestore.instance.runTransaction((Transaction tx) {
-      tx.update(userCollection.document(id), {
+      tx.update(userCollection.document(_firebaseUser.uid), {
         "learn_skill": {position.toString(): skill.toDocument()}
       });
     });
@@ -71,6 +70,18 @@ class FirebaseUserRepository extends UserRepository {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(user.uid), {
         "last_sign_in_time": user.metadata.lastSignInTime,
+      });
+    });
+  }
+
+  Future<void> updateUserOnboarding(
+    String name,
+    Skill skill,
+  ) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(userCollection.document(_firebaseUser.uid), {
+        "display_name": name,
+        "onboarded": 1,
       });
     });
   }

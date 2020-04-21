@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -61,11 +62,11 @@ class UserEntity extends Equatable {
       displayName: snap.data["display_name"],
       about: snap.data["about"],
       photoUrl: snap.data["photo_url"],
-      learnSkills: snap.data["learn_skill"]?.map<String, Skill>(
-              (k, v) => MapEntry(k as String, Skill.fromMap(v))) ??
+      learnSkills: snap.data["learn_skill"]?.map<String, Skill>((k, v) =>
+              MapEntry(k as String, Skill.fromMap(v, SkillType.learn))) ??
           {},
-      teachSkills: snap.data["teach_skill"]?.map<String, Skill>(
-              (k, v) => MapEntry(k as String, Skill.fromMap(v))) ??
+      teachSkills: snap.data["teach_skill"]?.map<String, Skill>((k, v) =>
+              MapEntry(k as String, Skill.fromMap(v, SkillType.teach))) ??
           {},
       email: snap.data["email"],
       phoneNumber: snap.data["phone_number"],

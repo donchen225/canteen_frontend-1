@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:equatable/equatable.dart';
 
 class Recommendation extends Equatable {
@@ -35,12 +36,12 @@ class Recommendation extends Equatable {
       about: json['about'] as String,
       photoUrl: json['photo_url'] as String,
       learnSkill: json['learn_skill']
-          .map<Skill>((skill) =>
-              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .map<Skill>((skill) => Skill.fromEntity(
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
           .toList(),
       teachSkill: json['teach_skill']
-          .map<Skill>((skill) =>
-              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .map<Skill>((skill) => Skill.fromEntity(
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
           .toList(),
       status: json['status'],
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(

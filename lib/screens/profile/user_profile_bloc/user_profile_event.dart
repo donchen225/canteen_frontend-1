@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -49,7 +50,7 @@ class EditAboutSection extends UserProfileEvent {
 class EditSkill extends UserProfileEvent {
   final User user;
   final int skillIndex;
-  final String skillType;
+  final SkillType skillType;
 
   const EditSkill(this.user, this.skillType, this.skillIndex);
 
@@ -103,7 +104,7 @@ class UpdateName extends UserProfileEvent {
 class UpdateSkill extends UserProfileEvent {
   final User user;
   final Skill skill;
-  final String skillType;
+  final SkillType skillType;
   final int skillIndex;
 
   const UpdateSkill(this.user, this.skill, this.skillType, this.skillIndex);

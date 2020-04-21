@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -38,7 +39,7 @@ class UserProfileEditingAbout extends UserProfileState {
 
 class UserProfileEditingSkill extends UserProfileState {
   final User user;
-  final String skillType;
+  final SkillType skillType;
   final int skillIndex;
 
   const UserProfileEditingSkill(this.user, this.skillType, this.skillIndex);

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
@@ -206,16 +207,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               padding: EdgeInsets.only(left: listPadding, right: listPadding),
               child: SkillList(
                 user.teachSkill,
-                onTap: (int index) =>
-                    _userProfileBloc.add(EditSkill(user, 'teach', index)),
+                onTap: (int index) => _userProfileBloc
+                    .add(EditSkill(user, SkillType.teach, index)),
               ),
             ),
             user.teachSkill.length < 3
                 ? AddIcon(
                     160,
                     onTap: () {
-                      _userProfileBloc.add(
-                          EditSkill(user, 'teach', user.teachSkill.length));
+                      _userProfileBloc.add(EditSkill(
+                          user, SkillType.teach, user.teachSkill.length));
                     },
                   )
                 : Container(),
@@ -227,8 +228,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               padding: EdgeInsets.only(left: listPadding, right: listPadding),
               child: SkillList(
                 user.learnSkill,
-                onTap: (int index) =>
-                    _userProfileBloc.add(EditSkill(user, 'learn', index)),
+                onTap: (int index) => _userProfileBloc
+                    .add(EditSkill(user, SkillType.learn, index)),
               ),
             ),
             user.learnSkill.length < 3
@@ -237,8 +238,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: AddIcon(
                       160,
                       onTap: () {
-                        _userProfileBloc.add(
-                            EditSkill(user, 'learn', user.learnSkill.length));
+                        _userProfileBloc.add(EditSkill(
+                            user, SkillType.learn, user.learnSkill.length));
                       },
                     ),
                   )

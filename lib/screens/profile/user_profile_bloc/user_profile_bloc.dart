@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:meta/meta.dart';
@@ -45,11 +46,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     } else if (event is UpdateAboutSection) {
       yield* _mapUpdateAboutSectionToState(event);
     } else if (event is EditSkill) {
-      yield* _mapEditTeachSkillToState(
-          event.user, event.skillType, event.skillIndex);
+      yield* _mapEditTeachSkillToState(event);
     } else if (event is UpdateSkill) {
-      yield* _mapUpdateTeachSkillToState(
-          event.skill, event.skillType, event.skillIndex);
+      yield* _mapUpdateTeachSkillToState(event);
     } else if (event is EditName) {
       yield* _mapEditNameToState(event);
     } else if (event is UpdateName) {
@@ -85,16 +84,16 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     yield UserProfileLoaded(updatedUser);
   }
 
-  Stream<UserProfileState> _mapEditTeachSkillToState(
-      User user, String skillType, int skillIndex) async* {
-    yield UserProfileEditingSkill(user, skillType, skillIndex);
+  Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {
+    yield UserProfileEditingSkill(
+        event.user, event.skillType, event.skillIndex);
   }
 
   Stream<UserProfileState> _mapUpdateTeachSkillToState(
-      Skill skill, String skillType, int index) async* {
-    final updatedUser = skillType == 'teach'
-        ? _userRepository.updateTeachSkill(skill, index)
-        : _userRepository.updateLearnSkill(skill, index);
+      UpdateSkill event) async* {
+    final updatedUser = event.skillType == SkillType.teach
+        ? _userRepository.updateTeachSkill(event.skill, event.skillIndex)
+        : _userRepository.updateLearnSkill(event.skill, event.skillIndex);
     yield UserProfileLoaded(updatedUser);
   }
 

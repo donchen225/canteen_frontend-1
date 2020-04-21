@@ -2,6 +2,7 @@ import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user_entity.dart';
 import 'package:meta/meta.dart';
 
@@ -80,12 +81,12 @@ class User {
       photoUrl: snapshot.data['photo_url'],
       about: snapshot.data['about'],
       learnSkill: snapshot.data['learn_skill']
-          .map<Skill>((skill) =>
-              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .map<Skill>((skill) => Skill.fromEntity(
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
           .toList(),
       teachSkill: snapshot.data['teach_skill']
-          .map<Skill>((skill) =>
-              Skill.fromEntity(SkillEntity.fromAlgoliaSnapshot(skill)))
+          .map<Skill>((skill) => Skill.fromEntity(
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
           .toList(),
     );
   }

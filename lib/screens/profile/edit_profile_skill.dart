@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditProfileSkill extends StatefulWidget {
   final User user;
-  final String skillType;
+  final SkillType skillType;
   final int skillIndex;
 
   EditProfileSkill(
@@ -45,7 +46,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController = TextEditingController();
     _skillDescriptionController = TextEditingController();
 
-    skill = Skill('', '', 0, 30);
+    skill = Skill('', '', 0, 30, widget.skillType);
   }
 
   @override
@@ -152,8 +153,12 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                   print('UPDATING SKILL');
                   _userProfileBloc.add(UpdateSkill(
                       widget.user,
-                      Skill(_skillNameController.text,
-                          _skillDescriptionController.text, price, duration),
+                      Skill(
+                          _skillNameController.text,
+                          _skillDescriptionController.text,
+                          price,
+                          duration,
+                          widget.skillType),
                       widget.skillType,
                       widget.skillIndex ?? 0));
                 } else {
