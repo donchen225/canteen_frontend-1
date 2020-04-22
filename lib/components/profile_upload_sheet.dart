@@ -6,19 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileUploadSheet extends StatelessWidget {
-  File _imageFile;
   final Function onUpload;
 
   ProfileUploadSheet({this.onUpload});
 
-  Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(
+  Future<File> _pickImage(ImageSource source) async {
+    return await ImagePicker.pickImage(
         source: source,
         maxHeight: maxPhotoHeight,
         maxWidth: maxPhotoWidth,
         imageQuality: photoQuality);
-
-    _imageFile = selected;
   }
 
   @override
@@ -42,9 +39,10 @@ class ProfileUploadSheet extends StatelessWidget {
         //   ),
         // ),
         CupertinoActionSheetAction(
-          onPressed: () => _pickImage(ImageSource.camera).then((nothing) async {
+          onPressed: () =>
+              _pickImage(ImageSource.camera).then((imageFile) async {
             if (onUpload != null) {
-              onUpload(_imageFile);
+              onUpload(imageFile);
             }
           }),
           child: Text(
@@ -53,9 +51,9 @@ class ProfileUploadSheet extends StatelessWidget {
         ),
         CupertinoActionSheetAction(
           onPressed: () =>
-              _pickImage(ImageSource.gallery).then((nothing) async {
+              _pickImage(ImageSource.gallery).then((imageFile) async {
             if (onUpload != null) {
-              onUpload(_imageFile);
+              onUpload(imageFile);
             }
           }),
           child: Text(
