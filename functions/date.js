@@ -18,3 +18,7 @@ exports.subtractDate = (date, seconds) => {
     newDate.setTime(date.getTime() - seconds);
     return newDate;
 }
+
+exports.formatZoomDate = (date) => {
+    return date.replace(' ', 'T').split('.')[0];
+}

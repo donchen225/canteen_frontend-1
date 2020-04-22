@@ -11,6 +11,10 @@ const REQUEST_COLLECTION = 'requests';
 const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const USER_COLLECTION = 'users';
+const VIDEO_CHAT_COLLECTION = 'video_chat';
+
+const ZOOM_BASE_URL = 'https://api.zoom.us/v2/';
+const ZOOM_USER_ID = 'D3HzE_hfR5yJ6Kyv5QqaDA';
 
 admin.initializeApp();
 
@@ -196,9 +200,6 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
     });
 });
 
-const ZOOM_BASE_URL = 'https://api.zoom.us/v2/';
-const ZOOM_USER_ID = 'D3HzE_hfR5yJ6Kyv5QqaDA';
-
 // Video chat functions
 exports.createVideoChatRoom = functions.https.onRequest(async (data, context) => {
 
@@ -209,8 +210,24 @@ exports.createVideoChatRoom = functions.https.onRequest(async (data, context) =>
             'while authenticated.');
     }
 
+    // Check if match exists
+
     // Check if user has paid
 
+    // Check if zoom has already been created, if it has return that link instead
+
+    // Check if date has been accepted
+
+    // Validate zoom parameters
+
+    var response = await zoom.sendZoomRequest('topic', 'agenda', 'time', 'duration');
+
+    // Write response to Firestore
+    return await firestore.collection(VIDEO_CHAT_COLLECTION).add(response).then((doc) => {
+        return { 'zoom_url': doc['join_url'] };
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    })
 
 });
 
