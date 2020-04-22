@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/recommended/recommended_empty_screen.da
 import 'package:canteen_frontend/screens/recommended/recommended_unavailable.dart';
 import 'package:canteen_frontend/screens/recommended/skip_user_button.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -100,12 +101,12 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
           return Center(child: CupertinoActivityIndicator());
         } else {
           return AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: animationDuration),
             switchOutCurve: Threshold(0),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0.5, 0),
+                  begin: const Offset(offsetdX, 0),
                   end: Offset.zero,
                 ).animate(animation),
                 child: child,

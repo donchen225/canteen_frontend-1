@@ -340,12 +340,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         return Center(child: CupertinoActivityIndicator());
       } else {
         return AnimatedSwitcher(
-          duration: Duration(milliseconds: 200),
+          duration: Duration(milliseconds: animationDuration),
           switchOutCurve: Threshold(0),
           transitionBuilder: (Widget child, Animation<double> animation) {
             return SlideTransition(
               position: Tween<Offset>(
-                begin: const Offset(0.3, 0),
+                begin: const Offset(offsetdX, 0),
                 end: Offset.zero,
               ).animate(animation),
               child: child,

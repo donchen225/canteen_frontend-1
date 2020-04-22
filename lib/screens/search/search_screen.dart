@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_empty_results.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -153,12 +154,12 @@ class _SearchScreenState extends State<SearchScreen> {
               return Center(child: CupertinoActivityIndicator());
             } else {
               return AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
+                duration: Duration(milliseconds: animationDuration),
                 switchOutCurve: Threshold(0),
                 transitionBuilder: (Widget child, Animation<double> animation) {
                   return SlideTransition(
                     position: Tween<Offset>(
-                      begin: const Offset(0.3, 0),
+                      begin: const Offset(offsetdX, 0),
                       end: Offset.zero,
                     ).animate(animation),
                     child: child,

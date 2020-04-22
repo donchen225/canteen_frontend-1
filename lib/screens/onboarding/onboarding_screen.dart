@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_complete_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,12 +25,12 @@ class OnboardingScreen extends StatelessWidget {
     return BlocBuilder<OnboardingBloc, OnboardingState>(
         builder: (BuildContext context, OnboardingState state) {
       return AnimatedSwitcher(
-        duration: Duration(milliseconds: 200),
+        duration: Duration(milliseconds: animationDuration),
         switchOutCurve: Threshold(0),
         transitionBuilder: (Widget child, Animation<double> animation) {
           return SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(0.3, 0),
+              begin: const Offset(offsetdX, 0),
               end: Offset.zero,
             ).animate(animation),
             child: child,
