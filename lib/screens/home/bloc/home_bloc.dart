@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UserRepository _userRepository;
+  int _previousIndex = 0;
   int currentIndex = 0;
 
   HomeBloc({@required UserRepository userRepository})
@@ -29,25 +30,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapPageTappedToState(PageTapped event) async* {
+    _previousIndex = currentIndex;
     currentIndex = event.index;
     yield CurrentIndexChanged(currentIndex: currentIndex);
     yield PageLoading();
 
+    final reset = _previousIndex != currentIndex ? false : true;
+
     switch (this.currentIndex) {
       case 0:
-        yield RecommendedScreenLoaded();
+        yield RecommendedScreenLoaded(reset: reset);
         break;
       case 1:
-        yield SearchScreenLoaded();
+        yield SearchScreenLoaded(reset: reset);
         break;
       case 2:
-        yield RequestScreenLoaded();
+        yield RequestScreenLoaded(reset: reset);
         break;
       case 3:
-        yield MatchScreenLoaded();
+        yield MatchScreenLoaded(reset: reset);
         break;
       case 4:
-        yield UserProfileScreenLoaded();
+        yield UserProfileScreenLoaded(reset: reset);
         break;
     }
   }
@@ -69,6 +73,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {
+    _previousIndex = 0;
     currentIndex = 0;
     yield HomeUninitialized();
   }

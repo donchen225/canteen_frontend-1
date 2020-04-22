@@ -4,11 +4,14 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,17 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     _homeBloc.add(PageTapped(index: index));
-    // setState(() {
-    //   if (_selectedIndex == index) {
-    //     if (_selectedIndex == 1) {
-    //       BlocProvider.of<SearchBloc>(context).add(SearchHome());
-    //     } else if (_selectedIndex == 2) {
-    //       BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
-    //     } else if (_selectedIndex == 4) {
-    //       BlocProvider.of<UserProfileBloc>(context).add(ShowUserProfile());
-    //     }
-    //   }
-    // });
   }
 
   @override
@@ -72,6 +64,26 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
               BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
+            }
+
+            if (state is SearchScreenLoaded) {
+              if (state.reset) {
+                BlocProvider.of<SearchBloc>(context).add(SearchHome());
+              }
+            }
+
+            if (state is RequestScreenLoaded) {
+              if (state.reset) {
+                BlocProvider.of<RequestListBloc>(context)
+                    .add(LoadRequestList());
+              }
+            }
+
+            if (state is UserProfileScreenLoaded) {
+              if (state.reset) {
+                BlocProvider.of<UserProfileBloc>(context)
+                    .add(ShowUserProfile());
+              }
             }
           },
           child: BlocBuilder<HomeBloc, HomeState>(

@@ -19,6 +19,9 @@ class CurrentIndexChanged extends HomeState {
   CurrentIndexChanged({@required this.currentIndex});
 
   @override
+  List<Object> get props => [currentIndex];
+
+  @override
   String toString() => 'CurrentIndexChanged to $currentIndex';
 }
 
@@ -28,38 +31,63 @@ class PageLoading extends HomeState {
 }
 
 class RecommendedScreenLoaded extends HomeState {
-  RecommendedScreenLoaded();
+  final bool reset;
+
+  RecommendedScreenLoaded({this.reset});
 
   @override
-  String toString() => 'RecommendedScreenLoaded';
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'RecommendedScreenLoaded { reset: $reset }';
 }
 
 class SearchScreenLoaded extends HomeState {
-  SearchScreenLoaded();
+  final bool reset;
+
+  SearchScreenLoaded({this.reset});
 
   @override
-  String toString() => 'SearchScreenLoaded';
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'SearchScreenLoaded { reset: $reset }';
 }
 
 class RequestScreenLoaded extends HomeState {
-  RequestScreenLoaded();
+  final bool reset;
+
+  RequestScreenLoaded({this.reset});
 
   @override
-  String toString() => 'RequestScreenLoaded';
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'RequestScreenLoaded { reset: $reset }';
 }
 
 class MatchScreenLoaded extends HomeState {
-  MatchScreenLoaded();
+  final bool reset;
+
+  MatchScreenLoaded({this.reset});
 
   @override
-  String toString() => 'MatchScreenLoaded';
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'MatchScreenLoaded { reset: $reset }';
 }
 
 class UserProfileScreenLoaded extends HomeState {
-  UserProfileScreenLoaded();
+  final bool reset;
+
+  UserProfileScreenLoaded({this.reset});
 
   @override
-  String toString() => 'UserProfileScreenLoaded';
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'UserProfileScreenLoaded { reset: $reset }';
 }
 
 class OnboardScreenLoaded extends HomeState {
