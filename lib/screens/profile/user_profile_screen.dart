@@ -15,6 +15,7 @@ import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/services/firebase_storage.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   ImageProvider _profilePicture =
       AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
-  final double listPadding = 20;
   bool nameSelected = false;
 
   @override
@@ -96,7 +96,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 20, left: 10, bottom: 20),
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.blockSizeVertical * 3),
                   child: Row(
                     children: <Widget>[
                       GestureDetector(
@@ -107,7 +108,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           photoUrl: user.photoUrl,
                           localPicture: _profilePicture,
                           editable: true,
-                          size: 160,
+                          size: SizeConfig.instance.blockSizeHorizontal * 50,
                           onTap: () => showPopUpSheet(user),
                         ),
                       ),
@@ -117,7 +118,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
               child: ProfileSectionTitle('About'),
             ),
             GestureDetector(
@@ -125,7 +127,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 _userProfileBloc.add(EditAboutSection(user));
               },
               child: Padding(
-                padding: EdgeInsets.only(left: listPadding, right: listPadding),
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
                 child: Card(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Colors.grey[200]),
@@ -143,11 +146,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
               child: ProfileSectionTitle("I'm teaching"),
             ),
             Padding(
-              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
               child: SkillList(
                 user.teachSkill,
                 onTap: (int index) => _userProfileBloc
@@ -164,11 +169,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   )
                 : Container(),
             Padding(
-              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
               child: ProfileSectionTitle("I'm learning"),
             ),
             Padding(
-              padding: EdgeInsets.only(left: listPadding, right: listPadding),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
               child: SkillList(
                 user.learnSkill,
                 onTap: (int index) => _userProfileBloc
@@ -189,11 +196,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 : Container(),
             Padding(
               padding: EdgeInsets.only(
-                  left: listPadding, right: listPadding, top: 5, bottom: 10),
+                  left: SizeConfig.instance.blockSizeHorizontal * 3,
+                  right: SizeConfig.instance.blockSizeHorizontal * 3,
+                  top: SizeConfig.instance.blockSizeVertical,
+                  bottom: SizeConfig.instance.blockSizeVertical),
               child: Text('Basic Info'),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 40),
+              padding: EdgeInsets.only(
+                  bottom: SizeConfig.instance.blockSizeVertical * 13),
               child: GestureDetector(
                 onTapDown: (_) {
                   setState(() {
@@ -213,10 +224,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 },
                 child: Container(
                   padding: EdgeInsets.only(
-                      left: listPadding,
-                      right: listPadding + 5,
-                      top: 5,
-                      bottom: 5),
+                      left: SizeConfig.instance.blockSizeHorizontal * 6,
+                      right: SizeConfig.instance.blockSizeHorizontal * 3,
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical),
                   decoration: BoxDecoration(
                     color: nameSelected
                         ? Colors.grey[500].withOpacity(0.6)
