@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -38,9 +40,12 @@ class SettingsScreen extends StatelessWidget {
               child: ListTile(
                 title: Text('Log out'),
                 onTap: () {
-                  BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());
+                  BlocProvider.of<RecommendedBloc>(context)
+                      .add(ClearRecommended());
+                  BlocProvider.of<HomeBloc>(context).add(ClearHome());
+                  BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                 },
               ),
             )

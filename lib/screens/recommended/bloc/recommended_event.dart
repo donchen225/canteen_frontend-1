@@ -33,3 +33,13 @@ class AcceptRecommended extends RecommendedEvent {
   @override
   String toString() => 'AcceptRecommended';
 }
+
+class ClearRecommended extends RecommendedEvent {
+  const ClearRecommended();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'ClearRecommended';
+}

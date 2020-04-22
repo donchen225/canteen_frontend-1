@@ -1,6 +1,4 @@
 import 'package:canteen_frontend/models/recommendation/recommendation.dart';
-import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/models/user/user_entity.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -32,6 +32,8 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
       yield* _mapNextRecommendedToState();
     } else if (event is AcceptRecommended) {
       yield* _mapAcceptRecommendedToState();
+    } else if (event is ClearRecommended) {
+      yield* _mapClearRecommendedToState();
     }
   }
 
@@ -99,5 +101,11 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
     } else {
       yield RecommendedEmpty();
     }
+  }
+
+  Stream<RecommendedState> _mapClearRecommendedToState() async* {
+    _recommendations = [];
+    _currentIndex = 0;
+    yield RecommendedLoading();
   }
 }
