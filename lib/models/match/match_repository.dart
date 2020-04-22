@@ -44,12 +44,6 @@ class MatchRepository {
     }
   }
 
-  Future<void> addMatch(Match match) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(matchCollection.document(match.id), match.toEntity().toDocument());
-    });
-  }
-
   Future<void> deleteMatch(Match match) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.delete(matchCollection.document(match.id));

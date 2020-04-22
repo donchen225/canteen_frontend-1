@@ -92,18 +92,8 @@ class RequestGrid extends StatelessWidget {
                 padding: EdgeInsets.all(15),
                 child: FloatingActionButton(
                   onPressed: () {
-                    final userList = [
-                      state.request.senderId,
-                      state.request.receiverId
-                    ];
                     BlocProvider.of<RequestBloc>(context)
                         .add(AcceptRequest(state.request));
-
-                    BlocProvider.of<MatchBloc>(context).add(
-                      AddMatch(
-                        Match.create(userId: userList),
-                      ),
-                    );
                   },
                   child: Icon(Icons.check),
                 ),

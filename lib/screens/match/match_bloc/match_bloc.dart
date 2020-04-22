@@ -37,8 +37,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       yield* _mapLoadMatchesToState();
     } else if (event is RegisterActiveMatch) {
       _activeMatchId = event.activeMatchId;
-    } else if (event is AddMatch) {
-      yield* _mapAddMatchToState(event);
     } else if (event is DeleteMatch) {
       yield* _mapDeleteMatchToState(event);
     } else if (event is MatchesUpdated) {
@@ -57,14 +55,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       });
     } catch (exception) {
       print(exception.errorMessage());
-    }
-  }
-
-  Stream<MatchState> _mapAddMatchToState(AddMatch event) async* {
-    try {
-      _matchRepository.addMatch(event.match);
-    } catch (_) {
-      print('FAILED TO ADD MATCH');
     }
   }
 

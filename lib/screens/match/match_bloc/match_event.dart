@@ -26,18 +26,6 @@ class RegisterActiveMatch extends MatchEvent {
   String toString() => 'RegisterActiveMatch { activeMatchId : $activeMatchId }';
 }
 
-class AddMatch extends MatchEvent {
-  final Match match;
-
-  const AddMatch(this.match);
-
-  @override
-  List<Object> get props => [match];
-
-  @override
-  String toString() => 'AddMatch { match: $match }';
-}
-
 class UpdateMatch extends MatchEvent {
   final Match updatedMatch;
 
