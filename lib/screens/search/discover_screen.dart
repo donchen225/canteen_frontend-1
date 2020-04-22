@@ -69,7 +69,7 @@ class DiscoverScreen extends StatelessWidget {
                                   child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        user.displayName,
+                                        user.displayName ?? '',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w800,
                                             fontSize: 20),
