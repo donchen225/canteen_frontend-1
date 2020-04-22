@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:canteen_frontend/components/profile_upload_sheet.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -32,7 +33,6 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  File _imageFile;
   ImageProvider _profilePicture =
       AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
@@ -45,78 +45,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    File selected = await ImagePicker.pickImage(
-        source: source,
-        maxHeight: maxPhotoHeight,
-        maxWidth: maxPhotoWidth,
-        imageQuality: photoQuality);
-
-    setState(() {
-      _imageFile = selected;
-    });
-  }
-
-  void _clear() {
-    setState(() => _imageFile = null);
-  }
-
   void showPopUpSheet(User user) {
     showCupertinoModalPopup(
       context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Text(
-          'Change Profile Photo',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
-        ),
-        actions: <Widget>[
-          // TODO: implement this
-          CupertinoActionSheetAction(
-            onPressed: () {},
-            child: Text(
-              'Remove Current Photo',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () =>
-                _pickImage(ImageSource.camera).then((nothing) async {
-              setState(() {
-                _profilePicture = FileImage(_imageFile);
-              });
-              // TODO: move this to BLoC
-              CloudStorage().upload(_imageFile, user.id).then((task) async {
-                final downloadUrl = (await task.onComplete);
-                final String url = (await downloadUrl.ref.getDownloadURL());
-                widget._userRepository.updatePhoto(url);
-              });
-            }),
-            child: Text(
-              'Take Photo',
-            ),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () =>
-                _pickImage(ImageSource.gallery).then((nothing) async {
-              setState(() {
-                _profilePicture = FileImage(_imageFile);
-              });
-              CloudStorage().upload(_imageFile, user.id).then((task) async {
-                final downloadUrl = (await task.onComplete);
-                final String url = (await downloadUrl.ref.getDownloadURL());
-                widget._userRepository.updatePhoto(url);
-              });
-            }),
-            child: Text(
-              'Choose from Library',
-            ),
-          )
-        ],
-      ),
+      builder: (BuildContext context) =>
+          ProfileUploadSheet(onUpload: (imageFile) {
+        setState(() {
+          _profilePicture = FileImage(imageFile);
+        });
+        // TODO: move this to BLoC
+        CloudStorage().upload(imageFile, user.id).then((task) async {
+          final downloadUrl = (await task.onComplete);
+          final String url = (await downloadUrl.ref.getDownloadURL());
+          widget._userRepository.updatePhoto(url);
+        });
+      }),
     );
   }
 
