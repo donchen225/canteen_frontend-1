@@ -13,9 +13,6 @@ const RECOMMENDATION_COLLECTION = 'recommendations';
 const USER_COLLECTION = 'users';
 const VIDEO_CHAT_COLLECTION = 'video_chat';
 
-const ZOOM_BASE_URL = 'https://api.zoom.us/v2/';
-const ZOOM_USER_ID = 'D3HzE_hfR5yJ6Kyv5QqaDA';
-
 admin.initializeApp();
 
 const firestore = admin.firestore();
@@ -114,7 +111,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
 });
 
 // Create match in Firestore
-exports.createMatch = functions.firestore.document('requests/{requestId}').onUpdate((change, context) => {
+exports.createMatch = functions.firestore.document('requests/{requestId}').onUpdate(async (change, context) => {
     const newValue = change.after.data();
     const previousValue = change.before.data();
 
@@ -128,18 +125,44 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
     const time = admin.firestore.Timestamp.now();
 
     const matchId = (utils.hashCode(previousValue.sender_id) < utils.hashCode(previousValue.receiver_id)) ? previousValue.sender_id + previousValue.receiver_id : previousValue.receiver_id + previousValue.sender_id;
+    const videoChatId = context.eventId;
+
     const match = {
         "user_id": [previousValue.sender_id, previousValue.receiver_id],
         "status": 0,
         "created_on": time,
         "last_updated": time,
+        "active_video_chat": videoChatId,
     };
 
-    return firestore.collection(MATCH_COLLECTION).doc(matchId).set(match).then(() => {
+    const matchRef = firestore.collection(MATCH_COLLECTION).doc(matchId);
+
+    const create = shouldCreate(matchRef);
+
+    if (!create) {
+        return {};
+    }
+
+    await matchRef.set(match, { merge: true }).then(() => {
         return match;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
+
+    // Add video chat session
+    matchRef.collection(VIDEO_CHAT_COLLECTION).doc(videoChatId).set({
+        "last_updated": time,
+    }, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    return match;
+
+    function shouldCreate(matchRef) {
+        return matchRef.get().then(matchDoc => {
+            return !matchDoc.exists;
+        });
+    }
 });
 
 // Set up Algolia.
