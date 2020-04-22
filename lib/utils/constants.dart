@@ -15,5 +15,5 @@ const int photoQuality = 70;
 const String algoliaIndexName = 'users_dev';
 
 // Animation constants
-const int animationDuration = 100;
+const int animationDuration = 150;
 const double offsetdX = 0.8;
