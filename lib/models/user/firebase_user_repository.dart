@@ -10,8 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FirebaseUserRepository extends UserRepository {
   final FirebaseAuth _firebaseAuth;
   final userCollection = Firestore.instance.collection('users');
-  User _user; // current user stored in memory
-  Map<String, User> _userMap = {}; // all users stored in memory
+  User user; // current user stored in memory
+  Map<String, User> userMap = {}; // all users stored in memory
   FirebaseUser _firebaseUser; // current firebase user stored in memory
 
   FirebaseUserRepository({FirebaseAuth firebaseAuth})
@@ -78,16 +78,21 @@ class FirebaseUserRepository extends UserRepository {
     String name,
     Skill skill,
   ) {
+    final skillTypeField = '${skill.type.toString().split('.').last}_skill';
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "display_name": name,
         "onboarded": 1,
+        "$skillTypeField.0.name": skill.name,
+        "$skillTypeField.0.price": skill.price,
+        "$skillTypeField.0.duration": skill.duration,
+        "$skillTypeField.0.description": skill.description,
       });
     });
   }
 
   User updateAbout(String about) {
-    final updatedUser = _user.updateAbout(about);
+    final updatedUser = user.updateAbout(about);
     _updateAbout(about);
 
     return updatedUser;
@@ -102,7 +107,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   User updateName(String name) {
-    final updatedUser = _user.updateName(name);
+    final updatedUser = user.updateName(name);
     _updateDisplayName(name);
 
     return updatedUser;
@@ -117,7 +122,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   User updateTeachSkill(Skill skill, int index) {
-    final updatedUser = _user.updateTeachSkill(skill, index);
+    final updatedUser = user.updateTeachSkill(skill, index);
     _updateTeachSkill(skill.toEntity(), index);
 
     return updatedUser;
@@ -131,7 +136,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   User updateLearnSkill(Skill skill, int index) {
-    final updatedUser = _user.updateTeachSkill(skill, index);
+    final updatedUser = user.updateTeachSkill(skill, index);
     _updateLearnSkill(skill.toEntity(), index);
 
     return updatedUser;
@@ -164,19 +169,19 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   void saveUser(User user) {
-    _user = user;
+    user = user;
   }
 
   void saveUserMap(User user) {
-    _userMap[user.id] = user;
+    userMap[user.id] = user;
   }
 
   void clearUser() {
-    _user = null;
+    user = null;
   }
 
   void clearUserMap() {
-    _userMap = {};
+    userMap = {};
   }
 
   // TODO: remove future parameter
@@ -190,8 +195,8 @@ class FirebaseUserRepository extends UserRepository {
 
   // Gets the User from the "user" Firestore collection using id
   Future<User> getUser(String id) async {
-    if (_userMap.containsKey(id)) {
-      return Future.value(_userMap[id]);
+    if (userMap.containsKey(id)) {
+      return Future.value(userMap[id]);
     }
 
     return userCollection.document(id).get().then((snapshot) {
@@ -204,8 +209,8 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<User> currentUser() async {
-    if (_user != null) {
-      return Future.value(_user);
+    if (user != null) {
+      return Future.value(user);
     }
     try {
       return getUser((await getFirebaseUser()).uid);
@@ -216,7 +221,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   User currentUserNow() {
-    return _user ?? null;
+    return user;
   }
 
   // Listens to changes for a single user ID

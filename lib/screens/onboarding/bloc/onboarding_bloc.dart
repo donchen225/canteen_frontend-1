@@ -17,8 +17,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   Stream<OnboardingState> mapEventToState(OnboardingEvent event) async* {
     if (event is LoadWelcomeScreen) {
       yield* _mapLoadWelcomeScreenToState();
-    } else if (event is LoadOnboardingScreen) {
-      yield* _mapLoadOnboardingScreenToState();
+    } else if (event is LoadOnboarding) {
+      yield* _mapLoadOnboardingToState();
+    } else if (event is CompleteOnboarding) {
+      yield* _mapCompleteOnboardingToState(event);
     }
   }
 
@@ -26,8 +28,15 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     yield WelcomeScreenLoaded();
   }
 
-  Stream<OnboardingState> _mapLoadOnboardingScreenToState() async* {
+  Stream<OnboardingState> _mapLoadOnboardingToState() async* {
     final user = await _userRepository.currentUser();
     yield OnboardingSignUpScreensLoaded(user);
+  }
+
+  Stream<OnboardingState> _mapCompleteOnboardingToState(
+      CompleteOnboarding event) async* {
+    print('UPDATED USER ONBOARDING');
+    _userRepository.updateUserOnboarding(event.name, event.skill);
+    yield OnboardingCompleteScreenLoaded();
   }
 }

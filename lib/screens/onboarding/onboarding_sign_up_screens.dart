@@ -1,6 +1,8 @@
 import 'package:canteen_frontend/components/duration_picker.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   bool _learnSkillSelected;
   String _skillType;
 
+  List<int> _durationOptions;
   int _selectedDurationIndex;
 
   void initState() {
@@ -40,6 +43,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
 
     _currentIndex = 0;
     _selectedDurationIndex = 0;
+    _durationOptions = <int>[30, 60, 90, 120];
     _pageValidated = [false, false, false, true, false, false];
     _teachSkillSelected = false;
     _learnSkillSelected = false;
@@ -630,10 +634,27 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       },
       onTapDoneButton: validateSkillPage()
           ? () {
+              final skill = _teachSkillSelected
+                  ? Skill(
+                      _teachSkillNameController.text,
+                      _teachSkillDescriptionController.text,
+                      int.parse(_teachSkillPriceController.text),
+                      _durationOptions[_selectedDurationIndex],
+                      SkillType.teach,
+                    )
+                  : Skill(
+                      _learnSkillNameController.text,
+                      _learnSkillDescriptionController.text,
+                      int.parse(_learnSkillPriceController.text),
+                      _durationOptions[_selectedDurationIndex],
+                      SkillType.learn,
+                    );
+
               // Update user information and onboarding information here
-              BlocProvider.of<HomeBloc>(context).add(
-                PageTapped(index: 0),
-              );
+              BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding(
+                name: _nameController.text,
+                skill: skill,
+              ));
             }
           : () {},
       showNextButton: true,

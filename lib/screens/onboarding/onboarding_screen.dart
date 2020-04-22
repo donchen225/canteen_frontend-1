@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_complete_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,8 @@ class OnboardingScreen extends StatelessWidget {
       return WelcomeScreen();
     } else if (state is OnboardingSignUpScreensLoaded) {
       return OnboardingSignUpScreens(state.user);
+    } else if (state is OnboardingCompleteScreenLoaded) {
+      return OnboardingCompleteScreen();
     }
 
     return Container();

@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         BlocProvider.of<OnboardingBloc>(context)
-                            .add(LoadOnboardingScreen());
+                            .add(LoadOnboarding());
                       },
                       color: Palette.orangeColor,
                       child: Text(
