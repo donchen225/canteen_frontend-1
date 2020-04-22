@@ -11,6 +11,7 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +133,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(),
-        primaryColor: Color.fromARGB(255, 34, 145, 133),
+        primaryColor: Palette.orangeColor,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),

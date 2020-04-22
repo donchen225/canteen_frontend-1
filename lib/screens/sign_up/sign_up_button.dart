@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class SignUpButton extends StatelessWidget {
@@ -10,7 +11,8 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      color: Colors.blue, // TODO: extract to style
+      elevation: 1,
+      color: Palette.orangeColor, // TODO: extract to style
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
