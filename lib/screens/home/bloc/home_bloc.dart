@@ -55,6 +55,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     if (user.onBoarded != null && user.onBoarded == 1) {
       yield HomeInitializing();
+      yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
     }
