@@ -5,6 +5,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,54 +43,74 @@ class RequestGrid extends StatelessWidget {
         );
       } else if (state is IndividualDetailedRequestLoaded) {
         return Scaffold(
-            appBar: AppBar(
-              brightness: Brightness.light,
-              title: Text(state.request.sender.displayName ?? ''),
-            ),
             body: Stack(
-              children: <Widget>[
-                ProfileList(
-                  state.request.sender,
-                  height: 100,
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        BlocProvider.of<RequestBloc>(context)
-                            .add(DeclineRequest(state.request));
-                      },
-                      child: Icon(Icons.clear),
+          children: <Widget>[
+            Container(
+              color: Palette.backgroundColor,
+              child: CustomScrollView(slivers: <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  brightness: Brightness.light,
+                  backgroundColor: Palette.backgroundColor,
+                  title: Text(
+                    state.request.sender.displayName ?? '',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        final userList = [
-                          state.request.senderId,
-                          state.request.receiverId
-                        ];
-                        BlocProvider.of<RequestBloc>(context)
-                            .add(AcceptRequest(state.request));
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.instance.blockSizeVertical * 13,
+                      left: SizeConfig.instance.blockSizeHorizontal * 3,
+                      right: SizeConfig.instance.blockSizeHorizontal * 3),
+                  sliver: ProfileList(
+                    state.request.sender,
+                    key: Key('search-show-profile'),
+                    height: SizeConfig.instance.blockSizeHorizontal * 33,
+                  ),
+                ),
+              ]),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    BlocProvider.of<RequestBloc>(context)
+                        .add(DeclineRequest(state.request));
+                  },
+                  child: Icon(Icons.clear),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    final userList = [
+                      state.request.senderId,
+                      state.request.receiverId
+                    ];
+                    BlocProvider.of<RequestBloc>(context)
+                        .add(AcceptRequest(state.request));
 
-                        BlocProvider.of<MatchBloc>(context).add(
-                          AddMatch(
-                            Match.create(userId: userList),
-                          ),
-                        );
-                      },
-                      child: Icon(Icons.check),
-                    ),
-                  ),
+                    BlocProvider.of<MatchBloc>(context).add(
+                      AddMatch(
+                        Match.create(userId: userList),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.check),
                 ),
-              ],
-            ));
+              ),
+            ),
+          ],
+        ));
       }
     });
   }
