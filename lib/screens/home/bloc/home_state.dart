@@ -11,6 +11,8 @@ abstract class HomeState extends Equatable {
 
 class HomeUninitialized extends HomeState {}
 
+class HomeInitializing extends HomeState {}
+
 class CurrentIndexChanged extends HomeState {
   final int currentIndex;
 

@@ -30,7 +30,7 @@ class LoadUser extends UserEvent {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'LoadUser { user: $user }';
+  String toString() => 'LoadUser { user: ${user.displayName} }';
 }
 
 abstract class UpdateUser extends UserEvent {

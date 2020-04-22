@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class OnboardingCompleteScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         BlocProvider.of<HomeBloc>(context)
-                            .add(PageTapped(index: 0));
+                            .add(InitializeHome());
                       },
                       color: Palette.orangeColor,
                       child: Text(

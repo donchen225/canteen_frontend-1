@@ -141,19 +141,8 @@ class App extends StatelessWidget {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is Authenticated) {
-                print('IN AUTHENTICATION BLOC LISTENER');
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
-
-                BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-
-                BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-
-                BlocProvider.of<RecommendedBloc>(context)
-                    .add(LoadRecommended());
-
-                BlocProvider.of<RecommendedBloc>(context)
-                    .add(LoadRecommended());
 
                 BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
               }
@@ -192,6 +181,7 @@ class App extends StatelessWidget {
                     child: HomeScreen(userRepository: _userRepository),
                   );
                 }
+                return Container();
               },
             ),
           );

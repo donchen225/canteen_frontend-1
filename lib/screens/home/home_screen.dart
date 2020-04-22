@@ -1,12 +1,15 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/recommended_screen.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -64,67 +67,85 @@ class _HomeScreenState extends State<HomeScreen> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
         ),
-        child: BlocBuilder<HomeBloc, HomeState>(
-          bloc: _homeBloc,
-          builder: (BuildContext context, HomeState state) {
-            if (state is HomeUninitialized || state is OnboardScreenLoaded) {
-              return Visibility(visible: false, child: Container());
-            }
+        child: BlocListener<HomeBloc, HomeState>(
+          listener: (BuildContext context, HomeState state) {
+            if (state is HomeInitializing) {
+              print('HOME INITIALIZING LISTENER');
+              BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-            return BottomNavigationBar(
-              currentIndex: _homeBloc.currentIndex,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              selectedFontSize: 12,
-              unselectedFontSize: 12,
-              selectedItemColor: Colors.orange[500],
-              type: BottomNavigationBarType.fixed,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                  ),
-                  title: Text(''),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.search,
-                  ),
-                  title: Text(''),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.email,
-                  ),
-                  title: Text(''),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.sms,
-                  ),
-                  title: Text(''),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person,
-                  ),
-                  title: Text(''),
-                ),
-              ],
-              onTap: _onItemTapped,
-            );
+              BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+
+              BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
+            }
           },
+          child: BlocBuilder<HomeBloc, HomeState>(
+            bloc: _homeBloc,
+            builder: (BuildContext context, HomeState state) {
+              if (state is HomeUninitialized || state is OnboardScreenLoaded) {
+                return Visibility(visible: false, child: Container());
+              }
+
+              return BottomNavigationBar(
+                currentIndex: _homeBloc.currentIndex,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                selectedFontSize: 12,
+                unselectedFontSize: 12,
+                selectedItemColor: Colors.orange[500],
+                type: BottomNavigationBarType.fixed,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.home,
+                    ),
+                    title: Text(''),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.search,
+                    ),
+                    title: Text(''),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.email,
+                    ),
+                    title: Text(''),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.sms,
+                    ),
+                    title: Text(''),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.person,
+                    ),
+                    title: Text(''),
+                  ),
+                ],
+                onTap: _onItemTapped,
+              );
+            },
+          ),
         ),
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
           print('IN HOME PAGE BLOC BUILDER');
 
+          if (state is HomeInitializing) {
+            print('IN HOME INITIALIZING BLOC BUILDER');
+            return Center(child: CupertinoActivityIndicator());
+          }
+
           if (state is PageLoading) {
             print('IN PAGE LOADING SCREEN');
             return Center(child: CupertinoActivityIndicator());
           }
           if (state is RecommendedScreenLoaded) {
+            print('IN HOME RECOMMENDED SCREEN LOADED');
             return RecommendedScreen();
           }
           if (state is SearchScreenLoaded) {
@@ -150,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: OnboardingScreen(),
             );
           }
-          print('WHY AM I HERE?');
           return Container();
         },
       ),

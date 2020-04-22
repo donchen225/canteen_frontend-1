@@ -19,7 +19,7 @@ class LoadUserProfile extends UserProfileEvent {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'LoadUserProfile { user: ${user.toString()} }';
+  String toString() => 'LoadUserProfile { user: ${user.displayName} }';
 }
 
 class ClearProfile extends UserProfileEvent {}
@@ -31,7 +31,7 @@ class ShowUserProfile extends UserProfileEvent {
   List<Object> get props => null;
 
   @override
-  String toString() => 'LoadUserProfile';
+  String toString() => 'ShowUserProfile';
 }
 
 class EditAboutSection extends UserProfileEvent {
@@ -43,7 +43,7 @@ class EditAboutSection extends UserProfileEvent {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'EditAboutSection { user: ${user.toString()} }';
+  String toString() => 'EditAboutSection';
 }
 
 // TODO: remove User
@@ -59,7 +59,7 @@ class EditSkill extends UserProfileEvent {
 
   @override
   String toString() =>
-      'EditSkill { user: ${user.toString()} skillType: $skillType skillIndex: $skillIndex }';
+      'EditSkill { user: ${user.displayName} skillType: $skillType skillIndex: $skillIndex }';
 }
 
 class UpdateAboutSection extends UserProfileEvent {
@@ -73,7 +73,7 @@ class UpdateAboutSection extends UserProfileEvent {
 
   @override
   String toString() =>
-      'UpdateAboutSection { user: ${user.toString()} about: $about }';
+      'UpdateAboutSection { user: ${user.about} about: $about }';
 }
 
 class EditName extends UserProfileEvent {
@@ -85,7 +85,7 @@ class EditName extends UserProfileEvent {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'EditName { user: ${user.toString()} }';
+  String toString() => 'EditName { user: ${user.displayName} }';
 }
 
 class UpdateName extends UserProfileEvent {

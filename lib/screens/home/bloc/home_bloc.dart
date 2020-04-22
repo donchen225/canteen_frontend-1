@@ -21,6 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapPageTappedToState(event);
     } else if (event is CheckOnboardStatus) {
       yield* _mapCheckOnboardStatusToState();
+    } else if (event is InitializeHome) {
+      yield* _mapInitializeHomeToState();
     }
   }
 
@@ -52,9 +54,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final user = await _userRepository.currentUser();
 
     if (user.onBoarded != null && user.onBoarded == 1) {
-      yield RecommendedScreenLoaded();
+      yield HomeInitializing();
     } else {
       yield OnboardScreenLoaded();
     }
+  }
+
+  Stream<HomeState> _mapInitializeHomeToState() async* {
+    yield HomeInitializing();
+    yield RecommendedScreenLoaded();
   }
 }

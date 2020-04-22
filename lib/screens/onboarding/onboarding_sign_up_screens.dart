@@ -610,8 +610,6 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
 
   @override
   Widget build(BuildContext context) {
-    print(_pageValidated[_currentIndex]);
-
     return IntroViewsFlutter(
       pages,
       onTapNextButton: () {

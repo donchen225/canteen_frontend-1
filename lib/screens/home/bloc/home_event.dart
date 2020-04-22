@@ -23,3 +23,10 @@ class CheckOnboardStatus extends HomeEvent {
   @override
   String toString() => 'CheckOnboardStatus';
 }
+
+class InitializeHome extends HomeEvent {
+  InitializeHome();
+
+  @override
+  String toString() => 'InitializeHome';
+}
