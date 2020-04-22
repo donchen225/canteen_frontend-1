@@ -30,7 +30,7 @@ class RecommendedUnavailableScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.instance.blockSizeVertical * 6),
                     child: RaisedButton(
-                      color: Colors.orange[400],
+                      color: Palette.orangeColor,
                       child: Text('Try Again'),
                       elevation: 1,
                       shape: RoundedRectangleBorder(
