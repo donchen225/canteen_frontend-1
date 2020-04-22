@@ -70,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocListener<HomeBloc, HomeState>(
           listener: (BuildContext context, HomeState state) {
             if (state is HomeInitializing) {
-              print('HOME INITIALIZING LISTENER');
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -133,19 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
-          print('IN HOME PAGE BLOC BUILDER');
-
           if (state is HomeInitializing) {
-            print('IN HOME INITIALIZING BLOC BUILDER');
             return Center(child: CupertinoActivityIndicator());
           }
 
           if (state is PageLoading) {
-            print('IN PAGE LOADING SCREEN');
             return Center(child: CupertinoActivityIndicator());
           }
           if (state is RecommendedScreenLoaded) {
-            print('IN HOME RECOMMENDED SCREEN LOADED');
             return RecommendedScreen();
           }
           if (state is SearchScreenLoaded) {
