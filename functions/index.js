@@ -75,7 +75,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
-    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).get().then((querySnapshot) => {
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 0).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             if (doc.exists) {
                 terminate = true;
@@ -92,6 +92,39 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         return output;
     }
 
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 0).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.exists) {
+                terminate = true;
+                output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+                return;
+            }
+        });
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    if (terminate) {
+        return output;
+    }
+
+    const matchId = (utils.hashCode(uid) < utils.hashCode(receiverId)) ? uid + receiverId : receiverId + uid;
+
+    await firestore.collection(MATCH_COLLECTION).doc(matchId).get().then((doc) => {
+        if (doc.exists) {
+            terminate = true;
+            output = { 'status': 'SKIPPED', 'message': 'Match already exists.' };
+            return;
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    if (terminate) {
+        return output;
+    }
 
     // Create document
     const doc = {
