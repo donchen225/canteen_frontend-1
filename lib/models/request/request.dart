@@ -25,7 +25,6 @@ class Request {
   });
 
   static Request create({Skill skill, String receiverId, String comment}) {
-    print('COMMENT: $comment');
     return Request(
       skill: skill != null
           ? (skill.name + ' - ' + '\$${(skill.price).toString()}')

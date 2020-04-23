@@ -24,13 +24,14 @@ class MatchRepository {
     _detailedMatches = [];
   }
 
-  // TODO: improve this PLEASE
   void saveDetailedMatch(DetailedMatch match) {
     var idx = 0;
     while (idx < _detailedMatches.length) {
-      if (match.lastUpdated.isBefore(_detailedMatches[idx].lastUpdated)) {
-        idx++;
+      if (match.lastUpdated.isAfter(_detailedMatches[idx].lastUpdated)) {
+        break;
       }
+
+      idx++;
     }
     _detailedMatches.insert(idx, match);
   }

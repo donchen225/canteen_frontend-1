@@ -109,6 +109,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         _matchRepository.updateDetailedMatch(update.item1, update.item2);
       }
     }
+
     yield MatchesLoaded(_matchRepository.currentDetailedMatches());
   }
 
