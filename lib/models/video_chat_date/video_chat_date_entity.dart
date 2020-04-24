@@ -1,60 +1,55 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class VideoChatRoomEntity extends Equatable {
+class VideoChatDateEntity extends Equatable {
   final String id;
-  final String startUrl;
-  final String joinUrl;
+  final String userId;
   final DateTime startTime;
   final int duration;
   final String timeZone;
-  final DateTime createdOn;
+  final DateTime lastUpdated;
   final int status;
 
-  const VideoChatRoomEntity(
+  const VideoChatDateEntity(
     this.id,
-    this.startUrl,
-    this.joinUrl,
+    this.userId,
     this.startTime,
     this.duration,
     this.timeZone,
-    this.createdOn,
+    this.lastUpdated,
     this.status,
   );
 
   @override
   List<Object> get props => [
         id,
-        startUrl,
-        joinUrl,
+        userId,
         startTime,
         duration,
         timeZone,
-        createdOn,
+        lastUpdated,
         status,
       ];
 
-  static VideoChatRoomEntity fromSnapshot(DocumentSnapshot snap) {
-    return VideoChatRoomEntity(
+  static VideoChatDateEntity fromSnapshot(DocumentSnapshot snap) {
+    return VideoChatDateEntity(
       snap.documentID,
-      snap.data["start_url"],
-      snap.data["join_url"],
+      snap.data["user_id"],
       snap.data["start_time"],
       snap.data["duration"],
       snap.data["time_zone"],
-      snap.data["created_on"],
+      snap.data["last_updated"],
       snap.data["status"],
     );
   }
 
   Map<String, Object> toDocument() {
     return {
-      "start_url": startUrl,
-      "join_url": joinUrl,
+      "user_id": userId,
       "start_time": startTime,
       "duration": duration,
       "time_zone": timeZone,
-      "created_on": createdOn,
+      "last_updated": lastUpdated,
       "status": status,
     };
   }

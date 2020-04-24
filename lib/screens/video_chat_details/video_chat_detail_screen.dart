@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/video_chat_details/video_chat_time_picker.dart';
 import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +18,21 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
   String videoChatUrl;
 
   final double _kPickerSheetHeight = 216.0;
-  final double _kPickerItemHeight = 32.0;
 
-  DateTime dateTime = roundUpHour(DateTime.now(), Duration(hours: 1));
+  DateTime initialDateTime = roundUpHour(DateTime.now(), Duration(hours: 1));
+  DateTime proposedDate1;
+  DateTime proposedDate2;
+  DateTime proposedDate3;
+
+  @override
+  void initState() {
+    super.initState();
+
+    print(initialDateTime);
+    proposedDate1 = initialDateTime;
+    proposedDate2 = initialDateTime;
+    proposedDate3 = initialDateTime;
+  }
 
   Widget _buildMenu(List<Widget> children) {
     return Container(
@@ -67,7 +80,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
     );
   }
 
-  Widget _buildDateAndTimePicker(BuildContext context) {
+  Widget _buildDateAndTimePicker(BuildContext context, DateTime date) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -76,17 +89,14 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
             showCupertinoModalPopup<void>(
               context: context,
               builder: (BuildContext context) {
-                return _buildBottomPicker(
-                  CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.dateAndTime,
-                    initialDateTime: dateTime,
-                    minuteInterval: 15,
-                    onDateTimeChanged: (DateTime newDateTime) {
-                      if (mounted) {
-                        setState(() => dateTime = newDateTime);
-                      }
-                    },
-                  ),
+                return VideoChatTimePicker(
+                  initialTime: initialDateTime,
+                  onChanged: (dateTime) {
+                    setState(() {
+                      date = dateTime;
+                      print(proposedDate1);
+                    });
+                  },
                 );
               },
             );
@@ -94,7 +104,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
           child: _buildMenu(
             <Widget>[
               Text(
-                DateFormat.yMMMd().add_jm().format(dateTime),
+                DateFormat.yMMMd().add_jm().format(date),
               ),
             ],
           ),
@@ -117,9 +127,9 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Your proposed times'),
-              _buildDateAndTimePicker(context),
-              _buildDateAndTimePicker(context),
-              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context, proposedDate1),
+              _buildDateAndTimePicker(context, proposedDate2),
+              _buildDateAndTimePicker(context, proposedDate3),
               RaisedButton(
                 child: Text('Submit'),
               )
@@ -133,9 +143,9 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
           child: Column(
             children: <Widget>[
               Text("${widget.user.displayName}'s proposed times"),
-              _buildDateAndTimePicker(context),
-              _buildDateAndTimePicker(context),
-              _buildDateAndTimePicker(context),
+              _buildDateAndTimePicker(context, proposedDate1),
+              _buildDateAndTimePicker(context, proposedDate2),
+              _buildDateAndTimePicker(context, proposedDate3),
             ],
           ),
         ),

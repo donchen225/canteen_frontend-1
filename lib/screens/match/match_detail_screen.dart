@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
+import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -42,6 +43,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
 
   @override
   void initState() {
+    print('INIT MATCH DETAIL SCREEN');
     super.initState();
     _tabController = TabController(vsync: this, length: tabChoices.length);
   }
@@ -78,34 +80,65 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
       ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        title: Text(
-          prospect.displayName ?? prospect.email,
-          style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
-        ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        leading: BackButton(
-          color: Colors.black,
-        ),
-        bottom: TabBar(
-          indicatorColor: Colors.black,
-          controller: _tabController,
-          tabs: tabChoices.map((text) {
-            return Tab(
-              child: text,
-            );
-          }).toList(),
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey.shade400,
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: tabWidgets,
-      ),
+    return BlocBuilder<VideoChatDetailsBloc, VideoChatDetailsState>(
+      builder: (BuildContext context, VideoChatDetailsState state) {
+        if (state is VideoChatDetailsUninitialized) {
+          return Scaffold(
+            appBar: AppBar(
+              brightness: Brightness.light,
+              title: Text(
+                prospect.displayName ?? prospect.email,
+                style:
+                    GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+              ),
+              backgroundColor: Palette.appBarBackgroundColor,
+              elevation: 1,
+            ),
+            body: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  RaisedButton(
+                      onPressed: () {
+                        BlocProvider.of<VideoChatDetailsBloc>(context)
+                            .add(ProposeVideoChatDetails());
+                      },
+                      child: Text('Submit')),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            brightness: Brightness.light,
+            title: Text(
+              prospect.displayName ?? prospect.email,
+              style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+            ),
+            backgroundColor: Palette.appBarBackgroundColor,
+            elevation: 1,
+            bottom: TabBar(
+              indicatorColor: Colors.black,
+              controller: _tabController,
+              tabs: tabChoices.map((text) {
+                return Tab(
+                  child: text,
+                );
+              }).toList(),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey.shade400,
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: tabWidgets,
+          ),
+        );
+      },
     );
   }
 }
