@@ -9,6 +9,7 @@ class Match {
   final String id;
   final List<String> userId;
   final MatchStatus status;
+  final String activeVideoChat;
   final DateTime createdOn;
   final DateTime lastUpdated;
 
@@ -16,23 +17,10 @@ class Match {
     @required this.userId,
     this.id,
     this.status,
+    this.activeVideoChat,
     this.createdOn,
     this.lastUpdated,
   });
-
-  static Match create({List<String> userId}) {
-    final date = DateTime.now().toUtc();
-
-    return Match(
-      id: userId[0].hashCode < userId[1].hashCode
-          ? userId[0] + userId[1]
-          : userId[1] + userId[0],
-      userId: userId..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
-      status: MatchStatus.initialized,
-      createdOn: date,
-      lastUpdated: date,
-    );
-  }
 
   static Match fromEntity(MatchEntity entity, {Message lastMessage}) {
     return Match(
@@ -49,14 +37,10 @@ class Match {
       id: id,
       userId: userId,
       status: status.index,
+      activeVideoChat: activeVideoChat,
       lastUpdated: lastUpdated,
       createdOn: createdOn,
     );
-  }
-
-  Match addLastMessage(Message message) {
-    return Match(
-        id: id, userId: userId, lastUpdated: lastUpdated, createdOn: createdOn);
   }
 }
 
@@ -68,6 +52,7 @@ class DetailedMatch extends Match {
       {@required userId,
       @required id,
       @required status,
+      @required activeVideoChat,
       @required createdOn,
       @required lastUpdated,
       @required this.userList,
@@ -76,6 +61,7 @@ class DetailedMatch extends Match {
             userId: userId,
             id: id,
             status: status,
+            activeVideoChat: activeVideoChat,
             lastUpdated: lastUpdated,
             createdOn: createdOn);
 
@@ -85,6 +71,7 @@ class DetailedMatch extends Match {
         userId: match.userId,
         id: match.id,
         status: match.status,
+        activeVideoChat: match.activeVideoChat,
         createdOn: match.createdOn,
         userList: userList,
         lastUpdated: match.lastUpdated,

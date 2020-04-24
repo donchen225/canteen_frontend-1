@@ -17,15 +17,6 @@ class LoadMatches extends MatchEvent {
   String toString() => 'LoadMatches';
 }
 
-class RegisterActiveMatch extends MatchEvent {
-  final String activeMatchId;
-
-  const RegisterActiveMatch(this.activeMatchId);
-
-  @override
-  String toString() => 'RegisterActiveMatch { activeMatchId : $activeMatchId }';
-}
-
 class UpdateMatch extends MatchEvent {
   final Match updatedMatch;
 

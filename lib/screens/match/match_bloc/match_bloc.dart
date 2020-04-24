@@ -16,8 +16,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   final MatchRepository _matchRepository;
   final UserRepository _userRepository;
   StreamSubscription _matchSubscription;
-  Map<String, StreamSubscription> messagesSubscriptionMap = Map();
-  String _activeMatchId;
 
   MatchBloc(
       {@required MatchRepository matchRepository,
@@ -35,8 +33,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
     if (event is LoadMatches) {
       yield* _mapLoadMatchesToState();
-    } else if (event is RegisterActiveMatch) {
-      _activeMatchId = event.activeMatchId;
     } else if (event is DeleteMatch) {
       yield* _mapDeleteMatchToState(event);
     } else if (event is MatchesUpdated) {

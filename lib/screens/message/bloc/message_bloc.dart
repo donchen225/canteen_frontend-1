@@ -14,7 +14,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final MatchRepository _matchRepository;
   final UserRepository _userRepository;
   Map<String, StreamSubscription> messagesSubscriptionMap = Map();
-  StreamSubscription chatsSubscription;
   String activeChatId;
 
   MessageBloc({

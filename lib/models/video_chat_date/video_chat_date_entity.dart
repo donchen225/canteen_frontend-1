@@ -10,7 +10,7 @@ class VideoChatDateEntity extends Equatable {
   final DateTime lastUpdated;
   final int status;
 
-  const VideoChatDateEntity(
+  const VideoChatDateEntity({
     this.id,
     this.userId,
     this.startTime,
@@ -18,7 +18,7 @@ class VideoChatDateEntity extends Equatable {
     this.timeZone,
     this.lastUpdated,
     this.status,
-  );
+  });
 
   @override
   List<Object> get props => [
@@ -33,13 +33,13 @@ class VideoChatDateEntity extends Equatable {
 
   static VideoChatDateEntity fromSnapshot(DocumentSnapshot snap) {
     return VideoChatDateEntity(
-      snap.documentID,
-      snap.data["user_id"],
-      snap.data["start_time"],
-      snap.data["duration"],
-      snap.data["time_zone"],
-      snap.data["last_updated"],
-      snap.data["status"],
+      id: snap.documentID,
+      userId: snap.data["user_id"],
+      startTime: snap.data["start_time"],
+      duration: snap.data["duration"],
+      timeZone: snap.data["time_zone"],
+      lastUpdated: snap.data["last_updated"],
+      status: snap.data["status"],
     );
   }
 

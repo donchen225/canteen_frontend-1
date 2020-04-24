@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/models/message/message_entity.dart';
+import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
+import 'package:canteen_frontend/models/video_chat_date/video_chat_date_entity.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,8 +14,6 @@ import 'package:tuple/tuple.dart';
 class MatchRepository {
   final matchCollection = Firestore.instance.collection('matches');
   static const String messages = "messages";
-  static const String videoChat = "video_chat";
-  static const String dates = "dates";
   List<DetailedMatch> _detailedMatches = [];
 
   MatchRepository();
@@ -137,21 +137,5 @@ class MatchRepository {
         .documents
         .map((doc) => Message.fromEntity(MessageEntity.fromSnapshot(doc)))
         .toList();
-  }
-
-  Stream<List<Tuple2<DocumentChangeType, Match>>> getVideoChatDates(
-      String matchId, String videoChatId) {
-    return matchCollection
-        .document(matchId)
-        .collection(videoChat)
-        .document(videoChatId)
-        .collection(dates)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.documentChanges
-          .map((doc) => Tuple2<DocumentChangeType, Match>(doc.type,
-              Match.fromEntity(MatchEntity.fromSnapshot(doc.document))))
-          .toList();
-    });
   }
 }

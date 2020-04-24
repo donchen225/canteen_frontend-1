@@ -45,14 +45,14 @@ class VideoChatDate extends Equatable {
     );
   }
 
-  Map<String, Object> toDocument() {
-    return {
-      "user_id": userId,
-      "start_time": startTime,
-      "duration": duration,
-      "time_zone": timeZone,
-      "last_updated": lastUpdated,
-      "status": status,
-    };
+  VideoChatDateEntity toEntity() {
+    return VideoChatDateEntity(
+      userId: userId,
+      startTime: startTime,
+      duration: duration,
+      timeZone: timeZone,
+      lastUpdated: lastUpdated,
+      status: status,
+    );
   }
 }

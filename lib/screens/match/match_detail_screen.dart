@@ -102,6 +102,12 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text('Select 3 times:'),
+                    ),
+                  ),
                   RaisedButton(
                       onPressed: () {
                         BlocProvider.of<VideoChatDetailsBloc>(context)

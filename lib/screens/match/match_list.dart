@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
+import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/video_chat_details/bloc/video_chat_details_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,11 @@ class MatchList extends StatelessWidget {
                   onTap: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
-                        return BlocProvider<VideoChatDetailsBloc>(
-                          create: (BuildContext context) =>
-                              VideoChatDetailsBloc(),
-                          child: MatchDetailScreen(match: match),
-                        );
+                        BlocProvider.of<VideoChatDetailsBloc>(context).add(
+                            LoadVideoChatDetails(
+                                matchId: match.id,
+                                videoChatId: match.activeVideoChat));
+                        return MatchDetailScreen(match: match);
                       }),
                     );
                   });

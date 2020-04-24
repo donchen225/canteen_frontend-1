@@ -22,9 +22,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         assert(authenticationBloc != null),
         _userRepository = userRepository,
         _authenticationBloc = authenticationBloc {
-    print('IN USER BLOC CONSTRUCTOR');
     _authSubscription = _authenticationBloc.listen((state) {
-      print('AUTH BLOC CHANGED');
       if (!(state is Authenticated)) {
         print('AUTH BLOC IS NOT AUTHENTICATED, CANCELLING USER SUBSCRIPTION');
         add(LogOutUser());
@@ -50,7 +48,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Stream<UserState> _mapInitializeUserToState(
       FirebaseUser firebaseUser) async* {
-    print('INITIALIZING USER');
     _userSubscription?.cancel();
     _userSubscription =
         _userRepository.getCurrentUser(firebaseUser.uid).listen((user) {

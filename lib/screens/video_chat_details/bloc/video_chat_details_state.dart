@@ -7,6 +7,8 @@ abstract class VideoChatDetailsState extends Equatable {
   List<Object> get props => [];
 }
 
+class VideoChatDetailsLoading extends VideoChatDetailsState {}
+
 class VideoChatDetailsUninitialized extends VideoChatDetailsState {}
 
 class VideoChatDetailsProposing extends VideoChatDetailsState {}

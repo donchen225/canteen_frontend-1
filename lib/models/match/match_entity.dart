@@ -6,6 +6,7 @@ class MatchEntity extends Equatable {
   final String id;
   final List<String> userId;
   final int status;
+  final String activeVideoChat;
   final DateTime lastUpdated;
   final DateTime createdOn;
 
@@ -13,6 +14,7 @@ class MatchEntity extends Equatable {
       {@required this.id,
       @required this.userId,
       @required this.status,
+      @required this.activeVideoChat,
       @required this.lastUpdated,
       @required this.createdOn});
 
@@ -21,17 +23,19 @@ class MatchEntity extends Equatable {
       'id': id,
       'user_id': userId,
       'status': status,
+      'active_video_chat': activeVideoChat,
       'created_on': createdOn,
       'last_updated': lastUpdated,
     };
   }
 
   @override
-  List<Object> get props => [id, userId, status, createdOn, lastUpdated];
+  List<Object> get props =>
+      [id, userId, status, activeVideoChat, createdOn, lastUpdated];
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, userId: $userId, status: $status, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'MatchEntity { id: $id, userId: $userId, status: $status, activeVideoChat: $activeVideoChat, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static MatchEntity fromJson(Map<String, Object> json) {
@@ -39,6 +43,7 @@ class MatchEntity extends Equatable {
       id: json['id'] as String,
       userId: json['user_id'] as List<String>,
       status: json['status'] as int,
+      activeVideoChat: json['active_video_chat'] as String,
       createdOn: DateTime.parse(json['created_on']),
       lastUpdated: DateTime.parse(json['last_updated']),
     );
@@ -49,6 +54,7 @@ class MatchEntity extends Equatable {
       id: snapshot.documentID,
       userId: snapshot.data['user_id'].map<String>((x) => x as String).toList(),
       status: snapshot.data['status'],
+      activeVideoChat: snapshot.data['active_video_chat'],
       createdOn: snapshot.data["created_on"].toDate(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
     );
@@ -58,6 +64,7 @@ class MatchEntity extends Equatable {
     return {
       'user_id': userId,
       'status': status,
+      'active_video_chat': activeVideoChat,
       'created_on': createdOn,
       'last_updated': lastUpdated,
     };
