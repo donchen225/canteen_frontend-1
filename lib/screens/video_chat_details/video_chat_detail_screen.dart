@@ -1,4 +1,6 @@
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/video_chat_date/proposed_date_time.dart';
+import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/video_chat_details/video_chat_time_picker.dart';
 import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -8,8 +10,12 @@ import 'package:intl/intl.dart';
 
 class VideoChatDetailScreen extends StatefulWidget {
   final User user;
+  final List<VideoChatDate> userDates;
+  final List<VideoChatDate> partnerDates;
 
-  VideoChatDetailScreen({@required this.user}) : assert(user != null);
+  VideoChatDetailScreen(
+      {@required this.user, this.userDates, this.partnerDates})
+      : assert(user != null);
 
   _VideoChatDetailScreenState createState() => _VideoChatDetailScreenState();
 }
@@ -19,19 +25,33 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
 
   final double _kPickerSheetHeight = 216.0;
 
-  DateTime initialDateTime = roundUpHour(DateTime.now(), Duration(hours: 1));
-  DateTime proposedDate1;
-  DateTime proposedDate2;
-  DateTime proposedDate3;
+  final int numDates = 3;
+  DateTime now;
+  DateTime initialDateTime;
+  List<VideoChatDate> userDates;
+  List<ProposedVieoChatDate> userProposedDates;
+  List<VideoChatDate> partnerDates;
 
   @override
   void initState() {
     super.initState();
 
-    print(initialDateTime);
-    proposedDate1 = initialDateTime;
-    proposedDate2 = initialDateTime;
-    proposedDate3 = initialDateTime;
+    now = DateTime.now();
+    initialDateTime = roundUpHour(now, Duration(hours: 1));
+
+    if (userDates == null) {
+      userDates = List<VideoChatDate>.generate(
+          numDates,
+          (i) => VideoChatDate(
+                userId: widget.user.id,
+                startTime: initialDateTime,
+                lastUpdated: now,
+                status: 0,
+              ));
+
+      userProposedDates = List<ProposedVieoChatDate>.generate(userDates.length,
+          (i) => ProposedVieoChatDate(userDates[i].startTime));
+    }
   }
 
   Widget _buildMenu(List<Widget> children) {
@@ -58,29 +78,8 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
     );
   }
 
-  Widget _buildBottomPicker(Widget picker) {
-    return Container(
-      height: _kPickerSheetHeight,
-      padding: const EdgeInsets.only(top: 6.0),
-      color: CupertinoColors.white,
-      child: DefaultTextStyle(
-        style: const TextStyle(
-          color: CupertinoColors.black,
-          fontSize: 22.0,
-        ),
-        child: GestureDetector(
-          // Blocks taps from propagating to the modal sheet and popping.
-          onTap: () {},
-          child: SafeArea(
-            top: false,
-            child: picker,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateAndTimePicker(BuildContext context, DateTime date) {
+  Widget _buildDateAndTimePicker(
+      BuildContext context, ProposedVieoChatDate date) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -93,8 +92,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
                   initialTime: initialDateTime,
                   onChanged: (dateTime) {
                     setState(() {
-                      date = dateTime;
-                      print(proposedDate1);
+                      date.startTime = dateTime;
                     });
                   },
                 );
@@ -104,7 +102,7 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
           child: _buildMenu(
             <Widget>[
               Text(
-                DateFormat.yMMMd().add_jm().format(date),
+                DateFormat.yMMMd().add_jm().format(date.startTime),
               ),
             ],
           ),
@@ -127,9 +125,9 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Your proposed times'),
-              _buildDateAndTimePicker(context, proposedDate1),
-              _buildDateAndTimePicker(context, proposedDate2),
-              _buildDateAndTimePicker(context, proposedDate3),
+              _buildDateAndTimePicker(context, userProposedDates[0]),
+              _buildDateAndTimePicker(context, userProposedDates[1]),
+              _buildDateAndTimePicker(context, userProposedDates[2]),
               RaisedButton(
                 child: Text('Submit'),
               )
@@ -143,9 +141,9 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
           child: Column(
             children: <Widget>[
               Text("${widget.user.displayName}'s proposed times"),
-              _buildDateAndTimePicker(context, proposedDate1),
-              _buildDateAndTimePicker(context, proposedDate2),
-              _buildDateAndTimePicker(context, proposedDate3),
+              // _buildDateAndTimePicker(context, proposedDate1),
+              // _buildDateAndTimePicker(context, proposedDate2),
+              // _buildDateAndTimePicker(context, proposedDate3),
             ],
           ),
         ),
