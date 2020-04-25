@@ -111,8 +111,6 @@ class _VideoChatDetailScreenState extends State<VideoChatDetailScreen> {
     );
   }
 
-  Widget _buildProposedTimeRow(BuildContext context) {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

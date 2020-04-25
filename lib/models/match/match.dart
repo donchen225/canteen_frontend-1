@@ -27,6 +27,7 @@ class Match {
       id: entity.id,
       userId: entity.userId,
       status: MatchStatus.values[entity.status],
+      activeVideoChat: entity.activeVideoChat,
       createdOn: entity.createdOn,
       lastUpdated: entity.lastUpdated,
     );

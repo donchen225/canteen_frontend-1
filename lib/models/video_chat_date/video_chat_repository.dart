@@ -4,8 +4,6 @@ import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:tuple/tuple.dart';
-
 class VideoChatRepository {
   final matchCollection = Firestore.instance.collection('matches');
   static const String videoChat = "video_chat";
@@ -14,7 +12,7 @@ class VideoChatRepository {
 
   VideoChatRepository();
 
-  Future<void> addVideoChatDate(
+  Future<void> addVideoChatDates(
       List<VideoChatDate> date, String matchId, String videoChatId) {
     var batch = Firestore.instance.batch();
 

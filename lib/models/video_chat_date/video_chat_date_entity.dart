@@ -35,10 +35,10 @@ class VideoChatDateEntity extends Equatable {
     return VideoChatDateEntity(
       id: snap.documentID,
       userId: snap.data["user_id"],
-      startTime: snap.data["start_time"],
+      startTime: snap.data["start_time"].toDate(),
       duration: snap.data["duration"],
       timeZone: snap.data["time_zone"],
-      lastUpdated: snap.data["last_updated"],
+      lastUpdated: snap.data["last_updated"].toDate(),
       status: snap.data["status"],
     );
   }

@@ -2,10 +2,12 @@ import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_initial_screen.dart';
 import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,41 +86,21 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
 
     return BlocBuilder<VideoChatDetailsBloc, VideoChatDetailsState>(
       builder: (BuildContext context, VideoChatDetailsState state) {
-        if (state is VideoChatDetailsUninitialized) {
-          return Scaffold(
-            appBar: AppBar(
-              brightness: Brightness.light,
-              title: Text(
-                prospect.displayName ?? prospect.email,
-                style:
-                    GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
-              ),
-              backgroundColor: Palette.appBarBackgroundColor,
-              elevation: 1,
-            ),
-            body: Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text('Select 3 times:'),
-                    ),
-                  ),
-                  RaisedButton(
-                      onPressed: () {
-                        BlocProvider.of<VideoChatDetailsBloc>(context)
-                            .add(ProposeVideoChatDetails());
-                      },
-                      child: Text('Submit')),
-                ],
-              ),
-            ),
+        if (state is VideoChatDetailsLoading) {
+          return Center(
+            child: CupertinoActivityIndicator(),
           );
         }
+
+        if (state is VideoChatDetailsUninitialized) {
+          return VideoChatDetailInitialScreen(
+            user: prospect,
+            matchId: widget.match.id,
+            videoChatId: widget.match.activeVideoChat,
+          );
+        }
+
+        print('IN MATCH DETAIL OUTSIDE STATE');
 
         return Scaffold(
           appBar: AppBar(

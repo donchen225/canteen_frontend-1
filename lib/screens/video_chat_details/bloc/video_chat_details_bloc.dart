@@ -24,8 +24,8 @@ class VideoChatDetailsBloc
       yield* _mapLoadVideoChatDetailsToState(event);
     } else if (event is ReceivedVideoChatDetails) {
       yield* _mapReceivedVideoChatDetailsToState(event);
-    } else if (event is ProposeVideoChatDetails) {
-      yield* _mapProposeVideoChatDetailsToState();
+    } else if (event is ProposeVideoChatDates) {
+      yield* _mapProposeVideoChatDatesToState(event);
     }
   }
 
@@ -53,14 +53,21 @@ class VideoChatDetailsBloc
 
   Stream<VideoChatDetailsState> _mapReceivedVideoChatDetailsToState(
       ReceivedVideoChatDetails event) async* {
-    if (event.videoChatDates.isEmpty) {
+    if (event.dates.isEmpty) {
       yield VideoChatDetailsUninitialized();
     } else {
+      // If partner proposed dates, show their dates
       yield VideoChatDetailsProposing();
     }
   }
 
-  Stream<VideoChatDetailsState> _mapProposeVideoChatDetailsToState() async* {
+  Stream<VideoChatDetailsState> _mapProposeVideoChatDatesToState(
+      ProposeVideoChatDates event) async* {
+    print('PROPOSING VIDEO CHAT DATES');
+    print('MATCH ID: ${event.matchId}');
+    print('VIDEO CHAT ID: ${event.videoChatId}');
+    await _videoChatRepository.addVideoChatDates(
+        event.dates, event.matchId, event.videoChatId);
     yield VideoChatDetailsProposing();
   }
 }
