@@ -26,7 +26,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     with SingleTickerProviderStateMixin {
   MatchDetailBloc _matchDetailBloc;
   MatchDetailNavigationBloc _matchDetailNavigationBloc;
-  bool _matchInitialized;
   TabController _tabController;
 
   List<Text> tabChoices = [
@@ -51,7 +50,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   void initState() {
     print('INIT MATCH DETAIL SCREEN');
     super.initState();
-    _matchInitialized = true;
     _tabController = TabController(vsync: this, length: tabChoices.length);
     _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);
     _matchDetailNavigationBloc =
@@ -63,120 +61,108 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
     final prospect = widget.match.userList.firstWhere((u) => u.id != user.id);
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(double.infinity,
-            _matchInitialized ? kToolbarHeight * 2 : kToolbarHeight),
-        child: BlocListener<MatchDetailBloc, MatchDetailState>(
-          listener: (BuildContext context, MatchDetailState state) {
-            if (!(state is MatchUninitialized)) {
-              setState(() {
-                _matchInitialized = true;
-              });
-            }
-          },
-          child: BlocBuilder<MatchDetailBloc, MatchDetailState>(
-            bloc: _matchDetailBloc,
-            builder: (BuildContext context, MatchDetailState state) {
-              return AppBar(
-                brightness: Brightness.light,
-                title: Text(
-                  prospect.displayName ?? prospect.email,
-                  style:
-                      GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
-                ),
-                backgroundColor: Palette.appBarBackgroundColor,
-                elevation: 1,
-                bottom: PreferredSize(
-                  preferredSize: const Size(double.infinity, kToolbarHeight),
-                  child: TabBar(
-                    indicatorColor: Colors.black,
-                    controller: _tabController,
-                    tabs: tabChoices.map((text) {
-                      return Tab(
-                        child: text,
-                      );
-                    }).toList(),
-                    onTap: (index) {
-                      _matchDetailNavigationBloc.add(TabTapped(index: index));
-                    },
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey.shade400,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-      body: BlocBuilder<MatchDetailBloc, MatchDetailState>(
+    return BlocBuilder<MatchDetailBloc, MatchDetailState>(
+        bloc: _matchDetailBloc,
         builder: (BuildContext context, MatchDetailState state) {
-          if (state is MatchLoading) {
-            return Center(
-              child: CupertinoActivityIndicator(),
-            );
-          }
-
-          if (state is MatchUninitialized) {
-            return VideoChatDetailInitialScreen(
-              user: user,
-              matchId: widget.match.id,
-              videoChatId: widget.match.activeVideoChat,
-            );
-          }
-
-          if (_matchDetailNavigationBloc.state
-              is MatchNavigationUninitialized) {
-            _matchDetailNavigationBloc.add(TabTapped(index: 0));
-          }
-
-          return BlocBuilder<MatchDetailNavigationBloc,
-              MatchDetailNavigationState>(
-            bloc: _matchDetailNavigationBloc,
-            builder:
-                (BuildContext context, MatchDetailNavigationState navState) {
-              if (navState is MatchNavigationUninitialized ||
-                  navState is PageLoading ||
-                  navState is CurrentIndexChanged) {
-                return Center(child: CupertinoActivityIndicator());
-              }
-
-              if (navState is ChatScreenLoaded) {
-                return ChatScreen(
-                  user: prospect,
-                  match: widget.match,
-                );
-              }
-
-              if (navState is VideoChatDetailScreenLoaded) {
-                return VideoChatDetailScreen(
-                  user: user,
-                  match: widget.match,
-                  userDates: null,
-                  partnerDates: null,
-                );
-              }
-
-              if (navState is ProfileScreenLoaded) {
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                          top: SizeConfig.instance.blockSizeVertical * 3,
-                          left: SizeConfig.instance.blockSizeHorizontal * 3,
-                          right: SizeConfig.instance.blockSizeHorizontal * 3,
-                          bottom: SizeConfig.instance.blockSizeVertical * 13),
-                      sliver: ProfileList(prospect, height: 100),
+          return Scaffold(
+            appBar: AppBar(
+              brightness: Brightness.light,
+              title: Text(
+                prospect.displayName ?? prospect.email,
+                style:
+                    GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+              ),
+              backgroundColor: Palette.appBarBackgroundColor,
+              elevation: 1,
+              bottom: !(state is MatchUninitialized || state is MatchUnpaid)
+                  ? TabBar(
+                      indicatorColor: Colors.black,
+                      controller: _tabController,
+                      tabs: tabChoices.map((text) {
+                        return Tab(
+                          child: text,
+                        );
+                      }).toList(),
+                      onTap: (index) {
+                        _matchDetailNavigationBloc.add(TabTapped(index: index));
+                      },
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey.shade400,
                     )
-                  ],
-                );
-              }
+                  : null,
+            ),
+            body: Builder(
+              builder: (BuildContext context) {
+                if (state is MatchLoading) {
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                }
 
-              return Container();
-            },
+                if (state is MatchUninitialized) {
+                  return VideoChatDetailInitialScreen(
+                    user: user,
+                    matchId: widget.match.id,
+                    videoChatId: widget.match.activeVideoChat,
+                  );
+                }
+
+                if (_matchDetailNavigationBloc.state
+                    is MatchNavigationUninitialized) {
+                  _matchDetailNavigationBloc.add(TabTapped(index: 0));
+                }
+
+                return BlocBuilder<MatchDetailNavigationBloc,
+                    MatchDetailNavigationState>(
+                  bloc: _matchDetailNavigationBloc,
+                  builder: (BuildContext context,
+                      MatchDetailNavigationState navState) {
+                    if (navState is MatchNavigationUninitialized ||
+                        navState is PageLoading ||
+                        navState is CurrentIndexChanged) {
+                      return Center(child: CupertinoActivityIndicator());
+                    }
+
+                    if (navState is ChatScreenLoaded) {
+                      return ChatScreen(
+                        user: prospect,
+                        match: widget.match,
+                      );
+                    }
+
+                    if (navState is VideoChatDetailScreenLoaded) {
+                      return VideoChatDetailScreen(
+                        user: user,
+                        match: widget.match,
+                        userDates: null,
+                        partnerDates: null,
+                      );
+                    }
+
+                    if (navState is ProfileScreenLoaded) {
+                      return CustomScrollView(
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: EdgeInsets.only(
+                                top: SizeConfig.instance.blockSizeVertical * 3,
+                                left:
+                                    SizeConfig.instance.blockSizeHorizontal * 3,
+                                right:
+                                    SizeConfig.instance.blockSizeHorizontal * 3,
+                                bottom:
+                                    SizeConfig.instance.blockSizeVertical * 13),
+                            sliver: ProfileList(prospect, height: 100),
+                          )
+                        ],
+                      );
+                    }
+
+                    return Container();
+                  },
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
+        });
   }
 }
