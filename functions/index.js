@@ -495,6 +495,7 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
         }).catch((error) => {
             console.log(`ALGOLIA SEARCH FAILED for ${q['term']}`)
             console.log(error);
+            throw new functions.https.HttpsError('unknown', error.message, error);
         });
 
         results.filter(x => recentProfileIds.includes(x.objectID));
