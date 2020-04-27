@@ -125,7 +125,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
             );
           }
 
-          _matchDetailNavigationBloc.add(TabTapped(index: 0));
+          if (_matchDetailNavigationBloc.state
+              is MatchNavigationUninitialized) {
+            _matchDetailNavigationBloc.add(TabTapped(index: 0));
+          }
 
           return BlocBuilder<MatchDetailNavigationBloc,
               MatchDetailNavigationState>(
