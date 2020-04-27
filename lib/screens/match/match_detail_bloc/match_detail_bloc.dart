@@ -54,7 +54,7 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       yield MatchUninitialized();
     } else {
       // If partner proposed dates, show their dates
-      yield MatchUninitialized();
+      yield MatchInitialized();
     }
   }
 

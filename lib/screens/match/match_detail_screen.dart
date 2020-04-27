@@ -25,6 +25,7 @@ class MatchDetailScreen extends StatefulWidget {
 class _MatchDetailScreenState extends State<MatchDetailScreen>
     with SingleTickerProviderStateMixin {
   MatchDetailBloc _matchDetailBloc;
+  MatchDetailNavigationBloc _matchDetailNavigationBloc;
   bool _matchInitialized;
   TabController _tabController;
 
@@ -53,6 +54,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     _matchInitialized = true;
     _tabController = TabController(vsync: this, length: tabChoices.length);
     _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);
+    _matchDetailNavigationBloc =
+        BlocProvider.of<MatchDetailNavigationBloc>(context);
   }
 
   @override
@@ -94,6 +97,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                         child: text,
                       );
                     }).toList(),
+                    onTap: (index) {
+                      _matchDetailNavigationBloc.add(TabTapped(index: index));
+                    },
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey.shade400,
                   ),
@@ -119,10 +125,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
             );
           }
 
-          print('IN MATCH DETAIL OUTSIDE STATE');
+          _matchDetailNavigationBloc.add(TabTapped(index: 0));
 
           return BlocBuilder<MatchDetailNavigationBloc,
               MatchDetailNavigationState>(
+            bloc: _matchDetailNavigationBloc,
             builder:
                 (BuildContext context, MatchDetailNavigationState navState) {
               if (navState is MatchNavigationUninitialized ||
