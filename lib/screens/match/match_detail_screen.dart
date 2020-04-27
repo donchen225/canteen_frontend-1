@@ -1,9 +1,10 @@
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/video_chat_details/video_chat_detail_initial_screen.dart';
+import 'package:canteen_frontend/screens/match/video_chat_details/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_initial_screen.dart';
-import 'package:canteen_frontend/screens/video_chat_details/video_chat_detail_screen.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -23,6 +24,8 @@ class MatchDetailScreen extends StatefulWidget {
 
 class _MatchDetailScreenState extends State<MatchDetailScreen>
     with SingleTickerProviderStateMixin {
+  MatchDetailBloc _matchDetailBloc;
+  bool _matchInitialized;
   TabController _tabController;
 
   List<Text> tabChoices = [
@@ -47,13 +50,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   void initState() {
     print('INIT MATCH DETAIL SCREEN');
     super.initState();
+    _matchInitialized = true;
     _tabController = TabController(vsync: this, length: tabChoices.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+    _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);
   }
 
   @override
@@ -61,74 +60,113 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
     final prospect = widget.match.userList.firstWhere((u) => u.id != user.id);
 
-    final tabWidgets = [
-      ChatScreen(
-        user: prospect,
-        match: widget.match,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size(double.infinity,
+            _matchInitialized ? kToolbarHeight * 2 : kToolbarHeight),
+        child: BlocListener<MatchDetailBloc, MatchDetailState>(
+          listener: (BuildContext context, MatchDetailState state) {
+            if (!(state is MatchUninitialized)) {
+              setState(() {
+                _matchInitialized = true;
+              });
+            }
+          },
+          child: BlocBuilder<MatchDetailBloc, MatchDetailState>(
+            bloc: _matchDetailBloc,
+            builder: (BuildContext context, MatchDetailState state) {
+              return AppBar(
+                brightness: Brightness.light,
+                title: Text(
+                  prospect.displayName ?? prospect.email,
+                  style:
+                      GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+                ),
+                backgroundColor: Palette.appBarBackgroundColor,
+                elevation: 1,
+                bottom: PreferredSize(
+                  preferredSize: const Size(double.infinity, kToolbarHeight),
+                  child: TabBar(
+                    indicatorColor: Colors.black,
+                    controller: _tabController,
+                    tabs: tabChoices.map((text) {
+                      return Tab(
+                        child: text,
+                      );
+                    }).toList(),
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey.shade400,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
-      VideoChatDetailScreen(
-        user: prospect,
-        userDates: null,
-        partnerDates: null,
-      ),
-      CustomScrollView(
-        slivers: <Widget>[
-          SliverPadding(
-              padding: EdgeInsets.only(
-                  top: SizeConfig.instance.blockSizeVertical * 3,
-                  left: SizeConfig.instance.blockSizeHorizontal * 3,
-                  right: SizeConfig.instance.blockSizeHorizontal * 3,
-                  bottom: SizeConfig.instance.blockSizeVertical * 13),
-              sliver: ProfileList(prospect, height: 100))
-        ],
-      ),
-    ];
+      body: BlocBuilder<MatchDetailBloc, MatchDetailState>(
+        builder: (BuildContext context, MatchDetailState state) {
+          if (state is MatchLoading) {
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
+          }
 
-    return BlocBuilder<VideoChatDetailsBloc, VideoChatDetailsState>(
-      builder: (BuildContext context, VideoChatDetailsState state) {
-        if (state is VideoChatDetailsLoading) {
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        }
+          if (state is MatchUninitialized) {
+            return VideoChatDetailInitialScreen(
+              user: user,
+              matchId: widget.match.id,
+              videoChatId: widget.match.activeVideoChat,
+            );
+          }
 
-        if (state is VideoChatDetailsUninitialized) {
-          return VideoChatDetailInitialScreen(
-            user: prospect,
-            matchId: widget.match.id,
-            videoChatId: widget.match.activeVideoChat,
-          );
-        }
+          print('IN MATCH DETAIL OUTSIDE STATE');
 
-        print('IN MATCH DETAIL OUTSIDE STATE');
+          return BlocBuilder<MatchDetailNavigationBloc,
+              MatchDetailNavigationState>(
+            builder:
+                (BuildContext context, MatchDetailNavigationState navState) {
+              if (navState is MatchNavigationUninitialized ||
+                  navState is PageLoading ||
+                  navState is CurrentIndexChanged) {
+                return Center(child: CupertinoActivityIndicator());
+              }
 
-        return Scaffold(
-          appBar: AppBar(
-            brightness: Brightness.light,
-            title: Text(
-              prospect.displayName ?? prospect.email,
-              style: GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
-            ),
-            backgroundColor: Palette.appBarBackgroundColor,
-            elevation: 1,
-            bottom: TabBar(
-              indicatorColor: Colors.black,
-              controller: _tabController,
-              tabs: tabChoices.map((text) {
-                return Tab(
-                  child: text,
+              if (navState is ChatScreenLoaded) {
+                return ChatScreen(
+                  user: prospect,
+                  match: widget.match,
                 );
-              }).toList(),
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey.shade400,
-            ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: tabWidgets,
-          ),
-        );
-      },
+              }
+
+              if (navState is VideoChatDetailScreenLoaded) {
+                return VideoChatDetailScreen(
+                  user: user,
+                  match: widget.match,
+                  userDates: null,
+                  partnerDates: null,
+                );
+              }
+
+              if (navState is ProfileScreenLoaded) {
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.instance.blockSizeVertical * 3,
+                          left: SizeConfig.instance.blockSizeHorizontal * 3,
+                          right: SizeConfig.instance.blockSizeHorizontal * 3,
+                          bottom: SizeConfig.instance.blockSizeVertical * 13),
+                      sliver: ProfileList(prospect, height: 100),
+                    )
+                  ],
+                );
+              }
+
+              return Container();
+            },
+          );
+        },
+      ),
     );
   }
 }

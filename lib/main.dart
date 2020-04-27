@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
@@ -10,7 +11,6 @@ import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart'
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -108,9 +108,9 @@ void main() async {
             userRepository: userRepository,
           ),
         ),
-        BlocProvider<VideoChatDetailsBloc>(
+        BlocProvider<MatchDetailBloc>(
           create: (BuildContext context) =>
-              VideoChatDetailsBloc(videoChatRepository: videoChatRepository),
+              MatchDetailBloc(videoChatRepository: videoChatRepository),
         )
       ],
       child: App(

@@ -1,6 +1,7 @@
+import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/video_chat_details_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,11 +31,15 @@ class MatchList extends StatelessWidget {
                   onTap: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
-                        BlocProvider.of<VideoChatDetailsBloc>(context).add(
+                        BlocProvider.of<MatchDetailBloc>(context).add(
                             LoadVideoChatDetails(
                                 matchId: match.id,
                                 videoChatId: match.activeVideoChat));
-                        return MatchDetailScreen(match: match);
+                        return BlocProvider<MatchDetailNavigationBloc>(
+                          create: (BuildContext context) =>
+                              MatchDetailNavigationBloc(),
+                          child: MatchDetailScreen(match: match),
+                        );
                       }),
                     );
                   });

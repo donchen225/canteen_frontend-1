@@ -2,14 +2,14 @@ import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-abstract class VideoChatDetailsEvent extends Equatable {
-  const VideoChatDetailsEvent();
+abstract class MatchDetailEvent extends Equatable {
+  const MatchDetailEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadVideoChatDetails extends VideoChatDetailsEvent {
+class LoadVideoChatDetails extends MatchDetailEvent {
   final String matchId;
   final String videoChatId;
 
@@ -23,7 +23,7 @@ class LoadVideoChatDetails extends VideoChatDetailsEvent {
       'LoadVideoChatDetails { matchId: $matchId videoChatId: $videoChatId }';
 }
 
-class ReceivedVideoChatDetails extends VideoChatDetailsEvent {
+class ReceivedVideoChatDetails extends MatchDetailEvent {
   final List<VideoChatDate> dates;
 
   const ReceivedVideoChatDetails(this.dates);
@@ -35,7 +35,7 @@ class ReceivedVideoChatDetails extends VideoChatDetailsEvent {
   String toString() => 'ReceivedVideoChatDetails { dates: $dates }';
 }
 
-class ProposeVideoChatDates extends VideoChatDetailsEvent {
+class ProposeVideoChatDates extends MatchDetailEvent {
   final String matchId;
   final String videoChatId;
   final List<VideoChatDate> dates;
@@ -53,6 +53,6 @@ class ProposeVideoChatDates extends VideoChatDetailsEvent {
   String toString() => 'ProposeVideoChatDates { dates: $dates }';
 }
 
-class AcceptVideoChatDetails extends VideoChatDetailsEvent {}
+class AcceptVideoChatDetails extends MatchDetailEvent {}
 
-class CompleteVideoChat extends VideoChatDetailsEvent {}
+class CompleteVideoChat extends MatchDetailEvent {}

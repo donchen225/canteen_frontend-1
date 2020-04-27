@@ -1,25 +1,23 @@
 import 'dart:async';
 
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/video_chat_details_event.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/video_chat_details_state.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/match_detail_event.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/match_detail_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-class VideoChatDetailsBloc
-    extends Bloc<VideoChatDetailsEvent, VideoChatDetailsState> {
+class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
   final VideoChatRepository _videoChatRepository;
-  Map<String, StreamSubscription> videoChatDetailsSubscriptionMap = Map();
+  Map<String, StreamSubscription> matchDetailsSubscriptionMap = Map();
 
-  VideoChatDetailsBloc({@required videoChatRepository})
+  MatchDetailBloc({@required videoChatRepository})
       : assert(videoChatRepository != null),
         _videoChatRepository = videoChatRepository;
 
-  VideoChatDetailsState get initialState => VideoChatDetailsUninitialized();
+  MatchDetailState get initialState => MatchUninitialized();
 
   @override
-  Stream<VideoChatDetailsState> mapEventToState(
-      VideoChatDetailsEvent event) async* {
+  Stream<MatchDetailState> mapEventToState(MatchDetailEvent event) async* {
     if (event is LoadVideoChatDetails) {
       yield* _mapLoadVideoChatDetailsToState(event);
     } else if (event is ReceivedVideoChatDetails) {
@@ -29,12 +27,12 @@ class VideoChatDetailsBloc
     }
   }
 
-  Stream<VideoChatDetailsState> _mapLoadVideoChatDetailsToState(
+  Stream<MatchDetailState> _mapLoadVideoChatDetailsToState(
       LoadVideoChatDetails event) async* {
     try {
-      yield VideoChatDetailsLoading();
+      yield MatchLoading();
       StreamSubscription videoChatDetailsSubscription =
-          videoChatDetailsSubscriptionMap[event.matchId];
+          matchDetailsSubscriptionMap[event.matchId];
       videoChatDetailsSubscription?.cancel();
       videoChatDetailsSubscription = _videoChatRepository
           .getVideoChatDates(event.matchId, event.videoChatId)
@@ -43,31 +41,30 @@ class VideoChatDetailsBloc
         print(videoChatDetails);
         add(ReceivedVideoChatDetails(videoChatDetails));
       });
-      videoChatDetailsSubscriptionMap[event.matchId] =
-          videoChatDetailsSubscription;
+      matchDetailsSubscriptionMap[event.matchId] = videoChatDetailsSubscription;
     } catch (exception) {
       print('VIDEO CHAT DETAILS ERROR: $exception');
-      yield VideoChatDetailsUninitialized();
+      yield MatchUninitialized();
     }
   }
 
-  Stream<VideoChatDetailsState> _mapReceivedVideoChatDetailsToState(
+  Stream<MatchDetailState> _mapReceivedVideoChatDetailsToState(
       ReceivedVideoChatDetails event) async* {
     if (event.dates.isEmpty) {
-      yield VideoChatDetailsUninitialized();
+      yield MatchUninitialized();
     } else {
       // If partner proposed dates, show their dates
-      yield VideoChatDetailsProposing();
+      yield MatchUninitialized();
     }
   }
 
-  Stream<VideoChatDetailsState> _mapProposeVideoChatDatesToState(
+  Stream<MatchDetailState> _mapProposeVideoChatDatesToState(
       ProposeVideoChatDates event) async* {
     print('PROPOSING VIDEO CHAT DATES');
     print('MATCH ID: ${event.matchId}');
     print('VIDEO CHAT ID: ${event.videoChatId}');
     await _videoChatRepository.addVideoChatDates(
         event.dates, event.matchId, event.videoChatId);
-    yield VideoChatDetailsProposing();
+    yield MatchInitialized();
   }
 }

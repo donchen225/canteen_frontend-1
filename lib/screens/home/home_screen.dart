@@ -141,13 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
-          if (state is HomeInitializing) {
+          if (state is HomeInitializing ||
+              state is PageLoading ||
+              state is CurrentIndexChanged) {
             return Center(child: CupertinoActivityIndicator());
           }
 
-          if (state is PageLoading) {
-            return Center(child: CupertinoActivityIndicator());
-          }
           if (state is RecommendedScreenLoaded) {
             return RecommendedScreen();
           }

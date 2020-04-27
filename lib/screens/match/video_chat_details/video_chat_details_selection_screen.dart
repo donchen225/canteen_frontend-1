@@ -1,18 +1,20 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/video_chat_date/proposed_date_time.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
-import 'package:canteen_frontend/screens/video_chat_details/video_chat_time_picker.dart';
 import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'video_chat_time_picker.dart';
+
 class VideoChatDetailsSelectionBlock extends StatefulWidget {
   final User user;
+  final List<VideoChatDate> userDates;
   final Function onSubmit;
 
   VideoChatDetailsSelectionBlock(
-      {@required this.user, @required this.onSubmit});
+      {@required this.user, this.userDates, @required this.onSubmit});
 
   @override
   _VideoChatDetailsSelectionBlockState createState() =>
@@ -36,19 +38,18 @@ class _VideoChatDetailsSelectionBlockState
     now = DateTime.now();
     initialDateTime = roundUpHour(now, Duration(hours: 1));
 
-    if (userDates == null) {
-      userDates = List<VideoChatDate>.generate(
-          numDates,
-          (i) => VideoChatDate(
-                userId: widget.user.id,
-                startTime: initialDateTime,
-                lastUpdated: now,
-                status: 0,
-              ));
+    userDates = widget.userDates ??
+        List<VideoChatDate>.generate(
+            numDates,
+            (i) => VideoChatDate(
+                  userId: widget.user.id,
+                  startTime: initialDateTime,
+                  lastUpdated: now,
+                  status: 0,
+                ));
 
-      userProposedDates = List<ProposedVieoChatDate>.generate(userDates.length,
-          (i) => ProposedVieoChatDate(userDates[i].startTime));
-    }
+    userProposedDates = List<ProposedVieoChatDate>.generate(
+        userDates.length, (i) => ProposedVieoChatDate(userDates[i].startTime));
   }
 
   Widget _buildMenu(List<Widget> children) {

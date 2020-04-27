@@ -1,12 +1,12 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
-import 'package:canteen_frontend/screens/video_chat_details/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/video_chat_details/video_chat_details_selection_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'video_chat_details_selection_screen.dart';
 
 class VideoChatDetailInitialScreen extends StatelessWidget {
   final User user;
@@ -60,13 +60,13 @@ class VideoChatDetailInitialScreen extends StatelessWidget {
                   VideoChatDetailsSelectionBlock(
                       user: user,
                       onSubmit: (List<VideoChatDate> proposedDates) {
-                        BlocProvider.of<VideoChatDetailsBloc>(context).add(
-                          ProposeVideoChatDates(
-                            matchId: matchId,
-                            videoChatId: videoChatId,
-                            dates: proposedDates,
-                          ),
-                        );
+                        // BlocProvider.of<VideoChatDetailsBloc>(context).add(
+                        //   ProposeVideoChatDates(
+                        //     matchId: matchId,
+                        //     videoChatId: videoChatId,
+                        //     dates: proposedDates,
+                        //   ),
+                        // );
                       }),
                 ],
               ),
