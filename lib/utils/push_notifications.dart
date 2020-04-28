@@ -30,18 +30,25 @@ class PushNotificationsManager {
       );
 
       if (Platform.isIOS) {
-        registerSettings();
+        _iosSubscription?.cancel();
+        _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
+            .listen((IosNotificationSettings settings) {
+          // Save settings to firestore
+          print('ON SETTINGS REGISTERED');
+          print(settings);
+        });
 
-        _firebaseMessaging
-            .requestNotificationPermissions(IosNotificationSettings());
+        registerSettings();
       }
 
       _firebaseMessaging.onTokenRefresh.listen((token) {
+        // Save token to firestore
         print('ON TOKEN REFRESH');
         print(token);
       });
 
       _firebaseMessaging.getToken().then((String token) {
+        // Save token to firestore
         print('GET TOKEN');
         assert(token != null);
 
@@ -53,13 +60,7 @@ class PushNotificationsManager {
   }
 
   void registerSettings() {
-    print('REGISTER SETTINGS');
-    _iosSubscription?.cancel();
-    _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      // Save settings to firestore
-      print('ON SETTINGS REGISTERED');
-      print(settings);
-    });
+    _firebaseMessaging
+        .requestNotificationPermissions(const IosNotificationSettings());
   }
 }

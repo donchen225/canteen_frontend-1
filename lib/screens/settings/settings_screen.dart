@@ -67,6 +67,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: CupertinoSwitch(
                             value: _settings['notifications'] ?? false,
                             onChanged: (bool value) {
+                              // If false, and notifications are true, turn on
+                              // If false, and notifications are false, open ios settings page
                               setState(() {
                                 _settings['notifications'] = value;
                               });
