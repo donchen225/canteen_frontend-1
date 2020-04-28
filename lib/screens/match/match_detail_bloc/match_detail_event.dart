@@ -9,18 +9,18 @@ abstract class MatchDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadVideoChatDetails extends MatchDetailEvent {
+class LoadMatchDetails extends MatchDetailEvent {
   final String matchId;
   final String videoChatId;
 
-  const LoadVideoChatDetails({this.matchId, this.videoChatId});
+  const LoadMatchDetails({this.matchId, this.videoChatId});
 
   @override
   List<Object> get props => [];
 
   @override
   String toString() =>
-      'LoadVideoChatDetails { matchId: $matchId videoChatId: $videoChatId }';
+      'LoadMatchDetails { matchId: $matchId videoChatId: $videoChatId }';
 }
 
 class ReceivedVideoChatDetails extends MatchDetailEvent {

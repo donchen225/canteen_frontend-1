@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 
 import 'video_chat_details_selection_screen.dart';
 
-class VideoChatDetailInitialScreen extends StatelessWidget {
+class VideoChatPaymentScreen extends StatelessWidget {
   final User user;
   final Match match;
 
-  VideoChatDetailInitialScreen({
+  VideoChatPaymentScreen({
     @required this.user,
     @required this.match,
   });
@@ -37,7 +37,7 @@ class VideoChatDetailInitialScreen extends StatelessWidget {
                       bottom: SizeConfig.instance.blockSizeVertical * 3,
                     ),
                     child: Text(
-                      'Select 3 times to video chat:',
+                      'Select method to pay:',
                       style: TextStyle(
                         fontSize: 20,
                       ),

@@ -18,8 +18,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
 
   @override
   Stream<MatchDetailState> mapEventToState(MatchDetailEvent event) async* {
-    if (event is LoadVideoChatDetails) {
-      yield* _mapLoadVideoChatDetailsToState(event);
+    if (event is LoadMatchDetails) {
+      yield* _mapLoadMatchDetailsToState(event);
     } else if (event is ReceivedVideoChatDetails) {
       yield* _mapReceivedVideoChatDetailsToState(event);
     } else if (event is ProposeVideoChatDates) {
@@ -27,8 +27,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
     }
   }
 
-  Stream<MatchDetailState> _mapLoadVideoChatDetailsToState(
-      LoadVideoChatDetails event) async* {
+  Stream<MatchDetailState> _mapLoadMatchDetailsToState(
+      LoadMatchDetails event) async* {
     try {
       yield MatchLoading();
       StreamSubscription videoChatDetailsSubscription =

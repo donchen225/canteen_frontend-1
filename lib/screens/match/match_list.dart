@@ -32,7 +32,7 @@ class MatchList extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
                         BlocProvider.of<MatchDetailBloc>(context).add(
-                            LoadVideoChatDetails(
+                            LoadMatchDetails(
                                 matchId: match.id,
                                 videoChatId: match.activeVideoChat));
                         return BlocProvider<MatchDetailNavigationBloc>(
