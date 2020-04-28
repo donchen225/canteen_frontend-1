@@ -5,11 +5,27 @@ import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  Map<String, bool> _settings = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    //TODO: load settings from firestore or local cache
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +48,41 @@ class SettingsScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               vertical: SizeConfig.instance.blockSizeVertical * 6),
           children: <Widget>[
+            Container(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal:
+                            SizeConfig.instance.blockSizeHorizontal * 6),
+                    alignment: Alignment.centerLeft,
+                    child: Text('Notifications'),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: MergeSemantics(
+                        child: ListTile(
+                          title: Text('Push Notifications'),
+                          trailing: CupertinoSwitch(
+                            value: _settings['notifications'] ?? false,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _settings['notifications'] = value;
+                              });
+
+                              print('ON CHANGE');
+                              print(_settings['notifications']);
+                              PushNotificationsManager().registerSettings();
+                            },
+                          ),
+                        ),
+                      )),
+                    ],
+                  )
+                ],
+              ),
+            ),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.grey[400]),
