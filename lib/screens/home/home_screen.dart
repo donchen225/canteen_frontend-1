@@ -39,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    print('HOME SCREEN INIT STATE - CHECK ONBOARD STATUS');
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.add(CheckOnboardStatus());
   }
 
   void _onItemTapped(int index) {
@@ -48,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('HOME SCREEN BUILD');
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
@@ -58,7 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BlocListener<HomeBloc, HomeState>(
           listener: (BuildContext context, HomeState state) {
+            print('HOME SCREEN BLOC LISTENER INITIALIZED');
             if (state is HomeInitializing) {
+              print(
+                  'IN HOME INITIALIZING - LOADING MATCHES/REQUESTS/RECOMMENDATIONS');
+
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -141,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
+          print('IN HOME SCREEN BLOC BUILDER');
           if (state is HomeInitializing ||
               state is PageLoading ||
               state is CurrentIndexChanged) {
@@ -148,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           if (state is RecommendedScreenLoaded) {
+            print('IN HOME SCREEN - RECOMMENDEDSCREENLOADED STATE');
             return RecommendedScreen();
           }
           if (state is SearchScreenLoaded) {

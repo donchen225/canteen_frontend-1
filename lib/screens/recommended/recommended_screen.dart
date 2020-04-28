@@ -97,7 +97,9 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<RecommendedBloc, RecommendedState>(
       builder: (context, state) {
+        print('IN RECOMMENDED SCREEN');
         if (state is RecommendedLoading) {
+          print('IN RECOMMENDED LOADING STATE');
           return Center(child: CupertinoActivityIndicator());
         } else {
           return AnimatedSwitcher(

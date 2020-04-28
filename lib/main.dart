@@ -14,6 +14,7 @@ import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ void main() async {
   final VideoChatRepository videoChatRepository = VideoChatRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
+  PushNotificationsManager().init();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -151,8 +153,6 @@ class App extends StatelessWidget {
               if (state is Authenticated) {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
-
-                BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
