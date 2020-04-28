@@ -40,4 +40,6 @@ abstract class UserRepository {
   Future<void> updatePhoto(String url) async {}
 
   Future<void> updateUserOnboarding(String name, Skill skill) async {}
+
+  Future<void> saveToken(String token) {}
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -153,6 +155,32 @@ class FirebaseUserRepository extends UserRepository {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "photo_url": url,
+      });
+    });
+  }
+
+  Future<void> saveToken(String token) {
+    print('TOKEN: $token');
+    if (token == null || token.isEmpty) {
+      return null;
+    }
+
+    final ref = userCollection
+        .document(_firebaseUser.uid)
+        .collection('tokens')
+        .document(token);
+
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.get(ref).then((doc) {
+        if (!(doc.exists)) {
+          tx.set(ref, {
+            "token": token,
+            "created_on": FieldValue.serverTimestamp(),
+            "platform": Platform.operatingSystem,
+          });
+        }
+      }).catchError((error) {
+        print('ERROR SAVING TOKEN: $error');
       });
     });
   }

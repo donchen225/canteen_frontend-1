@@ -47,7 +47,6 @@ void main() async {
   final VideoChatRepository videoChatRepository = VideoChatRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
-  PushNotificationsManager().init();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -153,6 +152,8 @@ class App extends StatelessWidget {
               if (state is Authenticated) {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
+
+                PushNotificationsManager().init(_userRepository);
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
