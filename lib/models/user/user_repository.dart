@@ -29,6 +29,8 @@ abstract class UserRepository {
 
   Future<void> updateName(String name) {}
 
+  Future<void> updateTitle(String title) {}
+
   Future<void> updateAbout(String updatedText) {}
 
   Future<void> updateTeachSkill(Skill skill, int index) {}

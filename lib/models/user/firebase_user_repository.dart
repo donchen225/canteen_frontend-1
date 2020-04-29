@@ -109,6 +109,14 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
+  Future<void> updateTitle(String title) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(userCollection.document(_firebaseUser.uid), {
+        "title": title,
+      });
+    });
+  }
+
   Future<void> updateTeachSkill(Skill skill, int index) {
     return Firestore.instance.runTransaction((Transaction tx) {
       tx.update(userCollection.document(_firebaseUser.uid),

@@ -88,11 +88,11 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   }
 
   Stream<UserProfileState> _mapEditTitleToState(EditTitle event) async* {
-    yield UserProfileEditingName(event.user);
+    yield UserProfileEditingTitle(event.user);
   }
 
   Stream<UserProfileState> _mapUpdateTitleToState(UpdateTitle event) async* {
-    await _userRepository.updateName(event.title);
+    await _userRepository.updateTitle(event.title);
   }
 
   Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {

@@ -135,7 +135,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 title: 'Title',
                 value: user.title,
                 onTap: () {
-                  // _userProfileBloc.add(EditName(user));
+                  _userProfileBloc.add(EditTitle(user));
                 }),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -246,7 +246,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         onComplete: (String text) => _userProfileBloc.add(UpdateName(text)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
-        // onCompleteNavigation: () {},
+      );
+    }
+
+    if (state is UserProfileEditingTitle) {
+      final user = state.user;
+      return EditProfileShortInfoScreen(
+        fieldName: 'Title',
+        initialText: user.title,
+        onComplete: (String text) => _userProfileBloc.add(UpdateTitle(text)),
+        onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
       );
     }
 
