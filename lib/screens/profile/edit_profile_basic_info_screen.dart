@@ -4,16 +4,18 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditProfileBasicInfoScreen extends StatefulWidget {
   final User user;
   final String field;
 
-  EditProfileScreen({@required this.user, @required this.field});
+  EditProfileBasicInfoScreen({@required this.user, @required this.field});
 
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfileBasicInfoScreenState createState() =>
+      _EditProfileBasicInfoScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileBasicInfoScreenState
+    extends State<EditProfileBasicInfoScreen> {
   UserProfileBloc _userProfileBloc;
   TextEditingController _textController;
   String fieldName;

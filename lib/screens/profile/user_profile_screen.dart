@@ -4,7 +4,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/basic_info_tab.dart';
-import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
+import 'package:canteen_frontend/screens/profile/edit_profile_basic_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
@@ -219,7 +219,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingAbout) {
-      return EditProfileScreen(
+      return EditProfileBasicInfoScreen(
         user: state.user,
         field: 'about',
       );
@@ -233,7 +233,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingName) {
-      return EditProfileScreen(
+      return EditProfileBasicInfoScreen(
         user: state.user,
         field: 'name',
       );
