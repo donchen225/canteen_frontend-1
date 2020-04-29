@@ -16,6 +16,7 @@ const VIDEO_CHAT_COLLECTION = 'video_chat';
 admin.initializeApp();
 
 const firestore = admin.firestore();
+const fcm = admin.messaging();
 
 // Create request in Firestore
 exports.addRequest = functions.https.onCall(async (data, context) => {
@@ -311,6 +312,46 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
         }
     }
     return { 'message': 'Not updated.' };
+});
+
+exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages/{messageId}').onCreate(async (snap, context) => {
+
+    const data = snap.data();
+    const matchId = context.params.matchId;
+
+    const senderId = data.sender_id;
+    const message = data.text;
+
+    const receiverId = matchId.replace(senderId, '');
+
+    const querySnapshot = await firestore
+        .collection(USER_COLLECTION)
+        .doc(receiverId)
+        .collection('tokens')
+        .get();
+
+    const tokens = querySnapshot.docs.map(snap => snap.id);
+
+    if (!Array.isArray(tokens) || !tokens.length) {
+        console.log("Token doesn't exist")
+        return;
+    }
+
+    const sender = await firestore
+        .collection(USER_COLLECTION)
+        .doc(senderId).get();
+    const senderData = sender.data();
+
+    const payload = {
+        notification: {
+            title: senderData.display_name,
+            body: message,
+            // icon: 'your-icon-url',
+            click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+        }
+    };
+
+    fcm.sendToDevice(tokens, payload);
 });
 
 exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate((change, context) => {
