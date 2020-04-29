@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
@@ -74,6 +75,20 @@ class UserProfileEditingTitle extends UserProfileState {
 
   @override
   String toString() => 'UserProfileEditingTitle { user: ${user.toString()}  }';
+}
+
+class UserProfileEditingAvailability extends UserProfileState {
+  final User user;
+  final Day day;
+
+  const UserProfileEditingAvailability(this.user, this.day);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UserProfileEditingAvailability { user: ${user.toString()}  }';
 }
 
 class SettingsMenu extends UserProfileState {}

@@ -33,6 +33,9 @@ abstract class UserRepository {
 
   Future<void> updateAbout(String updatedText) {}
 
+  Future<void> updateAvailability(
+      int dayIndex, DateTime startTime, DateTime endTime) {}
+
   Future<void> updateTeachSkill(Skill skill, int index) {}
 
   Future<void> updateLearnSkill(Skill skill, int index) {}

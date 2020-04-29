@@ -139,7 +139,7 @@ class _VideoChatDetailInitialScreenState
                   flex: 2,
                   child: _buildTableCalendar(),
                 ),
-                Expanded(child: _buildEventList()),
+                // Expanded(child: _buildEventList()),
                 // VideoChatDetailsSelectionBlock(
                 //     user: widget.user,
                 //     onSubmit: (List<VideoChatDate> proposedDates) {

@@ -1,9 +1,12 @@
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
+import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
+import 'package:canteen_frontend/screens/profile/availability_section.dart';
 import 'package:canteen_frontend/screens/profile/basic_info_tab.dart';
+import 'package:canteen_frontend/screens/profile/edit_availability_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_long_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_short_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
@@ -212,6 +215,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   )
                 : Container(),
+            Text('Availability'),
+            AvailabilitySection(
+              onDayTap: (Day day) =>
+                  _userProfileBloc.add(EditAvailability(user, day)),
+            ),
           ],
         ),
       );
@@ -253,6 +261,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         fieldName: 'Title',
         initialText: user.title,
         onComplete: (String text) => _userProfileBloc.add(UpdateTitle(text)),
+        onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+      );
+    }
+
+    if (state is UserProfileEditingAvailability) {
+      final user = state.user;
+      return EditAvailabilityScreen(
+        fieldName: 'Availability',
+        startTime: null, // Change this
+        onComplete: (DateTime startTime, DateTime endTime) => _userProfileBloc
+            .add(UpdateAvailability(state.day, startTime, endTime)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
       );

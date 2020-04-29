@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -57,6 +55,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapEditTitleToState(event);
     } else if (event is UpdateTitle) {
       yield* _mapUpdateTitleToState(event);
+    } else if (event is EditAvailability) {
+      yield* _mapEditAvailabilityToState(event);
+    } else if (event is UpdateAvailability) {
+      yield* _mapUpdateAvailabilityToState(event);
     } else if (event is ShowSettings) {
       yield* _mapShowSettingsToState();
     } else if (event is ShowUserProfile) {
@@ -93,6 +95,17 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapUpdateTitleToState(UpdateTitle event) async* {
     await _userRepository.updateTitle(event.title);
+  }
+
+  Stream<UserProfileState> _mapEditAvailabilityToState(
+      EditAvailability event) async* {
+    yield UserProfileEditingAvailability(event.user, event.day);
+  }
+
+  Stream<UserProfileState> _mapUpdateAvailabilityToState(
+      UpdateAvailability event) async* {
+    await _userRepository.updateAvailability(
+        event.day.index, event.startTime, event.endTime);
   }
 
   Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {
