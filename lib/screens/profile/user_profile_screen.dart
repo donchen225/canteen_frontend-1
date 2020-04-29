@@ -220,10 +220,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingAbout) {
+      final user = state.user;
       return EditProfileLongInfoScreen(
-        user: state.user,
-        field: 'about',
-      );
+          fieldName: 'About',
+          initialText: user.about,
+          onComplete: (String text) =>
+              _userProfileBloc.add(UpdateAboutSection(text)),
+          onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+          onCompleteNavigation: () =>
+              _userProfileBloc.add(LoadUserProfile(user)));
     }
 
     if (state is UserProfileEditingSkill) {

@@ -1,7 +1,6 @@
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditProfileShortInfoScreen extends StatefulWidget {
   final String initialText;
@@ -24,14 +23,12 @@ class EditProfileShortInfoScreen extends StatefulWidget {
 
 class _EditProfileShortInfoScreenState
     extends State<EditProfileShortInfoScreen> {
-  UserProfileBloc _userProfileBloc;
   TextEditingController _textController;
 
   @override
   void initState() {
     super.initState();
 
-    _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
     _textController = TextEditingController();
     _textController.text = widget.initialText ?? '';
   }
@@ -88,28 +85,33 @@ class _EditProfileShortInfoScreenState
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey[400]),
-            borderRadius: BorderRadius.circular(10),
+      body: Container(
+        height: MediaQuery.of(context).size.height * 0.25,
+        padding: EdgeInsets.only(
+            top: SizeConfig.instance.blockSizeVertical * 6,
+            left: SizeConfig.instance.blockSizeHorizontal * 6,
+            right: SizeConfig.instance.blockSizeHorizontal * 6,
+            bottom: SizeConfig.instance.blockSizeVertical * 6),
+        child: TextField(
+          controller: _textController,
+          autofocus: true,
+          style: TextStyle(
+              fontSize: SizeConfig.instance.blockSizeHorizontal * 7,
+              fontWeight: FontWeight.w600,
+              color: Palette.orangeColor,
+              decoration: TextDecoration.none),
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            counterText: '',
           ),
-          child: TextField(
-            controller: _textController,
-            autofocus: true,
-            style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(border: InputBorder.none),
-            keyboardType: TextInputType.multiline,
-            maxLength:
-                150, // TODO: move character counter to bottom right corner of container
-            maxLines: null,
-          ),
+          keyboardType: TextInputType.multiline,
+          maxLength: 80,
+          maxLines: 1,
         ),
       ),
     );
