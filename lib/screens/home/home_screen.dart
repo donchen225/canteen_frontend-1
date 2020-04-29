@@ -33,8 +33,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
 
-  final _searchKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -164,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return RecommendedScreen();
           }
           if (state is SearchScreenLoaded) {
-            return SearchScreen(key: _searchKey);
+            return SearchScreen();
           }
           if (state is RequestScreenLoaded) {
             return RequestScreen();

@@ -55,6 +55,18 @@ class ProfileList extends StatelessWidget {
               ),
             ],
           ),
+          Visibility(
+            visible: user.title?.isNotEmpty ?? false,
+            child: Container(
+              child: Text(
+                user.title ?? '',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: SizeConfig.instance.blockSizeHorizontal * 4,
+                ),
+              ),
+            ),
+          ),
           ProfileSectionTitle('About'),
           ProfileTextCard(
             height: height,

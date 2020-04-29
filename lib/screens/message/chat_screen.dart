@@ -18,7 +18,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen>
     with AutomaticKeepAliveClientMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final User user;
   final Match match;
   MessageBloc _messageBloc;
@@ -41,7 +40,6 @@ class _ChatScreenState extends State<ChatScreen>
     super.build(context);
     return SafeArea(
         child: Scaffold(
-      key: _scaffoldKey,
       body: GestureDetector(
         onTapDown: (_) {
           FocusScopeNode currentFocus = FocusScope.of(context);

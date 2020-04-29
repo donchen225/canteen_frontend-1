@@ -32,7 +32,6 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ImageProvider _profilePicture =
       AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
@@ -66,7 +65,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final user = state.user;
 
       return Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           brightness: Brightness.light,
           title: Text(
