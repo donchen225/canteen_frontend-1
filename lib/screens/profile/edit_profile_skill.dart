@@ -66,7 +66,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
           builder: (BuildContext context) {
             return DurationPicker(
               durationOptions: durationOptions,
-              backgroundColor: Colors.transparent,
               onChanged: (index) {
                 setState(() {
                   _selectedDurationIndex = index;
