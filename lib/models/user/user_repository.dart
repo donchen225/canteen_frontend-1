@@ -23,19 +23,17 @@ abstract class UserRepository {
 
   Future<List<User>> getAllUsers() async {}
 
-  /// Only use this if necessary, first check FirebaseUser in
-  /// Authentication state
   Future<FirebaseUser> getFirebaseUser() async {}
 
   Future<void> updateUserSignInTime(FirebaseUser user) async {}
 
-  User updateName(String name) {}
+  Future<void> updateName(String name) {}
 
-  User updateAbout(String updatedText) {}
+  Future<void> updateAbout(String updatedText) {}
 
-  User updateTeachSkill(Skill skill, int index) {}
+  Future<void> updateTeachSkill(Skill skill, int index) {}
 
-  User updateLearnSkill(Skill skill, int index) {}
+  Future<void> updateLearnSkill(Skill skill, int index) {}
 
   Future<void> updatePhoto(String url) async {}
 

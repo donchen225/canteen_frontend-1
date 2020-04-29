@@ -222,13 +222,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (state is UserProfileEditingAbout) {
       final user = state.user;
       return EditProfileLongInfoScreen(
-          fieldName: 'About',
-          initialText: user.about,
-          onComplete: (String text) =>
-              _userProfileBloc.add(UpdateAboutSection(text)),
-          onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
-          onCompleteNavigation: () =>
-              _userProfileBloc.add(LoadUserProfile(user)));
+        fieldName: 'About',
+        initialText: user.about,
+        onComplete: (String text) =>
+            _userProfileBloc.add(UpdateAboutSection(text)),
+        onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+      );
     }
 
     if (state is UserProfileEditingSkill) {
@@ -241,12 +241,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (state is UserProfileEditingName) {
       final user = state.user;
       return EditProfileShortInfoScreen(
-          fieldName: 'Name',
-          initialText: user.displayName,
-          onComplete: (String text) => _userProfileBloc.add(UpdateName(text)),
-          onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
-          onCompleteNavigation: () =>
-              _userProfileBloc.add(LoadUserProfile(user)));
+        fieldName: 'Name',
+        initialText: user.displayName,
+        onComplete: (String text) => _userProfileBloc.add(UpdateName(text)),
+        onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        // onCompleteNavigation: () {},
+      );
     }
 
     if (state is SettingsMenu) {

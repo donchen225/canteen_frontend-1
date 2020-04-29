@@ -93,14 +93,7 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  User updateAbout(String about) {
-    final updatedUser = user.updateAbout(about);
-    _updateAbout(about);
-
-    return updatedUser;
-  }
-
-  Future<void> _updateAbout(String about) {
+  Future<void> updateAbout(String about) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "about": about,
@@ -108,14 +101,7 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  User updateName(String name) {
-    final updatedUser = user.updateName(name);
-    _updateDisplayName(name);
-
-    return updatedUser;
-  }
-
-  Future<void> _updateDisplayName(String name) {
+  Future<void> updateName(String name) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "display_name": name,
@@ -123,31 +109,17 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  User updateTeachSkill(Skill skill, int index) {
-    final updatedUser = user.updateTeachSkill(skill, index);
-    _updateTeachSkill(skill.toEntity(), index);
-
-    return updatedUser;
-  }
-
-  Future<void> _updateTeachSkill(SkillEntity skill, int index) {
+  Future<void> updateTeachSkill(Skill skill, int index) {
     return Firestore.instance.runTransaction((Transaction tx) {
       tx.update(userCollection.document(_firebaseUser.uid),
-          {"teach_skill.${index.toString()}": skill.toDocument()});
+          {"teach_skill.${index.toString()}": skill.toEntity().toDocument()});
     });
   }
 
-  User updateLearnSkill(Skill skill, int index) {
-    final updatedUser = user.updateTeachSkill(skill, index);
-    _updateLearnSkill(skill.toEntity(), index);
-
-    return updatedUser;
-  }
-
-  Future<void> _updateLearnSkill(SkillEntity skill, int index) {
+  Future<void> updateLearnSkill(Skill skill, int index) {
     return Firestore.instance.runTransaction((Transaction tx) {
-      tx.update(userCollection.document(_firebaseUser.uid),
-          {"learn_skill.${index.toString()}": skill.toDocument()});
+      return tx.update(userCollection.document(_firebaseUser.uid),
+          {"learn_skill.${index.toString()}": skill.toEntity().toDocument()});
     });
   }
 
@@ -196,6 +168,55 @@ class FirebaseUserRepository extends UserRepository {
     return user;
   }
 
+  // Gets the User from the "user" Firestore collection using id
+  Future<User> getUser(String id) async {
+    if (userMap.containsKey(id)) {
+      return Future.value(userMap[id]);
+    }
+
+    return userCollection.document(id).get().then((snapshot) {
+      return UserEntity.fromSnapshot(snapshot);
+    }).then((userEntity) {
+      final user = User.fromEntity(userEntity);
+      saveUserMap(user);
+      return user;
+    });
+  }
+
+  Future<User> currentUser() async {
+    if (user != null) {
+      return Future.value(user);
+    }
+    try {
+      return getUser((await getFirebaseUser()).uid);
+    } catch (e) {
+      print('GET USER FAILED');
+      print(e);
+    }
+  }
+
+  // Listens to changes for a single user ID
+  Stream<User> getCurrentUser(String userId) {
+    return userCollection.document(userId).snapshots().map((snapshot) {
+      final user = User.fromEntity(UserEntity.fromSnapshot(snapshot));
+      saveUser(user);
+      return user;
+    });
+  }
+
+  // TODO: remove this function
+  Future<List<User>> getAllUsers() async {
+    return userCollection.getDocuments().then((querySnapshot) => querySnapshot
+        .documents
+        .map((documentSnapshot) =>
+            User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
+        .toList());
+  }
+
+  User currentUserNow() {
+    return user;
+  }
+
   void saveUser(User user) {
     user = user;
   }
@@ -219,54 +240,5 @@ class FirebaseUserRepository extends UserRepository {
 
   void clearFirebaseUser() {
     _firebaseUser = null;
-  }
-
-  // Gets the User from the "user" Firestore collection using id
-  Future<User> getUser(String id) async {
-    if (userMap.containsKey(id)) {
-      return Future.value(userMap[id]);
-    }
-
-    return userCollection.document(id).get().then((snapshot) {
-      return UserEntity.fromSnapshot(snapshot);
-    }).then((userEntity) {
-      final user = User.fromEntity(userEntity);
-      saveUser(user);
-      return user;
-    });
-  }
-
-  Future<User> currentUser() async {
-    if (user != null) {
-      return Future.value(user);
-    }
-    try {
-      return getUser((await getFirebaseUser()).uid);
-    } catch (e) {
-      print('GET USER FAILED');
-      print(e);
-    }
-  }
-
-  User currentUserNow() {
-    return user;
-  }
-
-  // Listens to changes for a single user ID
-  Stream<User> getCurrentUser(String userId) {
-    return userCollection.document(userId).snapshots().map((snapshot) {
-      final user = User.fromEntity(UserEntity.fromSnapshot(snapshot));
-      saveUser(user);
-      return user;
-    });
-  }
-
-  // TODO: remove this function
-  Future<List<User>> getAllUsers() async {
-    return userCollection.getDocuments().then((querySnapshot) => querySnapshot
-        .documents
-        .map((documentSnapshot) =>
-            User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
-        .toList());
   }
 }

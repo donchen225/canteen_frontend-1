@@ -53,6 +53,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapEditNameToState(event);
     } else if (event is UpdateName) {
       yield* _mapUpdateNameToState(event);
+    } else if (event is EditTitle) {
+      yield* _mapEditTitleToState(event);
+    } else if (event is UpdateTitle) {
+      yield* _mapUpdateTitleToState(event);
     } else if (event is ShowSettings) {
       yield* _mapShowSettingsToState();
     } else if (event is ShowUserProfile) {
@@ -72,8 +76,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapUpdateAboutSectionToState(
       UpdateAboutSection event) async* {
-    final updatedUser = _userRepository.updateAbout(event.about);
-    yield UserProfileLoaded(updatedUser);
+    await _userRepository.updateAbout(event.about);
   }
 
   Stream<UserProfileState> _mapEditNameToState(EditName event) async* {
@@ -81,8 +84,15 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   }
 
   Stream<UserProfileState> _mapUpdateNameToState(UpdateName event) async* {
-    final updatedUser = _userRepository.updateName(event.name);
-    yield UserProfileLoaded(updatedUser);
+    await _userRepository.updateName(event.name);
+  }
+
+  Stream<UserProfileState> _mapEditTitleToState(EditTitle event) async* {
+    yield UserProfileEditingName(event.user);
+  }
+
+  Stream<UserProfileState> _mapUpdateTitleToState(UpdateTitle event) async* {
+    await _userRepository.updateName(event.title);
   }
 
   Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {
@@ -92,10 +102,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapUpdateTeachSkillToState(
       UpdateSkill event) async* {
-    final updatedUser = event.skillType == SkillType.teach
-        ? _userRepository.updateTeachSkill(event.skill, event.skillIndex)
-        : _userRepository.updateLearnSkill(event.skill, event.skillIndex);
-    yield UserProfileLoaded(updatedUser);
+    event.skillType == SkillType.teach
+        ? await _userRepository.updateTeachSkill(event.skill, event.skillIndex)
+        : await _userRepository.updateLearnSkill(event.skill, event.skillIndex);
   }
 
   Stream<UserProfileState> _mapShowSettingsToState() async* {

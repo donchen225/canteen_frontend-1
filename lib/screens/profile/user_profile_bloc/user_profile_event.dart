@@ -98,6 +98,30 @@ class UpdateName extends UserProfileEvent {
   String toString() => 'UpdateName { name: $name }';
 }
 
+class EditTitle extends UserProfileEvent {
+  final User user;
+
+  const EditTitle(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'EditTitle { user: ${user.displayName} }';
+}
+
+class UpdateTitle extends UserProfileEvent {
+  final String title;
+
+  const UpdateTitle(this.title);
+
+  @override
+  List<Object> get props => [title];
+
+  @override
+  String toString() => 'UpdateName { title: $title }';
+}
+
 class UpdateSkill extends UserProfileEvent {
   final User user;
   final Skill skill;

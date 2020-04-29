@@ -34,7 +34,7 @@ class UserProfileEditingAbout extends UserProfileState {
   List<Object> get props => [user];
 
   @override
-  String toString() => 'UserProfileEditingAbout { user: ${user.toString()}  }';
+  String toString() => 'UserProfileEditingAbout { user: ${user.about}  }';
 }
 
 class UserProfileEditingSkill extends UserProfileState {
@@ -62,6 +62,18 @@ class UserProfileEditingName extends UserProfileState {
 
   @override
   String toString() => 'UserProfileEditingName { user: ${user.toString()}  }';
+}
+
+class UserProfileEditingTitle extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingTitle(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'UserProfileEditingTitle { user: ${user.toString()}  }';
 }
 
 class SettingsMenu extends UserProfileState {}
