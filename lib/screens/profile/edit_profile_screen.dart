@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,6 +45,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         brightness: Brightness.light,
         automaticallyImplyLeading: false,
+        backgroundColor: Palette.appBarBackgroundColor,
+        elevation: 1,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +57,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
               child: Text(
                 'Cancel',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Text('Edit ' + fieldName),
@@ -78,7 +85,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
               child: Text(
                 'Done',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],

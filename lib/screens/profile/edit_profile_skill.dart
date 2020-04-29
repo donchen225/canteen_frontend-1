@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +125,8 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
       appBar: AppBar(
         brightness: Brightness.light,
         automaticallyImplyLeading: false,
+        backgroundColor: Palette.appBarBackgroundColor,
+        elevation: 1,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,10 +137,14 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
               },
               child: Text(
                 'Cancel',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            Text(widget.skillType == 'teach'
+            Text(widget.skillType == SkillType.teach
                 ? 'Edit Teach Skill'
                 : 'Edit Learn Skill'),
             GestureDetector(
@@ -168,7 +175,11 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
               },
               child: Text(
                 'Done',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
