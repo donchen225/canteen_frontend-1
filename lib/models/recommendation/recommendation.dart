@@ -7,6 +7,7 @@ class Recommendation extends Equatable {
   final String id;
   final String userId;
   final String displayName;
+  final String title;
   final String about;
   final String photoUrl;
   final List<Skill> learnSkill;
@@ -19,6 +20,7 @@ class Recommendation extends Equatable {
     this.id,
     this.userId,
     this.displayName = '',
+    this.title = '',
     this.about = '',
     this.photoUrl = '',
     this.learnSkill = const [],
@@ -33,6 +35,7 @@ class Recommendation extends Equatable {
       id: json['id'] as String,
       userId: json['user_id'] as String,
       displayName: json['display_name'] as String,
+      title: json['title'] as String,
       about: json['about'] as String,
       photoUrl: json['photo_url'] as String,
       learnSkill: json['learn_skill']

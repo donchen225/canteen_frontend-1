@@ -8,6 +8,7 @@ class UserEntity extends Equatable {
   final String id;
   final String providerId;
   final String displayName;
+  final String title;
   final String about;
   final String photoUrl;
   final Map<String, Skill> learnSkills;
@@ -24,6 +25,7 @@ class UserEntity extends Equatable {
     this.id,
     this.providerId,
     this.displayName = '',
+    this.title = '',
     this.about = '',
     this.photoUrl = '',
     this.learnSkills = const {},
@@ -42,6 +44,7 @@ class UserEntity extends Equatable {
         id,
         providerId,
         displayName,
+        title,
         about,
         photoUrl,
         learnSkills,
@@ -60,6 +63,7 @@ class UserEntity extends Equatable {
       id: snap.documentID,
       providerId: snap.data["provider_id"],
       displayName: snap.data["display_name"],
+      title: snap.data["title"],
       about: snap.data["about"],
       photoUrl: snap.data["photo_url"],
       learnSkills: snap.data["learn_skill"]?.map<String, Skill>((k, v) =>
@@ -97,6 +101,7 @@ class UserEntity extends Equatable {
     return {
       "provider_id": providerId,
       "display_name": displayName,
+      "title": title,
       "about": about,
       "photo_url": photoUrl,
       "learn_skill": learnSkills,

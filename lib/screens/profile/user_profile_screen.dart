@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
+import 'package:canteen_frontend/screens/profile/basic_info_tab.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -19,7 +18,6 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -37,7 +35,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   ImageProvider _profilePicture =
       AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
-  bool nameSelected = false;
 
   @override
   void initState() {
@@ -91,6 +88,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
         body: ListView(
+          padding: EdgeInsets.only(
+              bottom: SizeConfig.instance.blockSizeVertical * 9),
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -117,6 +116,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ],
             ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: SizeConfig.instance.blockSizeHorizontal * 3,
+                  right: SizeConfig.instance.blockSizeHorizontal * 3,
+                  top: SizeConfig.instance.blockSizeVertical,
+                  bottom: SizeConfig.instance.blockSizeVertical),
+              child: Text('Basic Info'),
+            ),
+            BasicInfoTab(
+                title: 'Name',
+                value: user.displayName,
+                onTap: () {
+                  _userProfileBloc.add(EditName(user));
+                }),
+            BasicInfoTab(
+                title: 'Title',
+                value: user.title,
+                onTap: () {
+                  // _userProfileBloc.add(EditName(user));
+                }),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
@@ -194,67 +213,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   )
                 : Container(),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: SizeConfig.instance.blockSizeHorizontal * 3,
-                  right: SizeConfig.instance.blockSizeHorizontal * 3,
-                  top: SizeConfig.instance.blockSizeVertical,
-                  bottom: SizeConfig.instance.blockSizeVertical),
-              child: Text('Basic Info'),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: SizeConfig.instance.blockSizeVertical * 13),
-              child: GestureDetector(
-                onTapDown: (_) {
-                  setState(() {
-                    nameSelected = true;
-                  });
-                },
-                onTapCancel: () {
-                  setState(() {
-                    nameSelected = false;
-                  });
-                },
-                onTap: () {
-                  setState(() {
-                    nameSelected = false;
-                  });
-                  _userProfileBloc.add(EditName(user));
-                },
-                child: Container(
-                  padding: EdgeInsets.only(
-                      left: SizeConfig.instance.blockSizeHorizontal * 6,
-                      right: SizeConfig.instance.blockSizeHorizontal * 3,
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
-                  decoration: BoxDecoration(
-                    color: nameSelected
-                        ? Colors.grey[500].withOpacity(0.6)
-                        : Colors.white,
-                    border: Border(
-                      top: BorderSide(width: 1, color: Colors.grey[400]),
-                      bottom: BorderSide(width: 1, color: Colors.grey[400]),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Name',
-                              style: TextStyle(fontWeight: FontWeight.w600)),
-                          Text(user.displayName ?? '',
-                              style: TextStyle(fontWeight: FontWeight.w400)),
-                        ],
-                      ),
-                      Icon(Icons.keyboard_arrow_right)
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       );

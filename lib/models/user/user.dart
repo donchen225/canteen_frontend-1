@@ -11,6 +11,7 @@ class User {
   final String providerId;
   final String id;
   final String displayName;
+  final String title;
   final String about;
   final String photoUrl;
   final List<Skill> learnSkill;
@@ -27,6 +28,7 @@ class User {
     this.providerId,
     this.id,
     this.displayName = '',
+    this.title = '',
     this.about = '',
     this.photoUrl = '',
     this.learnSkill = const [],
@@ -42,7 +44,7 @@ class User {
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, about: $about, photoUrl: $photoUrl, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
   }
 
   static User fromEntity(UserEntity entity) {
@@ -60,6 +62,7 @@ class User {
       providerId: entity.providerId,
       id: entity.id,
       displayName: entity.displayName,
+      title: entity.title,
       about: entity.about,
       photoUrl: entity.photoUrl,
       learnSkill: learnSkillList,
@@ -79,6 +82,7 @@ class User {
       id: snapshot.objectID,
       displayName: snapshot.data['display_name'],
       photoUrl: snapshot.data['photo_url'],
+      title: snapshot.data['title'],
       about: snapshot.data['about'],
       learnSkill: snapshot.data['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
@@ -96,6 +100,7 @@ class User {
       id: rec.userId,
       displayName: rec.displayName,
       about: rec.about,
+      title: rec.title,
       photoUrl: rec.photoUrl,
       learnSkill: rec.learnSkill,
       teachSkill: rec.teachSkill,
@@ -107,6 +112,7 @@ class User {
       providerId: providerId,
       id: id,
       displayName: displayName,
+      title: title,
       about: updatedText,
       photoUrl: photoUrl,
       learnSkill: learnSkill,
@@ -125,6 +131,7 @@ class User {
       providerId: providerId,
       id: id,
       displayName: updatedText,
+      title: title,
       about: about,
       photoUrl: photoUrl,
       learnSkill: learnSkill,
@@ -150,6 +157,7 @@ class User {
       providerId: providerId,
       id: id,
       displayName: displayName,
+      title: title,
       about: about,
       photoUrl: photoUrl,
       learnSkill: learnSkill,
@@ -175,6 +183,7 @@ class User {
       providerId: providerId,
       id: id,
       displayName: displayName,
+      title: title,
       about: about,
       photoUrl: photoUrl,
       learnSkill: learnSkills,
