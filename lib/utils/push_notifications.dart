@@ -4,6 +4,11 @@ import 'dart:io';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+// PushNotificationsManager - Manages all push notifications
+// Types of push notifications:
+// * Chat message
+// * Request received
+// * Matched (Request accepted)
 class PushNotificationsManager {
   UserRepository _userRepository;
   StreamSubscription _iosSubscription;
