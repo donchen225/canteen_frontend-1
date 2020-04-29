@@ -53,7 +53,10 @@ dependencies:
   
   # Animation
   # flare_flutter: ^2.0.3
-
+  
+  # Calendar
+  table_calendar: ^2.2.3
+  
   # Onboarding
   intro_views_flutter:
     git:
