@@ -234,13 +234,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingName) {
+      final user = state.user;
       return EditProfileShortInfoScreen(
           fieldName: 'Name',
+          initialText: user.displayName,
           onComplete: (String text) => _userProfileBloc.add(UpdateName(text)),
-          onCancelNavigation: () =>
-              _userProfileBloc.add(LoadUserProfile(state.user)),
+          onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
           onCompleteNavigation: () =>
-              _userProfileBloc.add(LoadUserProfile(state.user)));
+              _userProfileBloc.add(LoadUserProfile(user)));
     }
 
     if (state is SettingsMenu) {
