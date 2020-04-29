@@ -7,9 +7,11 @@ class DurationPicker extends StatefulWidget {
   final ValueChanged<int> onChanged;
   final double magnification;
   final double pickerHeight;
+  final Color backgroundColor;
 
   DurationPicker({
     @required this.durationOptions,
+    this.backgroundColor = Colors.white,
     this.magnification = 1.0,
     this.onChanged,
     this.itemHeight = 32,
@@ -40,7 +42,7 @@ class _DurationPickerState extends State<DurationPicker> {
             magnification: widget.magnification,
             scrollController: _scrollController,
             itemExtent: widget.itemHeight,
-            backgroundColor: Colors.transparent,
+            backgroundColor: widget.backgroundColor,
             onSelectedItemChanged: (int index) {
               if (mounted) {
                 setState(() {

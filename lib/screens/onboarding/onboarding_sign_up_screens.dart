@@ -446,6 +446,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   Widget _buildDurationPicker() {
     return DurationPicker(
       magnification: 1.3,
+      backgroundColor: Colors.transparent,
       durationOptions: <int>[30, 60, 90, 120],
       onChanged: (index) {
         _selectedDurationIndex = index;
