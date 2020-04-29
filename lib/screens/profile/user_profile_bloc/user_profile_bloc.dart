@@ -40,7 +40,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     UserProfileEvent event,
   ) async* {
     if (event is LoadUserProfile) {
-      yield* _mapLoadUserProfileToState(event.user);
+      yield* _mapLoadUserProfileToState(event);
     } else if (event is EditAboutSection) {
       yield* _mapEditAboutSectionToState(event);
     } else if (event is UpdateAboutSection) {
@@ -60,8 +60,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     }
   }
 
-  Stream<UserProfileState> _mapLoadUserProfileToState(User user) async* {
-    yield UserProfileLoaded(user);
+  Stream<UserProfileState> _mapLoadUserProfileToState(
+      LoadUserProfile event) async* {
+    yield UserProfileLoaded(event.user);
   }
 
   Stream<UserProfileState> _mapEditAboutSectionToState(
