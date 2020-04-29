@@ -18,7 +18,8 @@ class MatchItem extends StatelessWidget {
     String t = timeago
         .format(time, locale: 'en_short')
         .replaceFirst(' ', '')
-        .replaceFirst('~', '');
+        .replaceFirst('~', '')
+        .replaceFirst('min', 'm');
 
     return t == 'now' ? t : '$t ago';
   }
