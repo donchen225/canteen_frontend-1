@@ -1,32 +1,39 @@
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EditProfileBasicInfoScreen extends StatefulWidget {
-  final User user;
-  final String field;
+class EditProfileShortInfoScreen extends StatefulWidget {
+  final String initialText;
+  final String fieldName;
+  final Function onComplete;
+  final Function onCancelNavigation;
+  final Function onCompleteNavigation;
 
-  EditProfileBasicInfoScreen({@required this.user, @required this.field});
+  EditProfileShortInfoScreen({
+    @required this.fieldName,
+    @required this.onComplete,
+    @required this.onCancelNavigation,
+    @required this.onCompleteNavigation,
+    this.initialText,
+  });
 
-  _EditProfileBasicInfoScreenState createState() =>
-      _EditProfileBasicInfoScreenState();
+  _EditProfileShortInfoScreenState createState() =>
+      _EditProfileShortInfoScreenState();
 }
 
-class _EditProfileBasicInfoScreenState
-    extends State<EditProfileBasicInfoScreen> {
+class _EditProfileShortInfoScreenState
+    extends State<EditProfileShortInfoScreen> {
   UserProfileBloc _userProfileBloc;
   TextEditingController _textController;
-  String fieldName;
 
   @override
   void initState() {
     super.initState();
-    fieldName = widget.field[0].toUpperCase() + widget.field.substring(1);
 
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
     _textController = TextEditingController();
+    _textController.text = widget.initialText ?? '';
   }
 
   @override
@@ -37,12 +44,6 @@ class _EditProfileBasicInfoScreenState
 
   @override
   Widget build(BuildContext context) {
-    if (widget.field == 'about') {
-      _textController.text = widget.user.about;
-    } else if (widget.field == 'name') {
-      _textController.text = widget.user.displayName;
-    }
-
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -55,7 +56,7 @@ class _EditProfileBasicInfoScreenState
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                _userProfileBloc.add(LoadUserProfile(widget.user));
+                widget.onCancelNavigation();
               },
               child: Text(
                 'Cancel',
@@ -66,23 +67,13 @@ class _EditProfileBasicInfoScreenState
                 ),
               ),
             ),
-            Text('Edit ' + fieldName),
+            Text('Edit ' + widget.fieldName),
             GestureDetector(
               onTap: () {
-                if (widget.field == 'about') {
-                  if (widget.user.about != _textController.text) {
-                    _userProfileBloc.add(
-                        UpdateAboutSection(widget.user, _textController.text));
-                  } else {
-                    _userProfileBloc.add(LoadUserProfile(widget.user));
-                  }
-                } else if (widget.field == 'name') {
-                  if (widget.user.displayName != _textController.text) {
-                    _userProfileBloc
-                        .add(UpdateName(widget.user, _textController.text));
-                  } else {
-                    _userProfileBloc.add(LoadUserProfile(widget.user));
-                  }
+                if (widget.initialText != _textController.text) {
+                  widget.onComplete(_textController.text);
+                } else {
+                  widget.onCompleteNavigation();
                 }
               },
               child: Text(

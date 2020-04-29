@@ -4,7 +4,8 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/basic_info_tab.dart';
-import 'package:canteen_frontend/screens/profile/edit_profile_basic_info_screen.dart';
+import 'package:canteen_frontend/screens/profile/edit_profile_long_info_screen.dart';
+import 'package:canteen_frontend/screens/profile/edit_profile_short_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
@@ -219,7 +220,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingAbout) {
-      return EditProfileBasicInfoScreen(
+      return EditProfileLongInfoScreen(
         user: state.user,
         field: 'about',
       );
@@ -233,10 +234,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     if (state is UserProfileEditingName) {
-      return EditProfileBasicInfoScreen(
-        user: state.user,
-        field: 'name',
-      );
+      return EditProfileShortInfoScreen(
+          fieldName: 'Name',
+          onComplete: (String text) => _userProfileBloc.add(UpdateName(text)),
+          onCancelNavigation: () =>
+              _userProfileBloc.add(LoadUserProfile(state.user)),
+          onCompleteNavigation: () =>
+              _userProfileBloc.add(LoadUserProfile(state.user)));
     }
 
     if (state is SettingsMenu) {

@@ -63,17 +63,15 @@ class EditSkill extends UserProfileEvent {
 }
 
 class UpdateAboutSection extends UserProfileEvent {
-  final User user;
   final String about;
 
-  const UpdateAboutSection(this.user, this.about);
+  const UpdateAboutSection(this.about);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [about];
 
   @override
-  String toString() =>
-      'UpdateAboutSection { user: ${user.about} about: $about }';
+  String toString() => 'UpdateAboutSection { about: $about }';
 }
 
 class EditName extends UserProfileEvent {
@@ -89,16 +87,15 @@ class EditName extends UserProfileEvent {
 }
 
 class UpdateName extends UserProfileEvent {
-  final User user;
   final String name;
 
-  const UpdateName(this.user, this.name);
+  const UpdateName(this.name);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [name];
 
   @override
-  String toString() => 'UpdateName { user: ${user.toString()} name: $name }';
+  String toString() => 'UpdateName { name: $name }';
 }
 
 class UpdateSkill extends UserProfileEvent {
