@@ -1,11 +1,8 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'video_chat_details_selection_screen.dart';
 
 class VideoChatDetailInitialScreen extends StatefulWidget {
   final User user;
@@ -23,16 +20,24 @@ class VideoChatDetailInitialScreen extends StatefulWidget {
 
 class _VideoChatDetailInitialScreenState
     extends State<VideoChatDetailInitialScreen> {
+  Map<DateTime, List> _events;
   MaterialLocalizations localizations;
   CalendarController _calendarController;
   List _availableTimes;
+  DateTime now;
+  DateTime endDate;
 
   @override
   void initState() {
     super.initState();
 
+    now = DateTime.now();
+    endDate = now.add(Duration(days: 60));
     _availableTimes = ['9:00am', '10:00am', '11:00am'];
-
+    _events = {
+      DateTime.now().add(Duration(days: 2)): ['Event A1'],
+      DateTime.now().add(Duration(days: 3)): ['Event A1']
+    };
     _calendarController = CalendarController();
   }
 
@@ -58,10 +63,26 @@ class _VideoChatDetailInitialScreenState
         (hour == endTime.hour && minute <= endTime.minute));
   }
 
+  Widget _buildEventsMarker() {
+    return Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.1),
+        shape: BoxShape.circle,
+        borderRadius: null,
+      ),
+    );
+  }
+
   Widget _buildTableCalendar() {
     return TableCalendar(
       calendarController: _calendarController,
+      events: _events,
       startingDayOfWeek: StartingDayOfWeek.monday,
+      startDay: now,
+      endDay: endDate,
+      rowHeight: SizeConfig.instance.blockSizeVertical * 6,
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         todayColor: Colors.deepOrange[200],
@@ -76,6 +97,24 @@ class _VideoChatDetailInitialScreenState
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
+      initialCalendarFormat: CalendarFormat.month,
+      availableCalendarFormats: {
+        CalendarFormat.month: 'Month',
+      },
+      builders: CalendarBuilders(
+        markersBuilder: (context, date, events, holidays) {
+          final children = <Widget>[];
+
+          if (events.isNotEmpty) {
+            children.add(Align(
+              child: _buildEventsMarker(),
+            ));
+          }
+
+          return children;
+        },
+      ),
+
       // onDaySelected: _onDaySelected,
       // onVisibleDaysChanged: _onVisibleDaysChanged,
       // onCalendarCreated: _onCalendarCreated,
