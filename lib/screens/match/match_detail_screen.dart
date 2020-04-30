@@ -101,6 +101,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                 }
 
                 if (state is MatchUninitialized) {
+                  print('IN MATCHUNINITIALIZED');
                   return VideoChatDetailInitialScreen(
                     user: user,
                     match: widget.match,

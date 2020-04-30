@@ -1,7 +1,9 @@
+import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class VideoChatDetailInitialScreen extends StatefulWidget {
@@ -20,31 +22,44 @@ class VideoChatDetailInitialScreen extends StatefulWidget {
 
 class _VideoChatDetailInitialScreenState
     extends State<VideoChatDetailInitialScreen> {
+  final f = DateFormat('yMMMMd');
   Map<DateTime, List> _events;
   MaterialLocalizations localizations;
   CalendarController _calendarController;
   List _availableTimes;
-  DateTime now;
+  final DateTime now = DateTime.now();
   DateTime endDate;
+  Map<Day, Map<String, List<String>>> availableDates = {
+    Day.monday: {"start_time": [], "end_time": []},
+    Day.tuesday: {"start_time": [], "end_time": []},
+    Day.friday: {"start_time": [], "end_time": []}
+  };
 
   @override
   void initState() {
     super.initState();
 
-    now = DateTime.now();
     endDate = now.add(Duration(days: 60));
     _availableTimes = ['9:00am', '10:00am', '11:00am'];
+    initializeEvents();
     _events = {
-      DateTime.now().add(Duration(days: 2)): ['Event A1'],
-      DateTime.now().add(Duration(days: 3)): ['Event A1']
+      DateTime.now().add(Duration(days: 2)): [''],
+      DateTime.now().add(Duration(days: 3)): ['']
     };
     _calendarController = CalendarController();
+    // TODO: debug why I can't set selected day here, problem in library
+    // _calendarController.setSelectedDay(now);
   }
 
   @override
   void dispose() {
     _calendarController.dispose();
     super.dispose();
+  }
+
+  void initializeEvents() {
+    // print(now);
+    // print(endDate);
   }
 
   Iterable<TimeOfDay> getTimes(
@@ -81,6 +96,7 @@ class _VideoChatDetailInitialScreenState
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.monday,
       startDay: now,
+      initialSelectedDay: now,
       endDay: endDate,
       rowHeight: SizeConfig.instance.blockSizeVertical * 6,
       calendarStyle: CalendarStyle(
@@ -115,7 +131,7 @@ class _VideoChatDetailInitialScreenState
         },
       ),
 
-      // onDaySelected: _onDaySelected,
+      onDaySelected: _onDaySelected,
       // onVisibleDaysChanged: _onVisibleDaysChanged,
       // onCalendarCreated: _onCalendarCreated,
     );
@@ -132,12 +148,20 @@ class _VideoChatDetailInitialScreenState
                 margin:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
-                  title: Text(event.toString()),
+                  title: Align(
+                      alignment: Alignment.center,
+                      child: Text(event.toString())),
+                  // Go to payment page
                   onTap: () => print('$event tapped!'),
                 ),
               ))
           .toList(),
     );
+  }
+
+  void _onDaySelected(DateTime day, List events) {
+    print('CALLBACK: _onDaySelected');
+    setState(() {});
   }
 
   @override
@@ -151,47 +175,37 @@ class _VideoChatDetailInitialScreenState
     return Container(
       color: Colors.white,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.instance.blockSizeHorizontal * 3,
-                      right: SizeConfig.instance.blockSizeHorizontal * 3,
-                      top: SizeConfig.instance.blockSizeVertical * 3,
-                    ),
-                    child: Text(
-                      'Select 3 times to video chat:',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: SizeConfig.instance.blockSizeHorizontal * 3,
+                right: SizeConfig.instance.blockSizeHorizontal * 3,
+                top: SizeConfig.instance.blockSizeVertical * 3,
+              ),
+              child: Text(
+                'Select 3 times to video chat:',
+                style: TextStyle(
+                  fontSize: 18,
                 ),
-                Expanded(
-                  flex: 2,
-                  child: _buildTableCalendar(),
-                ),
-                // Expanded(child: _buildEventList()),
-                // VideoChatDetailsSelectionBlock(
-                //     user: widget.user,
-                //     onSubmit: (List<VideoChatDate> proposedDates) {
-                //       // BlocProvider.of<VideoChatDetailsBloc>(context).add(
-                //       //   ProposeVideoChatDates(
-                //       //     matchId: matchId,
-                //       //     videoChatId: videoChatId,
-                //       //     dates: proposedDates,
-                //       //   ),
-                //       // );
-                //     }),
-              ],
+              ),
             ),
+          ),
+          Container(
+            child: _buildTableCalendar(),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              f.format(_calendarController.selectedDay ?? now),
+            ), // TODO: remove now
+          ),
+          Expanded(
+            flex: 1,
+            child: _buildEventList(),
           ),
         ],
       ),
