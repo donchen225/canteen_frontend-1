@@ -3,7 +3,6 @@ import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class UserProfileEvent extends Equatable {
   const UserProfileEvent();
@@ -151,6 +150,30 @@ class UpdateAvailability extends UserProfileEvent {
   @override
   String toString() =>
       'UpdateAvailability { day: $day, startTime: $startTime, endTime: $endTime }';
+}
+
+class EditInterests extends UserProfileEvent {
+  final User user;
+
+  const EditInterests(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'EditInterests { user: ${user.displayName} }';
+}
+
+class UpdateInterests extends UserProfileEvent {
+  final List<String> interests;
+
+  const UpdateInterests(this.interests);
+
+  @override
+  List<Object> get props => [interests];
+
+  @override
+  String toString() => 'UpdateInterests { interests: $interests }';
 }
 
 class UpdateSkill extends UserProfileEvent {

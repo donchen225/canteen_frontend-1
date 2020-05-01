@@ -55,6 +55,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapEditTitleToState(event);
     } else if (event is UpdateTitle) {
       yield* _mapUpdateTitleToState(event);
+    } else if (event is EditInterests) {
+      yield* _mapEditInterestsToState(event);
+    } else if (event is UpdateInterests) {
+      yield* _mapUpdateInterestsToState(event);
     } else if (event is EditAvailability) {
       yield* _mapEditAvailabilityToState(event);
     } else if (event is UpdateAvailability) {
@@ -95,6 +99,16 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapUpdateTitleToState(UpdateTitle event) async* {
     await _userRepository.updateTitle(event.title);
+  }
+
+  Stream<UserProfileState> _mapEditInterestsToState(
+      EditInterests event) async* {
+    yield UserProfileEditingInterests(event.user);
+  }
+
+  Stream<UserProfileState> _mapUpdateInterestsToState(
+      UpdateInterests event) async* {
+    // await _userRepository.updateTitle(event.title);
   }
 
   Stream<UserProfileState> _mapEditAvailabilityToState(

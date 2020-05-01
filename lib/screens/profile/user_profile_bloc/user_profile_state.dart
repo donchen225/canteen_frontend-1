@@ -91,4 +91,17 @@ class UserProfileEditingAvailability extends UserProfileState {
       'UserProfileEditingAvailability { user: ${user.toString()}  }';
 }
 
+class UserProfileEditingInterests extends UserProfileState {
+  final User user;
+
+  const UserProfileEditingInterests(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() =>
+      'UserProfileEditingAvailability { user: ${user.toString()}  }';
+}
+
 class SettingsMenu extends UserProfileState {}

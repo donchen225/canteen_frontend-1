@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/profile/add_icon.dart';
 import 'package:canteen_frontend/screens/profile/availability_section.dart';
 import 'package:canteen_frontend/screens/profile/basic_info_tab.dart';
 import 'package:canteen_frontend/screens/profile/edit_availability_screen.dart';
+import 'package:canteen_frontend/screens/profile/edit_profile_interests_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_long_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_short_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
@@ -162,7 +163,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // _userProfileBloc.add(EditAboutSection(user));
+                _userProfileBloc.add(EditInterests(user));
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -264,6 +265,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       return EditProfileShortInfoScreen(
         fieldName: 'Title',
         initialText: user.title,
+        onComplete: (String text) => _userProfileBloc.add(UpdateTitle(text)),
+        onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+        onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
+      );
+    }
+
+    if (state is UserProfileEditingInterests) {
+      final user = state.user;
+      return EditProfileInterestsScreen(
+        fieldName: 'Interests',
+        initialItems: ['test'],
         onComplete: (String text) => _userProfileBloc.add(UpdateTitle(text)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
