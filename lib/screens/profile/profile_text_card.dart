@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class ProfileTextCard extends StatelessWidget {
@@ -19,7 +20,7 @@ class ProfileTextCard extends StatelessWidget {
       color: color,
       child: Container(
         height: height,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 5),
         child: child ?? Container(),
       ),
     );

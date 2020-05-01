@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,66 +69,67 @@ class _SkillListState extends State<SkillList> {
           child: GestureDetector(
             onTap: () => _onTapFunction(index),
             child: ProfileTextCard(
-              height: widget.height,
               color: _getColor(index),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      child: Text(
-                        skill.name +
-                            ' - ' +
-                            '\$${(skill.price).toString()}' +
-                            (skill.duration != null
-                                ? ' / ${skill.duration} minutes'
-                                : ''),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                  Container(
+                    child: Text(
+                      skill.name,
+                      style: TextStyle(
+                          fontSize:
+                              SizeConfig.instance.blockSizeHorizontal * 4 * 1.2,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
+                  Text(
+                    '\$${(skill.price).toString()}' +
+                        (skill.duration != null
+                            ? ' / ${skill.duration} minutes'
+                            : ''),
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   widget.showDescription && skill.description.isNotEmpty
-                      ? Expanded(
-                          child: Container(
-                            child: Text(skill.description),
-                          ),
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.instance.blockSizeVertical),
+                          child: Text(skill.description),
                         )
                       : Container(),
                   Visibility(
                     visible: widget.onTapExtraButton != null,
-                    child: Expanded(
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            ClipOval(
-                              child: Material(
-                                color: Colors.orange[400],
-                                elevation: 4,
-                                child: InkWell(
-                                  child: SizedBox(
-                                    width: 33,
-                                    height: 33,
-                                    child: Center(
-                                      child: const Icon(
-                                        IconData(0xf474,
-                                            fontFamily: CupertinoIcons.iconFont,
-                                            fontPackage:
-                                                CupertinoIcons.iconFontPackage),
-                                        size: 25,
-                                        color: Colors.white,
-                                      ),
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          ClipOval(
+                            child: Material(
+                              color: Colors.orange[400],
+                              elevation: 4,
+                              child: InkWell(
+                                child: SizedBox(
+                                  width: 33,
+                                  height: 33,
+                                  child: Center(
+                                    child: const Icon(
+                                      IconData(0xf474,
+                                          fontFamily: CupertinoIcons.iconFont,
+                                          fontPackage:
+                                              CupertinoIcons.iconFontPackage),
+                                      size: 25,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                  onTap: () {
-                                    widget.onTapExtraButton(skill);
-                                  },
                                 ),
+                                onTap: () {
+                                  widget.onTapExtraButton(skill);
+                                },
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   )
