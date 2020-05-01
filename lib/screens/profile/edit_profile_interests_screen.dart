@@ -47,41 +47,48 @@ class _EditProfileInterestsScreenState
   }
 
   Widget _createInterestWidget(String interestText) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: SizeConfig.instance.blockSizeHorizontal * 2,
-        right: SizeConfig.instance.blockSizeHorizontal * 2,
-        top: SizeConfig.instance.blockSizeHorizontal * 1.5,
-        bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
-      ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.instance.blockSizeVertical,
-        bottom: SizeConfig.instance.blockSizeVertical,
-        right: SizeConfig.instance.blockSizeHorizontal * 3,
-      ),
-      decoration: BoxDecoration(
-        color: Palette.orangeColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            '#' + interestText,
-            style: TextStyle(
-              color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          interests.remove(interestText);
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.only(
+          left: SizeConfig.instance.blockSizeHorizontal * 2,
+          right: SizeConfig.instance.blockSizeHorizontal * 2,
+          top: SizeConfig.instance.blockSizeHorizontal * 1.5,
+          bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
+        ),
+        margin: EdgeInsets.only(
+          top: SizeConfig.instance.blockSizeVertical,
+          bottom: SizeConfig.instance.blockSizeVertical,
+          right: SizeConfig.instance.blockSizeHorizontal * 3,
+        ),
+        decoration: BoxDecoration(
+          color: Palette.orangeColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              '#' + interestText,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.instance.blockSizeHorizontal,
-            ),
-            child: Icon(
-              Icons.cancel,
-              color: Colors.white,
-            ),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.only(
+                left: SizeConfig.instance.blockSizeHorizontal,
+              ),
+              child: Icon(
+                Icons.cancel,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -133,7 +140,7 @@ class _EditProfileInterestsScreenState
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 40),
         child: Column(
           children: <Widget>[
             Container(
@@ -151,9 +158,14 @@ class _EditProfileInterestsScreenState
                     decoration: TextDecoration.none),
                 decoration: InputDecoration(
                   border: InputBorder.none,
+                  hintText: 'Enter an interest',
+                  counterText: '',
                   suffix: GestureDetector(
                       onTap: () {
-                        print('Tapped');
+                        setState(() {
+                          interests.add(_textController.text);
+                          _textController.clear();
+                        });
                       },
                       child: Text(
                         'Add',
@@ -165,29 +177,25 @@ class _EditProfileInterestsScreenState
                         ),
                       )),
                 ),
-                maxLength:
-                    150, // TODO: move character counter to bottom right corner of container
+                maxLength: 30,
                 maxLines: 1,
               ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: ProfileTextCard(
-                    height: SizeConfig.instance.blockSizeVertical * 30,
-                    child: Wrap(
-                      children: <Widget>[
-                        _createInterestWidget('MachineLearning'),
-                        _createInterestWidget('MachineLearning'),
-                        _createInterestWidget('MachineLearning'),
-                        _createInterestWidget('MachineLearning'),
-                        _createInterestWidget('MachineLearning'),
-                        _createInterestWidget('MachineLearning'),
-                      ],
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.blockSizeVertical * 3),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ProfileTextCard(
+                      height: SizeConfig.instance.blockSizeVertical * 30,
+                      child: Wrap(
+                        children: interests.map(_createInterestWidget).toList(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
