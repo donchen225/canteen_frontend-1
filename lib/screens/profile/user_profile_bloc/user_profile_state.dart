@@ -101,7 +101,7 @@ class UserProfileEditingInterests extends UserProfileState {
 
   @override
   String toString() =>
-      'UserProfileEditingAvailability { user: ${user.toString()}  }';
+      'UserProfileEditingInterests { user: ${user.toString()}  }';
 }
 
 class SettingsMenu extends UserProfileState {}

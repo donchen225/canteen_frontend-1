@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -24,14 +25,14 @@ class EditProfileInterestsScreen extends StatefulWidget {
 
 class _EditProfileInterestsScreenState
     extends State<EditProfileInterestsScreen> {
-  List<String> interests;
+  List<String> interests = [];
   TextEditingController _textController;
 
   @override
   void initState() {
     super.initState();
 
-    interests = widget.initialItems;
+    interests.addAll(widget.initialItems ?? []);
     _textController = TextEditingController();
     _textController.addListener(_onTextChange);
   }
@@ -44,53 +45,6 @@ class _EditProfileInterestsScreenState
 
   void _onTextChange() {
     setState(() {});
-  }
-
-  Widget _createInterestWidget(String interestText) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          interests.remove(interestText);
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.only(
-          left: SizeConfig.instance.blockSizeHorizontal * 2,
-          right: SizeConfig.instance.blockSizeHorizontal * 2,
-          top: SizeConfig.instance.blockSizeHorizontal * 1.5,
-          bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
-        ),
-        margin: EdgeInsets.only(
-          top: SizeConfig.instance.blockSizeVertical,
-          bottom: SizeConfig.instance.blockSizeVertical,
-          right: SizeConfig.instance.blockSizeHorizontal * 3,
-        ),
-        decoration: BoxDecoration(
-          color: Palette.orangeColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              '#' + interestText,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: SizeConfig.instance.blockSizeHorizontal,
-              ),
-              child: Icon(
-                Icons.cancel,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -122,8 +76,10 @@ class _EditProfileInterestsScreenState
             GestureDetector(
               onTap: () {
                 if (widget.initialItems != interests) {
-                  widget.onComplete(_textController.text);
+                  print('UPDATING INTERESTS');
+                  widget.onComplete(interests);
                 } else {
+                  print('NOT UPDATING INTERESTS');
                   widget.onCompleteNavigation();
                 }
               },
@@ -190,7 +146,22 @@ class _EditProfileInterestsScreenState
                     child: ProfileTextCard(
                       height: SizeConfig.instance.blockSizeVertical * 30,
                       child: Wrap(
-                        children: interests.map(_createInterestWidget).toList(),
+                        children: interests
+                            .map((text) => Padding(
+                                  padding: EdgeInsets.only(
+                                      right: SizeConfig
+                                              .instance.blockSizeHorizontal *
+                                          3),
+                                  child: InterestItem(
+                                    text: text,
+                                    onTap: (String interestText) {
+                                      setState(() {
+                                        interests.remove(interestText);
+                                      });
+                                    },
+                                  ),
+                                ))
+                            .toList(),
                       ),
                     ),
                   ),

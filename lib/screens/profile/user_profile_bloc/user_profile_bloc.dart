@@ -108,7 +108,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapUpdateInterestsToState(
       UpdateInterests event) async* {
-    // await _userRepository.updateTitle(event.title);
+    await _userRepository.updateInterests(event.interests);
   }
 
   Stream<UserProfileState> _mapEditAvailabilityToState(

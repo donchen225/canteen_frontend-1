@@ -5,7 +5,7 @@ class ProfileTextCard extends StatelessWidget {
   final double height;
   final Color color;
 
-  ProfileTextCard({this.child, this.height = 100, this.color = Colors.white});
+  ProfileTextCard({this.child, this.height, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {

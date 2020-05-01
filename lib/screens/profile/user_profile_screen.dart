@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
@@ -63,6 +64,27 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         });
       }),
     );
+  }
+
+  Widget _buildUserInterests(List<String> interests) {
+    if (interests.isEmpty) {
+      return Row(
+        children: <Widget>[
+          Text('Add '),
+          InterestItem(
+            text: 'interests',
+          ),
+          Text(' and get better matches!'),
+        ],
+      );
+    }
+
+    return Wrap(
+        children: interests
+            .map((text) => InterestItem(
+                  text: text,
+                ))
+            .toList());
   }
 
   Widget _buildUserProfile(UserProfileState state) {
@@ -168,7 +190,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-                child: ProfileTextCard(),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ProfileTextCard(
+                        child: _buildUserInterests(user.interests),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -275,8 +305,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final user = state.user;
       return EditProfileInterestsScreen(
         fieldName: 'Interests',
-        initialItems: ['test'],
-        onComplete: (String text) => _userProfileBloc.add(UpdateTitle(text)),
+        initialItems: user.interests ?? [],
+        onComplete: (List<String> interests) =>
+            _userProfileBloc.add(UpdateInterests(interests)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
       );
