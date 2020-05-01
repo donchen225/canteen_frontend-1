@@ -51,8 +51,8 @@ class _EditProfileInterestsScreenState
       padding: EdgeInsets.only(
         left: SizeConfig.instance.blockSizeHorizontal * 2,
         right: SizeConfig.instance.blockSizeHorizontal * 2,
-        top: SizeConfig.instance.blockSizeHorizontal,
-        bottom: SizeConfig.instance.blockSizeHorizontal,
+        top: SizeConfig.instance.blockSizeHorizontal * 1.5,
+        bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
       ),
       margin: EdgeInsets.only(
         top: SizeConfig.instance.blockSizeVertical,
@@ -63,7 +63,26 @@ class _EditProfileInterestsScreenState
         color: Palette.orangeColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text('#' + interestText),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '#' + interestText,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.instance.blockSizeHorizontal,
+            ),
+            child: Icon(
+              Icons.cancel,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
   }
 
