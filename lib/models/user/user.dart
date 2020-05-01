@@ -14,6 +14,7 @@ class User {
   final String title;
   final String about;
   final String photoUrl;
+  final List<String> interests;
   final List<Skill> learnSkill;
   final List<Skill> teachSkill;
   final String email;
@@ -31,6 +32,7 @@ class User {
     this.title = '',
     this.about = '',
     this.photoUrl = '',
+    this.interests = const [],
     this.learnSkill = const [],
     this.teachSkill = const [],
     this.email = '',
@@ -44,7 +46,7 @@ class User {
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
   }
 
   static User fromEntity(UserEntity entity) {
@@ -65,6 +67,7 @@ class User {
       title: entity.title,
       about: entity.about,
       photoUrl: entity.photoUrl,
+      interests: entity.interests,
       learnSkill: learnSkillList,
       teachSkill: teachSkillList,
       email: entity.email,
@@ -84,6 +87,7 @@ class User {
       photoUrl: snapshot.data['photo_url'],
       title: snapshot.data['title'],
       about: snapshot.data['about'],
+      interests: snapshot.data['interests'],
       learnSkill: snapshot.data['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
               SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
@@ -102,6 +106,7 @@ class User {
       about: rec.about,
       title: rec.title,
       photoUrl: rec.photoUrl,
+      interests: rec.interests,
       learnSkill: rec.learnSkill,
       teachSkill: rec.teachSkill,
     );
@@ -115,6 +120,7 @@ class User {
       title: title,
       about: updatedText,
       photoUrl: photoUrl,
+      interests: interests,
       learnSkill: learnSkill,
       teachSkill: teachSkill,
       email: email,
@@ -134,6 +140,7 @@ class User {
       title: title,
       about: about,
       photoUrl: photoUrl,
+      interests: interests,
       learnSkill: learnSkill,
       teachSkill: teachSkill,
       email: email,
@@ -160,6 +167,7 @@ class User {
       title: title,
       about: about,
       photoUrl: photoUrl,
+      interests: interests,
       learnSkill: learnSkill,
       teachSkill: teachSkills,
       email: email,
@@ -186,6 +194,7 @@ class User {
       title: title,
       about: about,
       photoUrl: photoUrl,
+      interests: interests,
       learnSkill: learnSkills,
       teachSkill: teachSkill,
       email: email,

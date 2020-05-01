@@ -11,6 +11,7 @@ class UserEntity extends Equatable {
   final String title;
   final String about;
   final String photoUrl;
+  final List<String> interests;
   final Map<String, Skill> learnSkills;
   final Map<String, Skill> teachSkills;
   final String email;
@@ -28,6 +29,7 @@ class UserEntity extends Equatable {
     this.title = '',
     this.about = '',
     this.photoUrl = '',
+    this.interests = const [],
     this.learnSkills = const {},
     this.teachSkills = const {},
     this.email = '',
@@ -47,6 +49,7 @@ class UserEntity extends Equatable {
         title,
         about,
         photoUrl,
+        interests,
         learnSkills,
         teachSkills,
         email,
@@ -66,6 +69,7 @@ class UserEntity extends Equatable {
       title: snap.data["title"],
       about: snap.data["about"],
       photoUrl: snap.data["photo_url"],
+      interests: snap.data["interests"],
       learnSkills: snap.data["learn_skill"]?.map<String, Skill>((k, v) =>
               MapEntry(k as String, Skill.fromMap(v, SkillType.learn))) ??
           {},
@@ -104,6 +108,7 @@ class UserEntity extends Equatable {
       "title": title,
       "about": about,
       "photo_url": photoUrl,
+      "interests": interests,
       "learn_skill": learnSkills,
       "teach_skill": teachSkills,
       "email": email,

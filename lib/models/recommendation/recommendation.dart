@@ -10,6 +10,7 @@ class Recommendation extends Equatable {
   final String title;
   final String about;
   final String photoUrl;
+  final List<String> interests;
   final List<Skill> learnSkill;
   final List<Skill> teachSkill;
   final int status;
@@ -23,6 +24,7 @@ class Recommendation extends Equatable {
     this.title = '',
     this.about = '',
     this.photoUrl = '',
+    this.interests = const [],
     this.learnSkill = const [],
     this.teachSkill = const [],
     this.status = 0,
@@ -38,6 +40,8 @@ class Recommendation extends Equatable {
       title: json['title'] as String,
       about: json['about'] as String,
       photoUrl: json['photo_url'] as String,
+      interests:
+          json['interests']?.map<String>((x) => x.toString())?.toList() ?? [],
       learnSkill: json['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
               SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
