@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
@@ -67,6 +68,21 @@ class ProfileList extends StatelessWidget {
               ),
             ),
           ),
+          Visibility(
+              visible: user.interests.isNotEmpty,
+              child: Align(
+                alignment: Alignment.center,
+                child: Wrap(
+                    children: user.interests
+                        .map((x) => Padding(
+                              padding: EdgeInsets.only(
+                                  right:
+                                      SizeConfig.instance.blockSizeHorizontal *
+                                          3),
+                              child: InterestItem(text: x),
+                            ))
+                        .toList()),
+              )),
           ProfileSectionTitle('About'),
           ProfileTextCard(
             height: height,

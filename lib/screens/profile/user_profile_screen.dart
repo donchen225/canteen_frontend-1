@@ -81,8 +81,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return Wrap(
         children: interests
-            .map((text) => InterestItem(
-                  text: text,
+            .map((text) => Padding(
+                  padding: EdgeInsets.only(
+                    right: SizeConfig.instance.blockSizeHorizontal * 3,
+                  ),
+                  child: InterestItem(
+                    text: text,
+                  ),
                 ))
             .toList());
   }
