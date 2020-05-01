@@ -46,18 +46,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             elevation: 1),
         body: ListView(
           padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.instance.blockSizeVertical * 6),
+              vertical: SizeConfig.instance.blockSizeVertical * 3),
           children: <Widget>[
             Container(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal:
-                            SizeConfig.instance.blockSizeHorizontal * 6),
-                    alignment: Alignment.centerLeft,
-                    child: Text('Notifications'),
-                  ),
                   Row(
                     children: <Widget>[
                       Expanded(
