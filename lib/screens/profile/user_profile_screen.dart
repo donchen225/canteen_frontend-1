@@ -12,6 +12,7 @@ import 'package:canteen_frontend/screens/profile/edit_profile_short_info_screen.
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
+import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
@@ -148,22 +149,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 _userProfileBloc.add(EditAboutSection(user));
               },
               child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+                  child: ProfileTextCard(
+                    child: Text(user.about ?? ''),
+                  )),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              child: ProfileSectionTitle("Interests"),
+            ),
+            GestureDetector(
+              onTap: () {
+                // _userProfileBloc.add(EditAboutSection(user));
+              },
+              child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.grey[200]),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  margin: EdgeInsets.all(0),
-                  elevation: 0.3,
-                  color: Colors.white,
-                  child: Container(
-                    height: 100,
-                    padding: EdgeInsets.all(15),
-                    child: Text(user.about ?? ''),
-                  ),
-                ),
+                child: ProfileTextCard(),
               ),
             ),
             Padding(
