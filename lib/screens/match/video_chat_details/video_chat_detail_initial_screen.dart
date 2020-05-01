@@ -152,7 +152,9 @@ class _VideoChatDetailInitialScreenState
                       alignment: Alignment.center,
                       child: Text(event.toString())),
                   // Go to payment page
-                  onTap: () => print('$event tapped!'),
+                  onTap: () {
+                    print('$event tapped!');
+                  },
                 ),
               ))
           .toList(),

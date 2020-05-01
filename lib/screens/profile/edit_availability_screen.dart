@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/screens/profile/availability_picker.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart';
 
 class EditAvailabilityScreen extends StatefulWidget {
   final String fieldName;
+  final Day day;
   final DateTime startTime;
   final DateTime endTime;
   final Function onComplete;
@@ -15,6 +17,7 @@ class EditAvailabilityScreen extends StatefulWidget {
 
   EditAvailabilityScreen({
     @required this.fieldName,
+    @required this.day,
     @required this.onComplete,
     @required this.onCancelNavigation,
     @required this.onCompleteNavigation,
@@ -78,6 +81,12 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // DateFormat format = new DateFormat("HH:mm:ss");
+    // DateTime time = format.parse("3:00:00 PM", true);
+    // DateTime time1 = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+    // print(time.toLocal());
+    // print(time1);
+    // print(time1.toLocal());
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -106,7 +115,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
               onTap: () {
                 if (startTime != widget.startTime &&
                     endTime != widget.endTime) {
-                  widget.onComplete(startTime, endTime);
+                  widget.onComplete(widget.day, startTime, endTime);
                 } else {
                   widget.onCompleteNavigation();
                 }
@@ -146,6 +155,30 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
                   _buildTimePicker(context, startTime, (newTime) {
                     setState(() {
                       startTime = newTime;
+                      final localTime = startTime.toLocal();
+                      final utcTime = startTime.toUtc();
+                      print('START TIME: $startTime');
+                      print('START TIME LOCAL: $localTime');
+                      print(localTime.weekday);
+                      print(localTime.day);
+                      print('START TIME UTC: ${startTime.toUtc()}');
+                      print(utcTime.weekday);
+                      print(utcTime.day);
+
+                      // If startTime and endTime both SAME weekday then use day of
+                      // Else split to separate ranges with respective days
+                      if (localTime.weekday == utcTime.weekday) {
+                        print('SAME');
+                      }
+
+                      final daySeconds = widget.day.index * (24 * 3600) * 1000;
+
+                      var milliseconds =
+                          ((utcTime.hour * 3600) + (utcTime.minute * 60)) *
+                              1000;
+                      print(DateTime.fromMillisecondsSinceEpoch(
+                          daySeconds + milliseconds,
+                          isUtc: true));
                     });
                   }),
                 ],

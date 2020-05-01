@@ -271,8 +271,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       return EditAvailabilityScreen(
         fieldName: 'Availability',
         startTime: null, // Change this
-        onComplete: (DateTime startTime, DateTime endTime) => _userProfileBloc
-            .add(UpdateAvailability(state.day, startTime, endTime)),
+        day: state.day,
+        onComplete: (Day day, DateTime startTime, DateTime endTime) =>
+            _userProfileBloc.add(UpdateAvailability(day, startTime, endTime)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
       );
