@@ -5,6 +5,7 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tuple/tuple.dart';
 
 class EditAvailabilityScreen extends StatefulWidget {
   final String fieldName;
@@ -81,14 +82,101 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
     );
   }
 
+  List<Tuple3<Day, int, int>> _getStartTimeAndDuration(
+      Day day, DateTime startTime, DateTime endTime) {
+    final startTimeLocal = startTime.toLocal();
+    final startTimeUtc = startTime.toUtc();
+
+    final endTimeLocal = endTime.toLocal();
+    final endTimeUtc = endTime.toUtc();
+
+    final startTimeUtcSeconds =
+        (startTimeUtc.hour * 60 + startTimeUtc.minute) * 60;
+    final endTimeUtcSeconds = (endTimeUtc.hour * 60 + endTimeUtc.minute) * 60;
+    final duration = endTimeUtcSeconds - startTimeUtcSeconds;
+
+    if (startTimeUtc.weekday == endTimeUtc.weekday) {
+      print('SAME UTC WEEKDAY');
+      if (startTimeLocal.weekday == startTimeUtc.weekday) {
+        return [Tuple3(day, startTimeUtcSeconds, duration)];
+      } else if (startTimeLocal.weekday < startTimeUtc.weekday) {
+        final newDay = Day.values[day.index + 1 <= 6 ? day.index + 1 : 0];
+        return [Tuple3(newDay, startTimeUtcSeconds, duration)];
+      } else {
+        final newDay = Day.values[day.index - 1 >= 0 ? day.index - 1 : 6];
+        return [Tuple3(newDay, startTimeUtcSeconds, duration)];
+      }
+    } else if (startTimeUtc.weekday < endTimeUtc.weekday) {
+      print('SEPARATE UTC DAYS');
+      if (startTimeLocal.weekday == startTimeUtc.weekday) {
+        final totalSeconds = 24 * 60 * 60;
+        final newDay = Day.values[day.index + 1 <= 6 ? day.index + 1 : 0];
+        return [
+          Tuple3(day, startTimeUtcSeconds, totalSeconds - startTimeUtcSeconds),
+          Tuple3(newDay, 0, endTimeUtcSeconds)
+        ];
+      } else if (endTimeLocal.weekday == endTimeUtc.weekday) {
+        final totalSeconds = 24 * 60 * 60;
+        final newDay = Day.values[day.index - 1 >= 0 ? day.index - 1 : 6];
+        return [
+          Tuple3(
+              newDay, startTimeUtcSeconds, totalSeconds - startTimeUtcSeconds),
+          Tuple3(day, 0, endTimeUtcSeconds)
+        ];
+      } else {
+        print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
+      }
+    } else {
+      print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
+    }
+
+    if (startTimeLocal.weekday == startTimeUtc.weekday &&
+        endTimeLocal.weekday == endTimeUtc.weekday) {
+      print('SAME');
+      print('WEEKDAY: ${widget.day}');
+      return [Tuple3(day, startTimeUtcSeconds, duration)];
+    } else if (startTimeLocal.weekday < startTimeUtc.weekday &&
+        endTimeLocal.weekday < endTimeUtc.weekday) {
+      print('BEFORE');
+      final newDay =
+          Day.values[widget.day.index + 1 <= 6 ? widget.day.index + 1 : 0];
+      print('WEEKDAY: $newDay');
+      return [Tuple3(newDay, startTimeUtcSeconds, duration)];
+    } else if (startTimeLocal.weekday < startTimeUtc.weekday &&
+        endTimeLocal.weekday == endTimeUtc.weekday) {
+      print('BEFORE');
+      final newDay =
+          Day.values[widget.day.index + 1 <= 6 ? widget.day.index + 1 : 0];
+      print('WEEKDAY: $newDay');
+      return [
+        Tuple3(newDay, startTimeUtcSeconds, duration),
+        Tuple3(newDay, startTimeUtcSeconds, duration)
+      ];
+    } else if (startTimeLocal.weekday > startTimeUtc.weekday &&
+        endTimeLocal.weekday > endTimeUtc.weekday) {
+      print('AFTER');
+      final newDay =
+          Day.values[widget.day.index - 1 >= 0 ? widget.day.index - 1 : 6];
+      print('WEEKDAY: $newDay');
+      return [Tuple3(newDay, startTimeUtcSeconds, duration)];
+    } else if (startTimeLocal.weekday > startTimeUtc.weekday &&
+        endTimeLocal.weekday == endTimeUtc.weekday) {
+      print('AFTER');
+      final newDay =
+          Day.values[widget.day.index - 1 >= 0 ? widget.day.index - 1 : 6];
+      print('WEEKDAY: $newDay');
+      return [
+        Tuple3(newDay, startTimeUtcSeconds, duration),
+        Tuple3(newDay, startTimeUtcSeconds, duration)
+      ];
+    } else {
+      print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // DateFormat format = new DateFormat("HH:mm:ss");
-    // DateTime time = format.parse("3:00:00 PM", true);
-    // DateTime time1 = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
-    // print(time.toLocal());
-    // print(time1);
-    // print(time1.toLocal());
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -118,6 +206,9 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
                 if (startTime != widget.startTime &&
                     endTime != widget.endTime) {
                   if (endTime.isAfter(startTime)) {
+                    final timeRanges = _getStartTimeAndDuration(
+                        widget.day, startTime, endTime);
+                    print('TIME RANGES: $timeRanges');
                     widget.onComplete(widget.day, startTime, endTime);
                   } else {
                     setState(() {
@@ -166,31 +257,6 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
                         setState(() {
                           _errorText = '';
                           startTime = newTime;
-                          final localTime = startTime.toLocal();
-                          final utcTime = startTime.toUtc();
-                          print('START TIME: $startTime');
-                          print('START TIME LOCAL: $localTime');
-                          print(localTime.weekday);
-                          print(localTime.day);
-                          print('START TIME UTC: ${startTime.toUtc()}');
-                          print(utcTime.weekday);
-                          print(utcTime.day);
-
-                          // If startTime and endTime both SAME weekday then use day of
-                          // Else split to separate ranges with respective days
-                          if (localTime.weekday == utcTime.weekday) {
-                            print('SAME');
-                          }
-
-                          final daySeconds =
-                              widget.day.index * (24 * 3600) * 1000;
-
-                          var milliseconds =
-                              ((utcTime.hour * 3600) + (utcTime.minute * 60)) *
-                                  1000;
-                          print(DateTime.fromMillisecondsSinceEpoch(
-                              daySeconds + milliseconds,
-                              isUtc: true));
                         });
                       }),
                     ],
@@ -207,6 +273,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
                       ),
                       _buildTimePicker(context, endTime, (newTime) {
                         setState(() {
+                          _errorText = '';
                           endTime = newTime;
                         });
                       }),
