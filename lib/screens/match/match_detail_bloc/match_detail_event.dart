@@ -23,6 +23,8 @@ class LoadMatchDetails extends MatchDetailEvent {
       'LoadMatchDetails { matchId: $matchId videoChatId: $videoChatId }';
 }
 
+class ViewVideoChatDates extends MatchDetailEvent {}
+
 class ReceivedVideoChatDetails extends MatchDetailEvent {
   final List<VideoChatDate> dates;
 
@@ -35,12 +37,12 @@ class ReceivedVideoChatDetails extends MatchDetailEvent {
   String toString() => 'ReceivedVideoChatDetails { dates: $dates }';
 }
 
-class ProposeVideoChatDates extends MatchDetailEvent {
+class SelectVideoChatDates extends MatchDetailEvent {
   final String matchId;
   final String videoChatId;
   final List<VideoChatDate> dates;
 
-  const ProposeVideoChatDates({
+  const SelectVideoChatDates({
     @required this.matchId,
     @required this.videoChatId,
     @required this.dates,
@@ -50,7 +52,7 @@ class ProposeVideoChatDates extends MatchDetailEvent {
   List<Object> get props => [];
 
   @override
-  String toString() => 'ProposeVideoChatDates { dates: $dates }';
+  String toString() => 'SelectVideoChatDates { dates: $dates }';
 }
 
 class AcceptVideoChatDetails extends MatchDetailEvent {}

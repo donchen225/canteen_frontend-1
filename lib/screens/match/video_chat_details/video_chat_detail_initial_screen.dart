@@ -1,8 +1,10 @@
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -154,6 +156,12 @@ class _VideoChatDetailInitialScreenState
                   // Go to payment page
                   onTap: () {
                     print('$event tapped!');
+                    BlocProvider.of<MatchDetailBloc>(context)
+                        .add(SelectVideoChatDates(
+                      matchId: widget.match.id,
+                      videoChatId: widget.match.activeVideoChat,
+                      dates: [],
+                    ));
                   },
                 ),
               ))

@@ -22,8 +22,10 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       yield* _mapLoadMatchDetailsToState(event);
     } else if (event is ReceivedVideoChatDetails) {
       yield* _mapReceivedVideoChatDetailsToState(event);
-    } else if (event is ProposeVideoChatDates) {
-      yield* _mapProposeVideoChatDatesToState(event);
+    } else if (event is SelectVideoChatDates) {
+      yield* _mapSelectVideoChatDatesToState(event);
+    } else if (event is ViewVideoChatDates) {
+      yield* _mapViewVideoChatDatesToState();
     }
   }
 
@@ -58,13 +60,17 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
     }
   }
 
-  Stream<MatchDetailState> _mapProposeVideoChatDatesToState(
-      ProposeVideoChatDates event) async* {
+  Stream<MatchDetailState> _mapViewVideoChatDatesToState() async* {
+    yield MatchUninitialized();
+  }
+
+  Stream<MatchDetailState> _mapSelectVideoChatDatesToState(
+      SelectVideoChatDates event) async* {
     print('PROPOSING VIDEO CHAT DATES');
     print('MATCH ID: ${event.matchId}');
     print('VIDEO CHAT ID: ${event.videoChatId}');
-    await _videoChatRepository.addVideoChatDates(
-        event.dates, event.matchId, event.videoChatId);
-    yield MatchInitialized();
+    // await _videoChatRepository.addVideoChatDates(
+    //     event.dates, event.matchId, event.videoChatId);
+    yield MatchUnpaid();
   }
 }
