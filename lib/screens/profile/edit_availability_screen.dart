@@ -33,6 +33,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
   _EditAvailabilityScreenState();
   DateTime startTime;
   DateTime endTime;
+  String _errorText;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
 
     startTime = widget.startTime ?? DateTime.fromMillisecondsSinceEpoch(0);
     endTime = widget.endTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    _errorText = '';
   }
 
   Widget _buildMenu(Widget child) {
@@ -115,7 +117,14 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
               onTap: () {
                 if (startTime != widget.startTime &&
                     endTime != widget.endTime) {
-                  widget.onComplete(widget.day, startTime, endTime);
+                  if (endTime.isAfter(startTime)) {
+                    widget.onComplete(widget.day, startTime, endTime);
+                  } else {
+                    setState(() {
+                      _errorText =
+                          'Your end time cannot be before your start time.';
+                    });
+                  }
                 } else {
                   widget.onCompleteNavigation();
                 }
@@ -133,72 +142,89 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
         ),
       ),
       body: Container(
-          height: MediaQuery.of(context).size.height * 0.25,
           padding: EdgeInsets.only(
               top: SizeConfig.instance.blockSizeVertical * 6,
               left: SizeConfig.instance.blockSizeHorizontal * 6,
               right: SizeConfig.instance.blockSizeHorizontal * 6,
               bottom: SizeConfig.instance.blockSizeVertical * 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
             children: <Widget>[
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: SizeConfig.instance.blockSizeVertical),
-                    child: Text(
-                      'From',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: SizeConfig.instance.blockSizeVertical),
+                        child: Text(
+                          'From',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      _buildTimePicker(context, startTime, (newTime) {
+                        setState(() {
+                          _errorText = '';
+                          startTime = newTime;
+                          final localTime = startTime.toLocal();
+                          final utcTime = startTime.toUtc();
+                          print('START TIME: $startTime');
+                          print('START TIME LOCAL: $localTime');
+                          print(localTime.weekday);
+                          print(localTime.day);
+                          print('START TIME UTC: ${startTime.toUtc()}');
+                          print(utcTime.weekday);
+                          print(utcTime.day);
+
+                          // If startTime and endTime both SAME weekday then use day of
+                          // Else split to separate ranges with respective days
+                          if (localTime.weekday == utcTime.weekday) {
+                            print('SAME');
+                          }
+
+                          final daySeconds =
+                              widget.day.index * (24 * 3600) * 1000;
+
+                          var milliseconds =
+                              ((utcTime.hour * 3600) + (utcTime.minute * 60)) *
+                                  1000;
+                          print(DateTime.fromMillisecondsSinceEpoch(
+                              daySeconds + milliseconds,
+                              isUtc: true));
+                        });
+                      }),
+                    ],
                   ),
-                  _buildTimePicker(context, startTime, (newTime) {
-                    setState(() {
-                      startTime = newTime;
-                      final localTime = startTime.toLocal();
-                      final utcTime = startTime.toUtc();
-                      print('START TIME: $startTime');
-                      print('START TIME LOCAL: $localTime');
-                      print(localTime.weekday);
-                      print(localTime.day);
-                      print('START TIME UTC: ${startTime.toUtc()}');
-                      print(utcTime.weekday);
-                      print(utcTime.day);
-
-                      // If startTime and endTime both SAME weekday then use day of
-                      // Else split to separate ranges with respective days
-                      if (localTime.weekday == utcTime.weekday) {
-                        print('SAME');
-                      }
-
-                      final daySeconds = widget.day.index * (24 * 3600) * 1000;
-
-                      var milliseconds =
-                          ((utcTime.hour * 3600) + (utcTime.minute * 60)) *
-                              1000;
-                      print(DateTime.fromMillisecondsSinceEpoch(
-                          daySeconds + milliseconds,
-                          isUtc: true));
-                    });
-                  }),
+                  Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: SizeConfig.instance.blockSizeVertical),
+                        child: Text(
+                          'To',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      _buildTimePicker(context, endTime, (newTime) {
+                        setState(() {
+                          endTime = newTime;
+                        });
+                      }),
+                    ],
+                  )
                 ],
               ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: SizeConfig.instance.blockSizeVertical),
-                    child: Text(
-                      'To',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+              Visibility(
+                visible: _errorText.isNotEmpty,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.blockSizeVertical,
                   ),
-                  _buildTimePicker(context, endTime, (newTime) {
-                    setState(() {
-                      endTime = newTime;
-                    });
-                  }),
-                ],
+                  child: Text(
+                    _errorText,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
               )
             ],
           )),
