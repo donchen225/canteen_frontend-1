@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _VideoChatDetailInitialScreenState
   Map<DateTime, List> _events;
   MaterialLocalizations localizations;
   CalendarController _calendarController;
-  List _availableTimes;
+  List<DateTime> _availableTimes;
   final DateTime now = DateTime.now();
   DateTime endDate;
   Map<Day, Map<String, List<String>>> availableDates = {
@@ -42,7 +43,7 @@ class _VideoChatDetailInitialScreenState
     super.initState();
 
     endDate = now.add(Duration(days: 60));
-    _availableTimes = ['9:00am', '10:00am', '11:00am'];
+    _availableTimes = [];
     initializeEvents();
     _events = {
       DateTime.now().add(Duration(days: 2)): [''],
@@ -152,15 +153,19 @@ class _VideoChatDetailInitialScreenState
                 child: ListTile(
                   title: Align(
                       alignment: Alignment.center,
-                      child: Text(event.toString())),
+                      child: Text(DateFormat.jm().format(event))),
                   // Go to payment page
                   onTap: () {
                     print('$event tapped!');
                     BlocProvider.of<MatchDetailBloc>(context)
-                        .add(SelectVideoChatDates(
+                        .add(SelectVideoChatDate(
                       matchId: widget.match.id,
                       videoChatId: widget.match.activeVideoChat,
-                      dates: [],
+                      date: VideoChatDate(
+                          userId: widget.user.id,
+                          startTime: event,
+                          duration: 30,
+                          timeZone: event.timeZoneName),
                     ));
                   },
                 ),
@@ -177,10 +182,11 @@ class _VideoChatDetailInitialScreenState
   @override
   Widget build(BuildContext context) {
     localizations = MaterialLocalizations.of(context);
-    _availableTimes = getTimes(TimeOfDay(hour: 0, minute: 0),
-            TimeOfDay(hour: 24, minute: 0), Duration(minutes: 30))
-        .map((x) => localizations.formatTimeOfDay(x))
-        .toList();
+    // _availableTimes = getTimes(TimeOfDay(hour: 0, minute: 0),
+    //         TimeOfDay(hour: 24, minute: 0), Duration(minutes: 30))
+    //     .map((x) => localizations.formatTimeOfDay(x))
+    //     .toList();
+    _availableTimes = [DateTime.now(), DateTime.now().add(Duration(hours: 1))];
 
     return Container(
       color: Colors.white,

@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class VideoChatPaymentScreen extends StatelessWidget {
+class VideoChatPaymentConfirmationScreen extends StatelessWidget {
   final User user;
   final Match match;
   final VideoChatDate date;
 
-  VideoChatPaymentScreen({
+  VideoChatPaymentConfirmationScreen({
     @required this.user,
     @required this.match,
     @required this.date,

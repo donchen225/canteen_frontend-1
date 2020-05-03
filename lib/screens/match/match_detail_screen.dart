@@ -112,6 +112,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   return VideoChatPaymentScreen(
                     user: user,
                     match: widget.match,
+                    date: state.date,
                   );
                 }
 

@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/models/message/message_entity.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_date_entity.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
