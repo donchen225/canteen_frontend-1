@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.add(CheckOnboardStatus());
   }
 
   void _onItemTapped(int index) {
@@ -147,11 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (BuildContext context, HomeState state) {
           print('IN HOME SCREEN BLOC BUILDER');
 
-          if (state is HomeUninitialized) {
-            _homeBloc.add(CheckOnboardStatus());
-          }
-
-          if (state is HomeInitializing ||
+          if (state is HomeUninitialized ||
+              state is HomeInitializing ||
               state is PageLoading ||
               state is CurrentIndexChanged) {
             return Center(child: CupertinoActivityIndicator());

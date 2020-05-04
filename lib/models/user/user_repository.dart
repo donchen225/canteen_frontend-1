@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/models/user_settings/user_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class UserRepository {
@@ -14,10 +13,6 @@ abstract class UserRepository {
 
   // Gets the User from the "user" Firestore collection using id
   Future<User> getUser(String id) async {}
-
-  Future<UserSettings> getSettings() async {}
-
-  Future<void> createSettings(UserSettings settings) async {}
 
   Future<User> currentUser() async {}
 
@@ -50,6 +45,4 @@ abstract class UserRepository {
   Future<void> updatePhoto(String url) async {}
 
   Future<void> updateUserOnboarding(String name, Skill skill) async {}
-
-  Future<void> saveToken(String token) {}
 }

@@ -60,7 +60,6 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    CachedSharedPreferences.clear();
     _userRepository.signOut();
     yield Unauthenticated();
   }

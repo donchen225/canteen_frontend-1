@@ -5,6 +5,7 @@ class PreferenceConstants {
   static const pushNotifications = "push_notifications";
   static const timeZone = "time_zone";
   static const timeZoneName = "time_zone_name";
+  static const settingsInitialized = "settings_initialized";
 }
 
 class CachedSharedPreferences {

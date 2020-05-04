@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
@@ -11,10 +12,10 @@ import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart'
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ void main() async {
   await initializeDateFormatting();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
+  final SettingsRepository settingsRepository = SettingsRepository();
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
   final RecommendationRepository recommendationRepository =
@@ -67,6 +69,13 @@ void main() async {
             return UserBloc(
               userRepository: userRepository,
               authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+            );
+          },
+        ),
+        BlocProvider<SettingBloc>(
+          create: (context) {
+            return SettingBloc(
+              settingsRepository: settingsRepository,
             );
           },
         ),
@@ -109,6 +118,7 @@ void main() async {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
             userRepository: userRepository,
+            settingBloc: BlocProvider.of<SettingBloc>(context),
           ),
         ),
         BlocProvider<MatchDetailBloc>(
@@ -119,6 +129,7 @@ void main() async {
       child: App(
         userRepository: userRepository,
         requestRepository: requestRepository,
+        settingsRepository: settingsRepository,
       ),
     ),
   );
@@ -127,15 +138,19 @@ void main() async {
 class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
+  final SettingsRepository _settingsRepository;
 
   App(
       {Key key,
       @required UserRepository userRepository,
-      @required RequestRepository requestRepository})
+      @required RequestRepository requestRepository,
+      @required SettingsRepository settingsRepository})
       : assert(userRepository != null),
         assert(requestRepository != null),
+        assert(settingsRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
+        _settingsRepository = settingsRepository,
         super(key: key);
 
   @override
@@ -154,8 +169,6 @@ class App extends StatelessWidget {
               if (state is Authenticated) {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
-
-                PushNotificationsManager().init(_userRepository);
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -185,6 +198,7 @@ class App extends StatelessWidget {
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(
                           userRepository: _userRepository,
+                          settingsRepository: _settingsRepository,
                           userBloc: BlocProvider.of<UserBloc>(context),
                         ),
                       ),

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/models/user_settings/user_settings.dart';
-import 'package:canteen_frontend/models/user_settings/user_settings_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -156,57 +154,6 @@ class FirebaseUserRepository extends UserRepository {
       tx.update(userCollection.document(_firebaseUser.uid), {
         "photo_url": url,
       });
-    });
-  }
-
-  Future<void> saveToken(String token) {
-    print('TOKEN: $token');
-    if (token == null || token.isEmpty) {
-      return null;
-    }
-
-    final ref = userCollection
-        .document(_firebaseUser.uid)
-        .collection('tokens')
-        .document(token);
-
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.get(ref).then((doc) {
-        if (!(doc.exists)) {
-          tx.set(ref, {
-            "token": token,
-            "created_on": FieldValue.serverTimestamp(),
-            "platform": Platform.operatingSystem,
-          });
-        }
-      }).catchError((error) {
-        print('ERROR SAVING TOKEN: $error');
-      });
-    });
-  }
-
-  Future<void> createSettings(UserSettings settings) async {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      return tx.set(
-          userCollection
-              .document(_firebaseUser.uid)
-              .collection('settings')
-              .document('${_firebaseUser.uid}-settings'),
-          settings.toEntity().toDocument());
-    });
-  }
-
-  Future<UserSettings> getSettings() async {
-    return userCollection
-        .document(_firebaseUser.uid)
-        .collection('settings')
-        .document('${_firebaseUser.uid}-settings')
-        .get()
-        .then((snapshot) {
-      if (!snapshot.exists) {
-        return null;
-      }
-      return UserSettings.fromEntity(UserSettingsEntity.fromSnapshot(snapshot));
     });
   }
 

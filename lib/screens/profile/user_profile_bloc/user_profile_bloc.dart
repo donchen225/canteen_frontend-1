@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
+import 'package:canteen_frontend/models/user_settings/user_settings.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_event.dart';
@@ -10,15 +13,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   final UserRepository _userRepository;
+  final SettingsRepository _settingsRepository;
   final UserBloc _userBloc;
   StreamSubscription _userSubscription;
 
   UserProfileBloc({
     @required UserRepository userRepository,
+    @required SettingsRepository settingsRepository,
     @required UserBloc userBloc,
   })  : assert(userRepository != null),
+        assert(settingsRepository != null),
         assert(userBloc != null),
         _userRepository = userRepository,
+        _settingsRepository = settingsRepository,
         _userBloc = userBloc {
     _userSubscription = _userBloc.listen((state) {
       if (state is UserLoaded) {
@@ -30,7 +37,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   @override
   UserProfileState get initialState {
     final user = _userRepository.currentUserNow();
-    return user != null ? UserProfileLoaded(user) : UserProfileLoading();
+    final settings = _settingsRepository.getCurrentSettings();
+    return (user != null && settings != null)
+        ? UserProfileLoaded(user, settings)
+        : UserProfileLoading();
   }
 
   @override
@@ -72,7 +82,18 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapLoadUserProfileToState(
       LoadUserProfile event) async* {
-    yield UserProfileLoaded(event.user);
+    // Load settings from cache here
+    final pushNotifications =
+        CachedSharedPreferences.getBool(PreferenceConstants.pushNotifications);
+    final timeZone =
+        CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
+    final timeZoneName =
+        CachedSharedPreferences.getString(PreferenceConstants.timeZoneName);
+    final settings = UserSettings(
+        pushNotifications: pushNotifications,
+        timeZone: timeZone,
+        timeZoneName: timeZoneName);
+    yield UserProfileLoaded(event.user, settings);
   }
 
   Stream<UserProfileState> _mapEditAboutSectionToState(
@@ -140,11 +161,13 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapShowUserProfileToState() async* {
     final userState = _userBloc.state;
-    if (userState is UserLoaded) {
-      yield UserProfileLoaded(userState.user);
+    final settings = _settingsRepository.getCurrentSettings();
+    if (userState is UserLoaded && settings != null) {
+      yield UserProfileLoaded(userState.user, settings);
     } else {
       yield UserProfileLoading();
-      yield UserProfileLoaded(await _userRepository.currentUser());
+      yield UserProfileLoaded(await _userRepository.currentUser(),
+          settings ?? await _settingsRepository.getSettings());
     }
   }
 

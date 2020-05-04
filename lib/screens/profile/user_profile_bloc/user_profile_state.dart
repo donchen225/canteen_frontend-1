@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/user_settings/user_settings.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UserProfileState extends Equatable {
@@ -14,14 +15,16 @@ class UserProfileLoading extends UserProfileState {}
 
 class UserProfileLoaded extends UserProfileState {
   final User user;
+  final UserSettings settings;
 
-  const UserProfileLoaded(this.user);
-
-  @override
-  List<Object> get props => [user];
+  const UserProfileLoaded(this.user, this.settings);
 
   @override
-  String toString() => 'UserProfileLoaded { user: ${user.toString()}  }';
+  List<Object> get props => [user, settings];
+
+  @override
+  String toString() =>
+      'UserProfileLoaded { user: ${user.toString()}, settings: $settings }';
 }
 
 class UserProfileEmpty extends UserProfileState {}

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 // PushNotificationsManager - Manages all push notifications
@@ -10,7 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 // * Request received
 // * Matched (Request accepted)
 class PushNotificationsManager {
-  UserRepository _userRepository;
+  SettingsRepository _settingsRepository;
   StreamSubscription _iosSubscription;
   bool _initialized = false;
 
@@ -23,9 +23,9 @@ class PushNotificationsManager {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Future<void> init(UserRepository userRepository) async {
+  Future<void> init(SettingsRepository settingsRepository) async {
     if (!_initialized) {
-      _userRepository = userRepository;
+      _settingsRepository = settingsRepository;
 
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
@@ -46,6 +46,7 @@ class PushNotificationsManager {
           // Save settings to firestore
           print('ON SETTINGS REGISTERED');
           print(settings);
+          saveSettings(settings);
         });
 
         registerSettings();
@@ -76,9 +77,9 @@ class PushNotificationsManager {
         .requestNotificationPermissions(const IosNotificationSettings());
   }
 
-  Future<void> saveSettings() {}
+  Future<void> saveSettings(IosNotificationSettings settings) {}
 
   Future<void> saveToken(String token) {
-    return _userRepository.saveToken(token);
+    return _settingsRepository.saveToken(token);
   }
 }
