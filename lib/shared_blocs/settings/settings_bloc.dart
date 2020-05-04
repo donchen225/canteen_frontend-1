@@ -48,37 +48,23 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       InitializeSettings event) async* {
     yield SettingsLoading();
     PushNotificationsManager().init(_settingsRepository);
+    UserSettings settings;
 
     if (event.hasOnboarded) {
-      UserSettings settings;
       try {
         settings = await _settingsRepository.getSettings();
         if (settings == null) {
-          final currentTime = DateTime.now();
-          settings = UserSettings(
-              pushNotifications: true,
-              timeZone: currentTime.timeZoneOffset.inSeconds,
-              timeZoneName: currentTime.timeZoneName,
-              settingsInitialized: true);
-
-          _settingsRepository.createSettings(settings);
+          settings = _initializeUserSettings();
         }
       } catch (e) {
         print('ERROR GETTING SETTINGS: $e');
       }
 
-      // Save settings in shared preferences
-      CachedSharedPreferences.setBool(
-          PreferenceConstants.pushNotifications, settings.pushNotifications);
-      CachedSharedPreferences.setInt(
-          PreferenceConstants.timeZone, settings.timeZone);
-      CachedSharedPreferences.setString(
-          PreferenceConstants.timeZoneName, settings.timeZoneName);
-      CachedSharedPreferences.setBool(PreferenceConstants.settingsInitialized,
-          settings.settingsInitialized);
-
       yield SettingsLoaded(settings);
-    } else {}
+    } else {
+      settings = _initializeUserSettings();
+      yield SettingsLoaded(settings);
+    }
   }
 
   Stream<SettingState> _mapUpdateSettingsToState() async* {}
@@ -86,5 +72,29 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   Stream<SettingState> _mapClearSettingsToState() async* {
     CachedSharedPreferences.clear();
     yield SettingsUninitialized();
+  }
+
+  UserSettings _initializeUserSettings() {
+    final currentTime = DateTime.now();
+    final settings = UserSettings(
+        // TODO: Upload all values of push notifications
+        pushNotifications: true,
+        timeZone: currentTime.timeZoneOffset.inSeconds,
+        timeZoneName: currentTime.timeZoneName,
+        settingsInitialized: true);
+
+    _settingsRepository.createSettings(settings);
+
+    // Save settings in shared preferences
+    CachedSharedPreferences.setBool(
+        PreferenceConstants.pushNotifications, settings.pushNotifications);
+    CachedSharedPreferences.setInt(
+        PreferenceConstants.timeZone, settings.timeZone);
+    CachedSharedPreferences.setString(
+        PreferenceConstants.timeZoneName, settings.timeZoneName);
+    CachedSharedPreferences.setBool(
+        PreferenceConstants.settingsInitialized, settings.settingsInitialized);
+
+    return settings;
   }
 }
