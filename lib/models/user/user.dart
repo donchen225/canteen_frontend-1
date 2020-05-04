@@ -1,4 +1,5 @@
 import 'package:algolia/algolia.dart';
+import 'package:canteen_frontend/models/availability/availability.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
@@ -20,6 +21,8 @@ class User {
   final String email;
   final String phoneNumber;
   final int onBoarded;
+  final Availability availability;
+  final int timeZone;
   final DateTime creationTimestamp;
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
@@ -38,6 +41,8 @@ class User {
     this.email = '',
     this.phoneNumber = '',
     this.onBoarded = 0,
+    this.availability,
+    this.timeZone = 0,
     this.creationTimestamp,
     this.lastSignInTimestamp,
     this.isAnonymous,
@@ -46,7 +51,7 @@ class User {
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded, availability: $availability, timeZone: $timeZone }';
   }
 
   static User fromEntity(UserEntity entity) {
@@ -73,6 +78,9 @@ class User {
       email: entity.email,
       phoneNumber: entity.phoneNumber,
       onBoarded: entity.onBoarded,
+      availability: Availability.fromMap(entity.availability,
+          offset: entity.timeZone ?? 0),
+      timeZone: entity.timeZone,
       creationTimestamp: entity.creationTimestamp,
       lastSignInTimestamp: entity.lastSignInTimestamp,
       isAnonymous: entity.isAnonymous,
@@ -125,6 +133,9 @@ class User {
       teachSkill: teachSkill,
       email: email,
       phoneNumber: phoneNumber,
+      onBoarded: onBoarded,
+      availability: availability,
+      timeZone: timeZone,
       creationTimestamp: creationTimestamp,
       lastSignInTimestamp: lastSignInTimestamp,
       isAnonymous: isAnonymous,
@@ -145,6 +156,9 @@ class User {
       teachSkill: teachSkill,
       email: email,
       phoneNumber: phoneNumber,
+      onBoarded: onBoarded,
+      availability: availability,
+      timeZone: timeZone,
       creationTimestamp: creationTimestamp,
       lastSignInTimestamp: lastSignInTimestamp,
       isAnonymous: isAnonymous,
@@ -172,6 +186,9 @@ class User {
       teachSkill: teachSkills,
       email: email,
       phoneNumber: phoneNumber,
+      onBoarded: onBoarded,
+      availability: availability,
+      timeZone: timeZone,
       creationTimestamp: creationTimestamp,
       lastSignInTimestamp: lastSignInTimestamp,
       isAnonymous: isAnonymous,
@@ -199,6 +216,9 @@ class User {
       teachSkill: teachSkill,
       email: email,
       phoneNumber: phoneNumber,
+      onBoarded: onBoarded,
+      availability: availability,
+      timeZone: timeZone,
       creationTimestamp: creationTimestamp,
       lastSignInTimestamp: lastSignInTimestamp,
       isAnonymous: isAnonymous,

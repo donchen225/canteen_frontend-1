@@ -19,11 +19,16 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 //    - App starts -> initialize push notifications manager ->
 //      check and load if settings exist on cloud
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
+  final UserRepository _userRepository;
   final SettingsRepository _settingsRepository;
 
-  SettingBloc({@required SettingsRepository settingsRepository})
+  SettingBloc(
+      {@required SettingsRepository settingsRepository,
+      @required UserRepository userRepository})
       : assert(settingsRepository != null),
-        _settingsRepository = settingsRepository;
+        assert(userRepository != null),
+        _settingsRepository = settingsRepository,
+        _userRepository = userRepository;
 
   // Load local settings if exists
   @override
@@ -84,6 +89,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         settingsInitialized: true);
 
     _settingsRepository.createSettings(settings);
+    _userRepository.updateTimeZone(currentTime.timeZoneOffset.inSeconds);
 
     // Save settings in shared preferences
     CachedSharedPreferences.setBool(

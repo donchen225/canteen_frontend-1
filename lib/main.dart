@@ -75,6 +75,7 @@ void main() async {
         BlocProvider<SettingBloc>(
           create: (context) {
             return SettingBloc(
+              userRepository: userRepository,
               settingsRepository: settingsRepository,
             );
           },

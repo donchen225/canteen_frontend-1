@@ -101,6 +101,14 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
+  Future<void> updateTimeZone(int timeZoneOffset) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(userCollection.document(_firebaseUser.uid), {
+        "time_zone": timeZoneOffset,
+      });
+    });
+  }
+
   Future<void> updateName(String name) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.update(userCollection.document(_firebaseUser.uid), {

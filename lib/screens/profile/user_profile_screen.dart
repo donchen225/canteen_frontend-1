@@ -258,6 +258,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Text('Availability'),
             Text('Time Zone'),
             AvailabilitySection(
+              availability: user.availability,
               onDayTap: (Day day) =>
                   _userProfileBloc.add(EditAvailability(user, day)),
             ),

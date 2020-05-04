@@ -17,6 +17,8 @@ class UserEntity extends Equatable {
   final String email;
   final String phoneNumber;
   final int onBoarded;
+  final Map<String, Map<String, int>> availability;
+  final int timeZone;
   final DateTime creationTimestamp;
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
@@ -35,6 +37,8 @@ class UserEntity extends Equatable {
     this.email = '',
     this.phoneNumber = '',
     this.onBoarded = 0,
+    this.availability = const {},
+    this.timeZone = 0,
     this.creationTimestamp,
     this.lastSignInTimestamp,
     this.isAnonymous,
@@ -55,6 +59,8 @@ class UserEntity extends Equatable {
         email,
         phoneNumber,
         onBoarded,
+        availability,
+        timeZone,
         creationTimestamp,
         lastSignInTimestamp,
         isAnonymous,
@@ -81,6 +87,13 @@ class UserEntity extends Equatable {
       email: snap.data["email"],
       phoneNumber: snap.data["phone_number"],
       onBoarded: snap.data["onboarded"],
+      availability: snap.data["availability"]?.map<String, Map<String, int>>(
+              (String k, dynamic v) => MapEntry<String, Map<String, int>>(
+                  k,
+                  v.map<String, int>(
+                      (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
+          {},
+      timeZone: snap.data["time_zone"],
       creationTimestamp: snap.data["creation_time"].toDate(),
       lastSignInTimestamp: snap.data["last_sign_in_time"].toDate(),
       isAnonymous: snap.data["is_anonymous"],
@@ -116,6 +129,8 @@ class UserEntity extends Equatable {
       "email": email,
       "phone_number": phoneNumber,
       "onboarded": onBoarded,
+      "availability": availability,
+      "time_zone": timeZone,
       "creation_time": creationTimestamp,
       "last_sign_in_time": lastSignInTimestamp,
       "is_anonymous": isAnonymous,

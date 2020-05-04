@@ -44,5 +44,7 @@ abstract class UserRepository {
 
   Future<void> updatePhoto(String url) async {}
 
+  Future<void> updateTimeZone(int timeZoneOffset) {}
+
   Future<void> updateUserOnboarding(String name, Skill skill) async {}
 }
