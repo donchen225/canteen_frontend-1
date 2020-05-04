@@ -2,6 +2,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceConstants {
   static const userId = "user_id";
+  static const pushNotifications = "push_notifications";
+  static const timeZone = "time_zone";
+  static const timeZoneName = "time_zone_name";
 }
 
 class CachedSharedPreferences {
@@ -44,12 +47,60 @@ class CachedSharedPreferences {
     return _preferences.getString(key) ?? defValue;
   }
 
-  static Future setString(String key, String value) {
+  static Future<void> setString(String key, String value) {
     if (_preferences == null) {
       return null;
     }
 
     return _preferences.setString(key, value).then((result) {
+      if (result) {
+        _memoryCache[key] = value;
+      }
+    });
+  }
+
+  static bool getBool(String key, {bool defValue = false}) {
+    if (_preferences == null) {
+      return defValue;
+    }
+
+    if (cacheKeyList.contains(key)) {
+      return _memoryCache[key];
+    }
+
+    return _preferences.getBool(key) ?? defValue;
+  }
+
+  static Future<void> setBool(String key, bool value) {
+    if (_preferences == null) {
+      return null;
+    }
+
+    return _preferences.setBool(key, value).then((result) {
+      if (result) {
+        _memoryCache[key] = value;
+      }
+    });
+  }
+
+  static int getInt(String key, {int defValue = 0}) {
+    if (_preferences == null) {
+      return defValue;
+    }
+
+    if (cacheKeyList.contains(key)) {
+      return _memoryCache[key];
+    }
+
+    return _preferences.getInt(key) ?? defValue;
+  }
+
+  static Future<void> setInt(String key, int value) {
+    if (_preferences == null) {
+      return null;
+    }
+
+    return _preferences.setInt(key, value).then((result) {
       if (result) {
         _memoryCache[key] = value;
       }

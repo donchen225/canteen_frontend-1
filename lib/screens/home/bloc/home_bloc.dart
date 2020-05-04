@@ -1,6 +1,8 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/user_settings.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -61,6 +63,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     if (user.onBoarded != null && user.onBoarded == 1) {
       yield HomeInitializing();
+
+      // Load user settings here else create settings
+      UserSettings settings;
+      try {
+        settings = await _userRepository.getSettings();
+        if (settings == null) {
+          final currentTime = DateTime.now();
+          settings = UserSettings(
+              pushNotifications: true,
+              timeZone: currentTime.timeZoneOffset.inSeconds,
+              timeZoneName: currentTime.timeZoneName);
+
+          _userRepository.createSettings(settings);
+        }
+      } catch (e) {
+        print('ERROR GETTING SETTINGS: $e');
+      }
+
+      // Save settings in shared preferences
+      CachedSharedPreferences.setBool(
+          PreferenceConstants.pushNotifications, settings.pushNotifications);
+      CachedSharedPreferences.setInt(
+          PreferenceConstants.timeZone, settings.timeZone);
+      CachedSharedPreferences.setString(
+          PreferenceConstants.timeZoneName, settings.timeZoneName);
+
       yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
@@ -69,6 +97,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapInitializeHomeToState() async* {
     yield HomeInitializing();
+
+    // Upload user settings here
+
     yield RecommendedScreenLoaded();
   }
 

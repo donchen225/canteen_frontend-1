@@ -7,6 +7,10 @@ service cloud.firestore {
       allow read: if isAuthenticated();
     }
 
+    match /users/{userId}/settings/{document=**} {
+      allow create, update, read: if isOwner(userId);
+    }
+
     match /users/{userId}/tokens/{document=**} {
       allow create, update, read: if isOwner(userId);
     }

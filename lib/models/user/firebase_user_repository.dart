@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/user_settings.dart';
+import 'package:canteen_frontend/models/user_settings/user_settings_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_frontend/models/user/firebase_user_entity.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -180,6 +182,31 @@ class FirebaseUserRepository extends UserRepository {
       }).catchError((error) {
         print('ERROR SAVING TOKEN: $error');
       });
+    });
+  }
+
+  Future<void> createSettings(UserSettings settings) async {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      return tx.set(
+          userCollection
+              .document(_firebaseUser.uid)
+              .collection('settings')
+              .document('${_firebaseUser.uid}-settings'),
+          settings.toEntity().toDocument());
+    });
+  }
+
+  Future<UserSettings> getSettings() async {
+    return userCollection
+        .document(_firebaseUser.uid)
+        .collection('settings')
+        .document('${_firebaseUser.uid}-settings')
+        .get()
+        .then((snapshot) {
+      if (!snapshot.exists) {
+        return null;
+      }
+      return UserSettings.fromEntity(UserSettingsEntity.fromSnapshot(snapshot));
     });
   }
 

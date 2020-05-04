@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
