@@ -13,17 +13,22 @@ class MatchUninitialized extends MatchDetailState {}
 
 class MatchLoading extends MatchDetailState {}
 
+// Waiting for other user to select time and pay
+class MatchWaiting extends MatchDetailState {}
+
+class MatchTimeSelecting extends MatchDetailState {}
+
 // Initial time has been selected, requires user payment
-class MatchUnpaid extends MatchDetailState {
+class MatchTimeSelected extends MatchDetailState {
   final VideoChatDate date;
 
-  const MatchUnpaid({this.date});
+  const MatchTimeSelected({this.date});
 
   @override
   List<Object> get props => [date];
 
   @override
-  String toString() => 'MatchUnpaid { date: $date }';
+  String toString() => 'MatchTimeSelected { date: $date }';
 }
 
 // Initial time and payment have been completed
@@ -32,3 +37,5 @@ class MatchInitialized extends MatchDetailState {}
 class MatchConfirmed extends MatchDetailState {}
 
 class MatchCompleted extends MatchDetailState {}
+
+class MatchError extends MatchDetailState {}

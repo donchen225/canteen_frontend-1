@@ -1,3 +1,5 @@
 enum MatchStatus {
-  initialized,
+  uninitialized,
+  paid,
+  completed,
 }

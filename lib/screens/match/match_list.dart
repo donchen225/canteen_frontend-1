@@ -31,10 +31,8 @@ class MatchList extends StatelessWidget {
                   onTap: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) {
-                        BlocProvider.of<MatchDetailBloc>(context).add(
-                            LoadMatchDetails(
-                                matchId: match.id,
-                                videoChatId: match.activeVideoChat));
+                        BlocProvider.of<MatchDetailBloc>(context)
+                            .add(LoadMatchDetails(match: match));
                         return BlocProvider<MatchDetailNavigationBloc>(
                           create: (BuildContext context) =>
                               MatchDetailNavigationBloc(),

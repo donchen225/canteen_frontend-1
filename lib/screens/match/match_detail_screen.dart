@@ -75,7 +75,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               ),
               backgroundColor: Palette.appBarBackgroundColor,
               elevation: 1,
-              bottom: !(state is MatchUninitialized || state is MatchUnpaid)
+              bottom: !(state is MatchTimeSelecting ||
+                      state is MatchTimeSelected)
                   ? TabBar(
                       indicatorColor: Colors.black,
                       controller: _tabController,
@@ -94,25 +95,36 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
             ),
             body: Builder(
               builder: (BuildContext context) {
-                if (state is MatchLoading) {
+                if (state is MatchUninitialized || state is MatchLoading) {
                   return Center(
                     child: CupertinoActivityIndicator(),
                   );
                 }
 
-                if (state is MatchUninitialized) {
-                  print('IN MATCHUNINITIALIZED');
+                if (state is MatchWaiting) {
+                  return Center(
+                    child: Text('Waiting'),
+                  );
+                }
+
+                if (state is MatchTimeSelecting) {
                   return VideoChatDetailInitialScreen(
                     user: user,
                     match: widget.match,
                   );
                 }
 
-                if (state is MatchUnpaid) {
+                if (state is MatchTimeSelected) {
                   return VideoChatPaymentScreen(
                     user: user,
                     match: widget.match,
                     date: state.date,
+                  );
+                }
+
+                if (state is MatchError) {
+                  return Center(
+                    child: Text('Match Error.'),
                   );
                 }
 
