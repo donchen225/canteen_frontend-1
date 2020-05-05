@@ -38,8 +38,6 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  ImageProvider _profilePicture =
-      AssetImage('assets/blank-profile-picture.jpeg');
   UserProfileBloc _userProfileBloc;
 
   @override
@@ -54,7 +52,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       builder: (BuildContext context) =>
           ProfileUploadSheet(onUpload: (imageFile) {
         setState(() {
-          _profilePicture = FileImage(imageFile);
+          _userProfileBloc.add(LoadUserProfile(user));
         });
         // TODO: move this to BLoC
         CloudStorage().upload(imageFile, user.id).then((task) async {
@@ -136,7 +134,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         },
                         child: ProfilePicture(
                           photoUrl: user.photoUrl,
-                          localPicture: _profilePicture,
                           editable: true,
                           size: SizeConfig.instance.blockSizeHorizontal * 50,
                           onTap: () => showPopUpSheet(user),

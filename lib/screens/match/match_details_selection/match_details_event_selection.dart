@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,25 +31,20 @@ class _MatchDetailEventSelectionScreenState
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-              height: SizeConfig.instance.blockSizeVertical * 10,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Video Chat Session',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )),
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: SizeConfig.instance.blockSizeVertical * 3),
+                child: ProfilePicture(
+                  photoUrl: widget.user.photoUrl,
+                  editable: false,
+                  size: SizeConfig.instance.blockSizeHorizontal * 50,
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(

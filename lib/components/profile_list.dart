@@ -49,7 +49,6 @@ class ProfileList extends StatelessWidget {
                     bottom: SizeConfig.instance.blockSizeVertical * 3),
                 child: ProfilePicture(
                   photoUrl: user.photoUrl,
-                  localPicture: AssetImage('assets/blank-profile-picture.jpeg'),
                   editable: false,
                   size: SizeConfig.instance.blockSizeHorizontal * 50,
                 ),

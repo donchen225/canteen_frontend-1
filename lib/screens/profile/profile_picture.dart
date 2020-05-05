@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 
 class ProfilePicture extends StatelessWidget {
   final String photoUrl;
-  final ImageProvider localPicture;
   final bool editable;
   final double size;
   final Function onTap;
 
   ProfilePicture(
       {@required this.photoUrl,
-      @required this.localPicture,
       @required this.editable,
       this.size = 160,
       this.onTap});
@@ -27,7 +25,7 @@ class ProfilePicture extends StatelessWidget {
           // TODO: fix profile picture is updated locally first
           image: (photoUrl != null && photoUrl.isNotEmpty)
               ? CachedNetworkImageProvider(photoUrl)
-              : localPicture,
+              : AssetImage('assets/blank-profile-picture.jpeg'),
           fit: BoxFit.cover,
         ),
         shape: BoxShape.circle,

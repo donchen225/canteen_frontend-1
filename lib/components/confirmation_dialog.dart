@@ -61,8 +61,6 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       vertical: SizeConfig.instance.blockSizeVertical * 3),
                   child: ProfilePicture(
                     photoUrl: widget.user.photoUrl,
-                    localPicture:
-                        AssetImage('assets/blank-profile-picture.jpeg'),
                     editable: false,
                     size: SizeConfig.instance.blockSizeHorizontal * 50,
                   ),
