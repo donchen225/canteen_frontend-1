@@ -47,10 +47,15 @@ class _MatchDetailTimeSelectionScreenState
   void initState() {
     super.initState();
 
-    _availableTimes = [];
+    startDate = DateTime(now.year, now.month, now.day);
+    endDate = startDate.add(Duration(days: availableDateRange));
+
     localTimeRanges = widget.user.availability.timeRangesLocal;
     eventDuration = widget.skill.duration;
     initializeEvents();
+
+    _availableTimes =
+        _events[startDate]?.map<DateTime>((x) => x)?.toList() ?? [];
 
     _calendarController = CalendarController();
     // TODO: debug why I can't set selected day here, problem in library
@@ -65,8 +70,6 @@ class _MatchDetailTimeSelectionScreenState
 
   void initializeEvents() {
     _events = {};
-    startDate = DateTime(now.year, now.month, now.day);
-    endDate = startDate.add(Duration(days: availableDateRange));
 
     final availableDays = localTimeRanges.keys.map((day) => day.index);
 
