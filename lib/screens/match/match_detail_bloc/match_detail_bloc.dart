@@ -78,6 +78,6 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
     print('VIDEO CHAT ID: ${event.videoChatId}');
     // await _videoChatRepository.addVideoChatDates(
     //     event.dates, event.matchId, event.videoChatId);
-    yield MatchPaying(date: event.date);
+    yield MatchPaying(skill: event.skill, date: event.date);
   }
 }

@@ -35,15 +35,16 @@ class MatchTimeSelecting extends MatchDetailState {
 
 // Select a payment for the event
 class MatchPaying extends MatchDetailState {
+  final Skill skill;
   final VideoChatDate date;
 
-  const MatchPaying({this.date});
+  const MatchPaying({this.skill, this.date});
 
   @override
-  List<Object> get props => [date];
+  List<Object> get props => [skill, date];
 
   @override
-  String toString() => 'MatchPaying { date: $date }';
+  String toString() => 'MatchPaying { skill: $skill, date: $date }';
 }
 
 // Initial time and payment have been completed

@@ -270,6 +270,7 @@ class _MatchDetailTimeSelectionScreenState
                         .add(SelectVideoChatDate(
                       matchId: widget.match.id,
                       videoChatId: widget.match.activeVideoChat,
+                      skill: widget.skill,
                       date: VideoChatDate(
                           userId: widget.user.id,
                           startTime: event,

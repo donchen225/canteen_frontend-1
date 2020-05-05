@@ -50,19 +50,21 @@ class ReceivedVideoChatDetails extends MatchDetailEvent {
 class SelectVideoChatDate extends MatchDetailEvent {
   final String matchId;
   final String videoChatId;
+  final Skill skill;
   final VideoChatDate date;
 
   const SelectVideoChatDate({
     @required this.matchId,
     @required this.videoChatId,
+    @required this.skill,
     @required this.date,
   });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [matchId, videoChatId, skill, date];
 
   @override
-  String toString() => 'SelectVideoChatDate { date: $date }';
+  String toString() => 'SelectVideoChatDate { skill: $skill, date: $date }';
 }
 
 class AcceptVideoChatDetails extends MatchDetailEvent {}
