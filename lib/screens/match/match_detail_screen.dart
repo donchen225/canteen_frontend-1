@@ -1,9 +1,10 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_initial_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/match_detail_time_selection_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_payment_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
@@ -125,11 +126,18 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                 }
 
                 if (state is MatchPaying) {
-                  return VideoChatPaymentScreen(
+                  return MatchPaymentScreen(
                     user: user,
                     match: widget.match,
                     skill: state.skill,
                     date: state.date,
+                  );
+                }
+
+                if (state is MatchPaymentConfirming) {
+                  return MatchPaymentConfirmationScreen(
+                    user: user,
+                    match: widget.match,
                   );
                 }
 

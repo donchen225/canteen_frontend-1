@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class VideoChatPaymentScreen extends StatelessWidget {
+class MatchPaymentScreen extends StatelessWidget {
   final User user;
   final Match match;
   final Skill skill;
   final VideoChatDate date;
   final DateFormat timeFormat = DateFormat.jm();
 
-  VideoChatPaymentScreen({
+  MatchPaymentScreen({
     @required this.user,
     @required this.match,
     @required this.skill,
@@ -167,7 +167,10 @@ class VideoChatPaymentScreen extends StatelessWidget {
                             Container(
                               child: RaisedButton(
                                 child: Text('Continue'),
-                                onPressed: () {},
+                                onPressed: () {
+                                  BlocProvider.of<MatchDetailBloc>(context)
+                                      .add(SelectPayment());
+                                },
                               ),
                             ),
                           ],

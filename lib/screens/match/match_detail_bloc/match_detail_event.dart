@@ -67,6 +67,8 @@ class SelectVideoChatDate extends MatchDetailEvent {
   String toString() => 'SelectVideoChatDate { skill: $skill, date: $date }';
 }
 
+class SelectPayment extends MatchDetailEvent {}
+
 class AcceptVideoChatDetails extends MatchDetailEvent {}
 
 class CompleteVideoChat extends MatchDetailEvent {}

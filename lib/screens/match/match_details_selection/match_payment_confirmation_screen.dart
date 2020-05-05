@@ -7,15 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class VideoChatPaymentConfirmationScreen extends StatelessWidget {
+class MatchPaymentConfirmationScreen extends StatelessWidget {
   final User user;
   final Match match;
-  final VideoChatDate date;
+  // final VideoChatDate date;
 
-  VideoChatPaymentConfirmationScreen({
+  MatchPaymentConfirmationScreen({
     @required this.user,
     @required this.match,
-    @required this.date,
   });
 
   @override
@@ -68,10 +67,6 @@ class VideoChatPaymentConfirmationScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Duration: ' + date.duration.toString() + ' min'),
-                  Text(DateFormat('yMMMMEEEEd').format(date.startTime)),
-                  Text(DateFormat.jm().format(date.startTime)),
-                  Text('Timezone: ${date.timeZone}'),
                   Text('\$'),
                   Align(
                     alignment: Alignment.center,

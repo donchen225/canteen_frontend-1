@@ -47,6 +47,8 @@ class MatchPaying extends MatchDetailState {
   String toString() => 'MatchPaying { skill: $skill, date: $date }';
 }
 
+class MatchPaymentConfirming extends MatchDetailState {}
+
 // Initial time and payment have been completed
 class MatchInitialized extends MatchDetailState {}
 

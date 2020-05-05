@@ -26,6 +26,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       yield* _mapSelectVideoChatDateToState(event);
     } else if (event is SelectEvent) {
       yield* _mapSelectEventToState(event);
+    } else if (event is SelectPayment) {
+      yield* _mapSelectPaymentToState(event);
     }
   }
 
@@ -79,5 +81,10 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
     // await _videoChatRepository.addVideoChatDates(
     //     event.dates, event.matchId, event.videoChatId);
     yield MatchPaying(skill: event.skill, date: event.date);
+  }
+
+  Stream<MatchDetailState> _mapSelectPaymentToState(
+      SelectPayment event) async* {
+    yield MatchPaymentConfirming();
   }
 }
