@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tuple/tuple.dart';
 
 class VideoChatDetailInitialScreen extends StatefulWidget {
   final User user;
@@ -31,16 +32,19 @@ class _VideoChatDetailInitialScreenState
   CalendarController _calendarController;
   List<DateTime> _availableTimes;
   final DateTime now = DateTime.now();
+  DateTime startDate;
   DateTime endDate;
+  final availableDateRange = 60;
+  Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
   @override
   void initState() {
     super.initState();
 
     print('MATCH DETAIL TIME SELECTION SCREEN');
-    print(widget.user.availability.timeRangesLocal);
+    localTimeRanges = widget.user.availability.timeRangesLocal;
+    print(localTimeRanges);
 
-    endDate = now.add(Duration(days: 60));
     _availableTimes = [];
     initializeEvents();
     _calendarController = CalendarController();
@@ -55,12 +59,20 @@ class _VideoChatDetailInitialScreenState
   }
 
   void initializeEvents() {
-    // print(now);
-    // print(endDate);
-    _events = {
-      DateTime.now().add(Duration(days: 2)): [''],
-      DateTime.now().add(Duration(days: 3)): ['']
-    };
+    _events = {};
+    startDate = DateTime(now.year, now.month, now.day);
+    endDate = startDate.add(Duration(days: availableDateRange));
+
+    final availableDays = localTimeRanges.keys.map((day) => day.index);
+
+    for (var i = 0; i < availableDateRange; i++) {
+      final date = startDate.add(Duration(days: i));
+      final dayIndex = date.weekday - 1;
+
+      if (availableDays.contains(dayIndex)) {
+        _events[date] = [''];
+      }
+    }
   }
 
   Iterable<TimeOfDay> getTimes(
