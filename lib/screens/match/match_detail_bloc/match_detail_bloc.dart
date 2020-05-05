@@ -39,7 +39,7 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       switch (status) {
         case MatchStatus.uninitialized:
           if (event.match.senderId == userId) {
-            yield MatchTimeSelecting();
+            yield MatchEventSelecting();
           } else {
             yield MatchWaiting();
           }
