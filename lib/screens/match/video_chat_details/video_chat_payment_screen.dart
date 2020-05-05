@@ -11,6 +11,7 @@ class VideoChatPaymentScreen extends StatelessWidget {
   final User user;
   final Match match;
   final VideoChatDate date;
+  final DateFormat timeFormat = DateFormat.jm();
 
   VideoChatPaymentScreen({
     @required this.user,
@@ -70,8 +71,9 @@ class VideoChatPaymentScreen extends StatelessWidget {
                 children: <Widget>[
                   Text('Duration: ' + date.duration.toString() + ' min'),
                   Text(DateFormat('yMMMMEEEEd').format(date.startTime)),
-                  Text(DateFormat.jm().format(date.startTime)),
-                  Text('Timezone: ${date.timeZone}'),
+                  Text(timeFormat.format(date.startTime)),
+                  Text(
+                      'Timezone: ${date.timeZone} (${timeFormat.format(DateTime.now())})'),
                   Text('\$'),
                   Align(
                     alignment: Alignment.center,
