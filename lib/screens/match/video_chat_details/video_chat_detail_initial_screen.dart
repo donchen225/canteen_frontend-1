@@ -35,6 +35,7 @@ class _VideoChatDetailInitialScreenState
   DateTime startDate;
   DateTime endDate;
   final availableDateRange = 60;
+  final duration = 30;
   Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
   @override
@@ -70,25 +71,20 @@ class _VideoChatDetailInitialScreenState
       final dayIndex = date.weekday - 1;
 
       if (availableDays.contains(dayIndex)) {
-        _events[date] = [''];
+        _events[date] = [];
+        localTimeRanges[Day.values[dayIndex]].forEach((timeRange) {
+          final diff = timeRange.item2 - timeRange.item1;
+          final numTimes = diff ~/ (duration * 60);
+          final times = List<DateTime>.generate(
+              numTimes,
+              (int index) => DateTime.fromMillisecondsSinceEpoch(
+                  (timeRange.item1 + (duration * 60 * index)) * 1000,
+                  isUtc: true));
+
+          _events[date].addAll(times);
+        });
       }
     }
-  }
-
-  Iterable<TimeOfDay> getTimes(
-      TimeOfDay startTime, TimeOfDay endTime, Duration step) sync* {
-    var hour = startTime.hour;
-    var minute = startTime.minute;
-
-    do {
-      yield TimeOfDay(hour: hour, minute: minute);
-      minute += step.inMinutes;
-      while (minute >= 60) {
-        minute -= 60;
-        hour++;
-      }
-    } while (hour < endTime.hour ||
-        (hour == endTime.hour && minute <= endTime.minute));
   }
 
   Widget _buildEventsMarker() {
@@ -166,7 +162,6 @@ class _VideoChatDetailInitialScreenState
                       child: Text(DateFormat.jm().format(event))),
                   // Go to payment page
                   onTap: () {
-                    print('$event tapped!');
                     BlocProvider.of<MatchDetailBloc>(context)
                         .add(SelectVideoChatDate(
                       matchId: widget.match.id,
@@ -185,8 +180,9 @@ class _VideoChatDetailInitialScreenState
   }
 
   void _onDaySelected(DateTime day, List events) {
-    print('CALLBACK: _onDaySelected');
-    setState(() {});
+    setState(() {
+      _availableTimes = events.map<DateTime>((x) => x).toList();
+    });
   }
 
   @override
@@ -196,7 +192,6 @@ class _VideoChatDetailInitialScreenState
     //         TimeOfDay(hour: 24, minute: 0), Duration(minutes: 30))
     //     .map((x) => localizations.formatTimeOfDay(x))
     //     .toList();
-    _availableTimes = [DateTime.now(), DateTime.now().add(Duration(hours: 1))];
 
     return Container(
       color: Colors.white,
