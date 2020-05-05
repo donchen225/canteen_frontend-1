@@ -32,23 +32,17 @@ class _VideoChatDetailInitialScreenState
   List<DateTime> _availableTimes;
   final DateTime now = DateTime.now();
   DateTime endDate;
-  Map<Day, Map<String, List<String>>> availableDates = {
-    Day.monday: {"start_time": [], "end_time": []},
-    Day.tuesday: {"start_time": [], "end_time": []},
-    Day.friday: {"start_time": [], "end_time": []}
-  };
 
   @override
   void initState() {
     super.initState();
 
+    print('MATCH DETAIL TIME SELECTION SCREEN');
+    print(widget.user.availability.timeRangesLocal);
+
     endDate = now.add(Duration(days: 60));
     _availableTimes = [];
     initializeEvents();
-    _events = {
-      DateTime.now().add(Duration(days: 2)): [''],
-      DateTime.now().add(Duration(days: 3)): ['']
-    };
     _calendarController = CalendarController();
     // TODO: debug why I can't set selected day here, problem in library
     // _calendarController.setSelectedDay(now);
@@ -63,6 +57,10 @@ class _VideoChatDetailInitialScreenState
   void initializeEvents() {
     // print(now);
     // print(endDate);
+    _events = {
+      DateTime.now().add(Duration(days: 2)): [''],
+      DateTime.now().add(Duration(days: 3)): ['']
+    };
   }
 
   Iterable<TimeOfDay> getTimes(
