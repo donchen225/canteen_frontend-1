@@ -63,19 +63,20 @@ class _MatchDetailEventSelectionScreenState
                     padding: EdgeInsets.only(
                       top: SizeConfig.instance.blockSizeVertical,
                       bottom: SizeConfig.instance.blockSizeVertical,
-                      left: SizeConfig.instance.blockSizeHorizontal,
-                      right: SizeConfig.instance.blockSizeHorizontal,
+                      left: SizeConfig.instance.blockSizeHorizontal * 3,
+                      right: SizeConfig.instance.blockSizeHorizontal * 3,
                     ),
                     decoration: BoxDecoration(
                       color: selected[i] ? Colors.blue : Colors.transparent,
                       border: Border.all(
                         width: 1,
                       ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +96,10 @@ class _MatchDetailEventSelectionScreenState
                               alignment: Alignment.center,
                               child: Text(
                                 '\$' + skill.price.toString(),
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               )),
                         ),
                       ],
