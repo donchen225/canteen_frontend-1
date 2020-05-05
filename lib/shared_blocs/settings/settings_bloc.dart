@@ -60,6 +60,8 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         settings = await _settingsRepository.getSettings();
         if (settings == null) {
           settings = _initializeUserSettings();
+        } else {
+          cacheSettings(settings);
         }
       } catch (e) {
         print('ERROR GETTING SETTINGS: $e');
@@ -92,6 +94,12 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     _userRepository.updateTimeZone(currentTime.timeZoneOffset.inSeconds);
 
     // Save settings in shared preferences
+    cacheSettings(settings);
+
+    return settings;
+  }
+
+  void cacheSettings(UserSettings settings) {
     CachedSharedPreferences.setBool(
         PreferenceConstants.pushNotifications, settings.pushNotifications);
     CachedSharedPreferences.setInt(
@@ -100,7 +108,5 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         PreferenceConstants.timeZoneName, settings.timeZoneName);
     CachedSharedPreferences.setBool(
         PreferenceConstants.settingsInitialized, settings.settingsInitialized);
-
-    return settings;
   }
 }

@@ -49,10 +49,6 @@ class Availability {
     }
 
     map.entries.forEach((entry) {
-      print(entry);
-      print(entry.key);
-      print(entry.value);
-      print(entry.value['start_time']);
       int startTime = entry.value['start_time'] - offset + localOffset;
       int endTime = entry.value['end_time'] - offset + localOffset;
 

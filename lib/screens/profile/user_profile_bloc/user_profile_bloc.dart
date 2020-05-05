@@ -93,6 +93,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         pushNotifications: pushNotifications,
         timeZone: timeZone,
         timeZoneName: timeZoneName);
+
     yield UserProfileLoaded(event.user, settings);
   }
 
