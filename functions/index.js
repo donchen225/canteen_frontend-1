@@ -163,6 +163,7 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 
     const match = {
         "user_id": [previousValue.sender_id, previousValue.receiver_id],
+        "sender_id": previousValue.sender_id,
         "status": 0,
         "created_on": time,
         "last_updated": time,
