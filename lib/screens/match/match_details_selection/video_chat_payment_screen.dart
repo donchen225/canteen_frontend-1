@@ -148,6 +148,19 @@ class VideoChatPaymentScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              child: Text('Venmo'),
+                            ),
+                            Container(
+                              child: Text('Paypal'),
+                            ),
+                            Container(
+                              child: Text('Credit Card'),
+                            )
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
