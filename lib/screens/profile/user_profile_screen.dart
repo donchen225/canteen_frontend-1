@@ -255,8 +255,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   )
                 : Container(),
-            Text('Availability'),
-            Text('Time Zone'),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              child: ProfileSectionTitle("Availability"),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              child: Text(
+                'Time Zone',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Users see their local time',
+                  ),
+                  Text(
+                    'Your time zone is ${state.settings.timeZoneName}',
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic, color: Colors.grey[600]),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                  vertical: SizeConfig.instance.blockSizeVertical),
+              child: Text(
+                'Recurring Availability',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+            ),
             AvailabilitySection(
               availability: user.availability,
               onDayTap: (Day day, TimeOfDay startTime, TimeOfDay endTime) =>
