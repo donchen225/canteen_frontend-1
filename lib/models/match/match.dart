@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 class Match {
   final String id;
   final List<String> userId;
+  final String senderId;
   final MatchStatus status;
   final String activeVideoChat;
   final DateTime createdOn;
@@ -15,6 +16,7 @@ class Match {
 
   Match({
     @required this.userId,
+    this.senderId,
     this.id,
     this.status,
     this.activeVideoChat,
@@ -26,6 +28,7 @@ class Match {
     return Match(
       id: entity.id,
       userId: entity.userId,
+      senderId: entity.senderId,
       status: MatchStatus.values[entity.status],
       activeVideoChat: entity.activeVideoChat,
       createdOn: entity.createdOn,
@@ -37,6 +40,7 @@ class Match {
     return MatchEntity(
       id: id,
       userId: userId,
+      senderId: senderId,
       status: status.index,
       activeVideoChat: activeVideoChat,
       lastUpdated: lastUpdated,
@@ -51,6 +55,7 @@ class DetailedMatch extends Match {
 
   DetailedMatch(
       {@required userId,
+      @required senderId,
       @required id,
       @required status,
       @required activeVideoChat,
@@ -60,6 +65,7 @@ class DetailedMatch extends Match {
       this.lastMessage})
       : super(
             userId: userId,
+            senderId: senderId,
             id: id,
             status: status,
             activeVideoChat: activeVideoChat,
@@ -70,6 +76,7 @@ class DetailedMatch extends Match {
       {Message lastMessage}) {
     return DetailedMatch(
         userId: match.userId,
+        senderId: match.senderId,
         id: match.id,
         status: match.status,
         activeVideoChat: match.activeVideoChat,

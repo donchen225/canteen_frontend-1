@@ -15,8 +15,6 @@ class Availability {
 
   static Availability fromMap(Map<String, Map<String, int>> map,
       {int offset = 0}) {
-    print('AVAILABILITY: $map');
-
     Map<Day, List<Tuple2<int, int>>> timeRanges = {};
     const daySeconds = 24 * 60 * 60;
     final timeNow = DateTime.now();
