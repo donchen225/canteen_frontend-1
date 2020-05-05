@@ -28,13 +28,13 @@ class _VideoChatDetailInitialScreenState
     extends State<VideoChatDetailInitialScreen> {
   final f = DateFormat('yMMMMd');
   Map<DateTime, List> _events;
-  MaterialLocalizations localizations;
   CalendarController _calendarController;
   List<DateTime> _availableTimes;
   final DateTime now = DateTime.now();
   DateTime startDate;
   DateTime endDate;
   final availableDateRange = 60;
+  final markerSize = 35.0;
   final duration = 30;
   Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
@@ -87,12 +87,84 @@ class _VideoChatDetailInitialScreenState
     }
   }
 
+  Widget _buildDay(DateTime day) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        alignment: Alignment.center,
+        width: markerSize,
+        height: markerSize,
+        child: Text(
+          day.day.toString(),
+          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedDay(DateTime day) {
+    return Container(
+      alignment: Alignment.center,
+      width: markerSize,
+      height: markerSize,
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        shape: BoxShape.circle,
+        borderRadius: null,
+      ),
+      child: Text(
+        day.day.toString(),
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildToday(DateTime day) {
+    return Stack(children: <Widget>[
+      Align(
+        alignment: Alignment.center,
+        child: Container(
+          alignment: Alignment.center,
+          width: markerSize,
+          height: markerSize,
+          child: Text(
+            day.day.toString(),
+            style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: markerSize / 1.3,
+          height: markerSize / 1.3,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: 5,
+              height: 5,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+            ),
+          ),
+        ),
+      )
+    ]);
+  }
+
+  Widget _buildDow(String day) {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(day),
+    );
+  }
+
   Widget _buildEventsMarker() {
     return Container(
-      width: 40.0,
-      height: 40.0,
+      width: markerSize,
+      height: markerSize,
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: Colors.orange.withOpacity(0.1),
         shape: BoxShape.circle,
         borderRadius: null,
       ),
@@ -110,7 +182,6 @@ class _VideoChatDetailInitialScreenState
       rowHeight: SizeConfig.instance.blockSizeVertical * 6,
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
-        todayColor: Colors.deepOrange[200],
         markersColor: Colors.brown[700],
         outsideDaysVisible: false,
       ),
@@ -127,6 +198,21 @@ class _VideoChatDetailInitialScreenState
         CalendarFormat.month: 'Month',
       },
       builders: CalendarBuilders(
+        selectedDayBuilder: (context, date, events) {
+          return _buildSelectedDay(date);
+        },
+        dayBuilder: (context, date, events) {
+          return _buildDay(date);
+        },
+        dowWeekendBuilder: (context, day) {
+          return _buildDow(day);
+        },
+        dowWeekdayBuilder: (context, day) {
+          return _buildDow(day);
+        },
+        todayDayBuilder: (context, date, events) {
+          return _buildToday(date);
+        },
         markersBuilder: (context, date, events, holidays) {
           final children = <Widget>[];
 
@@ -187,12 +273,6 @@ class _VideoChatDetailInitialScreenState
 
   @override
   Widget build(BuildContext context) {
-    localizations = MaterialLocalizations.of(context);
-    // _availableTimes = getTimes(TimeOfDay(hour: 0, minute: 0),
-    //         TimeOfDay(hour: 24, minute: 0), Duration(minutes: 30))
-    //     .map((x) => localizations.formatTimeOfDay(x))
-    //     .toList();
-
     return Container(
       color: Colors.white,
       child: Column(
