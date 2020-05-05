@@ -40,18 +40,18 @@ class VideoChatPaymentScreen extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                            ),
-                            onPressed: () {
-                              // BlocProvider.of<MatchDetailBloc>(context)
-                              //     .add(ViewVideoChatDates());
-                            },
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: IconButton(
+                        //     icon: Icon(
+                        //       Icons.arrow_back,
+                        //     ),
+                        //     onPressed: () {
+                        //       // BlocProvider.of<MatchDetailBloc>(context)
+                        //       //     .add(ViewVideoChatDates());
+                        //     },
+                        //   ),
+                        // ),
                         Container(
                           alignment: Alignment.center,
                           child: Text(

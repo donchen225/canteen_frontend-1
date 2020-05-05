@@ -199,12 +199,8 @@ class _MatchDetailTimeSelectionScreenState
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
-        formatButtonTextStyle:
-            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
+        formatButtonVisible: false,
+        headerPadding: EdgeInsets.symmetric(vertical: 0),
       ),
       initialCalendarFormat: CalendarFormat.month,
       availableCalendarFormats: {
@@ -304,10 +300,10 @@ class _MatchDetailTimeSelectionScreenState
               padding: EdgeInsets.only(
                 left: SizeConfig.instance.blockSizeHorizontal * 3,
                 right: SizeConfig.instance.blockSizeHorizontal * 3,
-                top: SizeConfig.instance.blockSizeVertical * 3,
+                top: SizeConfig.instance.blockSizeVertical * 2,
               ),
               child: Text(
-                'Select 3 times to video chat:',
+                'Select a time to video chat:',
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -318,10 +314,28 @@ class _MatchDetailTimeSelectionScreenState
             child: _buildTableCalendar(),
           ),
           Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
             alignment: Alignment.center,
-            child: Text(
-              f.format(_calendarController.selectedDay ?? now),
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.instance.blockSizeVertical),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '*${now.timeZoneName} Timezone (${DateFormat.jm().format(now)})',
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  f.format(_calendarController.selectedDay ?? now),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ), // TODO: remove now
           ),
           Expanded(
