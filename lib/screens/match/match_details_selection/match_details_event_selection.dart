@@ -27,6 +27,7 @@ class _MatchDetailEventSelectionScreenState
   Map<int, Skill> offeringList;
   List<bool> selected;
   Map<int, bool> _selectedReset;
+  Skill _selectedSkill;
 
   _MatchDetailEventSelectionScreenState();
 
@@ -57,6 +58,7 @@ class _MatchDetailEventSelectionScreenState
                         }
                       });
                       selected[i] = !selected[i];
+                      _selectedSkill = selected[i] ? offeringList[i] : null;
                     });
                   },
                   child: Container(
@@ -135,7 +137,12 @@ class _MatchDetailEventSelectionScreenState
               Container(
                 child: RaisedButton(
                   child: Text('Continue'),
-                  onPressed: () {},
+                  onPressed: _selectedSkill != null
+                      ? () {
+                          BlocProvider.of<MatchDetailBloc>(context)
+                              .add(SelectEvent(_selectedSkill));
+                        }
+                      : null,
                 ),
               ),
             ],

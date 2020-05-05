@@ -117,9 +117,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                 }
 
                 if (state is MatchTimeSelecting) {
-                  return VideoChatDetailInitialScreen(
+                  return MatchDetailTimeSelectionScreen(
                     user: prospect,
                     match: widget.match,
+                    skill: state.skill,
                   );
                 }
 

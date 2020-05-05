@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/availability/day.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
@@ -10,22 +11,24 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tuple/tuple.dart';
 
-class VideoChatDetailInitialScreen extends StatefulWidget {
+class MatchDetailTimeSelectionScreen extends StatefulWidget {
   final User user;
   final Match match;
+  final Skill skill;
 
-  VideoChatDetailInitialScreen({
+  MatchDetailTimeSelectionScreen({
     @required this.user,
     @required this.match,
+    @required this.skill,
   });
 
   @override
-  _VideoChatDetailInitialScreenState createState() =>
-      _VideoChatDetailInitialScreenState();
+  _MatchDetailTimeSelectionScreenState createState() =>
+      _MatchDetailTimeSelectionScreenState();
 }
 
-class _VideoChatDetailInitialScreenState
-    extends State<VideoChatDetailInitialScreen> {
+class _MatchDetailTimeSelectionScreenState
+    extends State<MatchDetailTimeSelectionScreen> {
   final f = DateFormat('yMMMMd');
   Map<DateTime, List> _events;
   CalendarController _calendarController;
@@ -35,7 +38,8 @@ class _VideoChatDetailInitialScreenState
   DateTime endDate;
   final availableDateRange = 60;
   final markerSize = 35.0;
-  final duration = 30;
+  int eventDuration;
+  int eventDiff = 30;
   final Color mainColor = Colors.orange;
   Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
@@ -43,12 +47,11 @@ class _VideoChatDetailInitialScreenState
   void initState() {
     super.initState();
 
-    print('MATCH DETAIL TIME SELECTION SCREEN');
-    localTimeRanges = widget.user.availability.timeRangesLocal;
-    print(localTimeRanges);
-
     _availableTimes = [];
+    localTimeRanges = widget.user.availability.timeRangesLocal;
+    eventDuration = widget.skill.duration;
     initializeEvents();
+
     _calendarController = CalendarController();
     // TODO: debug why I can't set selected day here, problem in library
     // _calendarController.setSelectedDay(now);
@@ -74,18 +77,21 @@ class _VideoChatDetailInitialScreenState
       if (availableDays.contains(dayIndex)) {
         _events[date] = [];
         localTimeRanges[Day.values[dayIndex]].forEach((timeRange) {
-          final diff = timeRange.item2 - timeRange.item1;
-          final numTimes = diff ~/ (duration * 60);
-          final times = List<DateTime>.generate(
-            numTimes,
-            (int index) => date.add(
-              Duration(
-                seconds: timeRange.item1 + (duration * 60 * index),
-              ),
-            ),
-          );
+          final diff = timeRange.item2 - timeRange.item1 - (eventDuration * 60);
 
-          _events[date].addAll(times);
+          if (diff >= 0) {
+            final numTimes = (diff ~/ (eventDiff * 60)) + 1;
+            final times = List<DateTime>.generate(
+              numTimes,
+              (int index) => date.add(
+                Duration(
+                  seconds: timeRange.item1 + (eventDiff * 60 * index),
+                ),
+              ),
+            );
+
+            _events[date].addAll(times);
+          }
         });
       }
     }
@@ -264,7 +270,7 @@ class _VideoChatDetailInitialScreenState
                       date: VideoChatDate(
                           userId: widget.user.id,
                           startTime: event,
-                          duration: 30,
+                          duration: eventDuration,
                           timeZone: event.timeZoneName),
                     ));
                   },

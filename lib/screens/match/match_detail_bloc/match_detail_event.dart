@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:equatable/equatable.dart';
@@ -22,7 +23,17 @@ class LoadMatchDetails extends MatchDetailEvent {
   String toString() => 'LoadMatchDetails { match: ${match.id} }';
 }
 
-class ViewVideoChatDates extends MatchDetailEvent {}
+class SelectEvent extends MatchDetailEvent {
+  final Skill skill;
+
+  const SelectEvent(this.skill);
+
+  @override
+  List<Object> get props => [skill];
+
+  @override
+  String toString() => 'SelectEvent { skill: $skill }';
+}
 
 class ReceivedVideoChatDetails extends MatchDetailEvent {
   final List<VideoChatDate> dates;

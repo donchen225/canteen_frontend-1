@@ -40,8 +40,8 @@ class VideoChatPaymentConfirmationScreen extends StatelessWidget {
                               Icons.arrow_back,
                             ),
                             onPressed: () {
-                              BlocProvider.of<MatchDetailBloc>(context)
-                                  .add(ViewVideoChatDates());
+                              // BlocProvider.of<MatchDetailBloc>(context)
+                              //     .add(SelectEvent());
                             },
                           ),
                         ),

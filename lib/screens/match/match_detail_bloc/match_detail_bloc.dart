@@ -24,8 +24,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       yield* _mapLoadMatchDetailsToState(event);
     } else if (event is SelectVideoChatDate) {
       yield* _mapSelectVideoChatDateToState(event);
-    } else if (event is ViewVideoChatDates) {
-      yield* _mapViewVideoChatDatesToState();
+    } else if (event is SelectEvent) {
+      yield* _mapSelectEventToState(event);
     }
   }
 
@@ -67,8 +67,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
   //   }
   // }
 
-  Stream<MatchDetailState> _mapViewVideoChatDatesToState() async* {
-    yield MatchTimeSelecting();
+  Stream<MatchDetailState> _mapSelectEventToState(SelectEvent event) async* {
+    yield MatchTimeSelecting(event.skill);
   }
 
   Stream<MatchDetailState> _mapSelectVideoChatDateToState(

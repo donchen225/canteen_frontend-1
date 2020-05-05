@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:equatable/equatable.dart';
 
@@ -20,7 +21,17 @@ class MatchWaiting extends MatchDetailState {}
 class MatchEventSelecting extends MatchDetailState {}
 
 // Select a time for the event
-class MatchTimeSelecting extends MatchDetailState {}
+class MatchTimeSelecting extends MatchDetailState {
+  final Skill skill;
+
+  const MatchTimeSelecting(this.skill);
+
+  @override
+  List<Object> get props => [skill];
+
+  @override
+  String toString() => 'MatchTimeSelecting { skill: $skill }';
+}
 
 // Select a payment for the event
 class MatchPaying extends MatchDetailState {
