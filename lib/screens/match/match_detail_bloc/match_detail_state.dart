@@ -16,11 +16,13 @@ class MatchLoading extends MatchDetailState {}
 // Waiting for other user to select time and pay
 class MatchWaiting extends MatchDetailState {}
 
+// Select an event from the user
 class MatchEventSelecting extends MatchDetailState {}
 
+// Select a time for the event
 class MatchTimeSelecting extends MatchDetailState {}
 
-// Initial time has been selected, requires user payment
+// Select a payment for the event
 class MatchPaying extends MatchDetailState {
   final VideoChatDate date;
 

@@ -1,8 +1,8 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/video_chat_details/video_chat_detail_initial_screen.dart';
-import 'package:canteen_frontend/screens/match/video_chat_details/video_chat_detail_screen.dart';
-import 'package:canteen_frontend/screens/match/video_chat_details/video_chat_payment_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_initial_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_payment_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
