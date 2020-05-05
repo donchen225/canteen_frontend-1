@@ -4,14 +4,12 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:tuple/tuple.dart';
 
 class EditAvailabilityScreen extends StatefulWidget {
   final String fieldName;
   final Day day;
-  final DateTime startTime;
-  final DateTime endTime;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
   final Function onComplete;
   final Function onCancelNavigation;
   final Function onCompleteNavigation;
@@ -32,16 +30,16 @@ class EditAvailabilityScreen extends StatefulWidget {
 
 class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
   _EditAvailabilityScreenState();
-  DateTime startTime;
-  DateTime endTime;
+  TimeOfDay startTime;
+  TimeOfDay endTime;
   String _errorText;
 
   @override
   void initState() {
     super.initState();
 
-    startTime = widget.startTime ?? DateTime.fromMillisecondsSinceEpoch(0);
-    endTime = widget.endTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    startTime = widget.startTime ?? TimeOfDay(hour: 9, minute: 0);
+    endTime = widget.endTime ?? TimeOfDay(hour: 17, minute: 0);
     _errorText = '';
   }
 
@@ -61,7 +59,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
   }
 
   Widget _buildTimePicker(
-      BuildContext context, DateTime time, Function onTimeChange) {
+      BuildContext context, TimeOfDay time, Function(TimeOfDay) onTimeChange) {
     return GestureDetector(
       onTap: () {
         showCupertinoModalPopup<void>(
@@ -70,109 +68,16 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
             return AvailabilityPicker(
               initialTime: time,
               onChanged: (dateTime) {
-                onTimeChange(dateTime);
+                onTimeChange(TimeOfDay.fromDateTime(dateTime));
               },
             );
           },
         );
       },
       child: _buildMenu(
-        Text(DateFormat.jm().format(time)),
+        Text(time.format(context)),
       ),
     );
-  }
-
-  List<Tuple3<Day, int, int>> _getStartTimeAndDuration(
-      Day day, DateTime startTime, DateTime endTime) {
-    final startTimeLocal = startTime.toLocal();
-    final startTimeUtc = startTime.toUtc();
-
-    final endTimeLocal = endTime.toLocal();
-    final endTimeUtc = endTime.toUtc();
-
-    final startTimeUtcSeconds =
-        (startTimeUtc.hour * 60 + startTimeUtc.minute) * 60;
-    final endTimeUtcSeconds = (endTimeUtc.hour * 60 + endTimeUtc.minute) * 60;
-    final duration = endTimeUtcSeconds - startTimeUtcSeconds;
-
-    if (startTimeUtc.weekday == endTimeUtc.weekday) {
-      print('SAME UTC WEEKDAY');
-      if (startTimeLocal.weekday == startTimeUtc.weekday) {
-        return [Tuple3(day, startTimeUtcSeconds, duration)];
-      } else if (startTimeLocal.weekday < startTimeUtc.weekday) {
-        final newDay = Day.values[day.index + 1 <= 6 ? day.index + 1 : 0];
-        return [Tuple3(newDay, startTimeUtcSeconds, duration)];
-      } else {
-        final newDay = Day.values[day.index - 1 >= 0 ? day.index - 1 : 6];
-        return [Tuple3(newDay, startTimeUtcSeconds, duration)];
-      }
-    } else if (startTimeUtc.weekday < endTimeUtc.weekday) {
-      print('SEPARATE UTC DAYS');
-      if (startTimeLocal.weekday == startTimeUtc.weekday) {
-        final totalSeconds = 24 * 60 * 60;
-        final newDay = Day.values[day.index + 1 <= 6 ? day.index + 1 : 0];
-        return [
-          Tuple3(day, startTimeUtcSeconds, totalSeconds - startTimeUtcSeconds),
-          Tuple3(newDay, 0, endTimeUtcSeconds)
-        ];
-      } else if (endTimeLocal.weekday == endTimeUtc.weekday) {
-        final totalSeconds = 24 * 60 * 60;
-        final newDay = Day.values[day.index - 1 >= 0 ? day.index - 1 : 6];
-        return [
-          Tuple3(
-              newDay, startTimeUtcSeconds, totalSeconds - startTimeUtcSeconds),
-          Tuple3(day, 0, endTimeUtcSeconds)
-        ];
-      } else {
-        print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
-      }
-    } else {
-      print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
-    }
-
-    if (startTimeLocal.weekday == startTimeUtc.weekday &&
-        endTimeLocal.weekday == endTimeUtc.weekday) {
-      print('SAME');
-      print('WEEKDAY: ${widget.day}');
-      return [Tuple3(day, startTimeUtcSeconds, duration)];
-    } else if (startTimeLocal.weekday < startTimeUtc.weekday &&
-        endTimeLocal.weekday < endTimeUtc.weekday) {
-      print('BEFORE');
-      final newDay =
-          Day.values[widget.day.index + 1 <= 6 ? widget.day.index + 1 : 0];
-      print('WEEKDAY: $newDay');
-      return [Tuple3(newDay, startTimeUtcSeconds, duration)];
-    } else if (startTimeLocal.weekday < startTimeUtc.weekday &&
-        endTimeLocal.weekday == endTimeUtc.weekday) {
-      print('BEFORE');
-      final newDay =
-          Day.values[widget.day.index + 1 <= 6 ? widget.day.index + 1 : 0];
-      print('WEEKDAY: $newDay');
-      return [
-        Tuple3(newDay, startTimeUtcSeconds, duration),
-        Tuple3(newDay, startTimeUtcSeconds, duration)
-      ];
-    } else if (startTimeLocal.weekday > startTimeUtc.weekday &&
-        endTimeLocal.weekday > endTimeUtc.weekday) {
-      print('AFTER');
-      final newDay =
-          Day.values[widget.day.index - 1 >= 0 ? widget.day.index - 1 : 6];
-      print('WEEKDAY: $newDay');
-      return [Tuple3(newDay, startTimeUtcSeconds, duration)];
-    } else if (startTimeLocal.weekday > startTimeUtc.weekday &&
-        endTimeLocal.weekday == endTimeUtc.weekday) {
-      print('AFTER');
-      final newDay =
-          Day.values[widget.day.index - 1 >= 0 ? widget.day.index - 1 : 6];
-      print('WEEKDAY: $newDay');
-      return [
-        Tuple3(newDay, startTimeUtcSeconds, duration),
-        Tuple3(newDay, startTimeUtcSeconds, duration)
-      ];
-    } else {
-      print('ERROR CONVERTING LOCAL TIME TO UTC TIME');
-      return [];
-    }
   }
 
   @override
@@ -203,13 +108,20 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
             Text('Edit ' + widget.fieldName),
             GestureDetector(
               onTap: () {
-                if (startTime != widget.startTime &&
+                print('ON TAP DONE');
+
+                if (startTime != widget.startTime ||
                     endTime != widget.endTime) {
-                  if (endTime.isAfter(startTime)) {
-                    final timeRanges = _getStartTimeAndDuration(
-                        widget.day, startTime, endTime);
-                    print('TIME RANGES: $timeRanges');
-                    widget.onComplete(widget.day, startTime, endTime);
+                  final startTimeSeconds =
+                      (startTime.hour * 60 + startTime.minute) * 60;
+                  final endTimeSeconds =
+                      !(endTime.hour == 0 && endTime.minute == 0)
+                          ? (endTime.hour * 60 + endTime.minute) * 60
+                          : 24 * 60 * 60;
+
+                  if (endTimeSeconds > startTimeSeconds) {
+                    widget.onComplete(
+                        widget.day, startTimeSeconds, endTimeSeconds);
                   } else {
                     setState(() {
                       _errorText =

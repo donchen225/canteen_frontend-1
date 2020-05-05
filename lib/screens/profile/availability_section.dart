@@ -30,18 +30,20 @@ class AvailabilitySection extends StatelessWidget {
     }
 
     final startTime = startTimeSeconds != null
-        ? TimeOfDay.fromDateTime(
-            DateTime.fromMillisecondsSinceEpoch(startTimeSeconds * 1000))
+        ? TimeOfDay.fromDateTime(DateTime.fromMillisecondsSinceEpoch(
+            startTimeSeconds * 1000,
+            isUtc: true))
         : null;
     final endTime = endTimeSeconds != null
-        ? TimeOfDay.fromDateTime(
-            DateTime.fromMillisecondsSinceEpoch(endTimeSeconds * 1000))
+        ? TimeOfDay.fromDateTime(DateTime.fromMillisecondsSinceEpoch(
+            endTimeSeconds * 1000,
+            isUtc: true))
         : null;
 
     return GestureDetector(
       onTap: () {
         if (onDayTap != null) {
-          onDayTap(day.value);
+          onDayTap(day.value, startTime, endTime);
         }
       },
       child: Container(

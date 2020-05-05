@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AvailabilityPicker extends StatefulWidget {
-  final DateTime initialTime;
+  final TimeOfDay initialTime;
   final double itemHeight;
   final ValueChanged<DateTime> onChanged;
 
@@ -20,6 +20,7 @@ class AvailabilityPicker extends StatefulWidget {
 
 class _AvailabilityPickerState extends State<AvailabilityPicker> {
   DateTime initialTime;
+  final now = new DateTime.now();
 
   _AvailabilityPickerState();
 
@@ -27,7 +28,10 @@ class _AvailabilityPickerState extends State<AvailabilityPicker> {
   void initState() {
     super.initState();
 
-    initialTime = widget.initialTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    initialTime = widget.initialTime != null
+        ? DateTime(now.year, now.month, now.day, widget.initialTime.hour,
+            widget.initialTime.minute)
+        : DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   @override

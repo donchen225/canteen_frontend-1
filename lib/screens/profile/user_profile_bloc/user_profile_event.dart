@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 abstract class UserProfileEvent extends Equatable {
   const UserProfileEvent();
@@ -126,30 +127,33 @@ class UpdateTitle extends UserProfileEvent {
 class EditAvailability extends UserProfileEvent {
   final User user;
   final Day day;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
 
-  const EditAvailability(this.user, this.day);
+  const EditAvailability({this.user, this.day, this.startTime, this.endTime});
 
   @override
-  List<Object> get props => [user, day];
+  List<Object> get props => [user, day, startTime, endTime];
 
   @override
   String toString() =>
-      'EditAvailability { user: ${user.displayName} day: $day }';
+      'EditAvailability { user: ${user.displayName} day: $day startTime: $startTime endTime: $endTime }';
 }
 
 class UpdateAvailability extends UserProfileEvent {
   final Day day;
-  final DateTime startTime;
-  final DateTime endTime;
+  final int startTimeSeconds;
+  final int endTimeSeconds;
 
-  const UpdateAvailability(this.day, this.startTime, this.endTime);
+  const UpdateAvailability(
+      this.day, this.startTimeSeconds, this.endTimeSeconds);
 
   @override
-  List<Object> get props => [day, startTime, endTime];
+  List<Object> get props => [day, startTimeSeconds, endTimeSeconds];
 
   @override
   String toString() =>
-      'UpdateAvailability { day: $day, startTime: $startTime, endTime: $endTime }';
+      'UpdateAvailability { day: $day, startTime: $startTimeSeconds, endTime: $endTimeSeconds }';
 }
 
 class EditInterests extends UserProfileEvent {

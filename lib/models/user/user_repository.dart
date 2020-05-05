@@ -34,7 +34,7 @@ abstract class UserRepository {
   Future<void> updateAbout(String updatedText) {}
 
   Future<void> updateAvailability(
-      int dayIndex, DateTime startTime, DateTime endTime) {}
+      int dayIndex, int startTimeSeconds, int endTimeSeconds) {}
 
   Future<void> updateInterests(List<String> intersts) {}
 

@@ -134,13 +134,17 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapEditAvailabilityToState(
       EditAvailability event) async* {
-    yield UserProfileEditingAvailability(event.user, event.day);
+    yield UserProfileEditingAvailability(
+        user: event.user,
+        day: event.day,
+        startTime: event.startTime,
+        endTime: event.endTime);
   }
 
   Stream<UserProfileState> _mapUpdateAvailabilityToState(
       UpdateAvailability event) async* {
     await _userRepository.updateAvailability(
-        event.day.index, event.startTime, event.endTime);
+        event.day.index, event.startTimeSeconds, event.endTimeSeconds);
   }
 
   Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {

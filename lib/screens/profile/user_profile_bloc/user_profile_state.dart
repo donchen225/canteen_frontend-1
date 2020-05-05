@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user_settings/user_settings.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 abstract class UserProfileState extends Equatable {
   const UserProfileState();
@@ -83,15 +84,18 @@ class UserProfileEditingTitle extends UserProfileState {
 class UserProfileEditingAvailability extends UserProfileState {
   final User user;
   final Day day;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
 
-  const UserProfileEditingAvailability(this.user, this.day);
+  const UserProfileEditingAvailability(
+      {this.user, this.day, this.startTime, this.endTime});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, day, startTime, endTime];
 
   @override
   String toString() =>
-      'UserProfileEditingAvailability { user: ${user.toString()}  }';
+      'UserProfileEditingAvailability { user: ${user.displayName} day: $day startTime: $startTime endTime: $endTime  }';
 }
 
 class UserProfileEditingInterests extends UserProfileState {

@@ -259,8 +259,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Text('Time Zone'),
             AvailabilitySection(
               availability: user.availability,
-              onDayTap: (Day day) =>
-                  _userProfileBloc.add(EditAvailability(user, day)),
+              onDayTap: (Day day, TimeOfDay startTime, TimeOfDay endTime) =>
+                  _userProfileBloc.add(EditAvailability(
+                      user: user,
+                      day: day,
+                      startTime: startTime,
+                      endTime: endTime)),
             ),
           ],
         ),
@@ -324,9 +328,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final user = state.user;
       return EditAvailabilityScreen(
         fieldName: 'Availability',
-        startTime: null, // Change this
+        startTime: state.startTime,
+        endTime: state.endTime,
         day: state.day,
-        onComplete: (Day day, DateTime startTime, DateTime endTime) =>
+        onComplete: (Day day, int startTime, int endTime) =>
             _userProfileBloc.add(UpdateAvailability(day, startTime, endTime)),
         onCancelNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
         onCompleteNavigation: () => _userProfileBloc.add(LoadUserProfile(user)),
