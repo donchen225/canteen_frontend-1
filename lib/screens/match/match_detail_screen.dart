@@ -75,8 +75,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               ),
               backgroundColor: Palette.appBarBackgroundColor,
               elevation: 1,
-              bottom: !(state is MatchTimeSelecting ||
-                      state is MatchTimeSelected)
+              bottom: !(state is MatchTimeSelecting || state is MatchPaying)
                   ? TabBar(
                       indicatorColor: Colors.black,
                       controller: _tabController,
@@ -114,7 +113,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   );
                 }
 
-                if (state is MatchTimeSelected) {
+                if (state is MatchPaying) {
                   return VideoChatPaymentScreen(
                     user: user,
                     match: widget.match,

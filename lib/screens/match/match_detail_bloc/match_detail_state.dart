@@ -16,19 +16,21 @@ class MatchLoading extends MatchDetailState {}
 // Waiting for other user to select time and pay
 class MatchWaiting extends MatchDetailState {}
 
+class MatchEventSelecting extends MatchDetailState {}
+
 class MatchTimeSelecting extends MatchDetailState {}
 
 // Initial time has been selected, requires user payment
-class MatchTimeSelected extends MatchDetailState {
+class MatchPaying extends MatchDetailState {
   final VideoChatDate date;
 
-  const MatchTimeSelected({this.date});
+  const MatchPaying({this.date});
 
   @override
   List<Object> get props => [date];
 
   @override
-  String toString() => 'MatchTimeSelected { date: $date }';
+  String toString() => 'MatchPaying { date: $date }';
 }
 
 // Initial time and payment have been completed
