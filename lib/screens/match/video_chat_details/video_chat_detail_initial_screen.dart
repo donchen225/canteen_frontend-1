@@ -36,6 +36,7 @@ class _VideoChatDetailInitialScreenState
   final availableDateRange = 60;
   final markerSize = 35.0;
   final duration = 30;
+  final Color mainColor = Colors.orange;
   Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
   @override
@@ -96,7 +97,7 @@ class _VideoChatDetailInitialScreenState
         height: markerSize,
         child: Text(
           day.day.toString(),
-          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+          style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -108,7 +109,7 @@ class _VideoChatDetailInitialScreenState
       width: markerSize,
       height: markerSize,
       decoration: BoxDecoration(
-        color: Colors.orange,
+        color: mainColor,
         shape: BoxShape.circle,
         borderRadius: null,
       ),
@@ -129,7 +130,7 @@ class _VideoChatDetailInitialScreenState
           height: markerSize,
           child: Text(
             day.day.toString(),
-            style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+            style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -164,7 +165,7 @@ class _VideoChatDetailInitialScreenState
       width: markerSize,
       height: markerSize,
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: mainColor.withOpacity(0.1),
         shape: BoxShape.circle,
         borderRadius: null,
       ),
@@ -237,7 +238,8 @@ class _VideoChatDetailInitialScreenState
       children: _availableTimes
           .map((event) => Container(
                 decoration: BoxDecoration(
-                  border: Border.all(width: 0.8),
+                  border:
+                      Border.all(width: 0.8, color: mainColor.withOpacity(0.7)),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 margin:
@@ -245,7 +247,11 @@ class _VideoChatDetailInitialScreenState
                 child: ListTile(
                   title: Align(
                       alignment: Alignment.center,
-                      child: Text(DateFormat.jm().format(event))),
+                      child: Text(
+                        DateFormat.jm().format(event),
+                        style: TextStyle(
+                            color: mainColor, fontWeight: FontWeight.bold),
+                      )),
                   // Go to payment page
                   onTap: () {
                     BlocProvider.of<MatchDetailBloc>(context)
@@ -302,6 +308,7 @@ class _VideoChatDetailInitialScreenState
             alignment: Alignment.center,
             child: Text(
               f.format(_calendarController.selectedDay ?? now),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ), // TODO: remove now
           ),
           Expanded(
