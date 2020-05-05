@@ -77,10 +77,13 @@ class _VideoChatDetailInitialScreenState
           final diff = timeRange.item2 - timeRange.item1;
           final numTimes = diff ~/ (duration * 60);
           final times = List<DateTime>.generate(
-              numTimes,
-              (int index) => DateTime.fromMillisecondsSinceEpoch(
-                  (timeRange.item1 + (duration * 60 * index)) * 1000,
-                  isUtc: true));
+            numTimes,
+            (int index) => date.add(
+              Duration(
+                seconds: timeRange.item1 + (duration * 60 * index),
+              ),
+            ),
+          );
 
           _events[date].addAll(times);
         });
