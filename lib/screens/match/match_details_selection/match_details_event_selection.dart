@@ -70,9 +70,9 @@ class _MatchDetailEventSelectionScreenState
                       right: SizeConfig.instance.blockSizeHorizontal * 3,
                     ),
                     decoration: BoxDecoration(
-                      color: selected[i] ? Colors.blue : Colors.transparent,
                       border: Border.all(
-                        width: 1,
+                        width: 2,
+                        color: selected[i] ? Palette.orangeColor : Colors.black,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -120,8 +120,8 @@ class _MatchDetailEventSelectionScreenState
           Align(
             alignment: Alignment.center,
             child: Padding(
-              padding: EdgeInsets.only(
-                  bottom: SizeConfig.instance.blockSizeVertical),
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.blockSizeVertical * 3),
               child: ProfilePicture(
                 photoUrl: widget.user.photoUrl,
                 editable: false,
