@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -131,21 +132,43 @@ class _MatchDetailEventSelectionScreenState
         ] +
         _buildOfferingWidgets() +
         <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                child: RaisedButton(
-                  child: Text('Continue'),
-                  onPressed: _selectedSkill != null
-                      ? () {
-                          BlocProvider.of<MatchDetailBloc>(context)
-                              .add(SelectEvent(_selectedSkill));
-                        }
-                      : null,
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.blockSizeVertical * 3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: RaisedButton(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical * 2,
+                      bottom: SizeConfig.instance.blockSizeVertical * 2,
+                      left: SizeConfig.instance.blockSizeHorizontal * 6,
+                      right: SizeConfig.instance.blockSizeHorizontal * 6,
+                    ),
+                    color: Palette.orangeColor,
+                    disabledColor: Palette.disabledButtonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 1,
+                    child: Text(
+                      'Continue',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Palette.whiteColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    onPressed: _selectedSkill != null
+                        ? () {
+                            BlocProvider.of<MatchDetailBloc>(context)
+                                .add(SelectEvent(_selectedSkill));
+                          }
+                        : null,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ];
   }

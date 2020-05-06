@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +84,7 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                         border: Border.all(
                           width: 1,
                         ),
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(5),
                       ),
                       child: Column(
                         children: <Widget>[
@@ -129,12 +130,16 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                             left: SizeConfig.instance.blockSizeHorizontal * 6,
                             right: SizeConfig.instance.blockSizeHorizontal * 6,
                           ),
+                          color: Palette.orangeColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Text(
                             'Complete payment',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Palette.whiteColor,
+                                fontWeight: FontWeight.w600),
                           ),
                           onPressed: () {},
                         ),
