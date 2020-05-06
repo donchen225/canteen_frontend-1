@@ -130,7 +130,8 @@ void main() async {
         ),
         BlocProvider<HomeNavigationBarBloc>(
           create: (BuildContext context) => HomeNavigationBarBloc(
-              requestBloc: BlocProvider.of<RequestBloc>(context)),
+              requestBloc: BlocProvider.of<RequestBloc>(context),
+              recommendedBloc: BlocProvider.of<RecommendedBloc>(context)),
         ),
       ],
       child: App(

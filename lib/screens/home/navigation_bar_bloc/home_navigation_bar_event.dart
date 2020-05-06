@@ -13,14 +13,16 @@ class LoadBadgeCounts extends HomeNavigationBarEvent {}
 
 class UpdateBadgeCount extends HomeNavigationBarEvent {
   final int numRequests;
+  final int numRecommended;
 
-  const UpdateBadgeCount({this.numRequests});
-
-  @override
-  List<Object> get props => [numRequests];
+  const UpdateBadgeCount({this.numRequests = 0, this.numRecommended = 0});
 
   @override
-  String toString() => 'UpdateBadgeCount { numRequests: $numRequests }';
+  List<Object> get props => [numRequests, numRecommended];
+
+  @override
+  String toString() =>
+      'UpdateBadgeCount { numRequests: $numRequests numRecommended: $numRecommended }';
 }
 
 class ClearBadgeCounts extends HomeNavigationBarEvent {}

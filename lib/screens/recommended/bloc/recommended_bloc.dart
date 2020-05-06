@@ -10,8 +10,8 @@ import 'package:meta/meta.dart';
 class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   final UserRepository _userRepository;
   final RecommendationRepository _recommendationRepository;
-  int _currentIndex = 0;
-  List<Recommendation> _recommendations = [];
+  int currentIndex = 0;
+  List<Recommendation> recommendations = [];
 
   RecommendedBloc(
       {@required UserRepository userRepository,
@@ -50,15 +50,15 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
     final newRecs = recs.where((rec) => rec.status == 0);
 
     newRecs.forEach((rec) {
-      final exists = (_recommendations.firstWhere((r) => r.userId == rec.userId,
+      final exists = (recommendations.firstWhere((r) => r.userId == rec.userId,
           orElse: () => null));
       if (exists == null) {
-        _recommendations.add(rec);
+        recommendations.add(rec);
       }
     });
 
-    if (_currentIndex < _recommendations.length) {
-      final rec = _recommendations[_currentIndex];
+    if (currentIndex < recommendations.length) {
+      final rec = recommendations[currentIndex];
       final recUser = User.fromRecommendation(rec);
 
       yield RecommendedLoaded(rec, recUser);
@@ -72,13 +72,13 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   Stream<RecommendedState> _mapNextRecommendedToState() async* {
     yield RecommendedLoading();
 
-    final currentRec = _recommendations[_currentIndex];
+    final currentRec = recommendations[currentIndex];
     _recommendationRepository.declineRecommendation(currentRec.id);
 
-    _currentIndex += 1;
+    currentIndex += 1;
 
-    if (_currentIndex < _recommendations.length) {
-      final rec = _recommendations[_currentIndex];
+    if (currentIndex < recommendations.length) {
+      final rec = recommendations[currentIndex];
       final recUser = User.fromRecommendation(rec);
       yield RecommendedLoaded(rec, recUser);
     } else {
@@ -89,13 +89,13 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   Stream<RecommendedState> _mapAcceptRecommendedToState() async* {
     yield RecommendedLoading();
 
-    final currentRec = _recommendations[_currentIndex];
+    final currentRec = recommendations[currentIndex];
     _recommendationRepository.acceptRecommendation(currentRec.id);
 
-    _currentIndex += 1;
+    currentIndex += 1;
 
-    if (_currentIndex < _recommendations.length) {
-      final rec = _recommendations[_currentIndex];
+    if (currentIndex < recommendations.length) {
+      final rec = recommendations[currentIndex];
       final recUser = User.fromRecommendation(rec);
       yield RecommendedLoaded(rec, recUser);
     } else {
@@ -104,8 +104,8 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   }
 
   Stream<RecommendedState> _mapClearRecommendedToState() async* {
-    _recommendations = [];
-    _currentIndex = 0;
+    recommendations = [];
+    currentIndex = 0;
     yield RecommendedLoading();
   }
 }

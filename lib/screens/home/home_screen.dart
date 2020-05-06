@@ -129,8 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.home,
+                      icon: _buildBadge(
+                        navBarState.numRecommended,
+                        Icon(
+                          Icons.home,
+                        ),
                       ),
                       title: Text(''),
                     ),

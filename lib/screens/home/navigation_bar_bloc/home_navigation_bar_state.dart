@@ -4,8 +4,9 @@ import 'package:equatable/equatable.dart';
 @immutable
 abstract class HomeNavigationBarState extends Equatable {
   final int numRequests;
+  final int numRecommended;
 
-  const HomeNavigationBarState({this.numRequests = 0});
+  const HomeNavigationBarState({this.numRequests = 0, this.numRecommended = 0});
 
   @override
   List<Object> get props => [];
@@ -13,11 +14,13 @@ abstract class HomeNavigationBarState extends Equatable {
 
 class HomeNavigationBarLoaded extends HomeNavigationBarState {
   final int numRequests;
+  final int numRecommended;
 
-  const HomeNavigationBarLoaded({this.numRequests = 0});
+  const HomeNavigationBarLoaded(
+      {this.numRequests = 0, this.numRecommended = 0});
 
   @override
-  List<Object> get props => [numRequests];
+  List<Object> get props => [numRequests, numRecommended];
 }
 
 class HomeNavigationBarLoading extends HomeNavigationBarState {}
