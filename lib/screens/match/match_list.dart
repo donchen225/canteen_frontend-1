@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';

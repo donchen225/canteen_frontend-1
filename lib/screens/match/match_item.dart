@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/message/message.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -49,19 +50,10 @@ class MatchItem extends StatelessWidget {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Container(
-                width: SizeConfig.instance.blockSizeHorizontal * 18,
-                height: SizeConfig.instance.blockSizeHorizontal * 18,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: (opponentList[0].photoUrl != null &&
-                            opponentList[0].photoUrl.isNotEmpty)
-                        ? CachedNetworkImageProvider(opponentList[0].photoUrl)
-                        : AssetImage('assets/blank-profile-picture.jpeg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              child: ProfilePicture(
+                photoUrl: opponentList[0].photoUrl,
+                editable: false,
+                size: SizeConfig.instance.blockSizeHorizontal * 18,
               ),
             ),
             Expanded(
