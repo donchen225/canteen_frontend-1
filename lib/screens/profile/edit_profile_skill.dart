@@ -106,7 +106,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
 
   @override
   Widget build(BuildContext context) {
-    final skillList = widget.skillType == 'teach'
+    final skillList = widget.skillType == SkillType.teach
         ? widget.user.teachSkill
         : widget.user.learnSkill;
 
