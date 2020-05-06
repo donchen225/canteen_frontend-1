@@ -45,8 +45,8 @@ class ProfileList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(
-                    bottom: SizeConfig.instance.blockSizeVertical * 3),
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.blockSizeVertical),
                 child: ProfilePicture(
                   photoUrl: user.photoUrl,
                   editable: false,
@@ -58,11 +58,14 @@ class ProfileList extends StatelessWidget {
           Visibility(
             visible: user.title?.isNotEmpty ?? false,
             child: Container(
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.blockSizeVertical),
               child: Text(
                 user.title ?? '',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: SizeConfig.instance.blockSizeHorizontal * 4,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
