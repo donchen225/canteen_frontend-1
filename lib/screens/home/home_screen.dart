@@ -47,6 +47,22 @@ class _HomeScreenState extends State<HomeScreen> {
     _homeBloc.add(PageTapped(index: index));
   }
 
+  Widget _buildBadge(int count, Widget child) {
+    return Badge(
+      badgeColor: Palette.orangeColor,
+      toAnimate: false,
+      badgeContent: Text(
+        count.toString(),
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 10,
+        ),
+      ),
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print('HOME SCREEN BUILD');
@@ -124,18 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: Badge(
-                        badgeColor: Palette.orangeColor,
-                        badgeContent: Text(
-                          navBarState.numRequests.toString(),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10),
-                        ),
-                        animationType: BadgeAnimationType.fade,
-                        child: Icon(
-                          Icons.email,
+                      icon: Visibility(
+                        visible: navBarState.numRequests != 0,
+                        child: _buildBadge(
+                          navBarState.numRequests,
+                          Icon(
+                            Icons.email,
+                          ),
                         ),
                       ),
                       title: Text(''),
