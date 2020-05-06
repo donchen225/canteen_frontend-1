@@ -1,33 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
-class ProfileGrid extends StatelessWidget {
-  final List<User> users;
-  List items;
+class DetailedRequestGrid extends StatelessWidget {
+  final List<DetailedRequest> items;
   final key;
 
   final Function onTap;
 
-  ProfileGrid(this.users, {this.key, this.items = const [], this.onTap})
+  DetailedRequestGrid({@required this.items, this.key, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      items = users;
-    }
-
+    print('PROFILE GRID BUILD');
     return Container(
       color: Palette.backgroundColor,
       child: GridView.builder(
         padding: EdgeInsets.only(top: 20),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 2, mainAxisSpacing: 2),
-        itemCount: users.length,
+        itemCount: items.length,
         itemBuilder: (context, index) {
-          final user = users[index];
+          final user = items[index].sender;
 
           return GestureDetector(
             onTap: onTap != null ? () => onTap(items[index]) : () {},

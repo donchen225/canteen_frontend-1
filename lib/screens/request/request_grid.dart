@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/components/profile_list.dart';
-import 'package:canteen_frontend/screens/request/profile_grid.dart';
+import 'package:canteen_frontend/screens/request/detailed_request_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -30,8 +30,7 @@ class RequestGrid extends StatelessWidget {
             backgroundColor: Palette.appBarBackgroundColor,
             elevation: 1,
           ),
-          body: ProfileGrid(
-            state.requestList.map((request) => request.sender).toList(),
+          body: DetailedRequestGrid(
             items: state.requestList,
             onTap: (request) {
               BlocProvider.of<RequestListBloc>(context)
@@ -100,6 +99,7 @@ class RequestGrid extends StatelessWidget {
           ],
         ));
       }
+      return Container();
     });
   }
 }
