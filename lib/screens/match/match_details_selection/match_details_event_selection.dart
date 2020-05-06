@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,10 +65,10 @@ class _MatchDetailEventSelectionScreenState
                   },
                   child: Container(
                     padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical,
-                      left: SizeConfig.instance.blockSizeHorizontal * 3,
-                      right: SizeConfig.instance.blockSizeHorizontal * 3,
+                      top: SizeConfig.instance.blockSizeVertical * 2,
+                      bottom: SizeConfig.instance.blockSizeVertical * 2,
+                      left: SizeConfig.instance.blockSizeHorizontal * 4,
+                      right: SizeConfig.instance.blockSizeHorizontal * 4,
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -79,16 +80,43 @@ class _MatchDetailEventSelectionScreenState
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          flex: 4,
+                          flex: 5,
                           child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(
-                                  skill.name,
-                                  style: TextStyle(fontSize: 18),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: SizeConfig
+                                              .instance.blockSizeVertical /
+                                          2),
+                                  child: Text(
+                                    skill.name,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                                Text('${skill.duration.toString()} min'),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig
+                                              .instance.blockSizeHorizontal,
+                                          top: SizeConfig
+                                                  .instance.blockSizeVertical /
+                                              2,
+                                          bottom: SizeConfig
+                                                  .instance.blockSizeVertical /
+                                              2),
+                                      child: const Icon(IconData(0xf26e,
+                                          fontFamily: CupertinoIcons.iconFont,
+                                          fontPackage:
+                                              CupertinoIcons.iconFontPackage)),
+                                    ),
+                                    Text('${skill.duration.toString()} min'),
+                                  ],
+                                ),
                                 Text(skill.description)
                               ],
                             ),
