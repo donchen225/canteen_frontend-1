@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class DetailedRequestGrid extends StatelessWidget {
@@ -14,54 +15,103 @@ class DetailedRequestGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('PROFILE GRID BUILD');
+    final double itemHeight = SizeConfig.instance.safeBlockVertical / 2.5;
+    final double itemWidth = SizeConfig.instance.safeBlockHorizontal / 2;
+
     return Container(
       color: Palette.backgroundColor,
       child: GridView.builder(
-        padding: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.only(
+          left: SizeConfig.instance.blockSizeHorizontal * 3,
+          right: SizeConfig.instance.blockSizeHorizontal * 3,
+          top: SizeConfig.instance.blockSizeVertical * 3,
+        ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, crossAxisSpacing: 2, mainAxisSpacing: 2),
+          childAspectRatio: (itemWidth / itemHeight),
+          crossAxisCount: 2,
+          crossAxisSpacing: SizeConfig.instance.blockSizeHorizontal * 3,
+          mainAxisSpacing: SizeConfig.instance.blockSizeVertical * 3,
+        ),
         itemCount: items.length,
         itemBuilder: (context, index) {
-          final user = items[index].sender;
+          final request = items[index];
+          final user = request.sender;
 
           return GestureDetector(
-            onTap: onTap != null ? () => onTap(items[index]) : () {},
-            child: Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: ListView(
-                physics: NeverScrollableScrollPhysics(),
+            onTap: onTap != null ? () => onTap(request) : () {},
+            child: Card(
+              elevation: 0.2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    width: 150, // TODO: change this to be dynamic
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: (user.photoUrl != null &&
-                                user.photoUrl.isNotEmpty)
-                            ? CachedNetworkImageProvider(user.photoUrl)
-                            : AssetImage('assets/blank-profile-picture.jpeg'),
-                        fit: BoxFit.cover,
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15)),
+                        image: DecorationImage(
+                          image: (user.photoUrl != null &&
+                                  user.photoUrl.isNotEmpty)
+                              ? CachedNetworkImageProvider(user.photoUrl)
+                              : AssetImage('assets/blank-profile-picture.jpeg'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, left: 5, right: 5),
-                    child: Text(user.displayName ?? ''),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.instance.blockSizeVertical,
+                          bottom: SizeConfig.instance.blockSizeVertical,
+                          left: SizeConfig.instance.blockSizeHorizontal * 3,
+                          right: SizeConfig.instance.blockSizeHorizontal * 3),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                user.displayName ?? '',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: SizeConfig
+                                            .instance.blockSizeHorizontal *
+                                        4),
+                              ),
+                            ],
+                          ),
+                          Visibility(
+                            visible: request.skill.isNotEmpty,
+                            child: Container(
+                                padding: EdgeInsets.only(
+                                  top: SizeConfig.instance.blockSizeVertical,
+                                  bottom: SizeConfig.instance.blockSizeVertical,
+                                  left:
+                                      SizeConfig.instance.blockSizeHorizontal *
+                                          3,
+                                  right:
+                                      SizeConfig.instance.blockSizeHorizontal *
+                                          3,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent[100],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Text(
+                                  request.skill,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  ListView.builder(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: user.teachSkill.length,
-                      itemBuilder: (context, index) {
-                        final skill = user.teachSkill[index];
-                        return Text((skill.name ?? '') +
-                            ' - ' +
-                            ('\$${skill.price.toString()}' ?? ''));
-                      }),
                 ],
               ),
             ),
