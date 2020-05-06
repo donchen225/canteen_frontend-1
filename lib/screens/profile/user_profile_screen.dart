@@ -258,8 +258,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: ProfileSectionTitle("Availability"),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              padding: EdgeInsets.only(
+                left: SizeConfig.instance.blockSizeHorizontal * 3,
+                right: SizeConfig.instance.blockSizeHorizontal * 3,
+                bottom: SizeConfig.instance.blockSizeVertical,
+              ),
               child: Text(
                 'Time Zone',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
