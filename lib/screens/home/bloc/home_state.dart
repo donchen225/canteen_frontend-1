@@ -3,7 +3,9 @@ import 'package:equatable/equatable.dart';
 
 @immutable
 abstract class HomeState extends Equatable {
-  const HomeState();
+  final int numRequests;
+
+  const HomeState({this.numRequests = 0});
 
   @override
   List<Object> get props => [];

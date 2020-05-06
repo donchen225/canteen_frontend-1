@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
@@ -126,7 +127,11 @@ void main() async {
           create: (BuildContext context) => MatchDetailBloc(
               matchRepository: matchRepository,
               videoChatRepository: videoChatRepository),
-        )
+        ),
+        BlocProvider<HomeNavigationBarBloc>(
+          create: (BuildContext context) => HomeNavigationBarBloc(
+              requestBloc: BlocProvider.of<RequestBloc>(context)),
+        ),
       ],
       child: App(
         userRepository: userRepository,

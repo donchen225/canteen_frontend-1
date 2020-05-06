@@ -1,5 +1,7 @@
+import 'package:badges/badges.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
@@ -97,48 +99,63 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Visibility(visible: false, child: Container());
               }
 
-              return BottomNavigationBar(
-                currentIndex: _homeBloc.currentIndex,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                selectedFontSize: 12,
-                unselectedFontSize: 12,
-                selectedItemColor: Palette.orangeColor,
-                type: BottomNavigationBarType.fixed,
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.home,
+              return BlocBuilder<HomeNavigationBarBloc, HomeNavigationBarState>(
+                  builder: (BuildContext context,
+                      HomeNavigationBarState navBarState) {
+                return BottomNavigationBar(
+                  currentIndex: _homeBloc.currentIndex,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  selectedFontSize: 12,
+                  unselectedFontSize: 12,
+                  selectedItemColor: Colors.black,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.home,
+                      ),
+                      title: Text(''),
                     ),
-                    title: Text(''),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.search,
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.search,
+                      ),
+                      title: Text(''),
                     ),
-                    title: Text(''),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.email,
+                    BottomNavigationBarItem(
+                      icon: Badge(
+                        badgeColor: Palette.orangeColor,
+                        badgeContent: Text(
+                          navBarState.numRequests.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10),
+                        ),
+                        animationType: BadgeAnimationType.fade,
+                        child: Icon(
+                          Icons.email,
+                        ),
+                      ),
+                      title: Text(''),
                     ),
-                    title: Text(''),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.sms,
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.sms,
+                      ),
+                      title: Text(''),
                     ),
-                    title: Text(''),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.person,
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.person,
+                      ),
+                      title: Text(''),
                     ),
-                    title: Text(''),
-                  ),
-                ],
-                onTap: _onItemTapped,
-              );
+                  ],
+                  onTap: _onItemTapped,
+                );
+              });
             },
           ),
         ),

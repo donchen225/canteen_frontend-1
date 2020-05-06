@@ -56,6 +56,9 @@ dependencies:
   
   # Calendar
   table_calendar: ^2.2.3
+
+  # Badge
+  badges: ^1.1.1
   
   # Onboarding
   intro_views_flutter:
