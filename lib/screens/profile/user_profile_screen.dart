@@ -291,14 +291,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
             ),
-            AvailabilitySection(
-              availability: user.availability,
-              onDayTap: (Day day, TimeOfDay startTime, TimeOfDay endTime) =>
-                  _userProfileBloc.add(EditAvailability(
-                      user: user,
-                      day: day,
-                      startTime: startTime,
-                      endTime: endTime)),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+              ),
+              child: AvailabilitySection(
+                availability: user.availability,
+                onDayTap: (Day day, TimeOfDay startTime, TimeOfDay endTime) =>
+                    _userProfileBloc.add(EditAvailability(
+                        user: user,
+                        day: day,
+                        startTime: startTime,
+                        endTime: endTime)),
+              ),
             ),
           ],
         ),

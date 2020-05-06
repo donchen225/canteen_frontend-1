@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/availability/availability.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
+import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -7,16 +8,27 @@ class AvailabilitySection extends StatelessWidget {
   final Availability availability;
   final Function onDayTap;
   final Map<String, Day> days = {
-    'MON': Day.monday,
-    'TUE': Day.tuesday,
-    'WED': Day.wednesday,
-    'THU': Day.thursday,
-    'FRI': Day.friday,
-    'SAT': Day.saturday,
-    'SUN': Day.sunday,
+    'Mondays': Day.monday,
+    'Tuesdays': Day.tuesday,
+    'Wednesdays': Day.wednesday,
+    'Thursdays': Day.thursday,
+    'Fridays': Day.friday,
+    'Saturdays': Day.saturday,
+    'Sundays': Day.sunday,
   };
 
   AvailabilitySection({this.availability, this.onDayTap});
+
+  Border _buildBorder(Day day) {
+    if (day == Day.monday) {
+      return Border.all(width: 1);
+    } else {}
+    return const Border(
+      bottom: BorderSide(width: 1),
+      left: BorderSide(width: 1),
+      right: BorderSide(width: 1),
+    );
+  }
 
   Widget _buildDayWidget(BuildContext context, MapEntry<String, Day> day) {
     int startTimeSeconds;
@@ -47,20 +59,23 @@ class AvailabilitySection extends StatelessWidget {
         }
       },
       child: Container(
-        height: SizeConfig.instance.blockSizeVertical * 10,
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+        padding: EdgeInsets.only(
+          left: SizeConfig.instance.blockSizeHorizontal * 3,
+          right: SizeConfig.instance.blockSizeHorizontal * 3,
+          top: SizeConfig.instance.blockSizeVertical * 3,
+          bottom: SizeConfig.instance.blockSizeVertical * 3,
+        ),
         decoration: BoxDecoration(
-          border: Border.all(width: 1),
+          border: _buildBorder(day.value),
         ),
         child: Row(
           children: <Widget>[
             Expanded(child: Text(day.key)),
             Expanded(
-                flex: 3,
                 child: Visibility(
                     visible: startTime != null && endTime != null,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Text(startTime?.format(context) ?? ''),
                         Text('-'),
@@ -75,9 +90,7 @@ class AvailabilitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+    return ProfileTextCard(
       child: Column(
         children: days.entries
             .map<Widget>((day) => _buildDayWidget(context, day))
