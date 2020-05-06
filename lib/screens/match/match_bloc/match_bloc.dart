@@ -33,8 +33,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
     if (event is LoadMatches) {
       yield* _mapLoadMatchesToState();
-    } else if (event is DeleteMatch) {
-      yield* _mapDeleteMatchToState(event);
     } else if (event is MatchesUpdated) {
       yield* _mapMatchesUpdateToState(event);
     } else if (event is ClearMatches) {
@@ -52,10 +50,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     } catch (exception) {
       print(exception.errorMessage());
     }
-  }
-
-  Stream<MatchState> _mapDeleteMatchToState(DeleteMatch event) async* {
-    _matchRepository.deleteMatch(event.match);
   }
 
   Stream<MatchState> _mapMatchesUpdateToState(MatchesUpdated event) async* {

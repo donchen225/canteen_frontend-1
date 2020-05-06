@@ -84,6 +84,20 @@ class SelectPayment extends MatchDetailEvent {
       'SelectPayment { paymentMethod: $paymentMethod skill: $skill }';
 }
 
+class ConfirmPayment extends MatchDetailEvent {
+  final Match match;
+
+  const ConfirmPayment({
+    @required this.match,
+  });
+
+  @override
+  List<Object> get props => [match];
+
+  @override
+  String toString() => 'ConfirmPayment { match: $match }';
+}
+
 class AcceptVideoChatDetails extends MatchDetailEvent {}
 
 class CompleteVideoChat extends MatchDetailEvent {}

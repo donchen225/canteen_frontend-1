@@ -123,8 +123,9 @@ void main() async {
           ),
         ),
         BlocProvider<MatchDetailBloc>(
-          create: (BuildContext context) =>
-              MatchDetailBloc(videoChatRepository: videoChatRepository),
+          create: (BuildContext context) => MatchDetailBloc(
+              matchRepository: matchRepository,
+              videoChatRepository: videoChatRepository),
         )
       ],
       child: App(

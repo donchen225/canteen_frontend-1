@@ -45,12 +45,6 @@ class MatchRepository {
     }
   }
 
-  Future<void> deleteMatch(Match match) async {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.delete(matchCollection.document(match.id));
-    });
-  }
-
   Future<void> sendMessage(String matchId, Message message) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
@@ -135,5 +129,11 @@ class MatchRepository {
         .documents
         .map((doc) => Message.fromEntity(MessageEntity.fromSnapshot(doc)))
         .toList();
+  }
+
+  Future<void> confirmPayment(Match match) async {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.update(matchCollection.document(match.id), {"status": 1});
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/match_detail_event.dart';
@@ -9,12 +10,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
+  final MatchRepository _matchRepository;
   final VideoChatRepository _videoChatRepository;
   Map<String, StreamSubscription> matchDetailsSubscriptionMap = Map();
 
-  MatchDetailBloc({@required videoChatRepository})
+  MatchDetailBloc({@required matchRepository, @required videoChatRepository})
       : assert(videoChatRepository != null),
-        _videoChatRepository = videoChatRepository;
+        assert(matchRepository != null),
+        _videoChatRepository = videoChatRepository,
+        _matchRepository = matchRepository;
 
   MatchDetailState get initialState => MatchUninitialized();
 
@@ -28,6 +32,8 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
       yield* _mapSelectEventToState(event);
     } else if (event is SelectPayment) {
       yield* _mapSelectPaymentToState(event);
+    } else if (event is ConfirmPayment) {
+      yield* _mapConfirmPaymentToState(event);
     }
   }
 
@@ -86,5 +92,12 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
   Stream<MatchDetailState> _mapSelectPaymentToState(
       SelectPayment event) async* {
     yield MatchPaymentConfirming(skill: event.skill);
+  }
+
+  Stream<MatchDetailState> _mapConfirmPaymentToState(
+      ConfirmPayment event) async* {
+    yield MatchLoading();
+    await _matchRepository.confirmPayment(event.match);
+    yield MatchInitialized();
   }
 }

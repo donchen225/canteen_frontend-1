@@ -141,7 +141,10 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                                 color: Palette.whiteColor,
                                 fontWeight: FontWeight.w600),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            BlocProvider.of<MatchDetailBloc>(context)
+                                .add(ConfirmPayment(match: match));
+                          },
                         ),
                       ),
                     ],
