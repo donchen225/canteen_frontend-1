@@ -14,6 +14,7 @@ class HomeNavigationBarBloc
   HomeNavigationBarBloc({@required RequestBloc requestBloc})
       : assert(requestBloc != null),
         _requestBloc = requestBloc {
+    print('HomeNavigationBarBloc CONSTRUCTOR');
     _requestSubscription = _requestBloc.listen((state) {
       if (state is RequestsLoaded) {
         add(UpdateBadgeCount(numRequests: state.requestList.length));
@@ -45,6 +46,6 @@ class HomeNavigationBarBloc
   }
 
   Stream<HomeNavigationBarState> _mapClearBadgeCountsToState() async* {
-    yield HomeNavigationBarLoaded();
+    yield HomeNavigationBarLoaded(numRequests: 0);
   }
 }

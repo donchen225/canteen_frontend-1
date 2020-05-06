@@ -59,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           fontSize: 10,
         ),
       ),
+      showBadge: count != 0,
       child: child,
     );
   }
@@ -140,13 +141,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: Visibility(
-                        visible: navBarState.numRequests != 0,
-                        child: _buildBadge(
-                          navBarState.numRequests,
-                          Icon(
-                            Icons.email,
-                          ),
+                      icon: _buildBadge(
+                        navBarState.numRequests,
+                        Icon(
+                          Icons.email,
                         ),
                       ),
                       title: Text(''),
