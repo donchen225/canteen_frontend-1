@@ -213,6 +213,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             ),
             child: TextField(
               controller: _skillNameController,
+              textCapitalization: TextCapitalization.sentences,
               autofocus: true,
               style: TextStyle(
                   fontSize: 14,
@@ -257,6 +258,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                           child: TextField(
                             textAlign: TextAlign.center,
                             controller: _skillPriceController,
+                            textCapitalization: TextCapitalization.sentences,
                             autofocus: true,
                             style: TextStyle(
                                 fontSize: 14,
@@ -318,6 +320,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             ),
             child: TextField(
               controller: _skillDescriptionController,
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,

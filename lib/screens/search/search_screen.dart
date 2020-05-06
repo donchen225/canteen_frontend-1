@@ -115,6 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,

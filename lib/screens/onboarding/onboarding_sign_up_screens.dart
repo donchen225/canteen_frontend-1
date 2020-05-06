@@ -165,6 +165,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
         children: <Widget>[
           TextField(
             controller: nameController,
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 25,
@@ -190,6 +191,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                 width: SizeConfig.instance.blockSizeHorizontal * 30,
                 child: TextField(
                   controller: priceController,
+                  textCapitalization: TextCapitalization.sentences,
                   cursorColor: Palette.orangeColor,
                   style: TextStyle(
                       fontSize: 25,
@@ -214,6 +216,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ),
           TextField(
             controller: descriptionController,
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 25,
@@ -368,6 +371,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ),
           TextField(
             controller: controller,
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 25,
@@ -415,6 +419,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ),
           TextField(
             controller: controller,
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 25,
@@ -506,6 +511,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             width: SizeConfig.instance.blockSizeHorizontal * 33,
             child: TextField(
               controller: controller,
+              textCapitalization: TextCapitalization.sentences,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               cursorColor: Palette.orangeColor,
@@ -560,6 +566,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           ),
           TextField(
             controller: controller,
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Palette.orangeColor,
             style: TextStyle(
                 fontSize: 14,

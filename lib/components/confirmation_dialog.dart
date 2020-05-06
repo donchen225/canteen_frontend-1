@@ -98,6 +98,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               ),
               child: TextField(
                 controller: commentController,
+                textCapitalization: TextCapitalization.sentences,
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.black,

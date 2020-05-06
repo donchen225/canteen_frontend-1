@@ -94,6 +94,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
           ),
           child: TextField(
             controller: _textController,
+            textCapitalization: TextCapitalization.sentences,
             autofocus: true,
             style: TextStyle(
                 fontSize: 14,

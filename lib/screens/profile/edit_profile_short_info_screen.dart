@@ -94,6 +94,7 @@ class _EditProfileShortInfoScreenState
             bottom: SizeConfig.instance.blockSizeVertical * 6),
         child: TextField(
           controller: _textController,
+          textCapitalization: TextCapitalization.sentences,
           autofocus: true,
           style: TextStyle(
               fontSize: SizeConfig.instance.blockSizeHorizontal * 7,
