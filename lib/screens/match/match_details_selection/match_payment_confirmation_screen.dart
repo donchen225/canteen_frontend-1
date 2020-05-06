@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
@@ -10,11 +11,13 @@ import 'package:intl/intl.dart';
 class MatchPaymentConfirmationScreen extends StatelessWidget {
   final User user;
   final Match match;
+  final Skill skill;
   // final VideoChatDate date;
 
   MatchPaymentConfirmationScreen({
     @required this.user,
     @required this.match,
+    @required this.skill,
   });
 
   @override
@@ -32,22 +35,22 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                            ),
-                            onPressed: () {
-                              // BlocProvider.of<MatchDetailBloc>(context)
-                              //     .add(SelectEvent());
-                            },
-                          ),
-                        ),
+                        // Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: IconButton(
+                        //     icon: Icon(
+                        //       Icons.arrow_back,
+                        //     ),
+                        //     onPressed: () {
+                        //       // BlocProvider.of<MatchDetailBloc>(context)
+                        //       //     .add(SelectEvent());
+                        //     },
+                        //   ),
+                        // ),
                         Container(
                           alignment: Alignment.center,
                           child: Text(
-                            'Video Chat Session',
+                            'Confirm Payment',
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
@@ -67,14 +70,17 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('\$'),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Select method to pay:',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical * 3,
+                      bottom: SizeConfig.instance.blockSizeVertical * 3,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text('Total'),
+                        Text('\$ ${skill.price.toString()}'),
+                      ],
                     ),
                   ),
                   Row(
@@ -82,7 +88,19 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         child: RaisedButton(
-                          child: Text('Continue'),
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.instance.blockSizeVertical * 2,
+                            bottom: SizeConfig.instance.blockSizeVertical * 2,
+                            left: SizeConfig.instance.blockSizeHorizontal * 6,
+                            right: SizeConfig.instance.blockSizeHorizontal * 6,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            'Complete payment',
+                            style: TextStyle(fontSize: 16),
+                          ),
                           onPressed: () {},
                         ),
                       ),

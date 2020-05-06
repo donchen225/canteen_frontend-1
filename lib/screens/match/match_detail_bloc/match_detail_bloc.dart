@@ -85,6 +85,6 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
 
   Stream<MatchDetailState> _mapSelectPaymentToState(
       SelectPayment event) async* {
-    yield MatchPaymentConfirming();
+    yield MatchPaymentConfirming(skill: event.skill);
   }
 }

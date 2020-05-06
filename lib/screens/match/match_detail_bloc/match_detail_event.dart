@@ -67,7 +67,22 @@ class SelectVideoChatDate extends MatchDetailEvent {
   String toString() => 'SelectVideoChatDate { skill: $skill, date: $date }';
 }
 
-class SelectPayment extends MatchDetailEvent {}
+class SelectPayment extends MatchDetailEvent {
+  final String paymentMethod;
+  final Skill skill;
+
+  const SelectPayment({
+    @required this.paymentMethod,
+    @required this.skill,
+  });
+
+  @override
+  List<Object> get props => [paymentMethod, skill];
+
+  @override
+  String toString() =>
+      'SelectPayment { paymentMethod: $paymentMethod skill: $skill }';
+}
 
 class AcceptVideoChatDetails extends MatchDetailEvent {}
 

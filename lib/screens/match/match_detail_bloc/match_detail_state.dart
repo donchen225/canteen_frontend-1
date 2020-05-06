@@ -47,7 +47,17 @@ class MatchPaying extends MatchDetailState {
   String toString() => 'MatchPaying { skill: $skill, date: $date }';
 }
 
-class MatchPaymentConfirming extends MatchDetailState {}
+class MatchPaymentConfirming extends MatchDetailState {
+  final Skill skill;
+
+  const MatchPaymentConfirming({this.skill});
+
+  @override
+  List<Object> get props => [skill];
+
+  @override
+  String toString() => 'MatchPaying { skill: $skill }';
+}
 
 // Initial time and payment have been completed
 class MatchInitialized extends MatchDetailState {}

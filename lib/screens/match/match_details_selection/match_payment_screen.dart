@@ -168,8 +168,11 @@ class MatchPaymentScreen extends StatelessWidget {
                               child: RaisedButton(
                                 child: Text('Continue'),
                                 onPressed: () {
-                                  BlocProvider.of<MatchDetailBloc>(context)
-                                      .add(SelectPayment());
+                                  BlocProvider.of<MatchDetailBloc>(context).add(
+                                      SelectPayment(
+                                          skill: skill,
+                                          paymentMethod:
+                                              'Venmo')); //TODO: change this to real payment method
                                 },
                               ),
                             ),

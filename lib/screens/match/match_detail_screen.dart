@@ -79,7 +79,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               elevation: 1,
               bottom: !(state is MatchEventSelecting ||
                       state is MatchTimeSelecting ||
-                      state is MatchPaying)
+                      state is MatchPaying ||
+                      state is MatchPaymentConfirming)
                   ? TabBar(
                       indicatorColor: Colors.black,
                       controller: _tabController,
@@ -138,6 +139,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   return MatchPaymentConfirmationScreen(
                     user: user,
                     match: widget.match,
+                    skill: state.skill,
                   );
                 }
 
