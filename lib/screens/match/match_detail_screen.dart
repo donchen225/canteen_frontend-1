@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_detail_time_selection_screen.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/match_waiting_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
@@ -105,12 +106,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   );
                 }
 
-                if (state is MatchWaiting) {
-                  return Center(
-                    child: Text('Waiting'),
-                  );
-                }
-
                 if (state is MatchEventSelecting) {
                   return MatchDetailEventSelectionScreen(
                     user: user,
@@ -163,6 +158,11 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                         navState is PageLoading ||
                         navState is CurrentIndexChanged) {
                       return Center(child: CupertinoActivityIndicator());
+                    }
+
+                    if (state is MatchWaiting &&
+                        !(navState is ProfileScreenLoaded)) {
+                      return MatchWaitingScreen();
                     }
 
                     if (navState is ChatScreenLoaded) {
