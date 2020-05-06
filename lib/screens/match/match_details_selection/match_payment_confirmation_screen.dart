@@ -64,7 +64,7 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: SizeConfig.instance.blockSizeHorizontal * 3,
                 right: SizeConfig.instance.blockSizeHorizontal * 3,
-                top: SizeConfig.instance.blockSizeVertical * 3,
+                // top: SizeConfig.instance.blockSizeVertical * 3,
                 bottom: SizeConfig.instance.blockSizeVertical * 3,
               ),
               child: Column(
@@ -72,15 +72,50 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical * 3,
-                      bottom: SizeConfig.instance.blockSizeVertical * 3,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text('Total'),
-                        Text('\$ ${skill.price.toString()}'),
-                      ],
+                        bottom: SizeConfig.instance.blockSizeVertical * 6),
+                    child: Container(
+                      width: SizeConfig.instance.blockSizeHorizontal * 66,
+                      padding: EdgeInsets.only(
+                        left: SizeConfig.instance.blockSizeHorizontal * 6,
+                        right: SizeConfig.instance.blockSizeHorizontal * 6,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.instance.blockSizeVertical * 3,
+                              bottom: SizeConfig.instance.blockSizeVertical * 3,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                    'Video Chat (${skill.duration.toString()} min)'),
+                                Text('\$ ${skill.price.toString()}'),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.instance.blockSizeVertical * 3,
+                              bottom: SizeConfig.instance.blockSizeVertical * 3,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Total'),
+                                Text('\$ ${skill.price.toString()}'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Row(
