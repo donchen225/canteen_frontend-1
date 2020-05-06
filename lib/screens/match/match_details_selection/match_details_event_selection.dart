@@ -148,8 +148,9 @@ class _MatchDetailEventSelectionScreenState
           Align(
             alignment: Alignment.center,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.instance.blockSizeVertical * 3),
+              padding: EdgeInsets.only(
+                  top: SizeConfig.instance.blockSizeVertical * 6,
+                  bottom: SizeConfig.instance.blockSizeVertical * 3),
               child: ProfilePicture(
                 photoUrl: widget.user.photoUrl,
                 editable: false,
@@ -203,11 +204,8 @@ class _MatchDetailEventSelectionScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
+    return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.instance.blockSizeVertical * 3,
-        bottom: SizeConfig.instance.blockSizeVertical * 3,
         left: SizeConfig.instance.blockSizeHorizontal * 3,
         right: SizeConfig.instance.blockSizeHorizontal * 3,
       ),
