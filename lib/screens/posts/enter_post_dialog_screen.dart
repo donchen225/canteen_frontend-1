@@ -10,7 +10,8 @@ class EnterPostDialogScreen extends StatefulWidget {
 }
 
 class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
-  TextEditingController _textController;
+  TextEditingController _titleController;
+  TextEditingController _messageController;
 
   _EnterPostDialogScreenState();
 
@@ -18,7 +19,8 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
   void initState() {
     super.initState();
 
-    _textController = TextEditingController();
+    _titleController = TextEditingController();
+    _messageController = TextEditingController();
   }
 
   @override
@@ -37,7 +39,27 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEFFFF),
           leading: CloseButton(),
-          title: Text('New Question'),
+          title: Text('New Post'),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 6,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'POST',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
@@ -53,22 +75,18 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
               currentFocus.unfocus();
             }
           },
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
                   padding: EdgeInsets.only(
                     top: SizeConfig.instance.blockSizeVertical * 3,
-                    left: SizeConfig.instance.blockSizeHorizontal * 3,
-                    right: SizeConfig.instance.blockSizeHorizontal * 3,
+                    left: SizeConfig.instance.blockSizeHorizontal * 6,
+                    right: SizeConfig.instance.blockSizeHorizontal * 6,
                   ),
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(
-                        width: 1,
-                        color: const Color(0xFFDEE0D1),
-                      ),
-                      bottom: BorderSide(
                         width: 1,
                         color: const Color(0xFFDEE0D1),
                       ),
@@ -82,41 +100,32 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
                         ],
                       ),
                       TextField(
-                        controller: _textController,
+                        controller: _titleController,
                         autofocus: true,
                         maxLines: null,
-                        decoration:
-                            InputDecoration(hintText: 'Add your question'),
+                        decoration: InputDecoration(
+                          hintText: 'An interesting title',
+                          hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      TextField(
+                        controller: _messageController,
+                        autofocus: true,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          hintText: 'Your text post (optional)',
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.instance.blockSizeVertical,
-                    bottom: SizeConfig.instance.blockSizeVertical,
-                    left: SizeConfig.instance.blockSizeHorizontal * 3,
-                    right: SizeConfig.instance.blockSizeHorizontal * 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: Palette.orangeColor,
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: _textController.text.isNotEmpty ? () {} : null,
-                    )
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
