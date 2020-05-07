@@ -1,9 +1,7 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/models/user_settings/user_settings.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -47,7 +45,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     switch (this.currentIndex) {
       case 0:
-        yield RecommendedScreenLoaded(reset: reset);
+        // yield RecommendedScreenLoaded(reset: reset);
+        yield PostScreenLoaded(reset: reset);
         break;
       case 1:
         yield SearchScreenLoaded(reset: reset);
@@ -73,7 +72,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // Load user settings
       _settingBloc.add(InitializeSettings(hasOnboarded: true));
 
-      yield RecommendedScreenLoaded();
+      yield PostScreenLoaded();
+      // yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
     }
@@ -84,7 +84,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     // Upload user settings here
 
-    yield RecommendedScreenLoaded();
+    yield PostScreenLoaded();
+    // yield RecommendedScreenLoaded();
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {

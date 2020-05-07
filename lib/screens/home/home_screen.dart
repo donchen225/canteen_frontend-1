@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/posts/posts_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
@@ -128,12 +129,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedItemColor: Colors.black,
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
+                    // BottomNavigationBarItem(
+                    //   icon: _buildBadge(
+                    //     navBarState.numRecommended,
+                    //     Icon(
+                    //       Icons.home,
+                    //     ),
+                    //   ),
+                    //   title: Text(''),
+                    // ),
                     BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numRecommended,
-                        Icon(
-                          Icons.home,
-                        ),
+                      icon: Icon(
+                        Icons.home,
                       ),
                       title: Text(''),
                     ),
@@ -184,8 +191,11 @@ class _HomeScreenState extends State<HomeScreen> {
             return Center(child: CupertinoActivityIndicator());
           }
 
+          if (state is PostScreenLoaded) {
+            return PostScreen();
+          }
+
           if (state is RecommendedScreenLoaded) {
-            print('IN HOME SCREEN - RECOMMENDEDSCREENLOADED STATE');
             return RecommendedScreen();
           }
           if (state is SearchScreenLoaded) {

@@ -30,6 +30,18 @@ class PageLoading extends HomeState {
   String toString() => 'PageLoading';
 }
 
+class PostScreenLoaded extends HomeState {
+  final bool reset;
+
+  PostScreenLoaded({this.reset});
+
+  @override
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'PostScreenLoaded { reset: $reset }';
+}
+
 class RecommendedScreenLoaded extends HomeState {
   final bool reset;
 
