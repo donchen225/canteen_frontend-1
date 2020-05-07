@@ -23,101 +23,101 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: Container(
-        height: SizeConfig.instance.blockSizeVertical * 90,
-        decoration: BoxDecoration(
-          color: const Color(0xFFFEFFFF),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
+    return Container(
+      height: SizeConfig.instance.blockSizeVertical * 90,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFEFFFF),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFFEFFFF),
+          leading: CloseButton(),
+          title: Text('New Question'),
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(15),
+            ),
           ),
         ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical * 2,
-                bottom: SizeConfig.instance.blockSizeVertical * 2,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEFFFF),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'New Question',
-                    style:
-                        TextStyle(fontSize: 18, color: const Color(0xFF939598)),
+        body: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.instance.blockSizeVertical * 3,
+                    left: SizeConfig.instance.blockSizeHorizontal * 3,
+                    right: SizeConfig.instance.blockSizeHorizontal * 3,
                   ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical * 3,
-                left: SizeConfig.instance.blockSizeHorizontal * 3,
-                right: SizeConfig.instance.blockSizeHorizontal * 3,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    width: 1,
-                    color: const Color(0xFFDEE0D1),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        width: 1,
+                        color: const Color(0xFFDEE0D1),
+                      ),
+                      bottom: BorderSide(
+                        width: 1,
+                        color: const Color(0xFFDEE0D1),
+                      ),
+                    ),
                   ),
-                  bottom: BorderSide(
-                    width: 1,
-                    color: const Color(0xFFDEE0D1),
-                  ),
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Row(
+                  child: Column(
                     children: <Widget>[
-                      Text('Brian Hsu asked'),
+                      Row(
+                        children: <Widget>[
+                          Text('Brian Hsu asked'),
+                        ],
+                      ),
+                      TextField(
+                        controller: _textController,
+                        autofocus: true,
+                        maxLines: null,
+                        decoration:
+                            InputDecoration(hintText: 'Add your question'),
+                      ),
                     ],
                   ),
-                  TextField(
-                    controller: _textController,
-                    autofocus: true,
-                    maxLines: null,
-                    decoration: InputDecoration(hintText: 'Add your question'),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Palette.orangeColor,
-                        child: Text(
-                          'Add',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.instance.blockSizeVertical,
+                    bottom: SizeConfig.instance.blockSizeVertical,
+                    left: SizeConfig.instance.blockSizeHorizontal * 3,
+                    right: SizeConfig.instance.blockSizeHorizontal * 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    RaisedButton(
+                      color: Palette.orangeColor,
+                      child: Text(
+                        'Add',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        onPressed:
-                            _textController.text.isNotEmpty ? () {} : null,
-                      )
-                    ],
-                  )
-                ],
+                      ),
+                      onPressed: _textController.text.isNotEmpty ? () {} : null,
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
