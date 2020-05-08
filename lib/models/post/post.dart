@@ -16,8 +16,8 @@ class Post extends Equatable {
       {this.id,
       @required this.from,
       @required this.title,
-      @required this.message,
-      @required this.tags,
+      this.message,
+      this.tags,
       @required this.lastUpdated,
       @required this.createdOn});
 
