@@ -55,6 +55,7 @@ class PostScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (_) {
                           return SinglePostScreen(
                             post: post,
+                            user: state.user,
                           );
                         }),
                       );

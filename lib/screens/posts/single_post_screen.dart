@@ -1,13 +1,16 @@
 import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/posts/enter_post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class SinglePostScreen extends StatelessWidget {
+  final User user;
   final DetailedPost post;
   final Color _sideTextColor = Colors.grey[500];
 
-  SinglePostScreen({@required this.post});
+  SinglePostScreen({@required this.post, @required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class SinglePostScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical,
+                top: SizeConfig.instance.blockSizeVertical * 2,
                 left: SizeConfig.instance.blockSizeHorizontal * 4,
                 right: SizeConfig.instance.blockSizeHorizontal * 4,
               ),
@@ -141,21 +144,33 @@ class SinglePostScreen extends StatelessWidget {
                     right: SizeConfig.instance.blockSizeHorizontal * 3,
                     bottom: SizeConfig.instance.safeBlockVertical * 3,
                   ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
-                    ),
-                    height: SizeConfig.instance.safeBlockVertical * 6,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Add a comment',
-                          style: TextStyle(color: Colors.grey[600]),
+                  child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => EnterPostDialogScreen(
+                          user: user,
                         ),
-                      ],
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                      ),
+                      height: SizeConfig.instance.safeBlockVertical * 6,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Add a comment',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
