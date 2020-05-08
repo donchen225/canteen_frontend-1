@@ -96,8 +96,8 @@ class PostScreen extends StatelessWidget {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: SizeConfig
-                                                .instance.blockSizeVertical *
-                                            2 *
+                                                .instance.safeBlockVertical *
+                                            2.2 *
                                             1.2),
                                   ),
                                 ),
@@ -109,8 +109,8 @@ class PostScreen extends StatelessWidget {
                                       post.message,
                                       style: TextStyle(
                                           fontSize: SizeConfig
-                                                  .instance.blockSizeVertical *
-                                              1.5 *
+                                                  .instance.safeBlockVertical *
+                                              1.8 *
                                               1.2),
                                     ),
                                   ),
