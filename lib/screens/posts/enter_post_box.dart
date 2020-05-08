@@ -1,9 +1,14 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/enter_post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class EnterPostBox extends StatelessWidget {
+  final User user;
+
+  EnterPostBox({@required this.user});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -23,7 +28,7 @@ class EnterPostBox extends StatelessWidget {
               padding: EdgeInsets.only(
                   bottom: SizeConfig.instance.blockSizeVertical),
               child: Text(
-                'Brian Hsu',
+                user.displayName ?? '',
                 style: TextStyle(color: Colors.grey[500]),
               ),
             ),

@@ -31,7 +31,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         _postRepository = postRepository,
         _userRepository = userRepository,
         _userBloc = userBloc {
-    print('POST BLOC CONSTRUCTOR');
     _userSubscription = _userBloc.listen((state) {
       print('POST BLOC USER SUBSCRIPTION RECEIVED EVENT');
       if (state is UserLoaded) {
@@ -62,6 +61,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       _postSubscription = _postRepository.getPosts().listen((posts) {
         add(PostsUpdated(posts));
       });
+
+      if (_self == null) {
+        print('USER IS NULL!!!!');
+        _self = await _userRepository.currentUser();
+        print('USER IS STILL NULL!!!!');
+      }
     } catch (exception) {
       print(exception.errorMessage());
     }
@@ -99,7 +104,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     }
 
-    yield PostsLoaded(_postRepository.currentDetailedPosts());
+    yield PostsLoaded(
+        posts: _postRepository.currentDetailedPosts(), user: _self);
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
