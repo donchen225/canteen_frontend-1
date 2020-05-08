@@ -12,7 +12,7 @@ abstract class PostState extends Equatable {
 class PostsLoading extends PostState {}
 
 class PostsLoaded extends PostState {
-  final List<Post> posts;
+  final List<DetailedPost> posts;
   final User user;
 
   const PostsLoaded({this.posts = const [], this.user});
