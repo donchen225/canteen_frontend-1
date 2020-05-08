@@ -130,7 +130,7 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
                         autofocus: true,
                         maxLines: null,
                         decoration: InputDecoration(
-                          hintText: 'An interesting title',
+                          hintText: 'Enter your question',
                           hintStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

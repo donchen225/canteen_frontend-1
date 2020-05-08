@@ -49,7 +49,7 @@ class EnterPostBox extends StatelessWidget {
               ),
             ),
             Text(
-              'What is your question or link?',
+              'What is your question?',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

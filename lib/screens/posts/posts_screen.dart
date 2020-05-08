@@ -31,8 +31,6 @@ class PostScreen extends StatelessWidget {
 
           if (state is PostsLoaded) {
             return ListView(
-              padding:
-                  EdgeInsets.only(top: SizeConfig.instance.blockSizeVertical),
               children: <Widget>[
                 EnterPostBox(
                   user: state.user,
