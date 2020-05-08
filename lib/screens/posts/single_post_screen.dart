@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -28,22 +29,29 @@ class SinglePostScreen extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(
                 top: SizeConfig.instance.blockSizeVertical * 2,
-                left: SizeConfig.instance.blockSizeHorizontal * 4,
-                right: SizeConfig.instance.blockSizeHorizontal * 4,
               ),
               child: CustomScrollView(
                 slivers: <Widget>[
                   SliverToBoxAdapter(
-                    child: PostNameTemplate(
-                      name: post.user.displayName,
-                      photoUrl: post.user.photoUrl,
-                      time: post.createdOn,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: SizeConfig.instance.blockSizeHorizontal * 4,
+                        right: SizeConfig.instance.blockSizeHorizontal * 4,
+                      ),
+                      child: PostNameTemplate(
+                        name: post.user.displayName,
+                        photoUrl: post.user.photoUrl,
+                        time: post.createdOn,
+                      ),
                     ),
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.blockSizeVertical * 2,
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical * 2,
+                        bottom: SizeConfig.instance.blockSizeVertical * 2,
+                        left: SizeConfig.instance.blockSizeHorizontal * 4,
+                        right: SizeConfig.instance.blockSizeHorizontal * 4,
                       ),
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -65,6 +73,8 @@ class SinglePostScreen extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(
                             bottom: SizeConfig.instance.blockSizeVertical,
+                            left: SizeConfig.instance.blockSizeHorizontal * 4,
+                            right: SizeConfig.instance.blockSizeHorizontal * 4,
                           ),
                           child: Text(post.message),
                         )),
@@ -196,8 +206,14 @@ class SinglePostScreen extends StatelessWidget {
                               itemBuilder: (BuildContext context, int index) {
                                 final comment = comments[index];
 
-                                return Container(
-                                  child: Text(comment.message),
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        SizeConfig.instance.blockSizeVertical,
+                                  ),
+                                  child: CommentContainer(
+                                    comment: comment,
+                                  ),
                                 );
                               });
                         }
