@@ -59,7 +59,8 @@ class PostEntity extends Equatable {
       from: snapshot.data['from'],
       title: snapshot.data['title'],
       message: snapshot.data['message'],
-      tags: snapshot.data['tags'].map<String>((x) => x as String).toList(),
+      tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
+          [],
       createdOn: snapshot.data["created_on"].toDate(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
     );

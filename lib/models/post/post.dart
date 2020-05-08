@@ -34,7 +34,7 @@ class Post extends Equatable {
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, from: $from, title: $title, message: $message, tags: $tags, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'PostEntity { id: $id, from: $from, title: $title, message: $message, tags: $tags, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Post fromEntity(PostEntity entity) {

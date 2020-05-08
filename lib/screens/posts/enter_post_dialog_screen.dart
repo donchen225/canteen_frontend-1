@@ -152,6 +152,7 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
                       ),
                       TextField(
                         controller: _titleController,
+                        textCapitalization: TextCapitalization.sentences,
                         autofocus: true,
                         maxLines: null,
                         decoration: InputDecoration(
@@ -161,6 +162,7 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
                       ),
                       TextField(
                         controller: _messageController,
+                        textCapitalization: TextCapitalization.sentences,
                         autofocus: true,
                         maxLines: null,
                         decoration: InputDecoration(
