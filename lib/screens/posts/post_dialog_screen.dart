@@ -34,7 +34,6 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
   @override
   Widget build(BuildContext context) {
     return TextDialogScreen(
-      user: widget.user,
       title: 'New Post',
       sendWidget: PostButton(onTap: (BuildContext context) {
         if (_titleController.text.isNotEmpty) {

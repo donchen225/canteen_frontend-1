@@ -1,18 +1,13 @@
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class TextDialogScreen extends StatelessWidget {
-  final User user;
   final String title;
   final Widget sendWidget;
   final Widget child;
 
   TextDialogScreen(
-      {@required this.user,
-      @required this.title,
-      @required this.sendWidget,
-      this.child});
+      {@required this.title, @required this.sendWidget, this.child});
 
   @override
   Widget build(BuildContext context) {

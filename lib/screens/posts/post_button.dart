@@ -2,9 +2,10 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class PostButton extends StatelessWidget {
+  final String text;
   final Function(BuildContext) onTap;
 
-  PostButton({@required this.onTap});
+  PostButton({@required this.onTap, this.text = 'POST'});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class PostButton extends StatelessWidget {
           right: SizeConfig.instance.blockSizeHorizontal * 3,
         ),
         child: Text(
-          'POST',
+          text,
           style: TextStyle(
             fontSize: 12,
             color: Colors.blue,
