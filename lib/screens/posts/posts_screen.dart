@@ -51,123 +51,141 @@ class PostScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                   final post = state.posts[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) {
-                          BlocProvider.of<CommentBloc>(context)
-                              .add(LoadComments(postId: post.id));
-                          return SinglePostScreen(
-                            post: post,
-                            user: state.user,
-                          );
-                        }),
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: SizeConfig.instance.blockSizeVertical),
-                      child: PostContainer(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.instance.blockSizeHorizontal * 4,
-                            right: SizeConfig.instance.blockSizeHorizontal * 4,
-                            top: SizeConfig.instance.blockSizeHorizontal * 3,
-                            bottom: SizeConfig.instance.blockSizeHorizontal * 3,
-                          ),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2),
-                                  child: PostNameTemplate(
-                                    name: post.user.displayName,
-                                    photoUrl: post.user.photoUrl,
-                                    time: post.createdOn,
-                                    color: _sideTextColor,
-                                  ),
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: SizeConfig.instance.blockSizeVertical),
+                    child: PostContainer(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.instance.blockSizeHorizontal * 4,
+                          right: SizeConfig.instance.blockSizeHorizontal * 4,
+                          top: SizeConfig.instance.blockSizeHorizontal * 3,
+                          bottom: SizeConfig.instance.blockSizeHorizontal * 3,
+                        ),
+                        child: Container(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    bottom:
+                                        SizeConfig.instance.blockSizeVertical *
+                                            2),
+                                child: PostNameTemplate(
+                                  name: post.user.displayName,
+                                  photoUrl: post.user.photoUrl,
+                                  time: post.createdOn,
+                                  color: _sideTextColor,
                                 ),
-                                Align(
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  post.title,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: SizeConfig
+                                              .instance.blockSizeVertical *
+                                          2 *
+                                          1.2),
+                                ),
+                              ),
+                              Visibility(
+                                visible: post.message.isNotEmpty,
+                                child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    post.title,
+                                    post.message,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
                                         fontSize: SizeConfig
                                                 .instance.blockSizeVertical *
-                                            2 *
+                                            1.5 *
                                             1.2),
                                   ),
                                 ),
-                                Visibility(
-                                  visible: post.message.isNotEmpty,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      post.message,
-                                      style: TextStyle(
-                                          fontSize: SizeConfig
-                                                  .instance.blockSizeVertical *
-                                              1.5 *
-                                              1.2),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      GestureDetector(
-                                        onTap: () {
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: SizeConfig.instance.blockSizeVertical *
+                                        2),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!(post.liked)) {
                                           final like = Like(
                                               from: state.user.id,
                                               createdOn: DateTime.now());
                                           BlocProvider.of<PostBloc>(context)
                                               .add(AddLike(post.id, like));
-                                        },
-                                        child: Container(
-                                            child: Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: SizeConfig.instance
-                                                          .blockSizeHorizontal *
-                                                      2),
-                                              child: Container(
-                                                height: SizeConfig.instance
-                                                        .blockSizeVertical *
-                                                    2.2,
-                                                width: SizeConfig.instance
-                                                        .blockSizeVertical *
-                                                    2.2,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'assets/up-arrow.png'),
+                                        } else {
+                                          BlocProvider.of<PostBloc>(context)
+                                              .add(DeleteLike(post.id));
+                                        }
+                                      },
+                                      child: Container(
+                                          padding: EdgeInsets.only(
+                                            left: SizeConfig.instance
+                                                    .blockSizeHorizontal *
+                                                3,
+                                            right: SizeConfig.instance
+                                                    .blockSizeHorizontal *
+                                                3,
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    right: SizeConfig.instance
+                                                            .blockSizeHorizontal *
+                                                        2),
+                                                child: Container(
+                                                  height: SizeConfig.instance
+                                                          .blockSizeVertical *
+                                                      2.2,
+                                                  width: SizeConfig.instance
+                                                          .blockSizeVertical *
+                                                      2.2,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/up-arrow.png'),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Text(
-                                              post.likeCount.toString(),
-                                              style: TextStyle(
-                                                  color: _sideTextColor,
-                                                  fontSize: SizeConfig.instance
-                                                          .blockSizeVertical *
-                                                      1.8,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        )),
-                                      ),
-                                      Container(
+                                              Text(
+                                                post.likeCount.toString(),
+                                                style: TextStyle(
+                                                    color: post.liked
+                                                        ? Colors.blue
+                                                        : _sideTextColor,
+                                                    fontSize: SizeConfig
+                                                            .instance
+                                                            .blockSizeVertical *
+                                                        1.8,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (_) {
+                                            BlocProvider.of<CommentBloc>(
+                                                    context)
+                                                .add(LoadComments(
+                                                    postId: post.id));
+                                            return SinglePostScreen(
+                                              post: post,
+                                              user: state.user,
+                                            );
+                                          }),
+                                        );
+                                      },
+                                      child: Container(
                                         child: Row(
                                           children: <Widget>[
                                             Padding(
@@ -195,14 +213,14 @@ class PostScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      Container(),
-                                    ],
-                                  ),
+                                    ),
+                                    Container(),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )),
-                    ),
+                              ),
+                            ],
+                          ),
+                        )),
                   );
                 }, childCount: state.posts.length),
               ),

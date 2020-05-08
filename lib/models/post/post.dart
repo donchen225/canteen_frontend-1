@@ -74,6 +74,7 @@ class Post extends Equatable {
 
 class DetailedPost extends Post {
   final User user;
+  final bool liked;
 
   DetailedPost({
     @required id,
@@ -86,6 +87,7 @@ class DetailedPost extends Post {
     @required createdOn,
     @required lastUpdated,
     @required this.user,
+    @required this.liked,
   }) : super(
             id: id,
             from: from,
@@ -100,6 +102,7 @@ class DetailedPost extends Post {
   static DetailedPost fromPost(
     Post post,
     User user,
+    bool liked,
   ) {
     return DetailedPost(
       id: post.id,
@@ -112,6 +115,7 @@ class DetailedPost extends Post {
       createdOn: post.createdOn,
       lastUpdated: post.lastUpdated,
       user: user,
+      liked: liked,
     );
   }
 }

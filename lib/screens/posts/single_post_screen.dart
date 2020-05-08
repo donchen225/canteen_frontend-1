@@ -105,40 +105,45 @@ class SinglePostScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Container(
-                                child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      right: SizeConfig
-                                              .instance.blockSizeHorizontal *
-                                          2),
-                                  child: Container(
-                                    height:
-                                        SizeConfig.instance.blockSizeVertical *
-                                            2.2,
-                                    width:
-                                        SizeConfig.instance.blockSizeVertical *
-                                            2.2,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image:
-                                            AssetImage('assets/up-arrow.png'),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                  child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        right: SizeConfig
+                                                .instance.blockSizeHorizontal *
+                                            2),
+                                    child: Container(
+                                      height: SizeConfig
+                                              .instance.blockSizeVertical *
+                                          2.2,
+                                      width: SizeConfig
+                                              .instance.blockSizeVertical *
+                                          2.2,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image:
+                                              AssetImage('assets/up-arrow.png'),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  post.likeCount.toString(),
-                                  style: TextStyle(
-                                      color: _sideTextColor,
-                                      fontSize: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          1.8,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            )),
+                                  Text(
+                                    post.likeCount.toString(),
+                                    style: TextStyle(
+                                        color: post.liked
+                                            ? Colors.blue
+                                            : _sideTextColor,
+                                        fontSize: SizeConfig
+                                                .instance.blockSizeVertical *
+                                            1.8,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                            ),
                             GestureDetector(
                               onTap: () {
                                 showModalBottomSheet(

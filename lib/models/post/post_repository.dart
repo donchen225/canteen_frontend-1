@@ -5,6 +5,7 @@ import 'package:canteen_frontend/models/comment/comment_entity.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/post/post_entity.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:tuple/tuple.dart';
@@ -111,15 +112,50 @@ class PostRepository {
   Future<void> addLike(String postId, Like like) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
-        postCollection
-            .document(postId)
-            .collection(commentsCollection)
-            .document(),
+        postCollection.document(postId).collection(likesCollection).document(),
         like.toEntity().toDocument(),
       );
 
       tx.update(postCollection.document(postId),
           {"like_count": FieldValue.increment(1)});
+    });
+  }
+
+  Future<void> deleteLike(String postId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    return postCollection
+        .document(postId)
+        .collection(likesCollection)
+        .where('from', isEqualTo: userId)
+        .getDocuments()
+        .then((snapshot) {
+      if (snapshot.documents.isNotEmpty) {
+        return Firestore.instance.runTransaction((Transaction tx) async {
+          tx.delete(postCollection
+              .document(postId)
+              .collection(likesCollection)
+              .document(snapshot.documents.first.documentID));
+
+          tx.update(postCollection.document(postId),
+              {"like_count": FieldValue.increment(-1)});
+        });
+      }
+    });
+  }
+
+  Future<bool> checkLike(String postId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    return postCollection
+        .document(postId)
+        .collection(likesCollection)
+        .where('from', isEqualTo: userId)
+        .getDocuments()
+        .then((snapshot) {
+      return snapshot.documents.isNotEmpty;
     });
   }
 

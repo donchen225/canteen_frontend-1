@@ -44,6 +44,18 @@ class AddLike extends PostEvent {
   String toString() => 'AddLike { postId: $postId, like: $like }';
 }
 
+class DeleteLike extends PostEvent {
+  final String postId;
+
+  const DeleteLike(this.postId);
+
+  @override
+  List<Object> get props => [postId];
+
+  @override
+  String toString() => 'DeleteLike { postId: $postId }';
+}
+
 class UpdatePost extends PostEvent {
   final Post post;
 

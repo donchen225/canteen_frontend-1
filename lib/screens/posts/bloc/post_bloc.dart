@@ -52,6 +52,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       yield* _mapAddPostToState(event);
     } else if (event is AddLike) {
       yield* _mapAddLikeToState(event);
+    } else if (event is DeleteLike) {
+      yield* _mapDeleteLikeToState(event);
     } else if (event is ClearPosts) {
       yield* _mapClearPostsToState();
     }
@@ -86,15 +88,25 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       return Future<User>.value(null);
     }));
 
+    final userLikedFuture = Future.wait(updatedPosts.map((update) async {
+      if (update.item1 == DocumentChangeType.modified ||
+          update.item1 == DocumentChangeType.added) {
+        return _postRepository.checkLike(update.item2.id);
+      }
+      return Future<bool>.value(false);
+    }));
+
     final userList = await userListFuture;
+    final userLiked = await userLikedFuture;
 
     for (int i = 0; i < updatedPosts.length; i++) {
       User user = userList[i];
+      bool liked = userLiked[i];
       Tuple2<DocumentChangeType, Post> update = updatedPosts[i];
 
       if (update.item1 == DocumentChangeType.added ||
           update.item1 == DocumentChangeType.modified) {
-        final detailedPost = DetailedPost.fromPost(update.item2, user);
+        final detailedPost = DetailedPost.fromPost(update.item2, user, liked);
 
         if (update.item1 == DocumentChangeType.added) {
           _postRepository.saveDetailedPost(detailedPost);
@@ -116,6 +128,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
     _postRepository.addLike(event.postId, event.like);
+  }
+
+  Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
+    _postRepository.deleteLike(event.postId);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {
