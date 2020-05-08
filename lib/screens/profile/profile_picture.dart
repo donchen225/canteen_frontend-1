@@ -11,7 +11,7 @@ class ProfilePicture extends StatelessWidget {
 
   ProfilePicture(
       {@required this.photoUrl,
-      @required this.editable,
+      this.editable = false,
       this.size = 160,
       this.onTap});
 

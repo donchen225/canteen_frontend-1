@@ -1,9 +1,12 @@
-import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class EnterPostDialogScreen extends StatefulWidget {
-  EnterPostDialogScreen();
+  final User user;
+
+  EnterPostDialogScreen({@required this.user});
 
   @override
   _EnterPostDialogScreenState createState() => _EnterPostDialogScreenState();
@@ -109,7 +112,17 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Text('Brian Hsu asked'),
+                          ProfilePicture(
+                            photoUrl: widget.user.photoUrl,
+                            editable: false,
+                            size: SizeConfig.instance.blockSizeHorizontal * 6,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    SizeConfig.instance.blockSizeHorizontal),
+                            child: Text('${widget.user.displayName ?? ''}'),
+                          ),
                         ],
                       ),
                       TextField(

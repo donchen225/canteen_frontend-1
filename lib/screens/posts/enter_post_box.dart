@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/enter_post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,9 @@ class EnterPostBox extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => EnterPostDialogScreen(),
+          builder: (context) => EnterPostDialogScreen(
+            user: user,
+          ),
         );
       },
       child: PostContainer(
@@ -27,9 +30,22 @@ class EnterPostBox extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(
                   bottom: SizeConfig.instance.blockSizeVertical),
-              child: Text(
-                user.displayName ?? '',
-                style: TextStyle(color: Colors.grey[500]),
+              child: Row(
+                children: <Widget>[
+                  ProfilePicture(
+                    photoUrl: user.photoUrl,
+                    editable: false,
+                    size: SizeConfig.instance.blockSizeHorizontal * 6,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.blockSizeHorizontal),
+                    child: Text(
+                      user.displayName ?? '',
+                      style: TextStyle(color: Colors.grey[500]),
+                    ),
+                  ),
+                ],
               ),
             ),
             Text(
