@@ -28,219 +28,214 @@ class SinglePostScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical * 2,
-              ),
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.instance.blockSizeHorizontal * 4,
-                        right: SizeConfig.instance.blockSizeHorizontal * 4,
-                      ),
-                      child: PostNameTemplate(
-                        name: post.user.displayName,
-                        photoUrl: post.user.photoUrl,
-                        time: post.createdOn,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical * 2,
+                      left: SizeConfig.instance.blockSizeHorizontal * 4,
+                      right: SizeConfig.instance.blockSizeHorizontal * 4,
+                    ),
+                    child: PostNameTemplate(
+                      name: post.user.displayName,
+                      photoUrl: post.user.photoUrl,
+                      time: post.createdOn,
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical * 2,
+                      bottom: SizeConfig.instance.blockSizeVertical * 2,
+                      left: SizeConfig.instance.blockSizeHorizontal * 4,
+                      right: SizeConfig.instance.blockSizeHorizontal * 4,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        post.title,
+                        style: TextStyle(
+                          fontSize:
+                              SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: Padding(
+                ),
+                SliverToBoxAdapter(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom: SizeConfig.instance.blockSizeVertical,
+                          left: SizeConfig.instance.blockSizeHorizontal * 4,
+                          right: SizeConfig.instance.blockSizeHorizontal * 4,
+                        ),
+                        child: Text(post.message),
+                      )),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.blockSizeVertical,
+                      bottom: SizeConfig.instance.blockSizeVertical,
+                    ),
+                    child: Container(
                       padding: EdgeInsets.only(
                         top: SizeConfig.instance.blockSizeVertical * 2,
                         bottom: SizeConfig.instance.blockSizeVertical * 2,
-                        left: SizeConfig.instance.blockSizeHorizontal * 4,
-                        right: SizeConfig.instance.blockSizeHorizontal * 4,
                       ),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          post.title,
-                          style: TextStyle(
-                            fontSize: SizeConfig.instance.blockSizeVertical *
-                                2.4 *
-                                1.2,
-                            fontWeight: FontWeight.bold,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            width: 1,
+                            color: Colors.grey[200],
+                          ),
+                          bottom: BorderSide(
+                            width: 1,
+                            color: Colors.grey[200],
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: SizeConfig.instance.blockSizeVertical,
-                            left: SizeConfig.instance.blockSizeHorizontal * 4,
-                            right: SizeConfig.instance.blockSizeHorizontal * 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              if (!(post.liked)) {
+                                final like = Like(
+                                    from: user.id, createdOn: DateTime.now());
+                                BlocProvider.of<PostBloc>(context)
+                                    .add(AddLike(post.id, like));
+                              } else {
+                                BlocProvider.of<PostBloc>(context)
+                                    .add(DeleteLike(post.id));
+                              }
+                            },
+                            child: Container(
+                                child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      right: SizeConfig
+                                              .instance.blockSizeHorizontal *
+                                          2),
+                                  child: Container(
+                                    height:
+                                        SizeConfig.instance.blockSizeVertical *
+                                            2.2,
+                                    width:
+                                        SizeConfig.instance.blockSizeVertical *
+                                            2.2,
+                                    child: Image.asset(
+                                      'assets/up-arrow.png',
+                                      color: post.liked
+                                          ? Colors.blue
+                                          : _sideTextColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  post.likeCount.toString(),
+                                  style: TextStyle(
+                                      color: post.liked
+                                          ? Colors.blue
+                                          : _sideTextColor,
+                                      fontSize: SizeConfig
+                                              .instance.blockSizeVertical *
+                                          1.8,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )),
                           ),
-                          child: Text(post.message),
-                        )),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical,
-                        bottom: SizeConfig.instance.blockSizeVertical,
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          top: SizeConfig.instance.blockSizeVertical * 2,
-                          bottom: SizeConfig.instance.blockSizeVertical * 2,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              width: 1,
-                              color: Colors.grey[200],
-                            ),
-                            bottom: BorderSide(
-                              width: 1,
-                              color: Colors.grey[200],
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                if (!(post.liked)) {
-                                  final like = Like(
-                                      from: user.id, createdOn: DateTime.now());
-                                  BlocProvider.of<PostBloc>(context)
-                                      .add(AddLike(post.id, like));
-                                } else {
-                                  BlocProvider.of<PostBloc>(context)
-                                      .add(DeleteLike(post.id));
-                                }
-                              },
-                              child: Container(
-                                  child: Row(
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => CommentDialogScreen(
+                                  user: user,
+                                  post: post,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              child: Row(
                                 children: <Widget>[
                                   Padding(
                                     padding: EdgeInsets.only(
                                         right: SizeConfig
                                                 .instance.blockSizeHorizontal *
                                             2),
-                                    child: Container(
-                                      height: SizeConfig
+                                    child: Icon(
+                                      Icons.mode_comment,
+                                      size: SizeConfig
                                               .instance.blockSizeVertical *
                                           2.2,
-                                      width: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2.2,
-                                      child: Image.asset(
-                                        'assets/up-arrow.png',
-                                        color: post.liked
-                                            ? Colors.blue
-                                            : _sideTextColor,
-                                      ),
+                                      color: _sideTextColor,
                                     ),
                                   ),
                                   Text(
-                                    post.likeCount.toString(),
+                                    'Comment',
                                     style: TextStyle(
-                                        color: post.liked
-                                            ? Colors.blue
-                                            : _sideTextColor,
+                                        color: _sideTextColor,
                                         fontSize: SizeConfig
                                                 .instance.blockSizeVertical *
                                             1.8,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ],
-                              )),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => CommentDialogScreen(
-                                    user: user,
-                                    post: post,
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          right: SizeConfig.instance
-                                                  .blockSizeHorizontal *
-                                              2),
-                                      child: Icon(
-                                        Icons.mode_comment,
-                                        size: SizeConfig
-                                                .instance.blockSizeVertical *
-                                            2.2,
-                                        color: _sideTextColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Comment',
-                                      style: TextStyle(
-                                          color: _sideTextColor,
-                                          fontSize: SizeConfig
-                                                  .instance.blockSizeVertical *
-                                              1.8,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
-                            Container(),
-                          ],
-                        ),
+                          ),
+                          Container(),
+                        ],
                       ),
                     ),
                   ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.blockSizeVertical * 2,
-                    ),
-                    sliver: SliverToBoxAdapter(
-                      child: BlocBuilder<CommentBloc, CommentState>(
-                          builder: (BuildContext context, CommentState state) {
-                        if (state is CommentsLoading) {
-                          return CupertinoActivityIndicator();
-                        }
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.blockSizeVertical * 2,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: BlocBuilder<CommentBloc, CommentState>(
+                        builder: (BuildContext context, CommentState state) {
+                      if (state is CommentsLoading) {
+                        return CupertinoActivityIndicator();
+                      }
 
-                        if (state is CommentsLoaded) {
-                          final comments = state.comments;
+                      if (state is CommentsLoaded) {
+                        final comments = state.comments;
 
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: state.comments.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final comment = comments[index];
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: state.comments.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final comment = comments[index];
 
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom:
-                                        SizeConfig.instance.blockSizeVertical,
-                                  ),
-                                  child: CommentContainer(
-                                    comment: comment,
-                                  ),
-                                );
-                              });
-                        }
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: SizeConfig.instance.blockSizeVertical,
+                                ),
+                                child: CommentContainer(
+                                  comment: comment,
+                                ),
+                              );
+                            });
+                      }
 
-                        return Container();
-                      }),
-                    ),
-                  )
-                ],
-              ),
+                      return Container();
+                    }),
+                  ),
+                )
+              ],
             ),
           ),
           Container(
