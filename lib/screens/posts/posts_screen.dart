@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostScreen extends StatelessWidget {
+  final Color _sideTextColor = Colors.grey[500];
+
   String formatTime(DateTime time) {
     String t = timeago
         .format(time, locale: 'en_short')
@@ -93,7 +95,7 @@ class PostScreen extends StatelessWidget {
                                     ),
                                     Text(
                                       post.user.displayName ?? '',
-                                      style: TextStyle(color: Colors.grey[500]),
+                                      style: TextStyle(color: _sideTextColor),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
@@ -105,7 +107,7 @@ class PostScreen extends StatelessWidget {
                                         height: SizeConfig
                                             .instance.blockSizeHorizontal,
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[500],
+                                          color: _sideTextColor,
                                           shape: BoxShape.circle,
                                         ),
                                       ),
@@ -113,8 +115,7 @@ class PostScreen extends StatelessWidget {
                                     Text(
                                       formatTime(post.createdOn),
                                       style: TextStyle(
-                                          color: Colors.grey[500],
-                                          fontSize: 12),
+                                          color: _sideTextColor, fontSize: 12),
                                     ),
                                   ],
                                 ),
@@ -143,6 +144,80 @@ class PostScreen extends StatelessWidget {
                                             1.5 *
                                             1.2),
                                   ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: SizeConfig.instance.blockSizeVertical *
+                                        2),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Container(
+                                        child: Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              right: SizeConfig.instance
+                                                      .blockSizeHorizontal *
+                                                  2),
+                                          child: Container(
+                                            height: SizeConfig.instance
+                                                    .blockSizeVertical *
+                                                2.2,
+                                            width: SizeConfig.instance
+                                                    .blockSizeVertical *
+                                                2.2,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/up-arrow.png'),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          '0',
+                                          style: TextStyle(
+                                              color: _sideTextColor,
+                                              fontSize: SizeConfig.instance
+                                                      .blockSizeVertical *
+                                                  1.8,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )),
+                                    Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                right: SizeConfig.instance
+                                                        .blockSizeHorizontal *
+                                                    2),
+                                            child: Icon(
+                                              Icons.mode_comment,
+                                              size: SizeConfig.instance
+                                                      .blockSizeVertical *
+                                                  2.2,
+                                              color: _sideTextColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Comment',
+                                            style: TextStyle(
+                                                color: _sideTextColor,
+                                                fontSize: SizeConfig.instance
+                                                        .blockSizeVertical *
+                                                    1.8,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(),
+                                  ],
                                 ),
                               ),
                             ],

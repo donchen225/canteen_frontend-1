@@ -97,6 +97,7 @@ flutter:
     - assets/icon.jpeg
     - assets/loading-icon.png
     - assets/blank-profile-picture.jpeg
+    - assets/up-arrow.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
