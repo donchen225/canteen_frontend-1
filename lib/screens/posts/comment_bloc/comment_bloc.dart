@@ -75,7 +75,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         print('USER IS STILL NULL!!!!');
       }
     } catch (exception) {
-      print(exception.errorMessage());
+      print(exception);
     }
   }
 

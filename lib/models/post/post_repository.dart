@@ -161,6 +161,7 @@ class PostRepository {
 
   Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(String postId) {
     final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
+    print('LAST FETCH: $lastFetch');
 
     final collection =
         postCollection.document(postId).collection(commentsCollection);
@@ -169,7 +170,10 @@ class PostRepository {
     final query = lastFetch == null
         ? collection.orderBy("last_updated", descending: true)
         : collection
-            .where("last_updated", isGreaterThan: lastFetch)
+            .where("last_updated",
+                isGreaterThan: lastFetch.add(Duration(
+                    microseconds:
+                        1))) // TODO: REMOVE THIS HACK, WHY IS THIS NOT WORKING ON FIRESTORE?????
             .orderBy("last_updated", descending: true);
 
     return query.snapshots().map((snapshot) {
