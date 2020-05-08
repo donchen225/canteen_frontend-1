@@ -62,7 +62,119 @@ class SinglePostScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(post.message)),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.instance.blockSizeVertical,
+                          ),
+                          child: Text(post.message),
+                        )),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical,
+                        bottom: SizeConfig.instance.blockSizeVertical,
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.instance.blockSizeVertical * 2,
+                          bottom: SizeConfig.instance.blockSizeVertical * 2,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: 1,
+                              color: Colors.grey[200],
+                            ),
+                            bottom: BorderSide(
+                              width: 1,
+                              color: Colors.grey[200],
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Container(
+                                child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      right: SizeConfig
+                                              .instance.blockSizeHorizontal *
+                                          2),
+                                  child: Container(
+                                    height:
+                                        SizeConfig.instance.blockSizeVertical *
+                                            2.2,
+                                    width:
+                                        SizeConfig.instance.blockSizeVertical *
+                                            2.2,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            AssetImage('assets/up-arrow.png'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '0',
+                                  style: TextStyle(
+                                      color: _sideTextColor,
+                                      fontSize: SizeConfig
+                                              .instance.blockSizeVertical *
+                                          1.8,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )),
+                            GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => CommentDialogScreen(
+                                    user: user,
+                                    post: post,
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.instance
+                                                  .blockSizeHorizontal *
+                                              2),
+                                      child: Icon(
+                                        Icons.mode_comment,
+                                        size: SizeConfig
+                                                .instance.blockSizeVertical *
+                                            2.2,
+                                        color: _sideTextColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Comment',
+                                      style: TextStyle(
+                                          color: _sideTextColor,
+                                          fontSize: SizeConfig
+                                                  .instance.blockSizeVertical *
+                                              1.8,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
@@ -74,6 +186,22 @@ class SinglePostScreen extends StatelessWidget {
                         if (state is CommentsLoading) {
                           return CupertinoActivityIndicator();
                         }
+
+                        if (state is CommentsLoaded) {
+                          final comments = state.comments;
+
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: state.comments.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final comment = comments[index];
+
+                                return Container(
+                                  child: Text(comment.message),
+                                );
+                              });
+                        }
+
                         return Container();
                       }),
                     ),
@@ -83,97 +211,22 @@ class SinglePostScreen extends StatelessWidget {
             ),
           ),
           Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  width: 1,
+                  color: Colors.grey[100],
+                ),
+              ),
+            ),
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.instance.blockSizeVertical,
-                    bottom: SizeConfig.instance.blockSizeVertical,
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical * 2,
-                      bottom: SizeConfig.instance.blockSizeVertical * 2,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 1,
-                          color: Colors.grey[100],
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                            child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right:
-                                      SizeConfig.instance.blockSizeHorizontal *
-                                          2),
-                              child: Container(
-                                height:
-                                    SizeConfig.instance.blockSizeVertical * 2.2,
-                                width:
-                                    SizeConfig.instance.blockSizeVertical * 2.2,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/up-arrow.png'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                  color: _sideTextColor,
-                                  fontSize:
-                                      SizeConfig.instance.blockSizeVertical *
-                                          1.8,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )),
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    right: SizeConfig
-                                            .instance.blockSizeHorizontal *
-                                        2),
-                                child: Icon(
-                                  Icons.mode_comment,
-                                  size: SizeConfig.instance.blockSizeVertical *
-                                      2.2,
-                                  color: _sideTextColor,
-                                ),
-                              ),
-                              Text(
-                                'Comment',
-                                style: TextStyle(
-                                    color: _sideTextColor,
-                                    fontSize:
-                                        SizeConfig.instance.blockSizeVertical *
-                                            1.8,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(),
-                      ],
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     left: SizeConfig.instance.blockSizeHorizontal * 3,
                     right: SizeConfig.instance.blockSizeHorizontal * 3,
                     bottom: SizeConfig.instance.safeBlockVertical * 3,
+                    top: SizeConfig.instance.blockSizeVertical * 2,
                   ),
                   child: GestureDetector(
                     onTap: () {
