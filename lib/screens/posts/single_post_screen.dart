@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
@@ -106,7 +108,17 @@ class SinglePostScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                if (!(post.liked)) {
+                                  final like = Like(
+                                      from: user.id, createdOn: DateTime.now());
+                                  BlocProvider.of<PostBloc>(context)
+                                      .add(AddLike(post.id, like));
+                                } else {
+                                  BlocProvider.of<PostBloc>(context)
+                                      .add(DeleteLike(post.id));
+                                }
+                              },
                               child: Container(
                                   child: Row(
                                 children: <Widget>[
