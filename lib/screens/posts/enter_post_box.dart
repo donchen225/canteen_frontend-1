@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/posts/enter_post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
+import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class EnterPostBox extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => EnterPostDialogScreen(
+          builder: (context) => PostDialogScreen(
             user: user,
           ),
         );

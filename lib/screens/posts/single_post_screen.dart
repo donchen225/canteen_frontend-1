@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/posts/enter_post_dialog_screen.dart';
+import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +150,7 @@ class SinglePostScreen extends StatelessWidget {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
-                        builder: (context) => EnterPostDialogScreen(
+                        builder: (context) => PostDialogScreen(
                           user: user,
                         ),
                       );
