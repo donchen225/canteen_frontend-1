@@ -160,11 +160,11 @@ class PostScreen extends StatelessWidget {
                                                     width: SizeConfig.instance
                                                             .blockSizeVertical *
                                                         2.2,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                            'assets/up-arrow.png'),
-                                                      ),
+                                                    child: Image.asset(
+                                                      'assets/up-arrow.png',
+                                                      color: post.liked
+                                                          ? Colors.blue
+                                                          : _sideTextColor,
                                                     ),
                                                   ),
                                                 ),
