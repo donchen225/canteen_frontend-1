@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/comment/comment_entity.dart';
+import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/post/post_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,7 @@ import 'package:tuple/tuple.dart';
 class PostRepository {
   final postCollection = Firestore.instance.collection('posts');
   final commentsCollection = 'comments';
+  final likesCollection = 'likes';
   List<DetailedPost> _detailedPosts = [];
   Map<String, List<DetailedComment>> _detailedComments = {};
 
@@ -100,6 +102,24 @@ class PostRepository {
             .document(),
         comment.toEntity().toDocument(),
       );
+
+      tx.update(postCollection.document(postId),
+          {"comment_count": FieldValue.increment(1)});
+    });
+  }
+
+  Future<void> addLike(String postId, Like like) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.set(
+        postCollection
+            .document(postId)
+            .collection(commentsCollection)
+            .document(),
+        like.toEntity().toDocument(),
+      );
+
+      tx.update(postCollection.document(postId),
+          {"like_count": FieldValue.increment(1)});
     });
   }
 

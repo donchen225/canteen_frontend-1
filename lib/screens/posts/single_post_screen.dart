@@ -129,7 +129,7 @@ class SinglePostScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '0',
+                                  post.likeCount.toString(),
                                   style: TextStyle(
                                       color: _sideTextColor,
                                       fontSize: SizeConfig

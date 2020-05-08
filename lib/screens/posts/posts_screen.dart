@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/enter_post_box.dart';
@@ -123,40 +124,49 @@ class PostScreen extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      Container(
-                                          child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig.instance
-                                                        .blockSizeHorizontal *
-                                                    2),
-                                            child: Container(
-                                              height: SizeConfig.instance
-                                                      .blockSizeVertical *
-                                                  2.2,
-                                              width: SizeConfig.instance
-                                                      .blockSizeVertical *
-                                                  2.2,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: AssetImage(
-                                                      'assets/up-arrow.png'),
+                                      GestureDetector(
+                                        onTap: () {
+                                          final like = Like(
+                                              from: state.user.id,
+                                              createdOn: DateTime.now());
+                                          BlocProvider.of<PostBloc>(context)
+                                              .add(AddLike(post.id, like));
+                                        },
+                                        child: Container(
+                                            child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: SizeConfig.instance
+                                                          .blockSizeHorizontal *
+                                                      2),
+                                              child: Container(
+                                                height: SizeConfig.instance
+                                                        .blockSizeVertical *
+                                                    2.2,
+                                                width: SizeConfig.instance
+                                                        .blockSizeVertical *
+                                                    2.2,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/up-arrow.png'),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            '0',
-                                            style: TextStyle(
-                                                color: _sideTextColor,
-                                                fontSize: SizeConfig.instance
-                                                        .blockSizeVertical *
-                                                    1.8,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      )),
+                                            Text(
+                                              post.likeCount.toString(),
+                                              style: TextStyle(
+                                                  color: _sideTextColor,
+                                                  fontSize: SizeConfig.instance
+                                                          .blockSizeVertical *
+                                                      1.8,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )),
+                                      ),
                                       Container(
                                         child: Row(
                                           children: <Widget>[

@@ -20,8 +20,8 @@ class Post extends Equatable {
       @required this.title,
       this.message,
       this.tags,
-      this.commentCount,
-      this.likeCount,
+      this.commentCount = 0,
+      this.likeCount = 0,
       @required this.lastUpdated,
       @required this.createdOn});
 

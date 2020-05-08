@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -28,6 +29,19 @@ class AddPost extends PostEvent {
 
   @override
   String toString() => 'AddPost { post: $post }';
+}
+
+class AddLike extends PostEvent {
+  final String postId;
+  final Like like;
+
+  const AddLike(this.postId, this.like);
+
+  @override
+  List<Object> get props => [postId, like];
+
+  @override
+  String toString() => 'AddLike { postId: $postId, like: $like }';
 }
 
 class UpdatePost extends PostEvent {

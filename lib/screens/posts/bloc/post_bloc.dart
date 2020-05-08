@@ -50,6 +50,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       yield* _mapPostsUpdateToState(event);
     } else if (event is AddPost) {
       yield* _mapAddPostToState(event);
+    } else if (event is AddLike) {
+      yield* _mapAddLikeToState(event);
     } else if (event is ClearPosts) {
       yield* _mapClearPostsToState();
     }
@@ -110,6 +112,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
     _postRepository.addPost(event.post);
+  }
+
+  Stream<PostState> _mapAddLikeToState(AddLike event) async* {
+    _postRepository.addLike(event.postId, event.like);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {
