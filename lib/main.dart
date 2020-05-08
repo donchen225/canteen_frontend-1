@@ -9,6 +9,7 @@ import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
@@ -118,6 +119,15 @@ void main() async {
         BlocProvider<PostBloc>(
           create: (context) {
             return PostBloc(
+              userRepository: userRepository,
+              postRepository: postRepository,
+              userBloc: BlocProvider.of<UserBloc>(context),
+            );
+          },
+        ),
+        BlocProvider<CommentBloc>(
+          create: (context) {
+            return CommentBloc(
               userRepository: userRepository,
               postRepository: postRepository,
               userBloc: BlocProvider.of<UserBloc>(context),

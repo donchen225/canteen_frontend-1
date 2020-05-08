@@ -8,6 +8,8 @@ class PostEntity extends Equatable {
   final String title;
   final String message;
   final List<String> tags;
+  final int commentCount;
+  final int likeCount;
   final DateTime lastUpdated;
   final DateTime createdOn;
 
@@ -17,6 +19,8 @@ class PostEntity extends Equatable {
       @required this.title,
       @required this.message,
       @required this.tags,
+      @required this.commentCount,
+      @required this.likeCount,
       @required this.lastUpdated,
       @required this.createdOn});
 
@@ -27,18 +31,29 @@ class PostEntity extends Equatable {
       'title': title,
       'message': message,
       'tags': tags,
+      'comment_count': commentCount,
+      'like_count': likeCount,
       'last_updated': lastUpdated,
       'created_on': createdOn,
     };
   }
 
   @override
-  List<Object> get props =>
-      [id, from, title, message, tags, lastUpdated, createdOn];
+  List<Object> get props => [
+        id,
+        from,
+        title,
+        message,
+        tags,
+        commentCount,
+        likeCount,
+        lastUpdated,
+        createdOn
+      ];
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, from: $from, title: $title, message: $message, tags: $tags, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'PostEntity { id: $id, from: $from, title: $title, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static PostEntity fromJson(Map<String, Object> json) {
@@ -48,6 +63,8 @@ class PostEntity extends Equatable {
       title: json['title'] as String,
       message: json['message'] as String,
       tags: json['tags'] as List<String>,
+      commentCount: json['comment_count'] as int,
+      likeCount: json['like_count'] as int,
       createdOn: DateTime.parse(json['created_on']),
       lastUpdated: DateTime.parse(json['last_updated']),
     );
@@ -61,6 +78,8 @@ class PostEntity extends Equatable {
       message: snapshot.data['message'],
       tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
           [],
+      commentCount: snapshot.data['comment_count'],
+      likeCount: snapshot.data['like_count'],
       createdOn: snapshot.data["created_on"].toDate(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
     );
@@ -73,6 +92,8 @@ class PostEntity extends Equatable {
       'title': title,
       'message': message,
       'tags': tags,
+      'comment_count': commentCount,
+      'like_count': likeCount,
       'created_on': createdOn,
       'last_updated': lastUpdated,
     };

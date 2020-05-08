@@ -1,9 +1,12 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SinglePostScreen extends StatelessWidget {
   final User user;
@@ -22,33 +25,61 @@ class SinglePostScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView(
+            child: Padding(
               padding: EdgeInsets.only(
                 top: SizeConfig.instance.blockSizeVertical * 2,
                 left: SizeConfig.instance.blockSizeHorizontal * 4,
                 right: SizeConfig.instance.blockSizeHorizontal * 4,
               ),
-              children: <Widget>[
-                PostNameTemplate(
-                  name: post.user.displayName,
-                  photoUrl: post.user.photoUrl,
-                  time: post.createdOn,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.blockSizeVertical * 2,
-                  ),
-                  child: Text(
-                    post.title,
-                    style: TextStyle(
-                      fontSize:
-                          SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
-                      fontWeight: FontWeight.bold,
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: PostNameTemplate(
+                      name: post.user.displayName,
+                      photoUrl: post.user.photoUrl,
+                      time: post.createdOn,
                     ),
                   ),
-                ),
-                Text(post.message),
-              ],
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.blockSizeVertical * 2,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          post.title,
+                          style: TextStyle(
+                            fontSize: SizeConfig.instance.blockSizeVertical *
+                                2.4 *
+                                1.2,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(post.message)),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.blockSizeVertical * 2,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: BlocBuilder<CommentBloc, CommentState>(
+                          builder: (BuildContext context, CommentState state) {
+                        if (state is CommentsLoading) {
+                          return CupertinoActivityIndicator();
+                        }
+                        return Container();
+                      }),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           Container(

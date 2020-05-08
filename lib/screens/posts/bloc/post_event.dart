@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tuple/tuple.dart';
+import 'package:meta/meta.dart';
 
 abstract class PostEvent extends Equatable {
   const PostEvent();

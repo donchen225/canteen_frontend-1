@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/comment/comment.dart';
+import 'package:canteen_frontend/models/comment/comment_entity.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/post/post_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +10,9 @@ import 'package:tuple/tuple.dart';
 
 class PostRepository {
   final postCollection = Firestore.instance.collection('posts');
+  final commentsCollection = 'comments';
   List<DetailedPost> _detailedPosts = [];
+  Map<String, List<DetailedComment>> _detailedComments = {};
 
   PostRepository();
 
@@ -16,8 +20,16 @@ class PostRepository {
     return _detailedPosts;
   }
 
+  List<DetailedComment> currentDetailedComments(String postId) {
+    return _detailedComments[postId] ?? [];
+  }
+
   void clearPosts() {
     _detailedPosts = [];
+  }
+
+  void clearComments() {
+    _detailedComments = {};
   }
 
   void saveDetailedPost(DetailedPost post) {
@@ -32,6 +44,24 @@ class PostRepository {
     _detailedPosts.insert(idx, post);
   }
 
+  void saveDetailedComment(String postId, DetailedComment comment) {
+    var idx = 0;
+
+    if (_detailedComments[postId] == null) {
+      _detailedComments[postId] = [];
+    }
+
+    final comments = _detailedComments[postId];
+    while (idx < comments.length) {
+      if (comment.lastUpdated.isAfter(comments[idx].lastUpdated)) {
+        break;
+      }
+
+      idx++;
+    }
+    comments.insert(idx, comment);
+  }
+
   void updateDetailedPost(DocumentChangeType type, Post post) {
     if (type == DocumentChangeType.modified) {
       _detailedPosts.removeWhere((p) => p.id == post.id);
@@ -41,12 +71,56 @@ class PostRepository {
     }
   }
 
+  void updateDetailedComment(
+      String postId, DocumentChangeType type, Comment comment) {
+    final comments = _detailedComments[postId];
+    if (type == DocumentChangeType.modified) {
+      comments.removeWhere((c) => c.id == comment.id);
+      comments.insert(0, comment);
+    } else if (type == DocumentChangeType.removed) {
+      comments.removeWhere((c) => c.id == comment.id);
+    }
+  }
+
   Future<void> addPost(Post post) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
         postCollection.document(),
         post.toEntity().toDocument(),
       );
+    });
+  }
+
+  Future<void> addComment(String postId, Comment comment) {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      tx.set(
+        postCollection
+            .document(postId)
+            .collection(commentsCollection)
+            .document(),
+        comment.toEntity().toDocument(),
+      );
+    });
+  }
+
+  Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(String postId) {
+    final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
+
+    final collection =
+        postCollection.document(postId).collection(commentsCollection);
+
+    // Only query comments since last fetch
+    final query = lastFetch == null
+        ? collection.orderBy("last_updated", descending: true)
+        : collection
+            .where("last_updated", isGreaterThan: lastFetch)
+            .orderBy("last_updated", descending: true);
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.documentChanges
+          .map((doc) => Tuple2<DocumentChangeType, Comment>(doc.type,
+              Comment.fromEntity(CommentEntity.fromSnapshot(doc.document))))
+          .toList();
     });
   }
 

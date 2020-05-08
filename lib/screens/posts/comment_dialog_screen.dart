@@ -1,6 +1,8 @@
+import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -19,7 +21,6 @@ class CommentDialogScreen extends StatefulWidget {
 }
 
 class _CommentDialogScreenState extends State<CommentDialogScreen> {
-  TextEditingController _titleController;
   TextEditingController _messageController;
 
   _CommentDialogScreenState();
@@ -27,8 +28,6 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
   @override
   void initState() {
     super.initState();
-
-    _titleController = TextEditingController();
     _messageController = TextEditingController();
   }
 
@@ -39,16 +38,16 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
       sendWidget: PostButton(
           text: 'SEND',
           onTap: (BuildContext context) {
-            if (_titleController.text.isNotEmpty) {
+            if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
-              final post = Post(
-                title: _titleController.text,
+              final comment = Comment(
                 message: _messageController.text,
                 from: widget.user.id,
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<PostBloc>(context).add(AddPost(post));
+              BlocProvider.of<CommentBloc>(context)
+                  .add(AddComment(postId: widget.post.id, comment: comment));
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(
@@ -67,7 +66,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
                           horizontal:
                               SizeConfig.instance.blockSizeHorizontal * 3),
                       child: Text(
-                        'Please enter a question',
+                        'Please add a comment',
                         style: TextStyle(
                           color: Colors.black,
                         ),
@@ -145,7 +144,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
-              hintText: 'Your text post (optional)',
+              hintText: 'Your comment',
             ),
           ),
         ],

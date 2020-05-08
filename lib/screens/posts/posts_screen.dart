@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/enter_post_box.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
@@ -53,6 +54,8 @@ class PostScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) {
+                          BlocProvider.of<CommentBloc>(context)
+                              .add(LoadComments(postId: post.id));
                           return SinglePostScreen(
                             post: post,
                             user: state.user,
