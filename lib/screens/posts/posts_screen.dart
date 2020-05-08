@@ -51,6 +51,8 @@ class PostScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                   final post = state.posts[index];
+                  print('POST SCREEN - POST: ${post.id}');
+
                   return Padding(
                     padding: EdgeInsets.only(
                         bottom: SizeConfig.instance.blockSizeVertical),

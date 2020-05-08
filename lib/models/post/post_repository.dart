@@ -121,28 +121,32 @@ class PostRepository {
     });
   }
 
-  Future<void> deleteLike(String postId) {
+  Future<void> deleteLike(String postId) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    return postCollection
+    final id = await postCollection
         .document(postId)
         .collection(likesCollection)
         .where('from', isEqualTo: userId)
         .getDocuments()
         .then((snapshot) {
       if (snapshot.documents.isNotEmpty) {
-        return Firestore.instance.runTransaction((Transaction tx) async {
-          tx.delete(postCollection
-              .document(postId)
-              .collection(likesCollection)
-              .document(snapshot.documents.first.documentID));
-
-          tx.update(postCollection.document(postId),
-              {"like_count": FieldValue.increment(-1)});
-        });
+        return snapshot.documents.first.documentID;
       }
     });
+
+    if (id != null && id.isNotEmpty) {
+      return Firestore.instance.runTransaction((Transaction tx) async {
+        tx.delete(postCollection
+            .document(postId)
+            .collection(likesCollection)
+            .document(id));
+
+        tx.update(postCollection.document(postId),
+            {"like_count": FieldValue.increment(-1)});
+      });
+    }
   }
 
   Future<bool> checkLike(String postId) {
@@ -162,7 +166,7 @@ class PostRepository {
   Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(String postId) {
     final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
     print('LAST FETCH: $lastFetch');
-
+    print('GET COMMENTS: $postId');
     final collection =
         postCollection.document(postId).collection(commentsCollection);
 
