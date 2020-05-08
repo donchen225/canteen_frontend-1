@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -92,6 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       .add(ClearBadgeCounts());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());
+                  BlocProvider.of<PostBloc>(context).add(ClearPosts());
                   BlocProvider.of<RecommendedBloc>(context)
                       .add(ClearRecommended());
                   BlocProvider.of<HomeBloc>(context).add(ClearHome());

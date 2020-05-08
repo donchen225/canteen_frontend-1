@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/models/post/post_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -13,7 +13,7 @@ class Post extends Equatable {
   final DateTime createdOn;
 
   const Post(
-      {@required this.id,
+      {this.id,
       @required this.from,
       @required this.title,
       @required this.message,
@@ -58,6 +58,44 @@ class Post extends Equatable {
       tags: tags,
       lastUpdated: lastUpdated,
       createdOn: createdOn,
+    );
+  }
+}
+
+class DetailedPost extends Post {
+  final User user;
+
+  DetailedPost({
+    @required id,
+    @required from,
+    @required title,
+    @required message,
+    @required tags,
+    @required createdOn,
+    @required lastUpdated,
+    @required this.user,
+  }) : super(
+            id: id,
+            from: from,
+            title: title,
+            message: message,
+            tags: tags,
+            lastUpdated: lastUpdated,
+            createdOn: createdOn);
+
+  static DetailedPost fromPost(
+    Post post,
+    User user,
+  ) {
+    return DetailedPost(
+      id: post.id,
+      from: post.from,
+      title: post.title,
+      message: post.message,
+      tags: post.tags,
+      createdOn: post.createdOn,
+      lastUpdated: post.lastUpdated,
+      user: user,
     );
   }
 }

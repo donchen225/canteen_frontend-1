@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/posts_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
@@ -88,6 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
               BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
+
+              BlocProvider.of<PostBloc>(context).add(LoadPosts());
             }
 
             if (state is SearchScreenLoaded) {

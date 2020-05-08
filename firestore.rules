@@ -19,6 +19,10 @@ service cloud.firestore {
       allow read, write: if isAuthenticated();
     }
 
+    match /posts/{postId} {
+      allow read, write: if isAuthenticated();
+    }
+
     match /requests/{requestId} {
       allow read: if resource.data.receiver_id == request.auth.uid;
       allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/user/$(request.resource.data.receiver_id));

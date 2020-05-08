@@ -70,4 +70,11 @@ class HomeNavigationBarBloc
       numRecommended: 0,
     );
   }
+
+  @override
+  Future<void> close() {
+    _requestSubscription?.cancel();
+    _recommendedSubscription?.cancel();
+    return super.close();
+  }
 }

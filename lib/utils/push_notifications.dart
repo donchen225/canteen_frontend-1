@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 // * Matched (Request accepted)
 class PushNotificationsManager {
   SettingsRepository _settingsRepository;
+  // TODO: figure out when to close this
   StreamSubscription _iosSubscription;
   bool _initialized = false;
 

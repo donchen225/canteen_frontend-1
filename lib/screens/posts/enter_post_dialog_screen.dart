@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -43,17 +43,30 @@ class _EnterPostDialogScreenState extends State<EnterPostDialogScreen> {
           actions: <Widget>[
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.blockSizeHorizontal * 6,
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'POST',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      // final post = Post();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical * 2,
+                        bottom: SizeConfig.instance.blockSizeVertical * 2,
+                        left: SizeConfig.instance.blockSizeHorizontal * 3,
+                        right: SizeConfig.instance.blockSizeHorizontal * 3,
+                      ),
+                      child: Text(
+                        'POST',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],

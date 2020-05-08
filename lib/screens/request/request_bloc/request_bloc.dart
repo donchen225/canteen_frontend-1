@@ -64,6 +64,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
 
   Stream<RequestState> _mapClearRequestsToState() async* {
     _requestRepository.clearRequests();
+    _requestSubscription?.cancel();
     yield ReqeustsCleared();
   }
 
