@@ -20,9 +20,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpState get initialState => SignUpState.empty();
 
   @override
-  Stream<SignUpState> transformEvents(
+  Stream<Transition<SignUpEvent, SignUpState>> transformEvents(
     Stream<SignUpEvent> events,
-    Stream<SignUpState> Function(SignUpEvent event) next,
+    TransitionFunction<SignUpEvent, SignUpState> transitionFn,
   ) {
     final nonDebounceStream = events.where((event) {
       return (event is! EmailChanged && event is! PasswordChanged);
@@ -32,7 +32,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     }).debounceTime(Duration(milliseconds: formRefreshMilliseconds));
     return super.transformEvents(
       nonDebounceStream.mergeWith([debounceStream]),
-      next,
+      transitionFn,
     );
   }
 
