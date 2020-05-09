@@ -13,6 +13,7 @@ This is the codebase for the Canteen mobile app, written in Flutter.
 
 1. Clone the repo.
 2. Set environment variables in `.env`.
+    * Get the `GoogleService-Info.plist` file
 3. Start the iOS simulator.
 4. Run in debug mode in your IDE of choice.
     * In VSCode, press F5.
