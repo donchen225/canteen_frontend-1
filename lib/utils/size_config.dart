@@ -12,6 +12,8 @@ class SizeConfig {
   double safeBlockHorizontal;
   double safeBlockVertical;
 
+  double paddingBottom;
+
   static final SizeConfig instance = SizeConfig._();
 
   SizeConfig._();
@@ -22,6 +24,8 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
+
+    paddingBottom = _mediaQueryData.padding.bottom;
 
     _safeAreaHorizontal =
         _mediaQueryData.padding.left + _mediaQueryData.padding.right;

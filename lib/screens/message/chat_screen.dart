@@ -38,8 +38,7 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: GestureDetector(
         onTapDown: (_) {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -73,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen>
           ],
         ),
       ),
-    ));
+    );
   }
 
   @override

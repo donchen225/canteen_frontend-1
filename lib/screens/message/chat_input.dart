@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -38,9 +40,13 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
+    final double additionalBottomPadding =
+        math.max(SizeConfig.instance.paddingBottom, 0.0);
+
     return Material(
         elevation: 60.0,
         child: Container(
+          padding: EdgeInsets.only(bottom: additionalBottomPadding),
           child: Column(
             children: <Widget>[
               Row(
@@ -50,7 +56,6 @@ class _ChatInputState extends State<ChatInput> {
                     child: Material(
                         child: Container(
                       padding: EdgeInsets.only(left: 20, right: 20),
-                      color: Colors.white70,
                       child: TextField(
                         controller: textEditingController,
                         textCapitalization: TextCapitalization.sentences,
@@ -84,7 +89,6 @@ class _ChatInputState extends State<ChatInput> {
                         ),
                       ),
                     ),
-                    color: Colors.white,
                   ),
                 ],
               ),
