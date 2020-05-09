@@ -1,5 +1,5 @@
 // Layout constants
-const double kMatchItemAspectRatio = 3.5 / 1;
+const double kMatchItemAspectRatio = 3.75 / 1;
 
 // Login/Sign-up constants
 const int formRefreshMilliseconds = 300;
