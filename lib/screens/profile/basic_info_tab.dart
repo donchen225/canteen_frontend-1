@@ -45,8 +45,8 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
           color:
               nameSelected ? Colors.grey[400].withOpacity(0.6) : Colors.white,
           border: Border(
-            top: BorderSide(width: 1, color: Colors.grey[400]),
-            bottom: BorderSide(width: 1, color: Colors.grey[400]),
+            top: BorderSide(width: 0.5, color: Colors.grey[400]),
+            bottom: BorderSide(width: 0.5, color: Colors.grey[400]),
           ),
         ),
         child: Row(

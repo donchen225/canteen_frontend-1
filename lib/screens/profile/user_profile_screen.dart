@@ -145,12 +145,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(
-                  left: SizeConfig.instance.blockSizeHorizontal * 3,
-                  right: SizeConfig.instance.blockSizeHorizontal * 3,
-                  top: SizeConfig.instance.blockSizeVertical,
-                  bottom: SizeConfig.instance.blockSizeVertical),
-              child: Text('Basic Info'),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+              child: ProfileSectionTitle('Basic Info'),
             ),
             BasicInfoTab(
                 title: 'Name',
