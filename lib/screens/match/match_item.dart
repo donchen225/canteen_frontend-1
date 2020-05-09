@@ -2,7 +2,6 @@ import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,74 +41,75 @@ class MatchItem extends StatelessWidget {
             padding: EdgeInsets.only(
               top: constraints.maxHeight * 0.05,
               bottom: constraints.maxHeight * 0.05,
-              left: constraints.maxWidth * 0.03,
+              left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
             decoration: BoxDecoration(
               color: Color(0xFFF0F0F0),
-              border: Border.all(width: 0.5, color: Colors.grey[400]),
+              border: Border.all(width: 0.2, color: Colors.grey[400]),
             ),
-            child: Row(
+            child: Stack(
               children: <Widget>[
-                Flexible(
-                  flex: 2,
-                  child: ProfilePicture(
-                    photoUrl: opponentList[0].photoUrl,
-                    editable: false,
-                    size: constraints.maxHeight * 0.75,
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: constraints.maxHeight * 0.15,
-                        bottom: constraints.maxHeight * 0.15,
-                        left: constraints.maxWidth * 0.04,
-                        right: constraints.maxWidth * 0.04),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 3,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              opponentList[0].displayName ?? '',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: constraints.maxHeight * 0.18),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            match.lastMessage != null
-                                ? (match.lastMessage as TextMessage).text
-                                : '',
-                            style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: constraints.maxHeight * 0.14),
-                            textAlign: TextAlign.start,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                Row(
+                  children: <Widget>[
+                    ProfilePicture(
+                      photoUrl: opponentList[0].photoUrl,
+                      editable: false,
+                      size: constraints.maxHeight * 0.75,
                     ),
-                  ),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            top: constraints.maxHeight * 0.15,
+                            bottom: constraints.maxHeight * 0.15,
+                            left: constraints.maxWidth * 0.04,
+                            right: constraints.maxWidth * 0.04),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  opponentList[0].displayName ?? '',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      fontSize: constraints.maxHeight * 0.18),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                match.lastMessage != null
+                                    ? (match.lastMessage as TextMessage).text
+                                    : '',
+                                style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: constraints.maxHeight * 0.14),
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.blockSizeVertical * 2),
-                    child: Column(
-                      children: <Widget>[
-                        Text(formatTime(match.lastUpdated)),
-                      ],
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: constraints.maxHeight * 0.1,
+                    horizontal: constraints.maxWidth * 0.05,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      formatTime(match.lastUpdated),
                     ),
                   ),
                 )
