@@ -33,7 +33,7 @@ class SettingsRepository {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
     return Firestore.instance.runTransaction((Transaction tx) async {
-      return tx.set(
+      await tx.set(
           userCollection
               .document(userId)
               .collection('settings')
@@ -71,17 +71,15 @@ class SettingsRepository {
         userCollection.document(userId).collection('tokens').document(token);
 
     return Firestore.instance.runTransaction((Transaction tx) async {
-      return tx.get(ref).then((doc) {
-        if (!(doc.exists)) {
-          tx.set(ref, {
-            "token": token,
-            "created_on": FieldValue.serverTimestamp(),
-            "platform": Platform.operatingSystem,
-          });
-        }
-      }).catchError((error) {
-        print('ERROR SAVING TOKEN: $error');
-      });
+      final doc = await tx.get(ref);
+
+      if (!(doc.exists)) {
+        await tx.set(ref, {
+          "token": token,
+          "created_on": FieldValue.serverTimestamp(),
+          "platform": Platform.operatingSystem,
+        });
+      }
     });
   }
 }

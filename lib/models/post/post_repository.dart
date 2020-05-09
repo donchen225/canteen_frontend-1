@@ -88,7 +88,7 @@ class PostRepository {
   Future<void> addPost(Post post) async {
     print('ADD POST');
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(
+      await tx.set(
         postCollection.document(),
         post.toEntity().toDocument(),
       );
@@ -98,7 +98,7 @@ class PostRepository {
   Future<void> addComment(String postId, Comment comment) async {
     print('ADD COMMENT');
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(
+      await tx.set(
         postCollection
             .document(postId)
             .collection(commentsCollection)
@@ -106,7 +106,7 @@ class PostRepository {
         comment.toEntity().toDocument(),
       );
 
-      tx.update(postCollection.document(postId),
+      await tx.update(postCollection.document(postId),
           {"comment_count": FieldValue.increment(1)});
     });
   }
@@ -114,12 +114,12 @@ class PostRepository {
   Future<void> addLike(String postId, Like like) async {
     print('ADD LIKE');
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(
+      await tx.set(
         postCollection.document(postId).collection(likesCollection).document(),
         like.toEntity().toDocument(),
       );
 
-      tx.update(postCollection.document(postId),
+      await tx.update(postCollection.document(postId),
           {"like_count": FieldValue.increment(1)});
     });
   }
@@ -142,12 +142,12 @@ class PostRepository {
 
     if (id != null && id.isNotEmpty) {
       return Firestore.instance.runTransaction((Transaction tx) async {
-        tx.delete(postCollection
+        await tx.delete(postCollection
             .document(postId)
             .collection(likesCollection)
             .document(id));
 
-        tx.update(postCollection.document(postId),
+        await tx.update(postCollection.document(postId),
             {"like_count": FieldValue.increment(-1)});
       });
     }

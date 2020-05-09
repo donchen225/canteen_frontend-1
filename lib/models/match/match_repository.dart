@@ -47,12 +47,12 @@ class MatchRepository {
 
   Future<void> sendMessage(String matchId, Message message) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.set(
+      await tx.set(
         matchCollection.document(matchId).collection(messages).document(),
         message.toEntity().toDocument(),
       );
 
-      tx.update(matchCollection.document(matchId), {
+      await tx.update(matchCollection.document(matchId), {
         "last_updated": message.timestamp,
       });
     });
@@ -133,7 +133,7 @@ class MatchRepository {
 
   Future<void> confirmPayment(Match match) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(matchCollection.document(match.id), {"status": 1});
+      await tx.update(matchCollection.document(match.id), {"status": 1});
     });
   }
 }

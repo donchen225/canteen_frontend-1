@@ -51,8 +51,8 @@ class FirebaseUserRepository extends UserRepository {
 
   // TODO: catch ALL transactions, transactions do NOT run offline
   Future<void> addFirebaseUser(FirebaseUser user) {
-    return Firestore.instance.runTransaction((Transaction tx) {
-      tx.set(
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      await tx.set(
           userCollection.document(user.uid),
           UserEntity.fromFirebaseUserEntity(
                   FirebaseUserEntity.fromFirebaseUser(user))
@@ -61,8 +61,8 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> addLearnSkill(int position, SkillEntity skill) {
-    return Firestore.instance.runTransaction((Transaction tx) {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "learn_skill": {position.toString(): skill.toDocument()}
       });
     });
@@ -70,7 +70,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateUserSignInTime(FirebaseUser user) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(user.uid), {
+      await tx.update(userCollection.document(user.uid), {
         "last_sign_in_time": user.metadata.lastSignInTime,
       });
     });
@@ -82,7 +82,7 @@ class FirebaseUserRepository extends UserRepository {
   ) {
     final skillTypeField = '${skill.type.toString().split('.').last}_skill';
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "display_name": name,
         "onboarded": 1,
         "$skillTypeField.0.name": skill.name,
@@ -95,7 +95,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateAbout(String about) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "about": about,
       });
     });
@@ -103,7 +103,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateTimeZone(int timeZoneOffset) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "time_zone": timeZoneOffset,
       });
     });
@@ -111,7 +111,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateName(String name) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "display_name": name,
       });
     });
@@ -119,7 +119,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateTitle(String title) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "title": title,
       });
     });
@@ -127,7 +127,7 @@ class FirebaseUserRepository extends UserRepository {
 
   Future<void> updateInterests(List<String> interests) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "interests": interests,
       });
     });
@@ -136,7 +136,7 @@ class FirebaseUserRepository extends UserRepository {
   Future<void> updateAvailability(
       int dayIndex, int startTimeSeconds, int endTimeSeconds) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "availability.$dayIndex.start_time": startTimeSeconds,
         "availability.$dayIndex.end_time": endTimeSeconds,
       });
@@ -144,22 +144,22 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> updateTeachSkill(Skill skill, int index) {
-    return Firestore.instance.runTransaction((Transaction tx) {
-      tx.update(userCollection.document(_firebaseUser.uid),
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      await tx.update(userCollection.document(_firebaseUser.uid),
           {"teach_skill.${index.toString()}": skill.toEntity().toDocument()});
     });
   }
 
   Future<void> updateLearnSkill(Skill skill, int index) {
-    return Firestore.instance.runTransaction((Transaction tx) {
-      return tx.update(userCollection.document(_firebaseUser.uid),
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      await tx.update(userCollection.document(_firebaseUser.uid),
           {"learn_skill.${index.toString()}": skill.toEntity().toDocument()});
     });
   }
 
   Future<void> updatePhoto(String url) {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(userCollection.document(_firebaseUser.uid), {
+      await tx.update(userCollection.document(_firebaseUser.uid), {
         "photo_url": url,
       });
     });

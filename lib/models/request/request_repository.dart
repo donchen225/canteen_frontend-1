@@ -22,13 +22,13 @@ class RequestRepository {
 
   Future<void> deleteRequest(Request request) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.delete(requestCollection.document(request.id));
+      await tx.delete(requestCollection.document(request.id));
     });
   }
 
   Future<void> acceptRequest(Request request) {
     Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(requestCollection.document(request.id), {"status": 1});
+      await tx.update(requestCollection.document(request.id), {"status": 1});
     });
 
     _requests.removeWhere((r) => r.id == request.id);
@@ -37,7 +37,7 @@ class RequestRepository {
 
   Future<void> declineRequest(Request request) {
     Firestore.instance.runTransaction((Transaction tx) async {
-      tx.update(requestCollection.document(request.id), {"status": 2});
+      await tx.update(requestCollection.document(request.id), {"status": 2});
     });
 
     _requests.removeWhere((r) => r.id == request.id);
