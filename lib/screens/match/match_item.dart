@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/match/match.dart';
@@ -33,81 +34,86 @@ class MatchItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: SizeConfig.instance.blockSizeVertical * 13,
-        padding: EdgeInsets.only(
-          top: SizeConfig.instance.blockSizeVertical * 1,
-          bottom: SizeConfig.instance.blockSizeVertical * 1,
-          left: SizeConfig.instance.blockSizeHorizontal * 4,
-          right: SizeConfig.instance.blockSizeHorizontal * 4,
-        ),
-        decoration: BoxDecoration(
-          color: Color(0xFFF0F0F0),
-          border: Border.all(width: 0.5, color: Colors.grey[400]),
-        ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: ProfilePicture(
-                photoUrl: opponentList[0].photoUrl,
-                editable: false,
-                size: SizeConfig.instance.blockSizeHorizontal * 18,
-              ),
+      child: AspectRatio(
+        aspectRatio: kMatchItemAspectRatio,
+        child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Container(
+            padding: EdgeInsets.only(
+              top: constraints.maxHeight * 0.05,
+              bottom: constraints.maxHeight * 0.05,
+              left: constraints.maxWidth * 0.03,
+              right: constraints.maxWidth * 0.03,
             ),
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: EdgeInsets.only(
-                    left: SizeConfig.instance.blockSizeHorizontal * 3,
-                    right: SizeConfig.instance.blockSizeHorizontal * 6),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            opponentList[0].displayName ?? '',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 18),
+            decoration: BoxDecoration(
+              color: Color(0xFFF0F0F0),
+              border: Border.all(width: 0.5, color: Colors.grey[400]),
+            ),
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  flex: 2,
+                  child: ProfilePicture(
+                    photoUrl: opponentList[0].photoUrl,
+                    editable: false,
+                    size: constraints.maxHeight * 0.75,
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: constraints.maxHeight * 0.15,
+                        bottom: constraints.maxHeight * 0.15,
+                        left: constraints.maxWidth * 0.04,
+                        right: constraints.maxWidth * 0.04),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              opponentList[0].displayName ?? '',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            match.lastMessage != null
+                                ? (match.lastMessage as TextMessage).text
+                                : '',
+                            style: TextStyle(color: Colors.grey[600]),
+                            textAlign: TextAlign.start,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        match.lastMessage != null
-                            ? (match.lastMessage as TextMessage).text
-                            : '',
-                        style: TextStyle(color: Colors.grey[600]),
-                        textAlign: TextAlign.start,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.blockSizeVertical * 2),
+                    child: Column(
+                      children: <Widget>[
+                        Text(formatTime(match.lastUpdated)),
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.blockSizeVertical * 2),
-                child: Column(
-                  children: <Widget>[
-                    Text(formatTime(match.lastUpdated)),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
