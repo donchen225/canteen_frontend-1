@@ -63,7 +63,7 @@ class MatchItem extends StatelessWidget {
                             top: constraints.maxHeight * 0.15,
                             bottom: constraints.maxHeight * 0.15,
                             left: constraints.maxWidth * 0.04,
-                            right: constraints.maxWidth * 0.04),
+                            right: constraints.maxWidth * 0.02),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
