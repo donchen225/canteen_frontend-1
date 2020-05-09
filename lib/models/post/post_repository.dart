@@ -85,7 +85,8 @@ class PostRepository {
     }
   }
 
-  Future<void> addPost(Post post) {
+  Future<void> addPost(Post post) async {
+    print('ADD POST');
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
         postCollection.document(),
@@ -94,7 +95,8 @@ class PostRepository {
     });
   }
 
-  Future<void> addComment(String postId, Comment comment) {
+  Future<void> addComment(String postId, Comment comment) async {
+    print('ADD COMMENT');
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
         postCollection
@@ -109,7 +111,8 @@ class PostRepository {
     });
   }
 
-  Future<void> addLike(String postId, Like like) {
+  Future<void> addLike(String postId, Like like) async {
+    print('ADD LIKE');
     return Firestore.instance.runTransaction((Transaction tx) async {
       tx.set(
         postCollection.document(postId).collection(likesCollection).document(),
@@ -122,6 +125,7 @@ class PostRepository {
   }
 
   Future<void> deleteLike(String postId) async {
+    print('DELETE LIKE');
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
@@ -149,7 +153,9 @@ class PostRepository {
     }
   }
 
-  Future<bool> checkLike(String postId) {
+  Future<bool> checkLike(String postId) async {
+    print('CHECK LIKE');
+    print('POST ID: $postId');
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
@@ -189,6 +195,7 @@ class PostRepository {
   }
 
   Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts() {
+    print('GET POSTS');
     return postCollection
         .orderBy("last_updated", descending: true)
         .snapshots()
