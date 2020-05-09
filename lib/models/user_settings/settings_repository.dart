@@ -71,7 +71,7 @@ class SettingsRepository {
         userCollection.document(userId).collection('tokens').document(token);
 
     return Firestore.instance.runTransaction((Transaction tx) async {
-      tx.get(ref).then((doc) {
+      return tx.get(ref).then((doc) {
         if (!(doc.exists)) {
           tx.set(ref, {
             "token": token,

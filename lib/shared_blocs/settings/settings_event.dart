@@ -36,7 +36,7 @@ class LoadSettings extends SettingEvent {
 class UpdateSettings extends SettingEvent {
   final UserSettings settings;
 
-  const UpdateSettings(this.settings);
+  const UpdateSettings({this.settings});
 
   @override
   List<Object> get props => [settings];
