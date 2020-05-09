@@ -18,7 +18,31 @@ This is the codebase for the Canteen mobile app, written in Flutter.
     * In VSCode, press F5.
 5. Create your own account in the app.
 
-## Firestore collections
+## Development
+
+### Developing Cloud Functions locally
+
+1. Set `.env` file.
+2. Export environment variables from `.env` file `source .env`
+
+## Deployment
+
+### Continuous Delivery (CodeMagic)
+
+* Set `flutter`, `cocoapod` versions
+* Set up `GoogleService-Info.plist` as environment variable `IOS_FIREBASE_JSON`
+
+### Setting up Algolia
+1. Get `ALGOLIA_APP_ID` and `ALGOLIA_ADMIN_API_KEY` from Algolia and set in `.env`.
+2. Create index on algolia.
+
+### Generating URL launcher icon
+
+`flutter pub run flutter_launcher_icons:main`
+
+## Architecture
+
+### Firestore collections
 
 ### Users
 
@@ -43,18 +67,6 @@ This is the codebase for the Canteen mobile app, written in Flutter.
     * `accepted`
     * `declined`
 
-## Setting up algolia
-1. Get `ALGOLIA_APP_ID` and `ALGOLIA_ADMIN_API_KEY` from Algolia and set in `.env`.
-2. Create index on algolia.
-
-## Developing functions locally
-
-1. Set `.env` file.
-2. Export environment variables from `.env` file `source .en
-
-## Generate URL launcher icon
-
-`flutter pub run flutter_launcher_icons:main`
 
 ## Notes
 
