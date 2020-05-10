@@ -56,11 +56,10 @@ class SinglePostScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         post.title,
-                        style: TextStyle(
-                          fontSize:
-                              SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .apply(fontWeightDelta: 2),
                       ),
                     ),
                   ),
@@ -74,7 +73,8 @@ class SinglePostScreen extends StatelessWidget {
                           left: SizeConfig.instance.blockSizeHorizontal * 4,
                           right: SizeConfig.instance.blockSizeHorizontal * 4,
                         ),
-                        child: Text(post.message),
+                        child: Text(post.message,
+                            style: Theme.of(context).textTheme.bodyText1),
                       )),
                 ),
                 SliverToBoxAdapter(
