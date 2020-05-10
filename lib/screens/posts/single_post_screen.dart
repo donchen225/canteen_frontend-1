@@ -89,8 +89,8 @@ class SinglePostScreen extends StatelessWidget {
                     ),
                     child: Container(
                       padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 2,
-                        bottom: SizeConfig.instance.blockSizeVertical * 2,
+                        top: SizeConfig.instance.blockSizeVertical * 1.5,
+                        bottom: SizeConfig.instance.blockSizeVertical * 1.5,
                       ),
                       decoration: BoxDecoration(
                         border: Border(
