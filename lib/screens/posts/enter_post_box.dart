@@ -50,11 +50,10 @@ class EnterPostBox extends StatelessWidget {
             ),
             Text(
               'What is your question?',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
+              style: Theme.of(context).textTheme.headline6.apply(
+                    color: Colors.grey,
+                    fontWeightDelta: 1,
+                  ),
             ),
           ],
         ),

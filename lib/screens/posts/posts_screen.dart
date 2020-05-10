@@ -17,6 +17,8 @@ class PostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle bodyTextTheme = Theme.of(context).textTheme.bodyText1;
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
@@ -108,8 +110,7 @@ class PostScreen extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       post.message,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                      style: bodyTextTheme,
                                       maxLines: kNumPostOverflowLines,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -154,32 +155,28 @@ class PostScreen extends StatelessWidget {
                                                               .blockSizeHorizontal *
                                                           2),
                                                   child: Container(
-                                                    height: SizeConfig.instance
-                                                            .blockSizeVertical *
-                                                        2.2,
-                                                    width: SizeConfig.instance
-                                                            .blockSizeVertical *
-                                                        2.2,
                                                     child: Image.asset(
                                                       'assets/up-arrow.png',
                                                       color: post.liked
                                                           ? Colors.blue
                                                           : _sideTextColor,
+                                                      height: bodyTextTheme
+                                                              .fontSize *
+                                                          1.2,
+                                                      width: bodyTextTheme
+                                                              .fontSize *
+                                                          1.2,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ),
                                                 Text(
                                                   post.likeCount.toString(),
-                                                  style: TextStyle(
+                                                  style: bodyTextTheme.apply(
                                                       color: post.liked
                                                           ? Colors.blue
                                                           : _sideTextColor,
-                                                      fontSize: SizeConfig
-                                                              .instance
-                                                              .blockSizeVertical *
-                                                          1.8,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                      fontWeightDelta: 1),
                                                 ),
                                               ],
                                             )),
@@ -194,20 +191,16 @@ class PostScreen extends StatelessWidget {
                                                       2),
                                               child: Icon(
                                                 Icons.mode_comment,
-                                                size: SizeConfig.instance
-                                                        .blockSizeVertical *
-                                                    2.2,
+                                                size: bodyTextTheme.fontSize *
+                                                    1.4,
                                                 color: _sideTextColor,
                                               ),
                                             ),
                                             Text(
                                               'Comment',
-                                              style: TextStyle(
+                                              style: bodyTextTheme.apply(
                                                   color: _sideTextColor,
-                                                  fontSize: SizeConfig.instance
-                                                          .blockSizeVertical *
-                                                      1.8,
-                                                  fontWeight: FontWeight.bold),
+                                                  fontWeightDelta: 1),
                                             ),
                                           ],
                                         ),
