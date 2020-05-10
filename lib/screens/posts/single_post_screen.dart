@@ -3,8 +3,10 @@ import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
+import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +22,8 @@ class SinglePostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle bodyTextTheme = Theme.of(context).textTheme.bodyText1;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -115,42 +119,11 @@ class SinglePostScreen extends StatelessWidget {
                                     .add(DeleteLike(post.id));
                               }
                             },
-                            child: Container(
-                                child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      right: SizeConfig
-                                              .instance.blockSizeHorizontal *
-                                          2),
-                                  child: Container(
-                                    height:
-                                        SizeConfig.instance.blockSizeVertical *
-                                            2.2,
-                                    width:
-                                        SizeConfig.instance.blockSizeVertical *
-                                            2.2,
-                                    child: Image.asset(
-                                      'assets/up-arrow.png',
-                                      color: post.liked
-                                          ? Colors.blue
-                                          : _sideTextColor,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  post.likeCount.toString(),
-                                  style: TextStyle(
-                                      color: post.liked
-                                          ? Colors.blue
-                                          : _sideTextColor,
-                                      fontSize: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          1.8,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            )),
+                            child: LikeButton(
+                              post: post,
+                              style: bodyTextTheme,
+                              sideTextColor: _sideTextColor,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -164,34 +137,9 @@ class SinglePostScreen extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        right: SizeConfig
-                                                .instance.blockSizeHorizontal *
-                                            2),
-                                    child: Icon(
-                                      Icons.mode_comment,
-                                      size: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2.2,
-                                      color: _sideTextColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Comment',
-                                    style: TextStyle(
-                                        color: _sideTextColor,
-                                        fontSize: SizeConfig
-                                                .instance.blockSizeVertical *
-                                            1.8,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            child: CommentButton(
+                                style: bodyTextTheme,
+                                sideTextColor: _sideTextColor),
                           ),
                           Container(),
                         ],
