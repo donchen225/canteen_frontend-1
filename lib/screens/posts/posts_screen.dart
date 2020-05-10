@@ -5,6 +5,7 @@ import 'package:canteen_frontend/screens/posts/enter_post_box.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -95,12 +96,10 @@ class PostScreen extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     post.title,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: SizeConfig
-                                                .instance.safeBlockVertical *
-                                            2.2 *
-                                            1.2),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .apply(fontWeightDelta: 1),
                                   ),
                                 ),
                                 Visibility(
@@ -109,11 +108,10 @@ class PostScreen extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       post.message,
-                                      style: TextStyle(
-                                          fontSize: SizeConfig
-                                                  .instance.safeBlockVertical *
-                                              1.8 *
-                                              1.2),
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                      maxLines: kNumPostOverflowLines,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),

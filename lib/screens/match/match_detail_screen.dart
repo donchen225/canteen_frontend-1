@@ -73,8 +73,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               brightness: Brightness.light,
               title: Text(
                 prospect.displayName ?? prospect.email,
-                style:
-                    GoogleFonts.montserrat(fontSize: 22, color: Colors.black),
+                style: TextStyle(fontSize: 22, color: Colors.black),
               ),
               backgroundColor: Palette.appBarBackgroundColor,
               elevation: 1,
