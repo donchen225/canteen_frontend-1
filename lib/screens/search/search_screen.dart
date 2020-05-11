@@ -102,42 +102,62 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Container(
-          height: 40,
-          color: Colors.grey[200],
-          child: Row(
-            children: <Widget>[
-              Flexible(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: TextField(
-                    textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      icon: Icon(
-                        Icons.search,
-                        size: 20,
-                        color: Colors.grey[800],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          SizeConfig.instance.safeBlockVertical * 10,
+        ),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          brightness: Brightness.light,
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
+          flexibleSpace: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
+                ),
+                child: Container(
+                  height: SizeConfig.instance.safeBlockVertical * 6,
+                  color: Colors.grey[200],
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: TextField(
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                              icon: Icon(
+                                Icons.search,
+                                size: SizeConfig.instance.safeBlockVertical * 4,
+                                color: Colors.grey[600],
+                              ),
+                              border: InputBorder.none,
+                              hintText: "Who do you want to connect with?",
+                              hintStyle:
+                                  Theme.of(context).textTheme.subtitle1.apply(
+                                        fontFamily: '.SF UI Text',
+                                        fontWeightDelta: 2,
+                                      ),
+                            ),
+                            onSubmitted: (query) {
+                              print('SUBMITTED: $query');
+                              BlocProvider.of<SearchBloc>(context)
+                                  .add(SearchStarted(query));
+                            },
+                          ),
+                        ),
                       ),
-                      border: InputBorder.none,
-                      hintText: "Who do you want to connect with?",
-                    ),
-                    onSubmitted: (query) {
-                      print('SUBMITTED: $query');
-                      BlocProvider.of<SearchBloc>(context)
-                          .add(SearchStarted(query));
-                    },
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -13,11 +13,11 @@ class DiscoverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: SizeConfig.instance.safeBlockVertical),
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverPadding(
+          padding: EdgeInsets.only(top: SizeConfig.instance.safeBlockVertical),
+          sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 final user = userList[index];
@@ -116,8 +116,8 @@ class DiscoverScreen extends StatelessWidget {
               childCount: userList.length,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
