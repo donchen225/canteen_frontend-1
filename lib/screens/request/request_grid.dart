@@ -19,17 +19,6 @@ class RequestGrid extends StatelessWidget {
         return Center(child: CupertinoActivityIndicator());
       } else if (state is DetailedRequestListLoaded) {
         return Scaffold(
-          appBar: AppBar(
-            brightness: Brightness.light,
-            title: Text(
-              'Requests',
-              style: TextStyle(
-                color: Color(0xFF303030),
-              ),
-            ),
-            backgroundColor: Palette.appBarBackgroundColor,
-            elevation: 1,
-          ),
           body: DetailedRequestGrid(
             items: state.requestList,
             onTap: (request) {

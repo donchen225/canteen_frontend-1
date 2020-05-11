@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/match/match_list.dart';
+import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,10 @@ class _MessageScreenState extends State<MessageScreen>
           }).toList(),
         ),
       ),
-      body: MatchList(),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[MatchList(), RequestScreen()],
+      ),
     );
   }
 }
