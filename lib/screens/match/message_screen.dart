@@ -13,18 +13,8 @@ class _MessageScreenState extends State<MessageScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  final List<Text> tabChoices = [
-    Text('Chats',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        )),
-    Text('Requests',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        )),
-  ];
+  final List<String> tabChoices = ['Chats', 'Requests'];
+
   @override
   void initState() {
     super.initState();
@@ -38,9 +28,10 @@ class _MessageScreenState extends State<MessageScreen>
         brightness: Brightness.light,
         title: Text(
           'Messages',
-          style: TextStyle(
-            color: Palette.appBarTextColor,
-          ),
+          style: Theme.of(context).textTheme.headline6.apply(
+                fontFamily: '.SF UI Text',
+                color: Palette.appBarTextColor,
+              ),
         ),
         backgroundColor: Palette.appBarBackgroundColor,
         automaticallyImplyLeading: false,
@@ -49,7 +40,14 @@ class _MessageScreenState extends State<MessageScreen>
           controller: _tabController,
           tabs: tabChoices.map((text) {
             return Tab(
-              child: text,
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.headline6.apply(
+                      fontFamily: '.SF UI Text',
+                      fontSizeFactor: 0.8,
+                      color: Palette.appBarTextColor,
+                    ),
+              ),
             );
           }).toList(),
         ),
