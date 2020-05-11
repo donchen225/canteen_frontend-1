@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +30,19 @@ class ProfileCard extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-            // color: Colors.red,
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(kCardCircularRadius),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
             ),
+          ],
+        ),
         child: Column(
           children: <Widget>[
             Container(
@@ -38,8 +50,9 @@ class ProfileCard extends StatelessWidget {
               width: width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15)),
+                  topLeft: Radius.circular(kCardCircularRadius),
+                  topRight: Radius.circular(kCardCircularRadius),
+                ),
                 image: DecorationImage(
                   image: (user.photoUrl != null && user.photoUrl.isNotEmpty)
                       ? CachedNetworkImageProvider(user.photoUrl)
