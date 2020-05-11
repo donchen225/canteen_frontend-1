@@ -47,7 +47,7 @@ class PostScreen extends StatelessWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      bottom: SizeConfig.instance.safeBlockVertical * 0.5),
                   child: EnterPostBox(
                     user: state.user,
                   ),
@@ -61,7 +61,7 @@ class PostScreen extends StatelessWidget {
 
                   return Padding(
                     padding: EdgeInsets.only(
-                        bottom: SizeConfig.instance.blockSizeVertical),
+                        bottom: SizeConfig.instance.safeBlockVertical * 0.5),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(

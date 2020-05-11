@@ -127,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         color: Colors.grey[800],
                       ),
                       border: InputBorder.none,
-                      hintText: "Search",
+                      hintText: "Who do you want to connect with?",
                     ),
                     onSubmitted: (query) {
                       print('SUBMITTED: $query');
