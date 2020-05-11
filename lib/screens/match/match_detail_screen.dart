@@ -32,7 +32,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   MatchDetailNavigationBloc _matchDetailNavigationBloc;
   TabController _tabController;
 
-  List<Text> tabChoices = [
+  final List<Text> tabChoices = [
     Text('CHAT',
         style: TextStyle(
           fontSize: 12,

@@ -3,7 +3,7 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/match_list_screen.dart';
+import 'package:canteen_frontend/screens/match/message_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -99,13 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             }
 
-            if (state is RequestScreenLoaded) {
-              if (state.reset) {
-                BlocProvider.of<RequestListBloc>(context)
-                    .add(LoadRequestList());
-              }
-            }
-
             if (state is UserProfileScreenLoaded) {
               if (state.reset) {
                 BlocProvider.of<UserProfileBloc>(context)
@@ -148,20 +141,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.search,
-                      ),
+                      icon: const Icon(IconData(0xf391,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
-                    BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numRequests,
-                        Icon(
-                          Icons.email,
-                        ),
-                      ),
-                      title: Text(''),
-                    ),
+                    // BottomNavigationBarItem(
+                    //   icon: _buildBadge(
+                    //     navBarState.numRequests,
+                    //     Icon(
+                    //       Icons.email,
+                    //     ),
+                    //   ),
+                    //   title: Text(''),
+                    // ),
                     BottomNavigationBarItem(
                       icon: Icon(
                         Icons.sms,
@@ -204,11 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is SearchScreenLoaded) {
             return SearchScreen();
           }
-          if (state is RequestScreenLoaded) {
-            return RequestScreen();
-          }
-          if (state is MatchScreenLoaded) {
-            return MatchListScreen();
+          if (state is MessageScreenLoaded) {
+            return MessageScreen();
           }
           if (state is UserProfileScreenLoaded) {
             return UserProfileScreen(

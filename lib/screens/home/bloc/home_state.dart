@@ -66,22 +66,10 @@ class SearchScreenLoaded extends HomeState {
   String toString() => 'SearchScreenLoaded { reset: $reset }';
 }
 
-class RequestScreenLoaded extends HomeState {
+class MessageScreenLoaded extends HomeState {
   final bool reset;
 
-  RequestScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'RequestScreenLoaded { reset: $reset }';
-}
-
-class MatchScreenLoaded extends HomeState {
-  final bool reset;
-
-  MatchScreenLoaded({this.reset});
+  MessageScreenLoaded({this.reset});
 
   @override
   List<Object> get props => [reset];
