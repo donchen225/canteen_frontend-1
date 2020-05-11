@@ -49,7 +49,7 @@ class EnterPostBox extends StatelessWidget {
               ),
             ),
             Text(
-              'What is your question?',
+              "What's on your mind?",
               style: Theme.of(context).textTheme.headline6.apply(
                     color: Colors.grey,
                     fontWeightDelta: 1,
