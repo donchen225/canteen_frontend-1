@@ -1,5 +1,7 @@
 // Layout constants
 const double kMatchItemAspectRatio = 3.75 / 1;
+const double kTabBarTextPadding = 10;
+const double kTabBarTextScaleFactor = 0.8;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;

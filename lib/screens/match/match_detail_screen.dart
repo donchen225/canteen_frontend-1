@@ -10,6 +10,7 @@ import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,11 +83,21 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                       state is MatchPaying ||
                       state is MatchPaymentConfirming)
                   ? TabBar(
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(width: 2.0),
+                        // insets: EdgeInsets.symmetric(horizontal: -10),
+                      ),
                       indicatorColor: Colors.black,
                       controller: _tabController,
                       tabs: tabChoices.map((text) {
-                        return Tab(
-                          child: text,
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: kTabBarTextPadding,
+                          ),
+                          child: Tab(
+                            child: text,
+                          ),
                         );
                       }).toList(),
                       onTap: (index) {

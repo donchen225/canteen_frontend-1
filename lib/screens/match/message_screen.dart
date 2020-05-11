@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/match/match_list.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
@@ -38,16 +39,22 @@ class _MessageScreenState extends State<MessageScreen>
         automaticallyImplyLeading: false,
         elevation: 1,
         bottom: TabBar(
+          indicatorSize: TabBarIndicatorSize.label,
           controller: _tabController,
           tabs: tabChoices.map((text) {
-            return Tab(
-              child: Text(
-                text,
-                style: Theme.of(context).textTheme.headline6.apply(
-                      fontFamily: '.SF UI Text',
-                      fontSizeFactor: 0.8,
-                      color: Palette.appBarTextColor,
-                    ),
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: kTabBarTextPadding,
+              ),
+              child: Tab(
+                child: Text(
+                  text,
+                  style: Theme.of(context).textTheme.headline6.apply(
+                        fontFamily: '.SF UI Text',
+                        fontSizeFactor: kTabBarTextScaleFactor,
+                        color: Palette.appBarTextColor,
+                      ),
+                ),
               ),
             );
           }).toList(),
