@@ -26,7 +26,7 @@ class PostScreen extends StatelessWidget {
       appBar: AppBar(
         brightness: Brightness.light,
         title: Text(
-          'Home',
+          'Community',
           style: TextStyle(
             color: Color(0xFF303030),
           ),
