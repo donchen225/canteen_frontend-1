@@ -101,20 +101,25 @@ class LandingScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: RaisedButton(
-                      color: Palette.orangeColor,
                       elevation: 0,
+                      highlightElevation: 0,
+                      color: Colors.white,
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.grey.withOpacity(0.2),
                       padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.instance.safeBlockVertical * 1.5,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(kButtonBorderRadius),
+                        side: BorderSide(width: 3, color: Palette.orangeColor),
+                        borderRadius: BorderRadius.circular(
+                          kButtonBorderRadius,
+                        ),
                       ),
                       child: Text(
                         'Sign Up With Email',
                         style: Theme.of(context).textTheme.button.apply(
                               fontSizeFactor: 1.5,
-                              color: Colors.white,
+                              color: Palette.orangeColor,
                               fontWeightDelta: 1,
                             ),
                       ),
