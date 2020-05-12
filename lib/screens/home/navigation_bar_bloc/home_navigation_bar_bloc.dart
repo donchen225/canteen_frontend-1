@@ -10,30 +10,17 @@ import 'package:meta/meta.dart';
 class HomeNavigationBarBloc
     extends Bloc<HomeNavigationBarEvent, HomeNavigationBarState> {
   final RequestBloc _requestBloc;
-  final RecommendedBloc _recommendedBloc;
   StreamSubscription _requestSubscription;
-  StreamSubscription _recommendedSubscription;
 
   HomeNavigationBarBloc(
       {@required RequestBloc requestBloc,
       @required RecommendedBloc recommendedBloc})
       : assert(requestBloc != null),
         assert(recommendedBloc != null),
-        _requestBloc = requestBloc,
-        _recommendedBloc = recommendedBloc {
+        _requestBloc = requestBloc {
     _requestSubscription = _requestBloc.listen((state) {
       if (state is RequestsLoaded) {
         add(UpdateBadgeCount(numRequests: state.requestList.length));
-      }
-    });
-
-    _recommendedSubscription = _recommendedBloc.listen((state) {
-      if (state is RecommendedLoaded) {
-        add(UpdateBadgeCount(
-            numRecommended: _recommendedBloc.recommendations.length -
-                _recommendedBloc.currentIndex));
-      } else if (state is RecommendedEmpty) {
-        add(UpdateBadgeCount(numRecommended: 0));
       }
     });
   }
@@ -74,7 +61,6 @@ class HomeNavigationBarBloc
   @override
   Future<void> close() {
     _requestSubscription?.cancel();
-    _recommendedSubscription?.cancel();
     return super.close();
   }
 }

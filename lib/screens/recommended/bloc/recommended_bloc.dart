@@ -10,8 +10,7 @@ import 'package:meta/meta.dart';
 class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   final UserRepository _userRepository;
   final RecommendationRepository _recommendationRepository;
-  int currentIndex = 0;
-  List<Recommendation> recommendations = [];
+  List<User> recommendations = [];
 
   RecommendedBloc(
       {@required UserRepository userRepository,
@@ -28,10 +27,6 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
   Stream<RecommendedState> mapEventToState(RecommendedEvent event) async* {
     if (event is LoadRecommended) {
       yield* _mapLoadRecommendedToState();
-    } else if (event is NextRecommended) {
-      yield* _mapNextRecommendedToState();
-    } else if (event is AcceptRecommended) {
-      yield* _mapAcceptRecommendedToState();
     } else if (event is ClearRecommended) {
       yield* _mapClearRecommendedToState();
     }
@@ -50,62 +45,57 @@ class RecommendedBloc extends Bloc<RecommendedEvent, RecommendedState> {
     final newRecs = recs.where((rec) => rec.status == 0);
 
     newRecs.forEach((rec) {
-      final exists = (recommendations.firstWhere((r) => r.userId == rec.userId,
+      final exists = (recommendations.firstWhere((r) => r.id == rec.userId,
           orElse: () => null));
       if (exists == null) {
-        recommendations.add(rec);
+        final user = User.fromRecommendation(rec);
+        recommendations.add(user);
       }
     });
 
-    if (currentIndex < recommendations.length) {
-      final rec = recommendations[currentIndex];
-      final recUser = User.fromRecommendation(rec);
-
-      yield RecommendedLoaded(rec, recUser);
-    } else if (recs.length > 0) {
-      yield RecommendedEmpty();
+    if (recommendations != null && recommendations.isNotEmpty) {
+      yield RecommendedLoaded(recommendations);
     } else {
       yield RecommendedUnavailable();
     }
   }
 
-  Stream<RecommendedState> _mapNextRecommendedToState() async* {
-    yield RecommendedLoading();
+  // Stream<RecommendedState> _mapNextRecommendedToState() async* {
+  //   yield RecommendedLoading();
 
-    final currentRec = recommendations[currentIndex];
-    _recommendationRepository.declineRecommendation(currentRec.id);
+  //   final currentRec = recommendations[currentIndex];
+  //   _recommendationRepository.declineRecommendation(currentRec.id);
 
-    currentIndex += 1;
+  //   currentIndex += 1;
 
-    if (currentIndex < recommendations.length) {
-      final rec = recommendations[currentIndex];
-      final recUser = User.fromRecommendation(rec);
-      yield RecommendedLoaded(rec, recUser);
-    } else {
-      yield RecommendedEmpty();
-    }
-  }
+  //   if (currentIndex < recommendations.length) {
+  //     final rec = recommendations[currentIndex];
+  //     final recUser = User.fromRecommendation(rec);
+  //     yield RecommendedLoaded(rec, recUser);
+  //   } else {
+  //     yield RecommendedEmpty();
+  //   }
+  // }
 
-  Stream<RecommendedState> _mapAcceptRecommendedToState() async* {
-    yield RecommendedLoading();
+  // Stream<RecommendedState> _mapAcceptRecommendedToState() async* {
+  //   yield RecommendedLoading();
 
-    final currentRec = recommendations[currentIndex];
-    _recommendationRepository.acceptRecommendation(currentRec.id);
+  //   final currentRec = recommendations[currentIndex];
+  //   _recommendationRepository.acceptRecommendation(currentRec.id);
 
-    currentIndex += 1;
+  //   currentIndex += 1;
 
-    if (currentIndex < recommendations.length) {
-      final rec = recommendations[currentIndex];
-      final recUser = User.fromRecommendation(rec);
-      yield RecommendedLoaded(rec, recUser);
-    } else {
-      yield RecommendedEmpty();
-    }
-  }
+  //   if (currentIndex < recommendations.length) {
+  //     final rec = recommendations[currentIndex];
+  //     final recUser = User.fromRecommendation(rec);
+  //     yield RecommendedLoaded(rec, recUser);
+  //   } else {
+  //     yield RecommendedEmpty();
+  //   }
+  // }
 
   Stream<RecommendedState> _mapClearRecommendedToState() async* {
     recommendations = [];
-    currentIndex = 0;
     yield RecommendedLoading();
   }
 }

@@ -191,9 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
             return PostScreen();
           }
 
-          if (state is RecommendedScreenLoaded) {
-            return RecommendedScreen();
-          }
           if (state is SearchScreenLoaded) {
             return SearchScreen();
           }

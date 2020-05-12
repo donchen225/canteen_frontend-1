@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -32,17 +33,37 @@ class DiscoverScreen extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: Container(
-            height: SizeConfig.instance.safeBlockVertical * 30,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 100.0,
-                  child: Card(
-                    child: Text('data'),
-                  ),
-                );
+            height: SizeConfig.instance.safeBlockVertical * 50,
+            child: BlocBuilder<RecommendedBloc, RecommendedState>(
+              builder: (BuildContext context, RecommendedState state) {
+                if (state is RecommendedLoading) {
+                  return CupertinoActivityIndicator();
+                }
+
+                if (state is RecommendedLoaded) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.recommendations.length,
+                    itemBuilder: (context, index) {
+                      final user = state.recommendations[index];
+
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.instance.safeBlockHorizontal * 6,
+                          bottom: SizeConfig.instance.safeBlockVertical * 3,
+                          top: SizeConfig.instance.safeBlockVertical * 3,
+                        ),
+                        child: ProfileCard(
+                            user: user,
+                            height: SizeConfig.instance.safeBlockVertical * 46,
+                            onTap: () => BlocProvider.of<SearchBloc>(context)
+                                .add(SearchInspectUser(user))),
+                      );
+                    },
+                  );
+                }
+
+                return Container();
               },
             ),
           ),
