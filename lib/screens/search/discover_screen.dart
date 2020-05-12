@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +54,14 @@ class DiscoverScreen extends StatelessWidget {
                           top: SizeConfig.instance.safeBlockVertical * 3,
                         ),
                         child: ProfileCard(
-                            user: user,
-                            height: SizeConfig.instance.safeBlockVertical * 46,
-                            onTap: () => BlocProvider.of<SearchBloc>(context)
-                                .add(SearchInspectUser(user))),
+                          user: user,
+                          height: SizeConfig.instance.safeBlockVertical * 46,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) {
+                              return ViewUserProfileScreen(user: user);
+                            }),
+                          ),
+                        ),
                       );
                     },
                   );
@@ -97,10 +101,14 @@ class DiscoverScreen extends StatelessWidget {
                     top: SizeConfig.instance.safeBlockVertical * 3,
                   ),
                   child: ProfileCard(
-                      user: user,
-                      height: SizeConfig.instance.safeBlockVertical * 46,
-                      onTap: () => BlocProvider.of<SearchBloc>(context)
-                          .add(SearchInspectUser(user))),
+                    user: user,
+                    height: SizeConfig.instance.safeBlockVertical * 46,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) {
+                        return ViewUserProfileScreen(user: user);
+                      }),
+                    ),
+                  ),
                 );
               },
             ),

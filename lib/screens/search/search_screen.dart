@@ -55,38 +55,6 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _loadSearchWidget(BuildContext context, SearchState state) {
     if (state is SearchUninitialized) {
       return DiscoverScreen(state.allUsers);
-    } else if (state is SearchShowProfile) {
-      return Scaffold(
-        key: Key(state.user.id),
-        floatingActionButton: SkipUserFloatingActionButton(
-          onTap: () {
-            state.isSearchResult
-                ? BlocProvider.of<SearchBloc>(context).add(SearchNextUser())
-                : BlocProvider.of<SearchBloc>(context).add(SearchHome());
-          },
-        ),
-        body: Container(
-          color: Palette.backgroundColor,
-          child: CustomScrollView(slivers: <Widget>[
-            SliverPadding(
-              padding: EdgeInsets.only(
-                  bottom: SizeConfig.instance.blockSizeVertical * 13,
-                  left: SizeConfig.instance.blockSizeHorizontal * 3,
-                  right: SizeConfig.instance.blockSizeHorizontal * 3),
-              sliver: ProfileList(
-                state.user,
-                key: Key('search-show-profile'),
-                height: SizeConfig.instance.blockSizeHorizontal * 33,
-                showName: true,
-                onTapLearnFunction: (skill) =>
-                    _onTapSkillFunction(context, state, skill),
-                onTapTeachFunction: (skill) =>
-                    _onTapSkillFunction(context, state, skill),
-              ),
-            ),
-          ]),
-        ),
-      );
     } else if (state is SearchCompleteNoResults) {
       return SearchEmptyResults();
     } else if (state is SearchResultsEnd) {

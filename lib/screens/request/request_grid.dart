@@ -54,7 +54,8 @@ class RequestGrid extends StatelessWidget {
                   sliver: ProfileList(
                     state.request.sender,
                     key: Key('search-show-profile'),
-                    height: SizeConfig.instance.blockSizeHorizontal * 33,
+                    skillListHeight:
+                        SizeConfig.instance.blockSizeHorizontal * 33,
                   ),
                 ),
               ]),

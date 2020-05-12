@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 
 class ProfileList extends StatelessWidget {
   final User user;
-  final double height;
+  final double skillListHeight;
   final bool showName;
   final Key key;
   final Function onTapTeachFunction;
   final Function onTapLearnFunction;
 
   ProfileList(this.user,
-      {@required this.height,
+      {@required this.skillListHeight,
       this.showName = false,
       this.onTapTeachFunction,
       this.onTapLearnFunction,
@@ -98,7 +98,7 @@ class ProfileList extends StatelessWidget {
           SkillList(
             user.teachSkill,
             onTapExtraButton: onTapTeachFunction,
-            height: height,
+            height: skillListHeight,
           ),
         ],
       ),

@@ -203,7 +203,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                                     SizeConfig.instance.blockSizeHorizontal * 3,
                                 bottom:
                                     SizeConfig.instance.blockSizeVertical * 13),
-                            sliver: ProfileList(prospect, height: 100),
+                            sliver: ProfileList(prospect, skillListHeight: 100),
                           )
                         ],
                       );
