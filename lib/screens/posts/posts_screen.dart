@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -57,7 +58,6 @@ class PostScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                   final post = state.posts[index];
-                  print('POST SCREEN - POST: ${post.id}');
 
                   return Padding(
                     padding: EdgeInsets.only(
@@ -85,16 +85,26 @@ class PostScreen extends StatelessWidget {
                           child: Container(
                             child: Column(
                               children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2),
-                                  child: PostNameTemplate(
-                                    name: post.user.displayName,
-                                    photoUrl: post.user.photoUrl,
-                                    time: post.createdOn,
-                                    color: _sideTextColor,
+                                GestureDetector(
+                                  onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return ViewUserProfileScreen(
+                                            user: post.user);
+                                      },
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig
+                                                .instance.blockSizeVertical *
+                                            2),
+                                    child: PostNameTemplate(
+                                      name: post.user.displayName,
+                                      photoUrl: post.user.photoUrl,
+                                      time: post.createdOn,
+                                      color: _sideTextColor,
+                                    ),
                                   ),
                                 ),
                                 Align(
