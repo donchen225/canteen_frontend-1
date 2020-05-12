@@ -63,42 +63,65 @@ class ProfileCard extends StatelessWidget {
             ),
             Container(
               width: width,
-              padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 2,
-                bottom: SizeConfig.instance.safeBlockVertical * 2,
-                left: SizeConfig.instance.safeBlockHorizontal * 6,
-                right: SizeConfig.instance.safeBlockHorizontal * 6,
-              ),
               child: Column(
                 children: <Widget>[
-                  Visibility(
-                    visible: user.title?.isNotEmpty ?? false,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: SizeConfig.instance.safeBlockVertical),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(user.title ?? '',
-                            style: Theme.of(context).textTheme.headline6),
-                      ),
+                  Container(
+                    color: Colors.grey[100],
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical,
+                      left: SizeConfig.instance.safeBlockHorizontal * 6,
+                      right: SizeConfig.instance.safeBlockHorizontal * 6,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            user.displayName ?? '',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .apply(fontWeightDelta: 1),
+                          ),
+                        ),
+                        Visibility(
+                          visible: user.title?.isNotEmpty ?? false,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(user.title ?? '',
+                                style: Theme.of(context).textTheme.subtitle2),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Visibility(
                     visible: user.teachSkill.length != 0,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: user.teachSkill.length,
-                      itemBuilder: (context, index) {
-                        final skill = user.teachSkill[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 1),
-                          child: Text(
-                            skill.name,
-                            style: TextStyle(fontWeight: FontWeight.w800),
-                          ),
-                        );
-                      },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical,
+                      ),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: user.teachSkill.length,
+                        itemBuilder: (context, index) {
+                          final skill = user.teachSkill[index];
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.instance.safeBlockHorizontal * 6,
+                              right:
+                                  SizeConfig.instance.safeBlockHorizontal * 6,
+                            ),
+                            child: Text(
+                              skill.name,
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
