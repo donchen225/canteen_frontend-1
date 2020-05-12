@@ -4,6 +4,9 @@ const double kTabBarTextPadding = 10;
 const double kTabBarTextScaleFactor = 0.8;
 const double kCardCircularRadius = 8.0;
 
+// Button constants
+const double kButtonBorderRadius = 30.0;
+
 // Post screen constants
 const int kNumPostOverflowLines = 4;
 

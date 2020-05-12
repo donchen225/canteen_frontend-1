@@ -6,6 +6,7 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/landing/landing_screen.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
@@ -208,7 +209,7 @@ class App extends StatelessWidget {
                   return SplashScreen();
                 }
                 if (state is Unauthenticated) {
-                  return LoginScreen(userRepository: _userRepository);
+                  return LandingScreen(userRepository: _userRepository);
                 }
                 if (state is Authenticated) {
                   return MultiBlocProvider(

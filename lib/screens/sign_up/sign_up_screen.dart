@@ -16,6 +16,11 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
       body: Center(
         child: BlocProvider<SignUpBloc>(
           create: (context) => SignUpBloc(userRepository: _userRepository),
