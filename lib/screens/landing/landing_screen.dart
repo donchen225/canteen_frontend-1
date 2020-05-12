@@ -27,29 +27,34 @@ class LandingScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: SizeConfig.instance.safeBlockHorizontal * 10,
-                      width: SizeConfig.instance.safeBlockHorizontal * 10,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/loading-icon.png'),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.safeBlockVertical * 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: SizeConfig.instance.safeBlockHorizontal * 10,
+                        width: SizeConfig.instance.safeBlockHorizontal * 10,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/loading-icon.png'),
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      'Canteen',
-                      style: Theme.of(context).textTheme.headline3.apply(
-                            color: Palette.orangeColor,
-                          ),
-                    ),
-                  ],
+                      Text(
+                        'Canteen',
+                        style: Theme.of(context).textTheme.headline3.apply(
+                              color: Palette.orangeColor,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.safeBlockVertical * 3,
+                    vertical: SizeConfig.instance.safeBlockVertical,
                   ),
                   child: Text(
                     'The most engaging communication platform for online communities.',
@@ -83,13 +88,18 @@ class LandingScreen extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(kButtonBorderRadius),
                         ),
-                        child: Text(
-                          'Continue With Facebook',
-                          style: Theme.of(context).textTheme.button.apply(
-                                fontSizeFactor: 1.5,
-                                color: Colors.white,
-                                fontWeightDelta: 1,
-                              ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Continue With Facebook',
+                              style: Theme.of(context).textTheme.button.apply(
+                                    fontSizeFactor: 1.2,
+                                    color: Colors.white,
+                                    fontWeightDelta: 1,
+                                  ),
+                            ),
+                          ],
                         ),
                         onPressed: () {},
                       ),
@@ -118,7 +128,7 @@ class LandingScreen extends StatelessWidget {
                       child: Text(
                         'Sign Up With Email',
                         style: Theme.of(context).textTheme.button.apply(
-                              fontSizeFactor: 1.5,
+                              fontSizeFactor: 1.2,
                               color: Palette.orangeColor,
                               fontWeightDelta: 1,
                             ),
@@ -154,7 +164,7 @@ class LandingScreen extends StatelessWidget {
                           text: TextSpan(
                             style: Theme.of(context).textTheme.button,
                             children: <TextSpan>[
-                              TextSpan(text: 'Already a member? '),
+                              TextSpan(text: 'Already have an account? '),
                               TextSpan(
                                 text: 'Log In',
                                 style: TextStyle(fontWeight: FontWeight.bold),

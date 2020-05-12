@@ -117,7 +117,7 @@ class _SignUpFormState extends State<SignUpForm> {
                           Navigator.maybePop(context);
                         },
                         child: Text(
-                          'Sign in.',
+                          'Sign In',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.w600,
