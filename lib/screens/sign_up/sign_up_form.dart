@@ -1,8 +1,9 @@
+import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/sign_up/sign_up_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +102,9 @@ class _SignUpFormState extends State<SignUpForm> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.blockSizeVertical * 3),
-                  child: SignUpButton(
+                  child: MainButton(
+                    color: Palette.orangeColor,
+                    text: 'Sign Up',
                     onPressed: isRegisterButtonEnabled(state)
                         ? _onFormSubmitted
                         : null,

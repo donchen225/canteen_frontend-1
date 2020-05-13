@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/create_account_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/bloc.dart';
-import 'login_button.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -25,7 +25,6 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final Color _textColor = Colors.white;
   LoginBloc _loginBloc;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -136,7 +135,9 @@ class _LoginFormState extends State<LoginForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      LoginButton(
+                      MainButton(
+                        color: Palette.orangeColor,
+                        text: 'Log In',
                         onPressed: isLoginButtonEnabled(state)
                             ? _onFormSubmitted
                             : null,
