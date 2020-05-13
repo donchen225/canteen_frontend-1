@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OnboardingCompleteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final buttonFontStyle = Theme.of(context).textTheme.headline5;
+    final textFontStyle = Theme.of(context).textTheme.subtitle1;
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,10 +37,22 @@ class OnboardingCompleteScreen extends StatelessWidget {
                     "How to use Canteen:",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
-                  Text("1. Check your recommendations."),
-                  Text("2. Search for people you want to talk to."),
-                  Text("3. Send a request."),
-                  Text("4. Video chat and make money.")
+                  Text(
+                    "1. Check your recommendations.",
+                    style: textFontStyle,
+                  ),
+                  Text(
+                    "2. Search for people you want to talk to.",
+                    style: textFontStyle,
+                  ),
+                  Text(
+                    "3. Send a request.",
+                    style: textFontStyle,
+                  ),
+                  Text(
+                    "4. Video chat and make money.",
+                    style: textFontStyle,
+                  )
                 ],
               ),
             ),
@@ -47,8 +63,10 @@ class OnboardingCompleteScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: SizeConfig.instance.safeBlockVertical * 9,
-                    width: SizeConfig.instance.safeBlockHorizontal * 42,
+                    height: buttonFontStyle.fontSize * kButtonHeightToFontRatio,
+                    width: buttonFontStyle.fontSize *
+                        kButtonHeightToFontRatio *
+                        kButtonAspectRatio,
                     child: RaisedButton(
                       elevation: 1,
                       shape: RoundedRectangleBorder(
@@ -61,7 +79,9 @@ class OnboardingCompleteScreen extends StatelessWidget {
                       color: Palette.orangeColor,
                       child: Text(
                         'Continue',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                        style: buttonFontStyle.apply(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

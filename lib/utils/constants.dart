@@ -6,6 +6,8 @@ const double kCardCircularRadius = 8.0;
 
 // Button constants
 const double kButtonBorderRadius = 30.0;
+const double kButtonAspectRatio = 14 / 3;
+const double kButtonHeightToFontRatio = 2.33;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;
