@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
   final UserRepository _userRepository;
+  final horizontalPaddingBlocks = 10;
 
   LandingScreen({UserRepository userRepository})
       : assert(userRepository != null),
@@ -15,10 +16,16 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final buttonFontStyle = Theme.of(context)
+        .textTheme
+        .button
+        .apply(fontSizeFactor: 1.5, fontWeightDelta: 1, color: Colors.white);
+
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
+        horizontal:
+            SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
       ),
       child: Column(
         children: <Widget>[
@@ -71,76 +78,37 @@ class LandingScreen extends StatelessWidget {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.instance.safeBlockVertical * 2,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: RaisedButton(
-                        color: Palette.orangeColor,
-                        elevation: 0,
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.instance.safeBlockVertical * 1.5,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(kButtonBorderRadius),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Continue With Facebook',
-                              style: Theme.of(context).textTheme.button.apply(
-                                    fontSizeFactor: 1.2,
-                                    color: Colors.white,
-                                    fontWeightDelta: 1,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: RaisedButton(
-                      elevation: 0,
-                      highlightElevation: 0,
-                      color: Colors.white,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.grey.withOpacity(0.2),
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.safeBlockVertical * 1.5,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 3, color: Palette.orangeColor),
-                        borderRadius: BorderRadius.circular(
-                          kButtonBorderRadius,
+                    child: Container(
+                      height: SizeConfig.instance.safeBlockHorizontal *
+                          (100 - (2 * horizontalPaddingBlocks)) /
+                          kButtonAspectRatio,
+                      child: RaisedButton(
+                        elevation: 0,
+                        highlightElevation: 0,
+                        color: Palette.orangeColor,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.grey.withOpacity(0.2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            100, // TODO: make this a constant
+                          ),
                         ),
+                        child: Text(
+                          'Sign Up With Email',
+                          style: buttonFontStyle,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return SignUpScreen(
+                                  userRepository: _userRepository);
+                            }),
+                          );
+                        },
                       ),
-                      child: Text(
-                        'Sign Up With Email',
-                        style: Theme.of(context).textTheme.button.apply(
-                              fontSizeFactor: 1.2,
-                              color: Palette.orangeColor,
-                              fontWeightDelta: 1,
-                            ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) {
-                            return SignUpScreen(
-                                userRepository: _userRepository);
-                          }),
-                        );
-                      },
                     ),
                   ),
                 ],
