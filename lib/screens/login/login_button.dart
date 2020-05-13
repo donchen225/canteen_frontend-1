@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class LoginButton extends StatelessWidget {
@@ -9,16 +11,21 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final buttonStyle = Theme.of(context).textTheme.button.apply(
+          color: Palette.buttonDarkTextColor,
+        );
+
     return RaisedButton(
-      color: Colors.blue, // TODO: extract to style
+      color: Palette.orangeColor,
+      disabledColor: Palette.orangeColor.withOpacity(kDisabledOpacity),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
       onPressed: _onPressed,
-      child: Text('Login',
-          style: TextStyle(
-            color: Colors.white,
-          )),
+      child: Text(
+        'Log In',
+        style: buttonStyle,
+      ),
     );
   }
 }

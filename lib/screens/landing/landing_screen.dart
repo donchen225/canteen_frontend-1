@@ -16,10 +16,10 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonFontStyle = Theme.of(context)
-        .textTheme
-        .button
-        .apply(fontSizeFactor: 1.5, fontWeightDelta: 1, color: Colors.white);
+    final buttonFontStyle = Theme.of(context).textTheme.button.apply(
+        fontSizeFactor: 1.3,
+        fontWeightDelta: 1,
+        color: Palette.buttonDarkTextColor);
 
     return Scaffold(
         body: Padding(

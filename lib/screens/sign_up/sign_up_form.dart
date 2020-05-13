@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -7,6 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpForm extends StatefulWidget {
+  final UserRepository _userRepository;
+
+  SignUpForm({UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository;
+
   State<SignUpForm> createState() => _SignUpFormState();
 }
 
@@ -114,7 +122,13 @@ class _SignUpFormState extends State<SignUpForm> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          Navigator.maybePop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return LoginScreen(
+                                  userRepository: widget._userRepository);
+                            }),
+                          );
                         },
                         child: Text(
                           'Sign In',

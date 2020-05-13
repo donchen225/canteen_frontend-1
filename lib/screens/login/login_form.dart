@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/create_account_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,23 +61,11 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final headerTextStyle =
+        Theme.of(context).textTheme.headline3.apply(color: Palette.titleColor);
+
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        // if (state.isSubmitting) {
-        //   Scaffold.of(context)
-        //     ..hideCurrentSnackBar()
-        //     ..showSnackBar(
-        //       SnackBar(
-        //         content: Row(
-        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //           children: [
-        //             Text('Logging In...'),
-        //             CupertinoActivityIndicator(),
-        //           ],
-        //         ),
-        //       ),
-        //     );
-        // }
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
         }
@@ -97,10 +86,7 @@ class _LoginFormState extends State<LoginForm> {
                         bottom: SizeConfig.instance.blockSizeVertical * 3),
                     child: Text(
                       'Canteen',
-                      style: TextStyle(
-                        color: _textColor,
-                        fontSize: 40,
-                      ),
+                      style: headerTextStyle,
                     ),
                   ),
                 ),
@@ -110,12 +96,9 @@ class _LoginFormState extends State<LoginForm> {
                       bottom: SizeConfig.instance.blockSizeVertical),
                   child: TextFormField(
                     controller: _emailController,
-                    style: TextStyle(color: _textColor),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: _textColor),
-                      fillColor: Colors.white.withOpacity(0.1),
                       filled: true,
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -127,13 +110,10 @@ class _LoginFormState extends State<LoginForm> {
                       top: SizeConfig.instance.blockSizeVertical,
                       bottom: SizeConfig.instance.blockSizeVertical),
                   child: TextFormField(
-                    style: TextStyle(color: _textColor),
                     controller: _passwordController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: _textColor),
-                      fillColor: Colors.white.withOpacity(0.1),
                       filled: true,
                     ),
                     obscureText: true,
