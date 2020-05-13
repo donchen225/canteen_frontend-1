@@ -1,9 +1,11 @@
+import 'package:canteen_frontend/components/facebook_web_view.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -12,6 +14,51 @@ class LandingScreen extends StatelessWidget {
   LandingScreen({UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository;
+
+  Route _createRoute(Widget route) {
+    return PageRouteBuilder(
+      maintainState: true,
+      pageBuilder: (context, animation, secondaryAnimation) => route,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Future<void> loginWithFacebook(BuildContext context) async {
+    String fbAppId = "545393946358900";
+    String redirectUrl = "https://www.facebook.com/connect/login_success.html";
+
+    print('in login function');
+    await Navigator.push(
+        context,
+        _createRoute(
+          FacebookWebView(
+              selectedUrl:
+                  // 'https://www.facebook.com/dialog/oauth?client_id=$fbAppId&redirect_uri=$redirectUrl&response_type=token&scope=email,public_profile,',
+                  'https://www.google.com'),
+        ));
+    // print('RESULT: $result');
+
+    // if (result != null) {
+    //   try {
+    //     final facebookAuthCred =
+    //         FacebookAuthProvider.getCredential(accessToken: result);
+    //     // final user = await firebaseAuth
+    //     //     .signInWithCredential(facebookAuthCred);
+    //   } catch (e) {}
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +148,10 @@ class LandingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          print('FB LOGIN PRESSED');
+                          await loginWithFacebook(context);
+                        },
                       ),
                     ),
                   ],

@@ -59,6 +59,13 @@
 	<string>For uploading photos to the app.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For uploading photos to the app.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
