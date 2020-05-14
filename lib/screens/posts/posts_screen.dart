@@ -16,8 +16,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PostScreen extends StatelessWidget {
+class PostScreen extends StatefulWidget {
+  @override
+  _PostScreenState createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen>
+    with SingleTickerProviderStateMixin {
   final Color _sideTextColor = Colors.grey[500];
+  TabController _tabController;
+  final List<String> tabChoices = [
+    'Home',
+    'Groups',
+    'Notifications',
+  ];
+
+  @override
+  void initState() {
+    _tabController = TabController(vsync: this, length: tabChoices.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +44,37 @@ class PostScreen extends StatelessWidget {
       appBar: AppBar(
         brightness: Brightness.light,
         title: Text(
-          'Community',
-          style: TextStyle(
-            color: Color(0xFF303030),
-          ),
+          'Groups',
+          style: Theme.of(context).textTheme.headline6.apply(
+                fontFamily: '.SF UI Text',
+                color: Palette.appBarTextColor,
+              ),
         ),
         backgroundColor: Palette.appBarBackgroundColor,
+        automaticallyImplyLeading: false,
         elevation: 1,
+        bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.label,
+            controller: _tabController,
+            tabs: tabChoices
+                .map(
+                  (text) => Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: kTabBarTextPadding,
+                    ),
+                    child: Tab(
+                      child: Text(
+                        text,
+                        style: Theme.of(context).textTheme.headline6.apply(
+                              fontFamily: '.SF UI Text',
+                              fontSizeFactor: kTabBarTextScaleFactor,
+                              color: Palette.appBarTextColor,
+                            ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList()),
       ),
       body: BlocBuilder<PostBloc, PostState>(
         builder: (BuildContext context, PostState state) {
