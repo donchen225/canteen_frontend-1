@@ -48,7 +48,9 @@ class _LoginFormState extends State<LoginForm> {
 
   String getErrorMessage(PlatformException error) {
     if (error == null) {
-      return '';
+      return '''
+
+      ''';
     }
 
     if (error.code == 'ERROR_WRONG_PASSWORD') {
@@ -142,19 +144,13 @@ class _LoginFormState extends State<LoginForm> {
                     autocorrect: false,
                   ),
                 ),
-                Visibility(
-                  visible: state.isFailure,
-                  maintainState: true,
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  child: Text(
-                    getErrorMessage(state.error),
-                    style: TextStyle(color: Colors.red),
-                  ),
+                Text(
+                  getErrorMessage(state.error),
+                  style: TextStyle(color: Colors.red),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical * 2),
+                      vertical: SizeConfig.instance.safeBlockVertical),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[

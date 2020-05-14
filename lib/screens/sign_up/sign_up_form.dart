@@ -123,19 +123,17 @@ class _SignUpFormState extends State<SignUpForm> {
                     autocorrect: false,
                   ),
                 ),
-                Visibility(
-                  visible: state.isFailure,
-                  maintainState: true,
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  child: Text(
-                    state.isFailure ? state.error.message : '',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                Text(
+                  state.isFailure
+                      ? state.error.message
+                      : '''
+                  
+                  ''',
+                  style: TextStyle(color: Colors.red),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical * 2),
+                      vertical: SizeConfig.instance.safeBlockVertical),
                   child: MainButton(
                     height: SizeConfig.instance.safeBlockHorizontal *
                         (100 - (2 * horizontalPaddingBlocks)) /
