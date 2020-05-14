@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_event.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  final horizontalPaddingBlocks = 10;
+
   @override
   Widget build(BuildContext context) {
     final buttonFontStyle = Theme.of(context).textTheme.headline5;
@@ -14,7 +17,8 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
         body: Container(
       padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
+          horizontal: SizeConfig.instance.safeBlockHorizontal *
+              horizontalPaddingBlocks),
       color: Palette.backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,28 +51,22 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    height: buttonFontStyle.fontSize * kButtonHeightToFontRatio,
-                    width: buttonFontStyle.fontSize *
-                        kButtonHeightToFontRatio *
-                        kButtonAspectRatio,
-                    child: RaisedButton(
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(55),
-                      ),
-                      onPressed: () {
-                        BlocProvider.of<OnboardingBloc>(context)
-                            .add(LoadOnboarding());
-                      },
-                      color: Palette.orangeColor,
-                      child: Text(
-                        'Continue',
-                        style: buttonFontStyle.apply(
-                          color: Colors.white,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: MainButton(
+                          height: SizeConfig.instance.safeBlockHorizontal *
+                              (100 - (2 * horizontalPaddingBlocks)) /
+                              kButtonAspectRatio,
+                          onPressed: () {
+                            BlocProvider.of<OnboardingBloc>(context)
+                                .add(LoadOnboarding());
+                          },
+                          color: Palette.orangeColor,
+                          text: 'Continue',
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
