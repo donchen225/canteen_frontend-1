@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 
 class ProfilePicture extends StatelessWidget {
   final String photoUrl;
+  final BoxShape shape;
   final bool editable;
   final double size;
   final Function onTap;
 
   ProfilePicture(
       {@required this.photoUrl,
+      this.shape = BoxShape.circle,
       this.editable = false,
       this.size = 160,
       this.onTap});
@@ -28,7 +30,7 @@ class ProfilePicture extends StatelessWidget {
               : AssetImage('assets/blank-profile-picture.jpeg'),
           fit: BoxFit.cover,
         ),
-        shape: BoxShape.circle,
+        shape: shape,
       ),
       child: editable
           ? Align(

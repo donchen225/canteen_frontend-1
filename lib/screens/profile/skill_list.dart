@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -104,31 +105,16 @@ class _SkillListState extends State<SkillList> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          ClipOval(
-                            child: Material(
-                              color: Colors.orange[400],
-                              elevation: 4,
-                              child: InkWell(
-                                child: SizedBox(
-                                  width: 33,
-                                  height: 33,
-                                  child: Center(
-                                    child: const Icon(
-                                      IconData(0xf474,
-                                          fontFamily: CupertinoIcons.iconFont,
-                                          fontPackage:
-                                              CupertinoIcons.iconFontPackage),
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
+                          FlatButton(
+                            color: Palette.orangeColor,
+                            child: Text(
+                              'Connect',
+                              style: Theme.of(context).textTheme.button.apply(
+                                    color: Palette.buttonDarkTextColor,
                                   ),
-                                ),
-                                onTap: () {
-                                  widget.onTapExtraButton(skill);
-                                },
-                              ),
                             ),
-                          )
+                            onPressed: () => widget.onTapExtraButton(skill),
+                          ),
                         ],
                       ),
                     ),

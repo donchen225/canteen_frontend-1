@@ -10,24 +10,27 @@ import 'package:flutter/material.dart';
 class ProfileList extends StatelessWidget {
   final User user;
   final double skillListHeight;
+  final EdgeInsetsGeometry padding;
   final bool showName;
   final Key key;
   final Function onTapTeachFunction;
   final Function onTapLearnFunction;
 
-  ProfileList(this.user,
-      {@required this.skillListHeight,
-      this.showName = false,
-      this.onTapTeachFunction,
-      this.onTapLearnFunction,
-      this.key})
-      : super(key: key);
+  ProfileList(
+    this.user, {
+    @required this.skillListHeight,
+    this.showName = false,
+    this.padding = const EdgeInsets.all(0),
+    this.onTapTeachFunction,
+    this.onTapLearnFunction,
+    this.key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildListDelegate.fixed(
-        [
+    return SliverToBoxAdapter(
+      child: Column(
+        children: <Widget>[
           Visibility(
             visible: showName,
             child: Padding(
@@ -45,60 +48,69 @@ class ProfileList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.blockSizeVertical),
+                padding: EdgeInsets.only(
+                    bottom: SizeConfig.instance.blockSizeVertical),
                 child: ProfilePicture(
                   photoUrl: user.photoUrl,
+                  shape: BoxShape.rectangle,
                   editable: false,
-                  size: SizeConfig.instance.blockSizeHorizontal * 50,
+                  size: SizeConfig.instance.safeBlockHorizontal * 100,
                 ),
               ),
             ],
           ),
-          Visibility(
-            visible: user.title?.isNotEmpty ?? false,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.instance.blockSizeVertical),
-              child: Text(
-                user.title ?? '',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: SizeConfig.instance.blockSizeHorizontal * 4,
-                  fontWeight: FontWeight.w600,
+          Padding(
+            padding: padding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Visibility(
+                  visible: user.title?.isNotEmpty ?? false,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.blockSizeVertical),
+                    child: Text(
+                      user.title ?? '',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: SizeConfig.instance.blockSizeHorizontal * 4,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Visibility(
+                    visible: user.interests.isNotEmpty,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Wrap(
+                          children: user.interests
+                              .map((x) => Padding(
+                                    padding: EdgeInsets.only(
+                                        right: SizeConfig
+                                                .instance.blockSizeHorizontal *
+                                            3),
+                                    child: InterestItem(text: x),
+                                  ))
+                              .toList()),
+                    )),
+                ProfileSectionTitle('About'),
+                ProfileTextCard(
+                  child: Container(
+                    child: Text(user.about ?? ''),
+                  ),
+                ),
+                Visibility(
+                  visible: user.teachSkill.length != 0,
+                  child: ProfileSectionTitle("My offerings"),
+                ),
+                SkillList(
+                  user.teachSkill,
+                  onTapExtraButton: onTapTeachFunction,
+                  height: skillListHeight,
+                ),
+              ],
             ),
-          ),
-          Visibility(
-              visible: user.interests.isNotEmpty,
-              child: Align(
-                alignment: Alignment.center,
-                child: Wrap(
-                    children: user.interests
-                        .map((x) => Padding(
-                              padding: EdgeInsets.only(
-                                  right:
-                                      SizeConfig.instance.blockSizeHorizontal *
-                                          3),
-                              child: InterestItem(text: x),
-                            ))
-                        .toList()),
-              )),
-          ProfileSectionTitle('About'),
-          ProfileTextCard(
-            child: Container(
-              child: Text(user.about ?? ''),
-            ),
-          ),
-          Visibility(
-            visible: user.teachSkill.length != 0,
-            child: ProfileSectionTitle("My offerings"),
-          ),
-          SkillList(
-            user.teachSkill,
-            onTapExtraButton: onTapTeachFunction,
-            height: skillListHeight,
           ),
         ],
       ),

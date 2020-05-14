@@ -41,26 +41,23 @@ class ViewUserProfileScreen extends StatelessWidget {
         title: Text(user.displayName ?? ''),
         backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-        ),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverPadding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 2,
-                bottom: SizeConfig.instance.safeBlockVertical * 6,
-              ),
-              sliver: ProfileList(
-                user,
-                skillListHeight: SizeConfig.instance.blockSizeHorizontal * 33,
-                onTapTeachFunction: (skill) =>
-                    _onTapSkillFunction(context, skill),
-              ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverPadding(
+            padding: EdgeInsets.only(
+              bottom: SizeConfig.instance.safeBlockVertical * 6,
             ),
-          ],
-        ),
+            sliver: ProfileList(
+              user,
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+              ),
+              skillListHeight: SizeConfig.instance.blockSizeHorizontal * 33,
+              onTapTeachFunction: (skill) =>
+                  _onTapSkillFunction(context, skill),
+            ),
+          ),
+        ],
       ),
     );
   }
