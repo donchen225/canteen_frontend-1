@@ -67,6 +67,7 @@ class ProfileList extends StatelessWidget {
                 Visibility(
                   visible: user.title?.isNotEmpty ?? false,
                   child: Container(
+                    alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.instance.blockSizeVertical),
                     child: Text(
