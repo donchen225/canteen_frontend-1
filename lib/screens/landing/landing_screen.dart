@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 class LandingScreen extends StatelessWidget {
   final UserRepository _userRepository;
-  final horizontalPaddingBlocks = 10;
 
   LandingScreen({UserRepository userRepository})
       : assert(userRepository != null),
@@ -18,14 +17,14 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttonFontStyle = Theme.of(context).textTheme.button;
     final buttonHeight = SizeConfig.instance.safeBlockHorizontal *
-        (100 - (2 * horizontalPaddingBlocks)) /
+        (100 - (2 * kLandingHorizontalPaddingBlocks)) /
         kButtonAspectRatio;
 
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.symmetric(
-        horizontal:
-            SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        horizontal: SizeConfig.instance.safeBlockHorizontal *
+            kLandingHorizontalPaddingBlocks,
       ),
       child: Column(
         children: <Widget>[

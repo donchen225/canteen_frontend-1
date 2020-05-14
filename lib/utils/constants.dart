@@ -10,6 +10,9 @@ const double kButtonAspectRatio = 6;
 const double kButtonHeightToFontRatio = 2.66;
 const double kDisabledOpacity = 0.5;
 
+// Login/onboarding constants
+const double kLandingHorizontalPaddingBlocks = 10;
+
 // Post screen constants
 const int kNumPostOverflowLines = 4;
 

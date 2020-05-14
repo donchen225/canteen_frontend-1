@@ -24,7 +24,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final horizontalPaddingBlocks = 10;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   LoginBloc _loginBloc;
@@ -83,9 +82,9 @@ class _LoginFormState extends State<LoginForm> {
                 top: SizeConfig.instance.safeBlockVertical * 20,
                 bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
-                    horizontalPaddingBlocks,
+                    kLandingHorizontalPaddingBlocks,
                 right: SizeConfig.instance.safeBlockHorizontal *
-                    horizontalPaddingBlocks,
+                    kLandingHorizontalPaddingBlocks,
               ),
               children: <Widget>[
                 Padding(
@@ -156,7 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                     children: <Widget>[
                       MainButton(
                         height: SizeConfig.instance.safeBlockHorizontal *
-                            (100 - (2 * horizontalPaddingBlocks)) /
+                            (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                             kButtonAspectRatio,
                         color: Palette.orangeColor,
                         text: 'Log In',

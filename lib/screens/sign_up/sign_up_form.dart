@@ -21,7 +21,6 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final horizontalPaddingBlocks = 10;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -59,9 +58,9 @@ class _SignUpFormState extends State<SignUpForm> {
                 top: SizeConfig.instance.safeBlockVertical * 20,
                 bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
-                    horizontalPaddingBlocks,
+                    kLandingHorizontalPaddingBlocks,
                 right: SizeConfig.instance.safeBlockHorizontal *
-                    horizontalPaddingBlocks,
+                    kLandingHorizontalPaddingBlocks,
               ),
               children: <Widget>[
                 Padding(
@@ -136,7 +135,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       vertical: SizeConfig.instance.safeBlockVertical),
                   child: MainButton(
                     height: SizeConfig.instance.safeBlockHorizontal *
-                        (100 - (2 * horizontalPaddingBlocks)) /
+                        (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                         kButtonAspectRatio,
                     color: Palette.orangeColor,
                     text: 'Next',

@@ -8,17 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final horizontalPaddingBlocks = 10;
-
   @override
   Widget build(BuildContext context) {
-    final buttonFontStyle = Theme.of(context).textTheme.headline5;
-
     return Scaffold(
         body: Container(
       padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.instance.safeBlockHorizontal *
-              horizontalPaddingBlocks),
+              kLandingHorizontalPaddingBlocks),
       color: Palette.backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,7 +52,7 @@ class WelcomeScreen extends StatelessWidget {
                       Expanded(
                         child: MainButton(
                           height: SizeConfig.instance.safeBlockHorizontal *
-                              (100 - (2 * horizontalPaddingBlocks)) /
+                              (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                               kButtonAspectRatio,
                           onPressed: () {
                             BlocProvider.of<OnboardingBloc>(context)
