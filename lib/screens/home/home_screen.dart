@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/message_screen.dart';
+import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -161,6 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       title: Text(''),
                     ),
+
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.notifications,
+                      ),
+                      title: Text(''),
+                    ),
                     BottomNavigationBarItem(
                       icon: Icon(
                         Icons.person,
@@ -190,12 +198,14 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is PostScreenLoaded) {
             return PostScreen();
           }
-
           if (state is SearchScreenLoaded) {
             return SearchScreen();
           }
           if (state is MessageScreenLoaded) {
             return MessageScreen();
+          }
+          if (state is NotificationScreenLoaded) {
+            return NotificationScreen();
           }
           if (state is UserProfileScreenLoaded) {
             return UserProfileScreen(

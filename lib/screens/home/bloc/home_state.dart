@@ -78,6 +78,18 @@ class MessageScreenLoaded extends HomeState {
   String toString() => 'MatchScreenLoaded { reset: $reset }';
 }
 
+class NotificationScreenLoaded extends HomeState {
+  final bool reset;
+
+  NotificationScreenLoaded({this.reset});
+
+  @override
+  List<Object> get props => [reset];
+
+  @override
+  String toString() => 'NotificationScreenLoaded { reset: $reset }';
+}
+
 class UserProfileScreenLoaded extends HomeState {
   final bool reset;
 

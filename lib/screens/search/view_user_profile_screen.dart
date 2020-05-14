@@ -38,12 +38,16 @@ class ViewUserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(user.displayName ?? ''),
-        backgroundColor: Palette.appBarBackgroundColor,
-      ),
+      // appBar: AppBar(
+      //   title: Text(user.displayName ?? ''),
+      //   backgroundColor: Palette.appBarBackgroundColor,
+      // ),
       body: CustomScrollView(
         slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: Palette.appBarBackgroundColor,
+          ),
           SliverPadding(
             padding: EdgeInsets.only(
               bottom: SizeConfig.instance.safeBlockVertical * 6,
@@ -51,7 +55,7 @@ class ViewUserProfileScreen extends StatelessWidget {
             sliver: ProfileList(
               user,
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
               ),
               skillListHeight: SizeConfig.instance.blockSizeHorizontal * 33,
               onTapTeachFunction: (skill) =>

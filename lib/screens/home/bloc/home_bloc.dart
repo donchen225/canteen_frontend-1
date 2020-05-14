@@ -54,6 +54,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield MessageScreenLoaded(reset: reset);
         break;
       case 3:
+        yield NotificationScreenLoaded(reset: reset);
+        break;
+      case 4:
         yield UserProfileScreenLoaded(reset: reset);
         break;
     }

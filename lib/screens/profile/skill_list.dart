@@ -84,13 +84,6 @@ class _SkillListState extends State<SkillList> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Text(
-                    '\$${(skill.price).toString()}' +
-                        (skill.duration != null
-                            ? ' / ${skill.duration} minutes'
-                            : ''),
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
                   widget.showDescription && skill.description.isNotEmpty
                       ? Padding(
                           padding: EdgeInsets.only(
@@ -102,11 +95,21 @@ class _SkillListState extends State<SkillList> {
                     visible: widget.onTapExtraButton != null,
                     child: Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          Text(
+                            '\$${(skill.price).toString()}' +
+                                (skill.duration != null
+                                    ? ' / ${skill.duration} minutes'
+                                    : ''),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           FlatButton(
                             color: Palette.orangeColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             child: Text(
                               'Connect',
                               style: Theme.of(context).textTheme.button.apply(
