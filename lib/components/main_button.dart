@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/utils/constants.dart';
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class MainButton extends StatelessWidget {
@@ -37,6 +36,7 @@ class MainButton extends StatelessWidget {
           text,
           style: buttonStyle.apply(
             color: textColor,
+            fontWeightDelta: 1,
             fontSizeFactor:
                 height / kButtonHeightToFontRatio / buttonStyle.fontSize,
           ),

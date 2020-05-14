@@ -16,10 +16,10 @@ class LandingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonFontStyle = Theme.of(context).textTheme.button.apply(
-        fontSizeFactor: 1.3,
-        fontWeightDelta: 1,
-        color: Palette.buttonDarkTextColor);
+    final buttonFontStyle = Theme.of(context).textTheme.button;
+    final buttonHeight = SizeConfig.instance.safeBlockHorizontal *
+        (100 - (2 * horizontalPaddingBlocks)) /
+        kButtonAspectRatio;
 
     return Scaffold(
         body: Padding(
@@ -82,9 +82,7 @@ class LandingScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      height: SizeConfig.instance.safeBlockHorizontal *
-                          (100 - (2 * horizontalPaddingBlocks)) /
-                          kButtonAspectRatio,
+                      height: buttonHeight,
                       child: RaisedButton(
                         elevation: 0,
                         highlightElevation: 0,
@@ -98,7 +96,12 @@ class LandingScreen extends StatelessWidget {
                         ),
                         child: Text(
                           'Sign Up With Email',
-                          style: buttonFontStyle,
+                          style: buttonFontStyle.apply(
+                              fontSizeFactor: buttonHeight /
+                                  kButtonHeightToFontRatio /
+                                  buttonFontStyle.fontSize,
+                              fontWeightDelta: 1,
+                              color: Palette.buttonDarkTextColor),
                         ),
                         onPressed: () {
                           Navigator.of(context).push(

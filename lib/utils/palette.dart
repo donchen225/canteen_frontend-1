@@ -21,4 +21,6 @@ class Palette {
   static Color disabledButtonColor = const Color(0xFF9E9E9E);
 
   static Color titleColor = const Color(0xFF000000);
+
+  static Color textFieldLightBackgroundColor = const Color(0xFFF5F5F5);
 }

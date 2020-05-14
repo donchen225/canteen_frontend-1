@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
+  final horizontalPaddingBlocks = 10;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -54,9 +56,12 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                  top: SizeConfig.instance.blockSizeVertical * 9,
-                  left: SizeConfig.instance.blockSizeHorizontal * 9,
-                  right: SizeConfig.instance.blockSizeHorizontal * 9),
+                top: SizeConfig.instance.blockSizeVertical * 9,
+                left: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
+                right: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
+              ),
               children: <Widget>[
                 Center(
                   child: Padding(
@@ -65,9 +70,10 @@ class _SignUpFormState extends State<SignUpForm> {
                         bottom: SizeConfig.instance.blockSizeVertical * 3),
                     child: Text(
                       'Sign Up',
-                      style: TextStyle(
-                        fontSize: 40,
-                      ),
+                      style: Theme.of(context).textTheme.headline4.apply(
+                            color: Palette.titleColor,
+                            fontWeightDelta: 3,
+                          ),
                     ),
                   ),
                 ),
@@ -78,8 +84,16 @@ class _SignUpFormState extends State<SignUpForm> {
                   child: TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
@@ -92,8 +106,16 @@ class _SignUpFormState extends State<SignUpForm> {
                   child: TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Password',
                     ),
                     obscureText: true,
                     autocorrect: false,
@@ -103,8 +125,11 @@ class _SignUpFormState extends State<SignUpForm> {
                   padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.blockSizeVertical * 3),
                   child: MainButton(
+                    height: SizeConfig.instance.safeBlockHorizontal *
+                        (100 - (2 * horizontalPaddingBlocks)) /
+                        kButtonAspectRatio,
                     color: Palette.orangeColor,
-                    text: 'Sign Up',
+                    text: 'Next',
                     onPressed: isRegisterButtonEnabled(state)
                         ? _onFormSubmitted
                         : null,
