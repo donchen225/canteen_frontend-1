@@ -138,7 +138,10 @@ class LandingScreen extends StatelessWidget {
                               TextSpan(text: 'Already have an account? '),
                               TextSpan(
                                 text: 'Log In',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Palette.textClickableColor,
+                                ),
                               ),
                             ],
                           ),

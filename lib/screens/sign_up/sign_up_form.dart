@@ -56,18 +56,20 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 9,
+                top: SizeConfig.instance.safeBlockVertical * 20,
+                bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
                     horizontalPaddingBlocks,
                 right: SizeConfig.instance.safeBlockHorizontal *
                     horizontalPaddingBlocks,
               ),
               children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: SizeConfig.instance.safeBlockVertical * 3,
-                        bottom: SizeConfig.instance.safeBlockVertical * 3),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical * 3,
+                      bottom: SizeConfig.instance.safeBlockVertical * 3),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
                       'Sign Up',
                       style: Theme.of(context).textTheme.headline4.apply(
@@ -121,9 +123,19 @@ class _SignUpFormState extends State<SignUpForm> {
                     autocorrect: false,
                   ),
                 ),
+                Visibility(
+                  visible: state.isFailure,
+                  maintainState: true,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  child: Text(
+                    state.isFailure ? state.error.message : '',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical * 3),
+                      vertical: SizeConfig.instance.safeBlockVertical * 2),
                   child: MainButton(
                     height: SizeConfig.instance.safeBlockHorizontal *
                         (100 - (2 * horizontalPaddingBlocks)) /
@@ -135,37 +147,35 @@ class _SignUpFormState extends State<SignUpForm> {
                         : null,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: Text(
-                    state.isFailure ? state.error.message : '',
-                    style: TextStyle(color: Colors.red),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.safeBlockVertical * 4,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Already have an account? ',
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return LoginScreen(
-                                  userRepository: widget._userRepository);
-                            }),
-                          );
-                        },
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ))
-                  ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Already have an account? ',
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return LoginScreen(
+                                    userRepository: widget._userRepository);
+                              }),
+                            );
+                          },
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: Palette.textClickableColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ))
+                    ],
+                  ),
                 ),
               ],
             ),

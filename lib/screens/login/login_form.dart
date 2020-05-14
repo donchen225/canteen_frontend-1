@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/login/create_account_button.dart';
+import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -62,8 +62,10 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final headerTextStyle =
-        Theme.of(context).textTheme.headline3.apply(color: Palette.titleColor);
+    final headerTextStyle = Theme.of(context).textTheme.headline3.apply(
+          color: Palette.titleColor,
+          fontWeightDelta: 3,
+        );
 
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
@@ -76,18 +78,20 @@ class _LoginFormState extends State<LoginForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 9,
+                top: SizeConfig.instance.safeBlockVertical * 20,
+                bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
                     horizontalPaddingBlocks,
                 right: SizeConfig.instance.safeBlockHorizontal *
                     horizontalPaddingBlocks,
               ),
               children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: SizeConfig.instance.safeBlockVertical * 3,
-                        bottom: SizeConfig.instance.safeBlockVertical * 3),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical * 3,
+                      bottom: SizeConfig.instance.safeBlockVertical * 3),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
                       'Canteen',
                       style: headerTextStyle,
@@ -138,19 +142,19 @@ class _LoginFormState extends State<LoginForm> {
                     autocorrect: false,
                   ),
                 ),
-                // TODO: change this error to a pop up
                 Visibility(
                   visible: state.isFailure,
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        getErrorMessage(state.error),
-                        style: TextStyle(color: Colors.red),
-                      )),
+                  maintainState: true,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  child: Text(
+                    getErrorMessage(state.error),
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical * 3),
+                      vertical: SizeConfig.instance.safeBlockVertical * 2),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -164,7 +168,36 @@ class _LoginFormState extends State<LoginForm> {
                             ? _onFormSubmitted
                             : null,
                       ),
-                      CreateAccountButton(userRepository: _userRepository),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.instance.safeBlockVertical * 4,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Don't have an account? ",
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return SignUpScreen(
+                                    userRepository: widget._userRepository);
+                              }),
+                            );
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              color: Palette.textClickableColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ))
                     ],
                   ),
                 ),
