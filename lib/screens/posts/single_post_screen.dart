@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,10 +42,19 @@ class SinglePostScreen extends StatelessWidget {
                       left: SizeConfig.instance.blockSizeHorizontal * 4,
                       right: SizeConfig.instance.blockSizeHorizontal * 4,
                     ),
-                    child: PostNameTemplate(
-                      name: post.user.displayName,
-                      photoUrl: post.user.photoUrl,
-                      time: post.createdOn,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) {
+                            return ViewUserProfileScreen(user: post.user);
+                          },
+                        ),
+                      ),
+                      child: PostNameTemplate(
+                        name: post.user.displayName,
+                        photoUrl: post.user.photoUrl,
+                        time: post.createdOn,
+                      ),
                     ),
                   ),
                 ),

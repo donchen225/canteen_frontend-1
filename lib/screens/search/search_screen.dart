@@ -106,7 +106,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: Colors.grey[600],
                               ),
                               border: InputBorder.none,
-                              hintText: "Who do you want to connect with?",
+                              hintText: "What are you looking for?",
                               hintStyle:
                                   Theme.of(context).textTheme.subtitle1.apply(
                                         fontFamily: '.SF UI Text',
