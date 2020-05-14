@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/login/create_account_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final horizontalPaddingBlocks = 10;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   LoginBloc _loginBloc;
@@ -74,15 +76,18 @@ class _LoginFormState extends State<LoginForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                  top: SizeConfig.instance.blockSizeVertical * 9,
-                  left: SizeConfig.instance.blockSizeHorizontal * 9,
-                  right: SizeConfig.instance.blockSizeHorizontal * 9),
+                top: SizeConfig.instance.safeBlockVertical * 9,
+                left: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
+                right: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
+              ),
               children: <Widget>[
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 3,
-                        bottom: SizeConfig.instance.blockSizeVertical * 3),
+                        top: SizeConfig.instance.safeBlockVertical * 3,
+                        bottom: SizeConfig.instance.safeBlockVertical * 3),
                     child: Text(
                       'Canteen',
                       style: headerTextStyle,
@@ -91,14 +96,21 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Email',
-                      filled: true,
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
@@ -106,14 +118,21 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Password',
-                      filled: true,
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Password',
                     ),
                     obscureText: true,
                     autocorrect: false,
@@ -131,11 +150,14 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.blockSizeVertical * 3),
+                      vertical: SizeConfig.instance.safeBlockVertical * 3),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       MainButton(
+                        height: SizeConfig.instance.safeBlockHorizontal *
+                            (100 - (2 * horizontalPaddingBlocks)) /
+                            kButtonAspectRatio,
                         color: Palette.orangeColor,
                         text: 'Log In',
                         onPressed: isLoginButtonEnabled(state)

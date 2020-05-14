@@ -56,7 +56,7 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical * 9,
+                top: SizeConfig.instance.safeBlockVertical * 9,
                 left: SizeConfig.instance.safeBlockHorizontal *
                     horizontalPaddingBlocks,
                 right: SizeConfig.instance.safeBlockHorizontal *
@@ -66,8 +66,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 3,
-                        bottom: SizeConfig.instance.blockSizeVertical * 3),
+                        top: SizeConfig.instance.safeBlockVertical * 3,
+                        bottom: SizeConfig.instance.safeBlockVertical * 3),
                     child: Text(
                       'Sign Up',
                       style: Theme.of(context).textTheme.headline4.apply(
@@ -79,8 +79,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -101,8 +101,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
@@ -123,7 +123,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.blockSizeVertical * 3),
+                      vertical: SizeConfig.instance.safeBlockVertical * 3),
                   child: MainButton(
                     height: SizeConfig.instance.safeBlockHorizontal *
                         (100 - (2 * horizontalPaddingBlocks)) /
