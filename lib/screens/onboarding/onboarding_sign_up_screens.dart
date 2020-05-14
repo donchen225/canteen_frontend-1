@@ -21,6 +21,7 @@ class OnboardingSignUpScreens extends StatefulWidget {
 }
 
 class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
+  final horizontalPaddingBlocks = 5;
   TextEditingController _nameController;
   TextEditingController _teachSkillNameController;
   TextEditingController _teachSkillPriceController;
@@ -253,27 +254,33 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: pageValidation,
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                "What are your skills?",
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: SizeConfig.instance.blockSizeVertical,
-              bottom: SizeConfig.instance.blockSizeVertical,
-              left: SizeConfig.instance.blockSizeHorizontal * 12,
-              right: SizeConfig.instance.blockSizeHorizontal * 12,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(
+                  "What are your skills?",
+                ),
+              ],
             ),
-          ),
-          _buildSkillSection(nameController, priceController,
-              descriptionController, _teachSkillSelected),
-        ],
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.instance.blockSizeVertical,
+                bottom: SizeConfig.instance.blockSizeVertical,
+                left: SizeConfig.instance.blockSizeHorizontal * 12,
+                right: SizeConfig.instance.blockSizeHorizontal * 12,
+              ),
+            ),
+            _buildSkillSection(nameController, priceController,
+                descriptionController, _teachSkillSelected),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
           fontFamily: 'MyFont',
@@ -289,61 +296,67 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: _pageValidated[1],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            child: Text("Do you want to learn or teach?"),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.instance.blockSizeVertical * 3),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text('Learn'),
-                  color: _learnSkillSelected
-                      ? Palette.orangeColor
-                      : Palette.buttonInvalidBackgroundColor,
-                  onPressed: () {
-                    setState(() {
-                      _learnSkillSelected = true;
-                      _teachSkillSelected = false;
-                      _pageValidated[1] = true;
-                      _skillType = 'learn';
-
-                      pages[1] = _buildSkillPage();
-                    });
-                  },
-                ),
-                RaisedButton(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text('Teach'),
-                  color: (_teachSkillSelected)
-                      ? Palette.orangeColor
-                      : Palette.buttonInvalidBackgroundColor,
-                  onPressed: () {
-                    setState(() {
-                      _teachSkillSelected = true;
-                      _learnSkillSelected = false;
-                      _pageValidated[1] = true;
-                      _skillType = 'teach';
-                      pages[1] = _buildSkillPage();
-                    });
-                  },
-                ),
-              ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              child: Text("Do you want to learn or teach?"),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.blockSizeVertical * 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text('Learn'),
+                    color: _learnSkillSelected
+                        ? Palette.orangeColor
+                        : Palette.buttonInvalidBackgroundColor,
+                    onPressed: () {
+                      setState(() {
+                        _learnSkillSelected = true;
+                        _teachSkillSelected = false;
+                        _pageValidated[1] = true;
+                        _skillType = 'learn';
+
+                        pages[1] = _buildSkillPage();
+                      });
+                    },
+                  ),
+                  RaisedButton(
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text('Teach'),
+                    color: (_teachSkillSelected)
+                        ? Palette.orangeColor
+                        : Palette.buttonInvalidBackgroundColor,
+                    onPressed: () {
+                      setState(() {
+                        _teachSkillSelected = true;
+                        _learnSkillSelected = false;
+                        _pageValidated[1] = true;
+                        _skillType = 'teach';
+                        pages[1] = _buildSkillPage();
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
           fontFamily: 'MyFont',
@@ -359,39 +372,44 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: _pageValidated[0],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "What's your name?",
-              textAlign: TextAlign.start,
-            ),
-          ),
-          TextField(
-            controller: controller,
-            textCapitalization: TextCapitalization.sentences,
-            cursorColor: Palette.orangeColor,
-            style: TextStyle(
-                fontSize: 25,
-                color: Palette.orangeColor,
-                fontWeight: FontWeight.w700,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-              counterText: "",
-              contentPadding: EdgeInsets.all(0),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "What's your name?",
+                textAlign: TextAlign.start,
               ),
             ),
-            maxLines: 1,
-            minLines: 1,
-          ),
-        ],
+            TextField(
+              controller: controller,
+              textCapitalization: TextCapitalization.sentences,
+              cursorColor: Palette.orangeColor,
+              style: TextStyle(
+                  fontSize: 25,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.none),
+              decoration: InputDecoration(
+                counterText: "",
+                contentPadding: EdgeInsets.all(0),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
+              maxLines: 1,
+              minLines: 1,
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
           fontFamily: 'MyFont',
@@ -403,43 +421,47 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
   PageViewModel _buildSkillNamePage(TextEditingController controller) {
     return PageViewModel(
       pageColor: Palette.backgroundColor,
-      // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[2],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "What is the name of the skill you want to $_skillType?",
-              textAlign: TextAlign.start,
-            ),
-          ),
-          TextField(
-            controller: controller,
-            textCapitalization: TextCapitalization.sentences,
-            cursorColor: Palette.orangeColor,
-            style: TextStyle(
-                fontSize: 25,
-                color: Palette.orangeColor,
-                fontWeight: FontWeight.w700,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-              counterText: "",
-              contentPadding: EdgeInsets.all(0),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "What is the name of the skill you want to $_skillType?",
+                textAlign: TextAlign.start,
               ),
             ),
-            maxLines: 1,
-            minLines: 1,
-          ),
-        ],
+            TextField(
+              controller: controller,
+              textCapitalization: TextCapitalization.sentences,
+              cursorColor: Palette.orangeColor,
+              style: TextStyle(
+                  fontSize: 25,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.none),
+              decoration: InputDecoration(
+                counterText: "",
+                contentPadding: EdgeInsets.all(0),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
+              maxLines: 1,
+              minLines: 1,
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
           fontFamily: 'MyFont',
@@ -466,21 +488,27 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: _pageValidated[3],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "How long do you want to $_skillType for?",
-              textAlign: TextAlign.start,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "How long do you want to $_skillType for?",
+                textAlign: TextAlign.start,
+              ),
             ),
-          ),
-          Container(
-            height: 200,
-            child: _buildDurationPicker(),
-          ),
-        ],
+            Container(
+              height: 200,
+              child: _buildDurationPicker(),
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
         fontFamily: 'MyFont',
@@ -497,49 +525,55 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: _pageValidated[4],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "How much do you want to $_skillType for?",
-              textAlign: TextAlign.start,
-            ),
-          ),
-          Container(
-            width: SizeConfig.instance.blockSizeHorizontal * 33,
-            child: TextField(
-              controller: controller,
-              textCapitalization: TextCapitalization.sentences,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              cursorColor: Palette.orangeColor,
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Palette.orangeColor,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.none),
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              decoration: InputDecoration(
-                icon: Text("\$"),
-                counterText: "",
-                contentPadding: EdgeInsets.all(0),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "How much do you want to $_skillType for?",
+                textAlign: TextAlign.start,
               ),
-              maxLines: 1,
-              minLines: 1,
-              maxLength: 4,
             ),
-          ),
-        ],
+            Container(
+              width: SizeConfig.instance.blockSizeHorizontal * 33,
+              child: TextField(
+                controller: controller,
+                textCapitalization: TextCapitalization.sentences,
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.number,
+                cursorColor: Palette.orangeColor,
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Palette.orangeColor,
+                    fontWeight: FontWeight.w700,
+                    decoration: TextDecoration.none),
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                decoration: InputDecoration(
+                  icon: Text("\$"),
+                  counterText: "",
+                  contentPadding: EdgeInsets.all(0),
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                ),
+                maxLines: 1,
+                minLines: 1,
+                maxLength: 4,
+              ),
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
           fontFamily: 'MyFont',
@@ -555,38 +589,44 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       iconColor: null,
       nextValidated: _pageValidated[5],
       bubbleBackgroundColor: Palette.orangeColor,
-      body: Column(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "What is the description of the skill you want to $_skillType?",
-              textAlign: TextAlign.start,
-            ),
-          ),
-          TextField(
-            controller: controller,
-            textCapitalization: TextCapitalization.sentences,
-            cursorColor: Palette.orangeColor,
-            style: TextStyle(
-                fontSize: 14,
-                color: Palette.orangeColor,
-                fontWeight: FontWeight.w700,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-              counterText: "",
-              contentPadding: EdgeInsets.all(0),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              SizeConfig.instance.safeBlockHorizontal * horizontalPaddingBlocks,
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "What is the description of the skill you want to $_skillType?",
+                textAlign: TextAlign.start,
               ),
             ),
-            maxLines: 6,
-            minLines: 1,
-          ),
-        ],
+            TextField(
+              controller: controller,
+              textCapitalization: TextCapitalization.sentences,
+              cursorColor: Palette.orangeColor,
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Palette.orangeColor,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.none),
+              decoration: InputDecoration(
+                counterText: "",
+                contentPadding: EdgeInsets.all(0),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+              ),
+              maxLines: 6,
+              minLines: 1,
+            ),
+          ],
+        ),
       ),
       bodyTextStyle: TextStyle(
         fontFamily: 'MyFont',
