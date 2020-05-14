@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -12,17 +13,19 @@ class OnboardingCompleteScreen extends StatelessWidget {
     final textFontStyle = Theme.of(context).textTheme.subtitle1;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 9),
-              alignment: Alignment.center,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.instance.safeBlockHorizontal *
+              kLandingHorizontalPaddingBlocks,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -56,40 +59,34 @@ class OnboardingCompleteScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          Flexible(
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: buttonFontStyle.fontSize * kButtonHeightToFontRatio,
-                    width: buttonFontStyle.fontSize *
-                        kButtonHeightToFontRatio *
-                        kButtonAspectRatio,
-                    child: RaisedButton(
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      onPressed: () {
-                        BlocProvider.of<HomeBloc>(context)
-                            .add(InitializeHome());
-                      },
-                      color: Palette.orangeColor,
-                      child: Text(
-                        'Continue',
-                        style: buttonFontStyle.apply(
-                          color: Colors.white,
+            Flexible(
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: MainButton(
+                            height: SizeConfig.instance.safeBlockHorizontal *
+                                (100 - (2 * kLandingHorizontalPaddingBlocks)) /
+                                kButtonAspectRatio,
+                            onPressed: () {
+                              BlocProvider.of<HomeBloc>(context)
+                                  .add(InitializeHome());
+                            },
+                            color: Palette.orangeColor,
+                            text: 'Continue',
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
