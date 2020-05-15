@@ -22,48 +22,36 @@ class SearchUninitialized extends SearchState {
 
 class SearchLoading extends SearchState {}
 
-class SearchCompleteWithResults extends SearchState {
+class SearchTyping extends SearchState {
+  final List<String> searchHistory;
+
+  const SearchTyping(this.searchHistory);
+
+  @override
+  List<Object> get props => [searchHistory];
+
+  @override
+  String toString() => 'SearchTyping';
+}
+
+class SearchCompleteShowResults extends SearchState {
   final List<User> userList;
 
-  const SearchCompleteWithResults(this.userList);
+  const SearchCompleteShowResults(this.userList);
 
   @override
   List<Object> get props => [userList];
 
   @override
-  String toString() => 'SearchCompleteWithResults';
+  String toString() => 'SearchCompleteShowResults';
 }
 
-class SearchCompleteNoResults extends SearchState {
-  const SearchCompleteNoResults();
+class SearchError extends SearchState {
+  const SearchError();
 
   @override
   List<Object> get props => [];
 
   @override
-  String toString() => 'SearchCompleteNoResults { }';
-}
-
-class SearchShowProfile extends SearchState {
-  final User user;
-  final bool isSearchResult;
-
-  const SearchShowProfile(this.user, this.isSearchResult);
-
-  @override
-  List<Object> get props => [user, isSearchResult];
-
-  @override
-  String toString() =>
-      'SearchShowProfile { user: ${user.id}, ${user.displayName} isSearchResult: $isSearchResult }';
-}
-
-class SearchResultsEnd extends SearchState {
-  const SearchResultsEnd();
-
-  @override
-  List<Object> get props => [];
-
-  @override
-  String toString() => 'SearchResultsEnd { }';
+  String toString() => 'SearchError';
 }

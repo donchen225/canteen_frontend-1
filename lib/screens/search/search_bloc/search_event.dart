@@ -10,6 +10,8 @@ abstract class SearchEvent extends Equatable {
 
 class SearchHome extends SearchEvent {}
 
+class EnterSearchQuery extends SearchEvent {}
+
 class SearchStarted extends SearchEvent {
   final String query;
 

@@ -9,14 +9,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final UserRepository _userRepository;
   List<User> _latestUsers = [];
   List<User> _searchResults = [];
-  int _currentIndex = 0;
+  List<String> _searchHistory = [];
 
   SearchBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository;
 
   @override
-  SearchState get initialState => SearchLoading();
+  SearchState get initialState =>
+      SearchLoading(); // TODO: change this to SearchUninitialized?
 
   @override
   Stream<SearchState> mapEventToState(
@@ -24,38 +25,33 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async* {
     if (event is SearchStarted) {
       yield* _mapSearchStartedToState(event);
+    } else if (event is EnterSearchQuery) {
+      yield* _mapEnterSearchQueryToState();
     } else if (event is SearchHome) {
       yield* _mapSearchHomeToState();
-    } else if (event is SearchInspectUser) {
-      yield* _mapSearchInspectUserToState(event);
-    } else if (event is SearchNextUser) {
-      yield* _mapSearchNextUserToState();
     }
   }
 
   Stream<SearchState> _mapSearchStartedToState(SearchStarted event) async* {
     yield SearchLoading();
     try {
-      _searchResults = [];
-      _currentIndex = 0;
-
       final snapshot = await AlgoliaSearch.query(event.query);
       final results = snapshot.hits
           .map((result) => User.fromAlgoliaSnapshot(result))
           .toList();
-      print(results);
 
-      if (results.length == 0) {
-        yield SearchCompleteNoResults();
-      } else {
-        _searchResults = results;
-        yield SearchShowProfile(_searchResults[_currentIndex], true);
-      }
+      _searchResults = results;
+
+      yield SearchCompleteShowResults(results);
     } catch (e) {
       print(e);
       print('SEARCH FAILED');
-      yield SearchCompleteNoResults();
+      yield SearchError();
     }
+  }
+
+  Stream<SearchState> _mapEnterSearchQueryToState() async* {
+    yield SearchTyping(_searchHistory);
   }
 
   // TODO: paginate results
@@ -66,21 +62,5 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
 
     yield SearchUninitialized(_latestUsers);
-  }
-
-  Stream<SearchState> _mapSearchInspectUserToState(
-      SearchInspectUser event) async* {
-    yield SearchShowProfile(event.user, false);
-  }
-
-  Stream<SearchState> _mapSearchNextUserToState() async* {
-    yield SearchLoading();
-    _currentIndex += 1;
-
-    if (_currentIndex < _searchResults.length) {
-      yield SearchShowProfile(_searchResults[_currentIndex], true);
-    } else {
-      yield SearchResultsEnd();
-    }
   }
 }
