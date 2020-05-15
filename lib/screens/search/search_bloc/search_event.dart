@@ -40,6 +40,8 @@ class SearchStarted extends SearchEvent {
 
 class SearchShowResults extends SearchEvent {}
 
+class SearchPreviousState extends SearchEvent {}
+
 class SearchInspectUser extends SearchEvent {
   final User user;
 

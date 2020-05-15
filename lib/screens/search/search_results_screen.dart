@@ -61,7 +61,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                         ),
                         onPressed: () {
                           BlocProvider.of<SearchBloc>(context)
-                              .add(EnterSearchQuery());
+                              .add(SearchPreviousState());
                         },
                       ),
                       Flexible(

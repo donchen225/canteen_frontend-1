@@ -12,8 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewUserProfileScreen extends StatelessWidget {
   final User user;
+  final Function onTapBack;
 
-  ViewUserProfileScreen({this.user}) : assert(user != null);
+  ViewUserProfileScreen({this.user, this.onTapBack}) : assert(user != null);
 
   void _onTapSkillFunction(BuildContext context, Skill skill) {
     showDialog(
@@ -42,7 +43,9 @@ class ViewUserProfileScreen extends StatelessWidget {
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
-            BlocProvider.of<SearchBloc>(context).add(SearchShowResults());
+            if (onTapBack != null) {
+              onTapBack();
+            }
           },
         ),
         backgroundColor: Palette.appBarBackgroundColor,

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -10,6 +12,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   List<User> _latestUsers = [];
   List<User> _searchResults = [];
   List<String> _searchHistory = [];
+  DoubleLinkedQueue<SearchState> _previousStates = DoubleLinkedQueue();
 
   SearchBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
@@ -33,10 +36,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _mapSearchShowResultsToState();
     } else if (event is SearchHome) {
       yield* _mapSearchHomeToState();
+    } else if (event is SearchPreviousState) {
+      yield* _mapSearchPreviousStateToState();
     }
   }
 
   Stream<SearchState> _mapSearchStartedToState(SearchStarted event) async* {
+    _previousStates.add(state);
     yield SearchLoading();
     try {
       _searchHistory.add(event.query);
@@ -58,27 +64,43 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<SearchState> _mapEnterSearchQueryToState(
       EnterSearchQuery event) async* {
+    _previousStates.add(state);
     yield SearchTyping(
         initialQuery: event.initialQuery, searchHistory: _searchHistory);
   }
 
   Stream<SearchState> _mapSearchInspectUserToState(
       SearchInspectUser event) async* {
+    _previousStates.add(state);
     yield SearchShowProfile(event.user);
   }
 
   Stream<SearchState> _mapSearchShowResultsToState() async* {
+    _previousStates.add(state);
     yield SearchCompleteShowResults(
         _searchHistory.isNotEmpty ? _searchHistory.last : '', _searchResults);
   }
 
   // TODO: paginate results
   Stream<SearchState> _mapSearchHomeToState() async* {
+    _previousStates.clear();
+
     if (_latestUsers.length == 0) {
       final users = await _userRepository.getAllUsers();
       _latestUsers = users;
     }
 
     yield SearchUninitialized(_latestUsers);
+  }
+
+  Stream<SearchState> _mapSearchPreviousStateToState() async* {
+    print(_previousStates);
+    try {
+      final state = _previousStates.removeLast();
+      print(state);
+      yield state;
+    } catch (e) {
+      print('Could not return to previous state: $e');
+    }
   }
 }

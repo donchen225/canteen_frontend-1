@@ -106,10 +106,9 @@ class DiscoverScreen extends StatelessWidget {
                             user: user,
                             height:
                                 SizeConfig.instance.scaffoldBodyHeight * 0.49,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) {
-                                return ViewUserProfileScreen(user: user);
-                              }),
+                            onTap: () =>
+                                BlocProvider.of<SearchBloc>(context).add(
+                              SearchInspectUser(user),
                             ),
                           ),
                         );
@@ -153,10 +152,8 @@ class DiscoverScreen extends StatelessWidget {
                     child: ProfileCard(
                       user: user,
                       height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) {
-                          return ViewUserProfileScreen(user: user);
-                        }),
+                      onTap: () => BlocProvider.of<SearchBloc>(context).add(
+                        SearchInspectUser(user),
                       ),
                     ),
                   );

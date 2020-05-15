@@ -88,7 +88,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                         GestureDetector(
                           onTap: () {
                             BlocProvider.of<SearchBloc>(context)
-                                .add(SearchHome());
+                                .add(SearchPreviousState());
                           },
                           child: Container(
                             alignment: Alignment.center,

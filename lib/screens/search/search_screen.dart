@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_results_screen.dart';
-import 'package:canteen_frontend/screens/search/search_show_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -32,6 +31,8 @@ class _SearchScreenState extends State<SearchScreen> {
     } else if (state is SearchShowProfile) {
       return ViewUserProfileScreen(
         user: state.user,
+        onTapBack: () =>
+            BlocProvider.of<SearchBloc>(context).add(SearchPreviousState()),
       );
     }
   }
