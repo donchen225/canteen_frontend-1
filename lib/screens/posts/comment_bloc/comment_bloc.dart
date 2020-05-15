@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:canteen_frontend/models/comment/comment.dart';
-import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_event.dart';
