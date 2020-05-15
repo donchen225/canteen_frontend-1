@@ -60,7 +60,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               }
 
-              if (state is SearchCompleteShowResults) {
+              if (state is SearchCompleteShowResults ||
+                  state is SearchUninitialized) {
                 return SlideTransition(
                   position: Tween<Offset>(
                     begin: const Offset(offsetdXReverse, 0),
