@@ -26,7 +26,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if (event is SearchStarted) {
       yield* _mapSearchStartedToState(event);
     } else if (event is EnterSearchQuery) {
-      yield* _mapEnterSearchQueryToState();
+      yield* _mapEnterSearchQueryToState(event);
     } else if (event is SearchHome) {
       yield* _mapSearchHomeToState();
     }
@@ -35,6 +35,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Stream<SearchState> _mapSearchStartedToState(SearchStarted event) async* {
     yield SearchLoading();
     try {
+      _searchHistory.add(event.query);
+
       final snapshot = await AlgoliaSearch.query(event.query);
       final results = snapshot.hits
           .map((result) => User.fromAlgoliaSnapshot(result))
@@ -42,7 +44,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       _searchResults = results;
 
-      yield SearchCompleteShowResults(results);
+      yield SearchCompleteShowResults(event.query, results);
     } catch (e) {
       print(e);
       print('SEARCH FAILED');
@@ -50,8 +52,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  Stream<SearchState> _mapEnterSearchQueryToState() async* {
-    yield SearchTyping(_searchHistory);
+  Stream<SearchState> _mapEnterSearchQueryToState(
+      EnterSearchQuery event) async* {
+    yield SearchTyping(
+        initialQuery: event.initialQuery, searchHistory: _searchHistory);
   }
 
   // TODO: paginate results

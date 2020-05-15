@@ -23,24 +23,27 @@ class SearchUninitialized extends SearchState {
 class SearchLoading extends SearchState {}
 
 class SearchTyping extends SearchState {
+  final String initialQuery;
   final List<String> searchHistory;
 
-  const SearchTyping(this.searchHistory);
+  const SearchTyping({this.initialQuery = '', this.searchHistory});
 
   @override
-  List<Object> get props => [searchHistory];
+  List<Object> get props => [initialQuery, searchHistory];
 
   @override
-  String toString() => 'SearchTyping';
+  String toString() =>
+      'SearchTyping { initialQuery: $initialQuery searchHistory: $searchHistory } ';
 }
 
 class SearchCompleteShowResults extends SearchState {
-  final List<User> userList;
+  final String query;
+  final List<User> results;
 
-  const SearchCompleteShowResults(this.userList);
+  const SearchCompleteShowResults(this.query, this.results);
 
   @override
-  List<Object> get props => [userList];
+  List<Object> get props => [query, results];
 
   @override
   String toString() => 'SearchCompleteShowResults';

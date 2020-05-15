@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_results_screen.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ class _SearchScreenState extends State<SearchScreen> {
     if (state is SearchUninitialized) {
       return DiscoverScreen(state.allUsers);
     } else if (state is SearchTyping) {
-      return SearchingScreen();
+      return SearchingScreen(
+          initialQuery: state.initialQuery, searchHistory: state.searchHistory);
     } else if (state is SearchCompleteShowResults) {
-      return Container();
+      return SearchResultScreen(query: state.query, results: state.results);
     }
   }
 

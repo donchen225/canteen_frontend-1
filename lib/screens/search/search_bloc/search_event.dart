@@ -10,7 +10,19 @@ abstract class SearchEvent extends Equatable {
 
 class SearchHome extends SearchEvent {}
 
-class EnterSearchQuery extends SearchEvent {}
+class EnterSearchQuery extends SearchEvent {
+  final String initialQuery;
+
+  const EnterSearchQuery({this.initialQuery = ''});
+
+  @override
+  List<Object> get props => [initialQuery];
+
+  @override
+  String toString() {
+    return 'EnterSearchQuery { initialQuery: $initialQuery }';
+  }
+}
 
 class SearchStarted extends SearchEvent {
   final String query;
