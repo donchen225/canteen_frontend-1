@@ -29,8 +29,10 @@ class ProfileList extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
+            padding: EdgeInsets.only(
+              left: SizeConfig.instance.safeBlockHorizontal * 6,
+              right: SizeConfig.instance.safeBlockHorizontal * 6,
+              bottom: SizeConfig.instance.safeBlockVertical * 2,
             ),
             child: Container(
               height: SizeConfig.instance.safeBlockHorizontal * 30,
@@ -98,7 +100,6 @@ class ProfileList extends StatelessWidget {
                                   ?.toList() ??
                               []),
                     )),
-                ProfileSectionTitle('About'),
                 Container(
                   padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.instance.safeBlockVertical,
