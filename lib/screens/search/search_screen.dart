@@ -44,11 +44,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
-// onTapDown: (_) {
-//   FocusScopeNode currentFocus = FocusScope.of(context);
-
-//   if (!currentFocus.hasPrimaryFocus) {
-//     currentFocus.unfocus();
-//   }
-// },

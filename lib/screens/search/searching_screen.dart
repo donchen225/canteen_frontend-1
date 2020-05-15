@@ -42,6 +42,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                           color: Colors.grey[200],
                           child: TextField(
                             autofocus: true,
+                            textInputAction: TextInputAction.search,
                             textCapitalization: TextCapitalization.sentences,
                             style: TextStyle(
                               color: Colors.black,
