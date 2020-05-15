@@ -25,15 +25,17 @@ class DiscoverScreen extends StatelessWidget {
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
         flexibleSpace: SafeArea(
-          child: Align(
-            alignment: Alignment.center,
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final height = constraints.maxHeight * 0.7;
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: constraints.maxWidth * 0.05,
-                  ),
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final height = kToolbarHeight * 0.7;
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: constraints.maxWidth * 0.05,
+                  right: constraints.maxWidth * 0.05,
+                  top: kToolbarHeight * 0.18,
+                ),
+                child: Align(
+                  alignment: Alignment.topCenter,
                   child: GestureDetector(
                     onTap: () {
                       BlocProvider.of<SearchBloc>(context)
@@ -54,9 +56,9 @@ class DiscoverScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
