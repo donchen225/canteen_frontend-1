@@ -5,6 +5,8 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'dart:math' as math;
+
 class SearchingScreen extends StatefulWidget {
   final String initialQuery;
   final List<String> searchHistory;
@@ -107,27 +109,52 @@ class _SearchingScreenState extends State<SearchingScreen> {
             ),
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.instance.safeBlockHorizontal * 6),
-          child: ListView.builder(
-              itemCount: widget.searchHistory.length,
-              itemBuilder: (BuildContext context, int index) {
-                final query = widget.searchHistory[index];
-                return GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.safeBlockVertical,
-                      bottom: SizeConfig.instance.safeBlockVertical,
-                    ),
-                    child: Text(
-                      query,
-                      style: textTheme,
+        body: ListView.builder(
+            itemCount: widget.searchHistory.length,
+            itemBuilder: (BuildContext context, int index) {
+              final query = widget.searchHistory[index];
+              return GestureDetector(
+                onTap: () {
+                  BlocProvider.of<SearchBloc>(context)
+                      .add(SearchStarted(query));
+                },
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.instance.safeBlockVertical * 2,
+                    bottom: SizeConfig.instance.safeBlockVertical * 2,
+                    left: SizeConfig.instance.safeBlockHorizontal * 6,
+                    right: SizeConfig.instance.safeBlockHorizontal * 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Palette.containerColor,
+                    border: Border(
+                      top: BorderSide(
+                        width: 0.5,
+                        color: Colors.grey[300],
+                      ),
+                      bottom: BorderSide(
+                        width: 0.5,
+                        color: Colors.grey[300],
+                      ),
                     ),
                   ),
-                );
-              }),
-        ));
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        query,
+                        style: textTheme,
+                      ),
+                      Transform.rotate(
+                        angle: -45 * math.pi / 180,
+                        child: const Icon(
+                          Icons.arrow_upward,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }));
   }
 }
