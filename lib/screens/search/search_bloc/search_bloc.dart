@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:canteen_frontend/models/search/search_query.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -11,7 +12,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final UserRepository _userRepository;
   List<User> _latestUsers = [];
   List<User> _searchResults = [];
-  List<String> _searchHistory = [];
+  List<SearchQuery> _searchHistory = [];
   DoubleLinkedQueue<SearchState> _previousStates = DoubleLinkedQueue();
 
   SearchBloc({@required UserRepository userRepository})
@@ -45,7 +46,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     _previousStates.add(state);
     yield SearchLoading();
     try {
-      _searchHistory.add(event.query);
+      final query = SearchQuery(
+        query: event.query.toLowerCase(),
+        displayQuery: event.query,
+      );
+      final exists = _searchHistory
+          .remove(query); // Remove without checking so only one traversal
+      print(exists);
+      _searchHistory.add(query);
 
       final snapshot = await AlgoliaSearch.query(event.query);
       final results = snapshot.hits
@@ -66,7 +74,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       EnterSearchQuery event) async* {
     _previousStates.add(state);
     yield SearchTyping(
-        initialQuery: event.initialQuery, searchHistory: _searchHistory);
+        initialQuery: event.initialQuery,
+        searchHistory: _searchHistory
+            .map((q) => q.displayQuery)
+            .toList()
+            .reversed
+            .toList());
   }
 
   Stream<SearchState> _mapSearchInspectUserToState(
