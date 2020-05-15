@@ -40,4 +40,5 @@ const String algoliaIndexName = 'users_dev';
 
 // Animation constants
 const int animationDuration = 150;
-const double offsetdX = 0.8;
+const double offsetdXForward = 1;
+const double offsetdXReverse = -1;

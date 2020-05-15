@@ -190,6 +190,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(),
         primaryColor: Palette.orangeColor,
+        scaffoldBackgroundColor: Palette.scaffoldBackgroundColor,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),

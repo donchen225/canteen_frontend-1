@@ -16,7 +16,9 @@ class Palette {
 
   static Color appBarBackgroundColor = const Color(0xFFFFFFFF);
   static Color backgroundColor = const Color(0xFFF8F8F8);
+  static Color scaffoldBackgroundColor = const Color(0xFFEDEFF1);
   static Color appBarTextColor = const Color(0xFF303030);
+  static Color containerColor = const Color(0xFFFFFFFF);
 
   static Color disabledButtonColor = const Color(0xFF9E9E9E);
 

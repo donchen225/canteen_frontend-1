@@ -80,19 +80,20 @@ class ProfileList extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                    visible: user.interests.isNotEmpty,
+                    visible: user.interests?.isNotEmpty ?? false,
                     child: Align(
                       alignment: Alignment.center,
                       child: Wrap(
                           children: user.interests
-                              .map((x) => Padding(
-                                    padding: EdgeInsets.only(
-                                        right: SizeConfig
-                                                .instance.blockSizeHorizontal *
-                                            3),
-                                    child: InterestItem(text: x),
-                                  ))
-                              .toList()),
+                                  ?.map((x) => Padding(
+                                        padding: EdgeInsets.only(
+                                            right: SizeConfig.instance
+                                                    .blockSizeHorizontal *
+                                                3),
+                                        child: InterestItem(text: x),
+                                      ))
+                                  ?.toList() ??
+                              []),
                     )),
                 ProfileSectionTitle('About'),
                 Container(

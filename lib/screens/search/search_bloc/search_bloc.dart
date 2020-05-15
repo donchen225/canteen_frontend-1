@@ -27,6 +27,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield* _mapSearchStartedToState(event);
     } else if (event is EnterSearchQuery) {
       yield* _mapEnterSearchQueryToState(event);
+    } else if (event is SearchInspectUser) {
+      yield* _mapSearchInspectUserToState(event);
+    } else if (event is SearchShowResults) {
+      yield* _mapSearchShowResultsToState();
     } else if (event is SearchHome) {
       yield* _mapSearchHomeToState();
     }
@@ -56,6 +60,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       EnterSearchQuery event) async* {
     yield SearchTyping(
         initialQuery: event.initialQuery, searchHistory: _searchHistory);
+  }
+
+  Stream<SearchState> _mapSearchInspectUserToState(
+      SearchInspectUser event) async* {
+    yield SearchShowProfile(event.user);
+  }
+
+  Stream<SearchState> _mapSearchShowResultsToState() async* {
+    yield SearchCompleteShowResults(
+        _searchHistory.isNotEmpty ? _searchHistory.last : '', _searchResults);
   }
 
   // TODO: paginate results

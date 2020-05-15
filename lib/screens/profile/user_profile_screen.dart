@@ -395,7 +395,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           transitionBuilder: (Widget child, Animation<double> animation) {
             return SlideTransition(
               position: Tween<Offset>(
-                begin: const Offset(offsetdX, 0),
+                begin: const Offset(offsetdXForward, 0),
                 end: Offset.zero,
               ).animate(animation),
               child: child,

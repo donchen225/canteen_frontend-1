@@ -124,15 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedItemColor: Colors.black,
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
-                    // BottomNavigationBarItem(
-                    //   icon: _buildBadge(
-                    //     navBarState.numRecommended,
-                    //     Icon(
-                    //       Icons.home,
-                    //     ),
-                    //   ),
-                    //   title: Text(''),
-                    // ),
                     BottomNavigationBarItem(
                       icon: Icon(
                         Icons.home,
@@ -185,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bloc: _homeBloc,
         builder: (BuildContext context, HomeState state) {
           print('IN HOME SCREEN BLOC BUILDER');
+          print('HOME STATE: $state');
 
           if (state is HomeUninitialized ||
               state is HomeInitializing ||

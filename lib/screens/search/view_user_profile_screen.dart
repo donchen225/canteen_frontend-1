@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -38,10 +39,14 @@ class ViewUserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(user.displayName ?? ''),
-      //   backgroundColor: Palette.appBarBackgroundColor,
-      // ),
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            BlocProvider.of<SearchBloc>(context).add(SearchShowResults());
+          },
+        ),
+        backgroundColor: Palette.appBarBackgroundColor,
+      ),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(

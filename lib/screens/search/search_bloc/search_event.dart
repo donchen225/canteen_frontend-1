@@ -38,6 +38,8 @@ class SearchStarted extends SearchEvent {
   }
 }
 
+class SearchShowResults extends SearchEvent {}
+
 class SearchInspectUser extends SearchEvent {
   final User user;
 
@@ -50,14 +52,4 @@ class SearchInspectUser extends SearchEvent {
   String toString() {
     return 'SearchInspectUser { user: ${user.id}, ${user.displayName} }';
   }
-}
-
-class SearchNextUser extends SearchEvent {
-  const SearchNextUser();
-
-  @override
-  List<Object> get props => [];
-
-  @override
-  String toString() => 'SearchNextUser';
 }
