@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -11,6 +10,7 @@ class ProfileCard extends StatelessWidget {
   final Function onTap;
   final double height;
   final double width;
+  final double kHorizontalPadding = 0.08;
 
   const ProfileCard({
     Key key,
@@ -75,10 +75,10 @@ class ProfileCard extends StatelessWidget {
                     Container(
                       color: Colors.grey[100],
                       padding: EdgeInsets.only(
-                        top: SizeConfig.instance.safeBlockVertical,
-                        bottom: SizeConfig.instance.safeBlockVertical,
-                        left: SizeConfig.instance.safeBlockHorizontal * 6,
-                        right: SizeConfig.instance.safeBlockHorizontal * 6,
+                        top: height * 0.03,
+                        bottom: height * 0.03,
+                        left: width * kHorizontalPadding,
+                        right: width * kHorizontalPadding,
                       ),
                       child: Column(
                         children: <Widget>[
@@ -106,8 +106,8 @@ class ProfileCard extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(
-                          left: SizeConfig.instance.safeBlockHorizontal * 6,
-                          right: SizeConfig.instance.safeBlockHorizontal * 6,
+                          left: width * kHorizontalPadding,
+                          right: width * kHorizontalPadding,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,8 +116,8 @@ class ProfileCard extends StatelessWidget {
                               visible: skill != null && skill?.name != null,
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                  top: SizeConfig.instance.safeBlockVertical,
-                                  bottom: SizeConfig.instance.safeBlockVertical,
+                                  top: height * 0.03,
+                                  bottom: height * 0.03,
                                 ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
@@ -147,9 +147,7 @@ class ProfileCard extends StatelessWidget {
                                     : '';
                                 return Padding(
                                   padding: EdgeInsets.only(
-                                    bottom:
-                                        SizeConfig.instance.safeBlockVertical *
-                                            2,
+                                    bottom: height * 0.06,
                                   ),
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
@@ -167,13 +165,10 @@ class ProfileCard extends StatelessWidget {
                                         ),
                                         Padding(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.instance
-                                                  .blockSizeHorizontal),
+                                              horizontal: width * 0.02),
                                           child: Container(
-                                            width: SizeConfig
-                                                .instance.blockSizeHorizontal,
-                                            height: SizeConfig
-                                                .instance.blockSizeHorizontal,
+                                            width: kDotSize,
+                                            height: kDotSize,
                                             decoration: BoxDecoration(
                                               color: Palette.titleColor,
                                               shape: BoxShape.circle,

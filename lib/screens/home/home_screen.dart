@@ -15,6 +15,7 @@ import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -118,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   currentIndex: _homeBloc.currentIndex,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
-                  selectedFontSize: 12,
-                  unselectedFontSize: 12,
+                  selectedFontSize: kBottomNavigationBarFontSize,
+                  unselectedFontSize: kBottomNavigationBarFontSize,
                   selectedItemColor: Colors.black,
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[

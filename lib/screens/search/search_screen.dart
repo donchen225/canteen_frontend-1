@@ -1,9 +1,6 @@
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
-import 'package:canteen_frontend/utils/constants.dart';
-import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

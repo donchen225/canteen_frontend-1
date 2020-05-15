@@ -31,7 +31,7 @@ class SearchBar extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.search,
-                      size: SizeConfig.instance.safeBlockVertical * 4,
+                      size: height * 0.8,
                       color: Colors.grey[600],
                     ),
                   ),

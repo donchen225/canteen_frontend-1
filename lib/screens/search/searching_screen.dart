@@ -18,59 +18,66 @@ class _SearchingScreenState extends State<SearchingScreen> {
         );
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          SizeConfig.instance.safeBlockVertical * 10,
-        ),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          brightness: Brightness.light,
-          backgroundColor: Palette.appBarBackgroundColor,
-          elevation: 1,
-          flexibleSpace: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: SearchBar(
-                        height: SizeConfig.instance.safeBlockVertical * 5,
-                        color: Colors.grey[200],
-                        child: TextField(
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Search skills, groups, people",
-                            hintStyle: appBarTextTheme.apply(
-                              color: Colors.grey[400],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        brightness: Brightness.light,
+        backgroundColor: Palette.appBarBackgroundColor,
+        elevation: 1,
+        flexibleSpace: SafeArea(
+          child: Align(
+            alignment: Alignment.center,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final height = constraints.maxHeight * 0.7;
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: constraints.maxWidth * 0.05,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: SearchBar(
+                          height: height,
+                          color: Colors.grey[200],
+                          child: TextField(
+                            autofocus: true,
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                bottom: constraints.maxHeight * 0.15,
+                              ),
+                              border: InputBorder.none,
+                              hintText: "Search skills, groups, people",
+                              hintStyle: appBarTextTheme.apply(
+                                color: Colors.grey[400],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<SearchBloc>(context).add(SearchHome());
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: SizeConfig.instance.safeBlockVertical * 5,
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.instance.safeBlockHorizontal * 3,
+                      GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SearchBloc>(context)
+                              .add(SearchHome());
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: height,
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.instance.safeBlockHorizontal * 3,
+                          ),
+                          child: Text('Cancel', style: appBarTextTheme),
                         ),
-                        child: Text('Cancel', style: appBarTextTheme),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

@@ -10,6 +10,12 @@ const double kButtonAspectRatio = 6;
 const double kButtonHeightToFontRatio = 2.66;
 const double kDisabledOpacity = 0.5;
 
+// BottomNavigationBar constants
+const double kBottomNavigationBarFontSize = 12;
+
+// Icon constants
+const double kDotSize = 4;
+
 // Login/onboarding constants
 const double kLandingHorizontalPaddingBlocks = 10;
 

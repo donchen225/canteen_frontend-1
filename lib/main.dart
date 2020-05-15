@@ -195,6 +195,7 @@ class App extends StatelessWidget {
       ),
       routes: {
         '/': (context) {
+          SizeConfig.instance.init(context);
           return BlocListener<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is Authenticated) {
@@ -204,7 +205,6 @@ class App extends StatelessWidget {
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
-                SizeConfig.instance.init(context);
                 if (state is Uninitialized) {
                   return SplashScreen();
                 }

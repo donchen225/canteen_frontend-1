@@ -18,39 +18,44 @@ class DiscoverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          SizeConfig.instance.safeBlockVertical * 10,
-        ),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          brightness: Brightness.light,
-          backgroundColor: Palette.appBarBackgroundColor,
-          elevation: 1,
-          flexibleSpace: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<SearchBloc>(context)
-                        .add(EnterSearchQuery());
-                  },
-                  child: SearchBar(
-                    height: SizeConfig.instance.safeBlockVertical * 5,
-                    color: Colors.grey[200],
-                    child: Text(
-                      "What are you looking for?",
-                      style: Theme.of(context).textTheme.subtitle1.apply(
-                            fontFamily: '.SF UI Text',
-                            fontWeightDelta: 2,
-                          ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        brightness: Brightness.light,
+        backgroundColor: Palette.appBarBackgroundColor,
+        elevation: 1,
+        flexibleSpace: SafeArea(
+          child: Align(
+            alignment: Alignment.center,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final height = constraints.maxHeight * 0.7;
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: constraints.maxWidth * 0.05,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<SearchBloc>(context)
+                          .add(EnterSearchQuery());
+                    },
+                    child: SearchBar(
+                      height: height,
+                      color: Colors.grey[200],
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "What are you looking for?",
+                          style: Theme.of(context).textTheme.subtitle1.apply(
+                                fontFamily: '.SF UI Text',
+                                fontWeightDelta: 2,
+                              ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -60,8 +65,8 @@ class DiscoverScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 3,
-                bottom: SizeConfig.instance.safeBlockVertical,
+                top: SizeConfig.instance.scaffoldBodyHeight * 0.02,
+                bottom: SizeConfig.instance.scaffoldBodyHeight * 0.01,
                 left: SizeConfig.instance.safeBlockHorizontal * 6,
                 right: SizeConfig.instance.safeBlockHorizontal * 6,
               ),
@@ -74,7 +79,7 @@ class DiscoverScreen extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Container(
-              height: SizeConfig.instance.safeBlockVertical * 50,
+              height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
               child: BlocBuilder<RecommendedBloc, RecommendedState>(
                 builder: (BuildContext context, RecommendedState state) {
                   if (state is RecommendedLoading) {
@@ -91,12 +96,14 @@ class DiscoverScreen extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.only(
                             left: SizeConfig.instance.safeBlockHorizontal * 6,
-                            bottom: SizeConfig.instance.safeBlockVertical * 3,
-                            top: SizeConfig.instance.safeBlockVertical * 3,
+                            bottom:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                           ),
                           child: ProfileCard(
                             user: user,
-                            height: SizeConfig.instance.safeBlockVertical * 46,
+                            height:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.49,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) {
                                 return ViewUserProfileScreen(user: user);
@@ -116,7 +123,7 @@ class DiscoverScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 3,
+                top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                 left: SizeConfig.instance.safeBlockHorizontal * 6,
                 right: SizeConfig.instance.safeBlockHorizontal * 6,
               ),
@@ -129,7 +136,7 @@ class DiscoverScreen extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Container(
-              height: SizeConfig.instance.safeBlockVertical * 50,
+              height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: userList.length,
@@ -138,12 +145,12 @@ class DiscoverScreen extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.only(
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
-                      bottom: SizeConfig.instance.safeBlockVertical * 3,
-                      top: SizeConfig.instance.safeBlockVertical * 3,
+                      bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                      top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                     ),
                     child: ProfileCard(
                       user: user,
-                      height: SizeConfig.instance.safeBlockVertical * 46,
+                      height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) {
                           return ViewUserProfileScreen(user: user);
