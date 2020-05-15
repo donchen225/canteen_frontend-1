@@ -49,6 +49,18 @@ class SearchCompleteShowResults extends SearchState {
   String toString() => 'SearchCompleteShowResults';
 }
 
+class SearchShowProfile extends SearchState {
+  final User user;
+
+  const SearchShowProfile(this.user);
+
+  @override
+  List<Object> get props => [user];
+
+  @override
+  String toString() => 'SearchShowProfile';
+}
+
 class SearchError extends SearchState {
   const SearchError();
 

@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_result.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,12 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           }).toList(),
         ),
       ),
-      body: Text('results'),
+      body: ListView.builder(
+          itemCount: widget.results.length,
+          itemBuilder: (BuildContext context, int index) {
+            final user = widget.results[index];
+            return SearchResult(user: user);
+          }),
     );
   }
 }
