@@ -4,7 +4,6 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +40,7 @@ class ViewUserProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print(user.title);
     return Scaffold(
+      backgroundColor: Palette.containerColor,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(

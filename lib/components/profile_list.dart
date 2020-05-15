@@ -28,42 +28,60 @@ class ProfileList extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: SizeConfig.instance.blockSizeVertical),
-                child: ProfilePicture(
-                  photoUrl: user.photoUrl,
-                  shape: BoxShape.rectangle,
-                  editable: false,
-                  size: SizeConfig.instance.safeBlockHorizontal * 100,
-                ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.instance.safeBlockHorizontal * 6,
+            ),
+            child: Container(
+              height: SizeConfig.instance.safeBlockHorizontal * 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  ProfilePicture(
+                    photoUrl: user.photoUrl,
+                    shape: BoxShape.circle,
+                    editable: false,
+                    size: SizeConfig.instance.safeBlockHorizontal * 30,
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              SizeConfig.instance.safeBlockHorizontal * 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom:
+                                  SizeConfig.instance.safeBlockVertical * 0.5,
+                            ),
+                            child: Text(
+                              user.displayName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .apply(fontWeightDelta: 2),
+                            ),
+                          ),
+                          Text(
+                            user.title ?? '',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
           Padding(
             padding: padding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Visibility(
-                  visible: user.title?.isNotEmpty ?? false,
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.blockSizeVertical),
-                    child: Text(
-                      user.title ?? '',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: SizeConfig.instance.blockSizeHorizontal * 4,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
                 Visibility(
                     visible: user.interests?.isNotEmpty ?? false,
                     child: Align(
