@@ -28,7 +28,6 @@ class _PostScreenState extends State<PostScreen>
   final List<String> tabChoices = [
     'Home',
     'Groups',
-    'Notifications',
   ];
 
   @override
