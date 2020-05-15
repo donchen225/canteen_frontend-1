@@ -39,21 +39,19 @@ class ViewUserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(user.title);
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            if (onTapBack != null) {
-              onTapBack();
-            }
-          },
-        ),
-        backgroundColor: Palette.appBarBackgroundColor,
-      ),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             pinned: true,
+            leading: BackButton(
+              onPressed: () {
+                if (onTapBack != null) {
+                  onTapBack();
+                }
+              },
+            ),
             backgroundColor: Palette.appBarBackgroundColor,
           ),
           SliverPadding(

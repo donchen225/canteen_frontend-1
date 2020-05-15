@@ -3,7 +3,6 @@ import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';

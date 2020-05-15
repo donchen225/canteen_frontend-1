@@ -10,7 +10,6 @@ class ProfileList extends StatelessWidget {
   final User user;
   final double skillListHeight;
   final EdgeInsetsGeometry padding;
-  final bool showName;
   final Key key;
   final Function onTapTeachFunction;
   final Function onTapLearnFunction;
@@ -18,7 +17,6 @@ class ProfileList extends StatelessWidget {
   ProfileList(
     this.user, {
     @required this.skillListHeight,
-    this.showName = false,
     this.padding = const EdgeInsets.all(0),
     this.onTapTeachFunction,
     this.onTapLearnFunction,
@@ -30,19 +28,6 @@ class ProfileList extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Column(
         children: <Widget>[
-          Visibility(
-            visible: showName,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.instance.blockSizeVertical * 3,
-              ),
-              child: Center(
-                  child: Text(
-                user.displayName ?? '',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
-              )),
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
