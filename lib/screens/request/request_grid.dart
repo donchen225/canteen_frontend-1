@@ -18,21 +18,18 @@ class RequestGrid extends StatelessWidget {
       if (state is RequestListLoading || state is RequestListLoaded) {
         return Center(child: CupertinoActivityIndicator());
       } else if (state is DetailedRequestListLoaded) {
-        return Scaffold(
-          body: DetailedRequestGrid(
-            items: state.requestList,
-            onTap: (request) {
-              BlocProvider.of<RequestListBloc>(context)
-                  .add(InspectDetailedRequest(request));
-            },
-          ),
+        return DetailedRequestGrid(
+          items: state.requestList,
+          onTap: (request) {
+            BlocProvider.of<RequestListBloc>(context)
+                .add(InspectDetailedRequest(request));
+          },
         );
       } else if (state is IndividualDetailedRequestLoaded) {
         return Scaffold(
             body: Stack(
           children: <Widget>[
             Container(
-              color: Palette.backgroundColor,
               child: CustomScrollView(slivers: <Widget>[
                 SliverAppBar(
                   pinned: true,
