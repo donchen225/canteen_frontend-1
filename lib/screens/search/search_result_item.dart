@@ -15,13 +15,14 @@ class SearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameStyle = Theme.of(context).textTheme.subtitle1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
 
     return GestureDetector(
       onTap: () {
         BlocProvider.of<SearchBloc>(context).add(SearchInspectUser(user));
       },
       child: Container(
-        height: 100,
+        height: height,
         decoration: BoxDecoration(
             color: Palette.containerColor,
             border: Border(
@@ -37,30 +38,47 @@ class SearchResultItem extends StatelessWidget {
         padding: EdgeInsets.only(
           left: SizeConfig.instance.safeBlockHorizontal * 6,
           right: SizeConfig.instance.safeBlockHorizontal * 6,
-          top: height * 0.2,
-          bottom: height * 0.2,
+          top: height * 0.1,
+          bottom: height * 0.1,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ProfilePicture(
               photoUrl: user.photoUrl,
               editable: false,
               size: height * 0.6,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.safeBlockHorizontal * 3),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    user.displayName,
-                    style: nameStyle.apply(fontWeightDelta: 2),
-                  ),
-                  Text(
-                    user.title ?? '',
-                    style: nameStyle.apply(fontWeightDelta: 2),
-                  )
-                ],
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      user.displayName,
+                      style: nameStyle.apply(fontWeightDelta: 2),
+                    ),
+                    Visibility(
+                      visible: user.title?.isNotEmpty ?? false,
+                      child: Text(
+                        user.title ?? '',
+                        style: nameStyle.apply(color: Colors.grey[500]),
+                        maxLines: 1,
+                      ),
+                    ),
+                    Visibility(
+                      visible: user.about?.isNotEmpty ?? false,
+                      child: Text(
+                        user.about ?? '',
+                        style: bodyTextStyle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

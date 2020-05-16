@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_result_item.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -125,7 +126,10 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           itemCount: widget.results.length,
           itemBuilder: (BuildContext context, int index) {
             final user = widget.results[index];
-            return SearchResultItem(user: user);
+            return SearchResultItem(
+              user: user,
+              height: SizeConfig.instance.safeBlockVertical * 14,
+            );
           }),
     );
   }
