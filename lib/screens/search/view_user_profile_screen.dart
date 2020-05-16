@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/components/confirmation_dialog.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
-import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -25,6 +24,7 @@ class ViewUserProfileScreen extends StatefulWidget {
 
 class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     with SingleTickerProviderStateMixin {
+  final int horizontalPaddingBlocks = 6;
   TabController _tabController;
 
   final List<String> tabs = [
@@ -88,8 +88,10 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(
-                      left: SizeConfig.instance.safeBlockHorizontal * 6,
-                      right: SizeConfig.instance.safeBlockHorizontal * 6,
+                      left: SizeConfig.instance.safeBlockHorizontal *
+                          horizontalPaddingBlocks,
+                      right: SizeConfig.instance.safeBlockHorizontal *
+                          horizontalPaddingBlocks,
                     ),
                     child: Column(
                       children: <Widget>[
@@ -114,7 +116,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                   padding: EdgeInsets.symmetric(
                                       horizontal: SizeConfig
                                               .instance.safeBlockHorizontal *
-                                          6),
+                                          horizontalPaddingBlocks),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -210,24 +212,22 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
                             context),
                       ),
-                      SliverPadding(
-                        padding: const EdgeInsets.all(8.0),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              final skill = widget.user.teachSkill[index];
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            final skill = widget.user.teachSkill[index];
 
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 0),
-                                child: SkillItem(
-                                  skill: skill,
-                                  onTap: () =>
-                                      _onTapSkillFunction(context, skill),
-                                ),
-                              );
-                            },
-                            childCount: widget.user.teachSkill.length,
-                          ),
+                            return SkillItem(
+                              verticalPadding:
+                                  SizeConfig.instance.safeBlockVertical * 2,
+                              horizontalPadding:
+                                  SizeConfig.instance.safeBlockHorizontal *
+                                      horizontalPaddingBlocks,
+                              skill: skill,
+                              onTap: () => _onTapSkillFunction(context, skill),
+                            );
+                          },
+                          childCount: widget.user.teachSkill.length,
                         ),
                       ),
                     ],
