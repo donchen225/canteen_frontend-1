@@ -32,7 +32,14 @@ class _PostScreenState extends State<PostScreen>
 
   @override
   void initState() {
+    super.initState();
     _tabController = TabController(vsync: this, length: tabChoices.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override

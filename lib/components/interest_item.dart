@@ -21,7 +21,7 @@ class InterestItem extends StatelessWidget {
         bottom: SizeConfig.instance.blockSizeVertical,
       ),
       decoration: BoxDecoration(
-        color: Palette.orangeColor,
+        color: Colors.blue[50],
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -30,7 +30,7 @@ class InterestItem extends StatelessWidget {
           Text(
             '#' + text,
             style: TextStyle(
-              color: Colors.white,
+              color: Palette.textClickableColor,
             ),
           ),
           Visibility(
@@ -41,7 +41,7 @@ class InterestItem extends StatelessWidget {
               ),
               child: Icon(
                 Icons.cancel,
-                color: Colors.white,
+                color: Palette.textClickableColor,
               ),
             ),
           )

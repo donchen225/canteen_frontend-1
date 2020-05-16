@@ -16,7 +16,6 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MatchDetailScreen extends StatefulWidget {
   final DetailedMatch match;
@@ -59,6 +58,12 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);
     _matchDetailNavigationBloc =
         BlocProvider.of<MatchDetailNavigationBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
