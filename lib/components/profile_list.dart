@@ -6,10 +6,10 @@ import 'package:canteen_frontend/screens/profile/skill_list.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
-class ProfileList extends StatelessWidget {
+class ProfileList extends StatefulWidget {
   final User user;
   final double skillListHeight;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry horizontalPadding;
   final Key key;
   final Function onTapTeachFunction;
   final Function onTapLearnFunction;
@@ -17,11 +17,44 @@ class ProfileList extends StatelessWidget {
   ProfileList(
     this.user, {
     @required this.skillListHeight,
-    this.padding = const EdgeInsets.all(0),
+    this.horizontalPadding = const EdgeInsets.all(0),
     this.onTapTeachFunction,
     this.onTapLearnFunction,
     this.key,
   }) : super(key: key);
+
+  @override
+  _ProfileListState createState() => _ProfileListState();
+}
+
+class _ProfileListState extends State<ProfileList>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  final List<Text> tabChoices = [
+    Text('OFFERINGS',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        )),
+    Text('DETAILS',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        )),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: tabChoices.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +62,14 @@ class ProfileList extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.instance.safeBlockHorizontal * 6,
-              right: SizeConfig.instance.safeBlockHorizontal * 6,
-              bottom: SizeConfig.instance.safeBlockVertical * 2,
-            ),
+            padding: widget.horizontalPadding,
             child: Container(
               height: SizeConfig.instance.safeBlockHorizontal * 30,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   ProfilePicture(
-                    photoUrl: user.photoUrl,
+                    photoUrl: widget.user.photoUrl,
                     shape: BoxShape.circle,
                     editable: false,
                     size: SizeConfig.instance.safeBlockHorizontal * 30,
@@ -60,7 +89,7 @@ class ProfileList extends StatelessWidget {
                                   SizeConfig.instance.safeBlockVertical * 0.5,
                             ),
                             child: Text(
-                              user.displayName,
+                              widget.user.displayName,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -68,7 +97,7 @@ class ProfileList extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            user.title ?? '',
+                            widget.user.title ?? '',
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ],
@@ -79,44 +108,66 @@ class ProfileList extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: padding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Visibility(
-                    visible: user.interests?.isNotEmpty ?? false,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Wrap(
-                          children: user.interests
-                                  ?.map((x) => Padding(
-                                        padding: EdgeInsets.only(
-                                            right: SizeConfig.instance
-                                                    .blockSizeHorizontal *
-                                                3),
-                                        child: InterestItem(text: x),
-                                      ))
-                                  ?.toList() ??
-                              []),
-                    )),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.safeBlockVertical,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Visibility(
+                  visible: widget.user.interests?.isNotEmpty ?? false,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Wrap(
+                        children: widget.user.interests
+                                ?.map((x) => Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.instance
+                                                  .blockSizeHorizontal *
+                                              3),
+                                      child: InterestItem(text: x),
+                                    ))
+                                ?.toList() ??
+                            []),
+                  )),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.safeBlockVertical,
+                ),
+                child: Text(widget.user.about ?? ''),
+              ),
+              Container(
+                height: SizeConfig.instance.safeBlockVertical * 6,
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      width: 0.5,
+                      color: Colors.grey[400],
+                    ),
+                    bottom: BorderSide(
+                      width: 0.5,
+                      color: Colors.grey[400],
+                    ),
                   ),
-                  child: Text(user.about ?? ''),
                 ),
-                Visibility(
-                  visible: user.teachSkill.length != 0,
-                  child: ProfileSectionTitle("My offerings"),
+                child: TabBar(
+                  controller: _tabController,
+                  tabs: tabChoices.map((text) => Tab(child: text)).toList(),
                 ),
-                SkillList(
-                  user.teachSkill,
-                  onTapExtraButton: onTapTeachFunction,
-                  height: skillListHeight,
+              ),
+              Container(
+                width: SizeConfig.instance.safeBlockHorizontal,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    SkillList(
+                      widget.user.teachSkill,
+                      onTapExtraButton: widget.onTapTeachFunction,
+                      height: widget.skillListHeight,
+                    ),
+                    Container(),
+                    Container(),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
