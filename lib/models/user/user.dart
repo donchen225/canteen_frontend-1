@@ -95,7 +95,10 @@ class User {
       photoUrl: snapshot.data['photo_url'],
       title: snapshot.data['title'],
       about: snapshot.data['about'],
-      interests: snapshot.data['interests'],
+      interests: snapshot.data['interests']
+              ?.map<String>((x) => x.toString())
+              ?.toList() ??
+          [],
       learnSkill: snapshot.data['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
               SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))

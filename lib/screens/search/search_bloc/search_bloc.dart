@@ -50,9 +50,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         query: event.query.toLowerCase(),
         displayQuery: event.query,
       );
-      final exists = _searchHistory
+      _searchHistory
           .remove(query); // Remove without checking so only one traversal
-      print(exists);
       _searchHistory.add(query);
 
       final snapshot = await AlgoliaSearch.query(event.query);
