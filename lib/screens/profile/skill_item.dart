@@ -72,7 +72,7 @@ class SkillItem extends StatelessWidget {
                             color: Palette.buttonDarkTextColor,
                           ),
                     ),
-                    onPressed: () => onTap(skill),
+                    onPressed: () => onTap(),
                   ),
                 ],
               ),
