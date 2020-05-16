@@ -149,6 +149,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                           ),
                         ),
                         Container(
+                          alignment: Alignment.centerLeft,
                           padding: EdgeInsets.symmetric(
                             vertical: SizeConfig.instance.safeBlockVertical,
                           ),
