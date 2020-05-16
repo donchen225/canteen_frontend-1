@@ -303,6 +303,8 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
                     display_name: user.display_name,
                     photo_url: user.photo_url,
                     about: user.about,
+                    title: user.title,
+                    interests: user.interests,
                     teach_skill: Object.values(user.teach_skill),
                     learn_skill: Object.values(user.learn_skill),
                 };
@@ -393,6 +395,8 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 display_name: docAfterChange.display_name,
                 photo_url: docAfterChange.photo_url,
                 about: docAfterChange.about,
+                title: docAfterChange.title,
+                interests: Objects.value(docAfterChange.interests),
                 teach_skill: teachSkillAfter,
                 learn_skill: learnSkillAfter,
             };
