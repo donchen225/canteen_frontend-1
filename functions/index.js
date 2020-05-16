@@ -226,16 +226,35 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
             display_name: document.display_name,
             photo_url: document.photo_url,
             about: document.about,
-            teach_skill: Object.values(document.teach_skill),
-            learn_skill: Object.values(document.learn_skill),
         };
+
+        if (document.teach_skill) {
+            record.teach_skill = Object.values(document.teach_skill);
+        }
+
+        if (document.learn_skill) {
+            record.learn_skill = Object.values(document.learn_skill);
+        }
+
+        if (document.title) {
+            record.title = document.title;
+        }
+
+        if (document.interests) {
+            record.interests = document.interests;
+        }
 
         algoliaRecords.push(record);
     });
 
     // After all records are created, we save them to 
-    collectionIndex.saveObjects(algoliaRecords, (_error, content) => {
+    return collectionIndex.saveObjects(algoliaRecords).then(() => {
         res.status(200).send("COLLECTION was indexed to Algolia successfully.");
+        return;
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+        return;
     });
 
 })
@@ -248,6 +267,10 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
             'learn_skill.name',
             'teach_skill.description',
             'learn_skill.description',
+            'title',
+            'about',
+            'interests',
+            'name',
         ],
         attributesForFaceting: [
             'filterOnly(user_id)',
