@@ -270,7 +270,7 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
             'title',
             'about',
             'interests',
-            'name',
+            'display_name',
         ],
         attributesForFaceting: [
             'filterOnly(user_id)',
