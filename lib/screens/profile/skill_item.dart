@@ -25,11 +25,12 @@ class SkillItem extends StatelessWidget {
         right: horizontalPadding,
       ),
       decoration: BoxDecoration(
+          color: Palette.containerColor,
           border: Border(
               bottom: BorderSide(
-        width: 0.5,
-        color: Colors.grey[400],
-      ))),
+            width: 0.5,
+            color: Colors.grey[400],
+          ))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -42,12 +43,15 @@ class SkillItem extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: SizeConfig.instance.blockSizeVertical,
-              bottom: SizeConfig.instance.blockSizeVertical * 2,
+          Visibility(
+            visible: skill.description?.isNotEmpty ?? false,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.instance.blockSizeVertical,
+                bottom: SizeConfig.instance.blockSizeVertical * 2,
+              ),
+              child: Text(skill.description),
             ),
-            child: Text(skill.description),
           ),
           Visibility(
             visible: onTap != null,

@@ -68,7 +68,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Palette.containerColor,
+      backgroundColor: Palette.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 0,
@@ -84,95 +84,100 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverToBoxAdapter(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.instance.safeBlockHorizontal *
-                          horizontalPaddingBlocks,
-                      right: SizeConfig.instance.safeBlockHorizontal *
-                          horizontalPaddingBlocks,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: SizeConfig.instance.safeBlockHorizontal * 30,
-                          padding: EdgeInsets.only(
-                            bottom: SizeConfig.instance.safeBlockVertical,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              ProfilePicture(
-                                photoUrl: widget.user.photoUrl,
-                                shape: BoxShape.circle,
-                                editable: false,
-                                size: SizeConfig.instance.safeBlockHorizontal *
-                                    30,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig
-                                              .instance.safeBlockHorizontal *
-                                          horizontalPaddingBlocks),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          bottom: SizeConfig
-                                                  .instance.safeBlockVertical *
-                                              0.5,
+              child: Container(
+                color: Palette.containerColor,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks,
+                        right: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height:
+                                SizeConfig.instance.safeBlockHorizontal * 30,
+                            padding: EdgeInsets.only(
+                              bottom: SizeConfig.instance.safeBlockVertical,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                ProfilePicture(
+                                  photoUrl: widget.user.photoUrl,
+                                  shape: BoxShape.circle,
+                                  editable: false,
+                                  size:
+                                      SizeConfig.instance.safeBlockHorizontal *
+                                          30,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig
+                                                .instance.safeBlockHorizontal *
+                                            horizontalPaddingBlocks),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: SizeConfig.instance
+                                                    .safeBlockVertical *
+                                                0.5,
+                                          ),
+                                          child: Text(
+                                            widget.user.displayName,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .apply(fontWeightDelta: 2),
+                                          ),
                                         ),
-                                        child: Text(
-                                          widget.user.displayName,
+                                        Text(
+                                          widget.user.title ?? '',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6
-                                              .apply(fontWeightDelta: 2),
+                                              .bodyText1,
                                         ),
-                                      ),
-                                      Text(
-                                        widget.user.title ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.instance.safeBlockVertical,
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.instance.safeBlockVertical,
+                            ),
+                            child: Text(widget.user.about ?? ''),
                           ),
-                          child: Text(widget.user.about ?? ''),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Wrap(
-                              children: widget.user.interests
-                                      ?.map((x) => Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig.instance
-                                                        .blockSizeHorizontal *
-                                                    3),
-                                            child: InterestItem(text: x),
-                                          ))
-                                      ?.toList() ??
-                                  []),
-                        ),
-                      ],
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Wrap(
+                                children: widget.user.interests
+                                        ?.map((x) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: SizeConfig.instance
+                                                          .blockSizeHorizontal *
+                                                      3),
+                                              child: InterestItem(text: x),
+                                            ))
+                                        ?.toList() ??
+                                    []),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SliverOverlapAbsorber(
