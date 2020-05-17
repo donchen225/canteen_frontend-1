@@ -34,4 +34,7 @@ class Palette {
   // Text colors
   static Color textClickableColor = const Color(0xFF2196F3);
   static Color textSecondaryBaseColor = const Color(0xFF9E9E9E);
+
+  // Border colors
+  static Color borderSeparatorColor = const Color(0xFFE0E0E0);
 }

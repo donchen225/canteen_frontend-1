@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,11 +12,13 @@ class CalendarDateTimeSelector extends StatefulWidget {
   final User user;
   final Skill skill;
   final double height;
+  final Function onDaySelected;
 
   CalendarDateTimeSelector({
     @required this.user,
     @required this.skill,
     this.height = 400,
+    this.onDaySelected,
   });
 
   @override
@@ -27,7 +30,6 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
   final f = DateFormat('yMMMMd');
   Map<DateTime, List> _events;
   CalendarController _calendarController;
-  List<DateTime> _availableTimes;
   final DateTime now = DateTime.now();
   DateTime startDate;
   DateTime endDate;
@@ -42,15 +44,14 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
   void initState() {
     super.initState();
 
+    print('INIT CALENDAR STATE');
+
     startDate = DateTime(now.year, now.month, now.day);
     endDate = startDate.add(Duration(days: availableDateRange));
 
     localTimeRanges = widget.user.availability?.timeRangesLocal ?? {};
     eventDuration = widget.skill.duration;
     initializeEvents();
-
-    _availableTimes =
-        _events[startDate]?.map<DateTime>((x) => x)?.toList() ?? [];
 
     _calendarController = CalendarController();
   }
@@ -188,7 +189,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.monday,
       startDay: now,
-      initialSelectedDay: now,
+      initialSelectedDay: null,
       endDay: endDate,
       rowHeight: widget.height * 0.12,
       calendarStyle: CalendarStyle(
@@ -232,63 +233,20 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
           return children;
         },
       ),
-
       onDaySelected: _onDaySelected,
-      // onVisibleDaysChanged: _onVisibleDaysChanged,
-      // onCalendarCreated: _onCalendarCreated,
-    );
-  }
-
-  Widget _buildEventList() {
-    return ListView(
-      children: _availableTimes
-          .map((event) => Container(
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(width: 0.8, color: mainColor.withOpacity(0.7)),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: ListTile(
-                  title: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        DateFormat.jm().format(event),
-                        style: TextStyle(
-                            color: mainColor, fontWeight: FontWeight.bold),
-                      )),
-                  // Go to payment page
-                  onTap: () {
-                    // BlocProvider.of<MatchDetailBloc>(context).add(
-                    //   SelectVideoChatDate(
-                    //     matchId: widget.match.id,
-                    //     videoChatId: widget.match.activeVideoChat,
-                    //     skill: widget.skill,
-                    //     date: VideoChatDate(
-                    //         userId: widget.user.id,
-                    //         startTime: event,
-                    //         duration: eventDuration,
-                    //         timeZone: event.timeZoneName),
-                    //   ),
-                    // );
-                  },
-                ),
-              ))
-          .toList(),
     );
   }
 
   void _onDaySelected(DateTime day, List events) {
-    setState(() {
-      _availableTimes = events.map<DateTime>((x) => x).toList();
-    });
+    if (widget.onDaySelected != null) {
+      widget.onDaySelected(events.map<DateTime>((x) => x).toList(), day);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Palette.containerColor,
       height: widget.height,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -320,17 +278,9 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
                     ],
                   ),
                 ),
-                // Text(
-                //   f.format(_calendarController.selectedDay ?? now),
-                //   style: TextStyle(fontWeight: FontWeight.bold),
-                // ),
               ],
-            ), // TODO: remove now
+            ),
           ),
-          // Expanded(
-          //   flex: 1,
-          //   child: _buildEventList(),
-          // ),
         ],
       ),
     );

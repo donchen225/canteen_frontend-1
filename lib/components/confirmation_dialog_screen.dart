@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/time_list_selector.dart';
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -5,6 +6,7 @@ import 'package:canteen_frontend/screens/match/match_details_selection/calendar_
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +28,8 @@ class ConfirmationDialogScreen extends StatefulWidget {
 }
 
 class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
+  List<DateTime> _timeList;
+  DateTime _selectedDay;
   TextEditingController _messageController;
 
   _ConfirmationDialogScreenState();
@@ -34,6 +38,35 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
   void initState() {
     super.initState();
     _messageController = TextEditingController();
+  }
+
+  Widget _buildTimeSelectorWidget() {
+    if (_timeList == null || _timeList.length == 0) {
+      return CalendarDateTimeSelector(
+        user: widget.user,
+        skill: widget.skill,
+        onDaySelected: (List<DateTime> times, DateTime selectedDay) {
+          setState(() {
+            if (times.length > 0) {
+              _timeList = times;
+              _selectedDay = selectedDay;
+            }
+          });
+        },
+      );
+    } else {
+      return TimeListSelector(
+        day: _selectedDay,
+        times: _timeList,
+        duration: widget.skill.duration,
+        onTapBack: () {
+          setState(() {
+            _timeList = null;
+            _selectedDay = null;
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -86,85 +119,95 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
               Scaffold.of(context).showSnackBar(snackBar);
             }
           }),
-      child: Container(
-        color: Colors.blue,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              height: widget.height * 0.1,
-              color: Colors.red,
-              child: Row(
-                children: <Widget>[
-                  ProfilePicture(
-                    photoUrl: widget.user.photoUrl,
-                    editable: false,
-                    size: widget.height * 0.1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: widget.height * 0.1,
+            child: Row(
+              children: <Widget>[
+                ProfilePicture(
+                  photoUrl: widget.user.photoUrl,
+                  editable: false,
+                  size: widget.height * 0.1,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('${widget.user.displayName ?? ''}',
-                            style: Theme.of(context).textTheme.headline6),
-                        Text(
-                          '${widget.user.title ?? ''}',
-                          style: subTitleStyle,
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('${widget.user.displayName ?? ''}',
+                          style: Theme.of(context).textTheme.headline6),
+                      Text(
+                        '${widget.user.title ?? ''}',
+                        style: subTitleStyle,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.instance.safeBlockVertical,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: SizeConfig.instance.safeBlockVertical),
-                    child: Text(
-                      '${widget.skill.name ?? ''}',
-                      style: subTitleStyle,
-                    ),
-                  ),
-                  Text(
-                    '\$${(widget.skill.price).toString()}' +
-                        (widget.skill.duration != null
-                            ? ' / ${widget.skill.duration} minutes'
-                            : ''),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.instance.safeBlockVertical,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.instance.safeBlockVertical),
+                  child: Text(
+                    '${widget.skill.name ?? ''}',
                     style: subTitleStyle,
                   ),
-                ],
+                ),
+                Text(
+                  '\$${(widget.skill.price).toString()}' +
+                      (widget.skill.duration != null
+                          ? ' / ${widget.skill.duration} minutes'
+                          : ''),
+                  style: subTitleStyle,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: widget.height * 0.01),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    width: 0.5,
+                    color: Palette.borderSeparatorColor,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.instance.safeBlockVertical * 2),
+                child: _buildTimeSelectorWidget(),
               ),
             ),
-            Expanded(
-              child: CalendarDateTimeSelector(
-                  user: widget.user, skill: widget.skill),
-            ),
-            // TextField(
-            //   controller: _messageController,
-            //   textCapitalization: TextCapitalization.sentences,
-            //   autofocus: false,
-            //   maxLines: null,
-            //   decoration: InputDecoration(
-            //     border: InputBorder.none,
-            //     focusedBorder: InputBorder.none,
-            //     enabledBorder: InputBorder.none,
-            //     errorBorder: InputBorder.none,
-            //     disabledBorder: InputBorder.none,
-            //     hintText: 'Your comment',
-            //   ),
-            // ),
-          ],
-        ),
+          ),
+          // TextField(
+          //   controller: _messageController,
+          //   textCapitalization: TextCapitalization.sentences,
+          //   autofocus: false,
+          //   maxLines: null,
+          //   decoration: InputDecoration(
+          //     border: InputBorder.none,
+          //     focusedBorder: InputBorder.none,
+          //     enabledBorder: InputBorder.none,
+          //     errorBorder: InputBorder.none,
+          //     disabledBorder: InputBorder.none,
+          //     hintText: 'Your comment',
+          //   ),
+          // ),
+        ],
       ),
     );
   }
