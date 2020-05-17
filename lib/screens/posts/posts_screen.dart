@@ -31,7 +31,10 @@ class _PostScreenState extends State<PostScreen> {
             BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
       );
     } else if (state is PostScreenDiscoverGroup) {
-      return DiscoverGroupScreen();
+      return DiscoverGroupScreen(
+        onTapBack: () =>
+            BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
+      );
     }
   }
 

@@ -193,7 +193,6 @@ class PostRepository {
   }
 
   Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts() {
-    print('GET POSTS');
     return postCollection
         .orderBy("last_updated", descending: true)
         .snapshots()
