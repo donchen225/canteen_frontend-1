@@ -24,7 +24,6 @@ class ViewUserProfileScreen extends StatefulWidget {
 
 class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     with SingleTickerProviderStateMixin {
-  final int horizontalPaddingBlocks = 6;
   TabController _tabController;
 
   final List<String> tabs = [
@@ -91,9 +90,9 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                     Padding(
                       padding: EdgeInsets.only(
                         left: SizeConfig.instance.safeBlockHorizontal *
-                            horizontalPaddingBlocks,
+                            kHorizontalPaddingBlocks,
                         right: SizeConfig.instance.safeBlockHorizontal *
-                            horizontalPaddingBlocks,
+                            kHorizontalPaddingBlocks,
                       ),
                       child: Column(
                         children: <Widget>[
@@ -120,7 +119,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                     padding: EdgeInsets.symmetric(
                                         horizontal: SizeConfig
                                                 .instance.safeBlockHorizontal *
-                                            horizontalPaddingBlocks),
+                                            kHorizontalPaddingBlocks),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -228,7 +227,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                   SizeConfig.instance.safeBlockVertical * 2,
                               horizontalPadding:
                                   SizeConfig.instance.safeBlockHorizontal *
-                                      horizontalPaddingBlocks,
+                                      kHorizontalPaddingBlocks,
                               skill: skill,
                               onTap: () => _onTapSkillFunction(context, skill),
                             );

@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/notifications/notification_screen.dart'
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/posts_screen.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
@@ -82,6 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is HomeInitializing) {
               print(
                   'IN HOME INITIALIZING - LOADING MATCHES/REQUESTS/RECOMMENDATIONS');
+              BlocProvider.of<SearchBloc>(context).add(SearchHome());
+
+              BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
@@ -90,6 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
 
               BlocProvider.of<PostBloc>(context).add(LoadPosts());
+            }
+
+            if (state is PostScreenLoaded) {
+              if (state.reset) {
+                BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
+              }
             }
 
             if (state is SearchScreenLoaded) {

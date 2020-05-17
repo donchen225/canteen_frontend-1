@@ -20,7 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
   }
 
-  Widget _loadSearchWidget(BuildContext context, SearchState state) {
+  Widget _loadSearchScreen(BuildContext context, SearchState state) {
     if (state is SearchUninitialized) {
       return DiscoverScreen(state.allUsers);
     } else if (state is SearchTyping) {
@@ -48,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
           return AnimatedSwitcher(
             duration: Duration(milliseconds: animationDuration),
             switchOutCurve: Threshold(0),
-            child: _loadSearchWidget(context, state),
+            child: _loadSearchScreen(context, state),
             transitionBuilder: (Widget child, Animation<double> animation) {
               print('STATE: $state');
               if (state is SearchShowProfile) {

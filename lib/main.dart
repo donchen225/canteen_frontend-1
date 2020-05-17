@@ -11,6 +11,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_screen_bloc/post_screen_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
@@ -138,7 +139,7 @@ void main() async {
         BlocProvider<SearchBloc>(
           create: (context) => SearchBloc(
             userRepository: userRepository,
-          )..add(SearchHome()),
+          ),
         ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
@@ -215,6 +216,12 @@ class App extends StatelessWidget {
                 if (state is Authenticated) {
                   return MultiBlocProvider(
                     providers: [
+                      BlocProvider<PostScreenBloc>(
+                        create: (context) => PostScreenBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          userRepository: _userRepository,
+                        ),
+                      ),
                       BlocProvider<MatchListBloc>(
                         create: (context) => MatchListBloc(
                           matchBloc: BlocProvider.of<MatchBloc>(context),

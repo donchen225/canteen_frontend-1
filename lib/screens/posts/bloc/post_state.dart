@@ -13,16 +13,14 @@ class PostsLoading extends PostState {}
 
 class PostsLoaded extends PostState {
   final List<DetailedPost> posts;
-  final User user;
 
-  const PostsLoaded({this.posts = const [], this.user});
-
-  @override
-  List<Object> get props => [posts, user];
+  const PostsLoaded({this.posts = const []});
 
   @override
-  String toString() =>
-      'PostsLoaded { posts: $posts user: ${user.displayName} }';
+  List<Object> get props => [posts];
+
+  @override
+  String toString() => 'PostsLoaded { posts: $posts }';
 }
 
 class PostsEmpty extends PostState {}

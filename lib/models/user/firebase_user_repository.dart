@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -177,9 +175,11 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   // Gets the User from the "user" Firestore collection using id
-  Future<User> getUser(String id) async {
-    if (userMap.containsKey(id)) {
-      return Future.value(userMap[id]);
+  Future<User> getUser(String id, {bool cache = true}) async {
+    if (cache) {
+      if (userMap.containsKey(id)) {
+        return Future.value(userMap[id]);
+      }
     }
 
     return userCollection.document(id).get().then((snapshot) {
@@ -196,9 +196,8 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(user);
     }
     try {
-      return getUser((await getFirebaseUser()).uid);
+      return getUser((await getFirebaseUser()).uid, cache: false);
     } catch (e) {
-      print('GET USER FAILED');
       print(e);
     }
   }

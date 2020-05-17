@@ -154,8 +154,6 @@ class PostRepository {
   }
 
   Future<bool> checkLike(String postId) async {
-    print('CHECK LIKE');
-    print('POST ID: $postId');
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 

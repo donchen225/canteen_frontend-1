@@ -118,8 +118,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     }
 
-    yield PostsLoaded(
-        posts: _postRepository.currentDetailedPosts(), user: _self);
+    yield PostsLoaded(posts: _postRepository.currentDetailedPosts());
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {

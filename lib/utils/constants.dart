@@ -3,6 +3,7 @@ const double kMatchItemAspectRatio = 3.75 / 1;
 const double kTabBarTextPadding = 10;
 const double kTabBarTextScaleFactor = 0.75;
 const double kCardCircularRadius = 8.0;
+const double kHorizontalPaddingBlocks = 5;
 
 // Button constants
 const double kButtonBorderRadius = 30.0;

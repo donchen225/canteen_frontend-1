@@ -8,7 +8,10 @@ import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
+import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +20,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SinglePostScreen extends StatelessWidget {
   final User user;
   final DetailedPost post;
+  final Function onTapBack;
   final Color _sideTextColor = Colors.grey[500];
 
-  SinglePostScreen({@required this.post, @required this.user});
+  SinglePostScreen(
+      {@required this.post, @required this.user, @required this.onTapBack});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +32,16 @@ class SinglePostScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Palette.containerColor,
         elevation: 1,
+        leading: BackButton(
+          onPressed: () {
+            if (onTapBack != null) {
+              onTapBack();
+            }
+          },
+        ),
+        title: Text('Posts'),
       ),
       body: Column(
         children: <Widget>[
@@ -36,130 +49,136 @@ class SinglePostScreen extends StatelessWidget {
             child: CustomScrollView(
               slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical * 2,
-                      left: SizeConfig.instance.blockSizeHorizontal * 4,
-                      right: SizeConfig.instance.blockSizeHorizontal * 4,
-                    ),
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) {
-                            return ViewUserProfileScreen(user: post.user);
-                          },
-                        ),
-                      ),
-                      child: PostNameTemplate(
-                        name: post.user.displayName,
-                        photoUrl: post.user.photoUrl,
-                        time: post.createdOn,
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical * 2,
-                      bottom: SizeConfig.instance.blockSizeVertical * 2,
-                      left: SizeConfig.instance.blockSizeHorizontal * 4,
-                      right: SizeConfig.instance.blockSizeHorizontal * 4,
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        post.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .apply(fontWeightDelta: 2),
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: SizeConfig.instance.blockSizeVertical,
-                          left: SizeConfig.instance.blockSizeHorizontal * 4,
-                          right: SizeConfig.instance.blockSizeHorizontal * 4,
-                        ),
-                        child: Text(post.message,
-                            style: Theme.of(context).textTheme.bodyText1),
-                      )),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical,
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 1.5,
-                        bottom: SizeConfig.instance.blockSizeVertical * 1.5,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            width: 1,
-                            color: Colors.grey[200],
+                  child: Container(
+                    color: Palette.containerColor,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.instance.safeBlockVertical * 2,
+                            left: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
+                            right: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
                           ),
-                          bottom: BorderSide(
-                            width: 1,
-                            color: Colors.grey[200],
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              if (!(post.liked)) {
-                                final like = Like(
-                                    from: user.id, createdOn: DateTime.now());
-                                BlocProvider.of<PostBloc>(context)
-                                    .add(AddLike(post.id, like));
-                              } else {
-                                BlocProvider.of<PostBloc>(context)
-                                    .add(DeleteLike(post.id));
-                              }
-                            },
-                            child: LikeButton(
-                              post: post,
-                              style: bodyTextTheme,
-                              sideTextColor: _sideTextColor,
+                          child: GestureDetector(
+                            onTap: () =>
+                                BlocProvider.of<PostScreenBloc>(context)
+                                    .add(PostsInspectUser(post.user)),
+                            child: PostNameTemplate(
+                              name: post.user.displayName,
+                              photoUrl: post.user.photoUrl,
+                              time: post.createdOn,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) => CommentDialogScreen(
-                                  user: user,
-                                  post: post,
-                                ),
-                              );
-                            },
-                            child: CommentButton(
-                                style: bodyTextTheme,
-                                sideTextColor: _sideTextColor),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.instance.safeBlockVertical,
+                            bottom: SizeConfig.instance.safeBlockVertical,
+                            left: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
+                            right: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
                           ),
-                          Container(),
-                        ],
-                      ),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            post.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .apply(fontWeightDelta: 2),
+                          ),
+                        ),
+                        Visibility(
+                          visible: post.message?.isNotEmpty ?? false,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: SizeConfig.instance.safeBlockVertical,
+                                left: SizeConfig.instance.safeBlockHorizontal *
+                                    kHorizontalPaddingBlocks,
+                                right: SizeConfig.instance.safeBlockHorizontal *
+                                    kHorizontalPaddingBlocks,
+                              ),
+                              child: Text(post.message,
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.instance.safeBlockVertical,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.instance.safeBlockVertical * 1.5,
+                              bottom:
+                                  SizeConfig.instance.safeBlockVertical * 1.5,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey[200],
+                                ),
+                                bottom: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    if (!(post.liked)) {
+                                      final like = Like(
+                                          from: user.id,
+                                          createdOn: DateTime.now());
+                                      BlocProvider.of<PostBloc>(context)
+                                          .add(AddLike(post.id, like));
+                                    } else {
+                                      BlocProvider.of<PostBloc>(context)
+                                          .add(DeleteLike(post.id));
+                                    }
+                                  },
+                                  child: LikeButton(
+                                    post: post,
+                                    style: bodyTextTheme,
+                                    sideTextColor: _sideTextColor,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) => CommentDialogScreen(
+                                        user: user,
+                                        post: post,
+                                      ),
+                                    );
+                                  },
+                                  child: CommentButton(
+                                      style: bodyTextTheme,
+                                      sideTextColor: _sideTextColor),
+                                ),
+                                Container(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 SliverPadding(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.blockSizeVertical * 2,
+                    vertical: SizeConfig.instance.safeBlockVertical * 2,
                   ),
                   sliver: SliverToBoxAdapter(
                     child: BlocBuilder<CommentBloc, CommentState>(
@@ -180,7 +199,7 @@ class SinglePostScreen extends StatelessWidget {
 
                               return Padding(
                                 padding: EdgeInsets.only(
-                                  bottom: SizeConfig.instance.blockSizeVertical,
+                                  bottom: SizeConfig.instance.safeBlockVertical,
                                 ),
                                 child: CommentContainer(
                                   comment: comment,
@@ -209,10 +228,10 @@ class SinglePostScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
-                    left: SizeConfig.instance.blockSizeHorizontal * 3,
-                    right: SizeConfig.instance.blockSizeHorizontal * 3,
+                    left: SizeConfig.instance.safeBlockHorizontal * 3,
+                    right: SizeConfig.instance.safeBlockHorizontal * 3,
                     bottom: SizeConfig.instance.safeBlockVertical * 3,
-                    top: SizeConfig.instance.blockSizeVertical * 2,
+                    top: SizeConfig.instance.safeBlockVertical * 2,
                   ),
                   child: GestureDetector(
                     onTap: () {
@@ -228,7 +247,7 @@ class SinglePostScreen extends StatelessWidget {
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                        horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                       ),
                       height: SizeConfig.instance.safeBlockVertical * 6,
                       decoration: BoxDecoration(

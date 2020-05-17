@@ -12,7 +12,7 @@ abstract class UserRepository {
   Future<void> signOut() async {}
 
   // Gets the User from the "user" Firestore collection using id
-  Future<User> getUser(String id) async {}
+  Future<User> getUser(String id, {bool cache}) async {}
 
   Future<User> currentUser() async {}
 
