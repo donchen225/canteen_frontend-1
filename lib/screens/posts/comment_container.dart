@@ -1,12 +1,12 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CommentContainer extends StatelessWidget {
   final DetailedComment comment;
-  final Color _sideTextColor = Colors.grey[500];
 
   CommentContainer({@required this.comment});
 
@@ -22,7 +22,7 @@ class CommentContainer extends StatelessWidget {
               name: comment.user.displayName,
               photoUrl: comment.user.photoUrl,
               time: comment.createdOn,
-              color: _sideTextColor,
+              color: Palette.textSecondaryBaseColor,
             ),
           ),
           Align(
