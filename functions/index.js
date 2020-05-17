@@ -244,6 +244,10 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
             record.interests = document.interests;
         }
 
+        if (document.availability) {
+            record.availability = Object.values(document.availability);
+        }
+
         algoliaRecords.push(record);
     });
 
@@ -326,11 +330,28 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
                     display_name: user.display_name,
                     photo_url: user.photo_url,
                     about: user.about,
-                    title: user.title,
-                    interests: user.interests,
-                    teach_skill: Object.values(user.teach_skill),
-                    learn_skill: Object.values(user.learn_skill),
                 };
+
+                if (user.teach_skill) {
+                    record.teach_skill = Object.values(user.teach_skill);
+                }
+
+                if (user.learn_skill) {
+                    record.learn_skill = Object.values(user.learn_skill);
+                }
+
+                if (user.title) {
+                    record.title = user.title;
+                }
+
+                if (user.interests) {
+                    record.interests = user.interests;
+                }
+
+                if (user.availability) {
+                    record.availability = Object.values(user.availability);
+                }
+
 
                 // Write to the algolia index
                 return collectionIndex.saveObject(record);
@@ -418,11 +439,30 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 display_name: docAfterChange.display_name,
                 photo_url: docAfterChange.photo_url,
                 about: docAfterChange.about,
-                title: docAfterChange.title,
-                interests: Objects.value(docAfterChange.interests),
                 teach_skill: teachSkillAfter,
                 learn_skill: learnSkillAfter,
             };
+
+            if (document.teach_skill) {
+                record.teach_skill = Object.values(document.teach_skill);
+            }
+
+            if (document.learn_skill) {
+                record.learn_skill = Object.values(document.learn_skill);
+            }
+
+            if (docAfterChange.title) {
+                record.title = docAfterChange.title;
+            }
+
+            if (docAfterChange.interests) {
+                record.interests = docAfterChange.interests;
+            }
+
+            if (docAfterChange.availability) {
+                record.availability = Object.values(docAfterChange.availability);
+            }
+
 
             // Write to the algolia index
             return collectionIndex.saveObject(record);
