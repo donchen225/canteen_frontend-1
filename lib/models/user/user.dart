@@ -89,12 +89,21 @@ class User {
   }
 
   static User fromAlgoliaSnapshot(AlgoliaObjectSnapshot snapshot) {
+    final availability = snapshot.data['availability']
+            ?.map<String, Map<String, int>>((String k, dynamic v) =>
+                MapEntry<String, Map<String, int>>(
+                    k,
+                    v.map<String, int>(
+                        (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
+        {};
+
     return User(
       id: snapshot.objectID,
       displayName: snapshot.data['display_name'],
       photoUrl: snapshot.data['photo_url'],
       title: snapshot.data['title'],
       about: snapshot.data['about'],
+      timeZone: snapshot.data['time_zone'],
       interests: snapshot.data['interests']
               ?.map<String>((x) => x.toString())
               ?.toList() ??
@@ -107,6 +116,8 @@ class User {
           .map<Skill>((skill) => Skill.fromEntity(
               SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
           .toList(),
+      availability: Availability.fromMap(availability,
+          offset: snapshot.data['time_zone'] as int ?? 0),
     );
   }
 
