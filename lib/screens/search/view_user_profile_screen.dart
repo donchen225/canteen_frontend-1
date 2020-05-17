@@ -27,8 +27,8 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
   TabController _tabController;
 
   final List<String> tabs = [
-    'OFFERINGS',
-    'DETAILS',
+    'Offerings',
+    'Details',
   ];
 
   @override

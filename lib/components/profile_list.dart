@@ -32,12 +32,12 @@ class _ProfileListState extends State<ProfileList>
   TabController _tabController;
 
   final List<Text> tabChoices = [
-    Text('OFFERINGS',
+    Text('Offerings',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
         )),
-    Text('DETAILS',
+    Text('Details',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
