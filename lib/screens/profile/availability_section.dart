@@ -20,14 +20,14 @@ class AvailabilitySection extends StatelessWidget {
   AvailabilitySection({this.availability, this.onDayTap});
 
   Border _buildBorder(Day day) {
-    if (day == Day.monday) {
-      return Border.all(width: 1);
-    } else {}
-    return const Border(
-      bottom: BorderSide(width: 1),
-      left: BorderSide(width: 1),
-      right: BorderSide(width: 1),
-    );
+    return day == Day.sunday
+        ? Border()
+        : Border(
+            bottom: BorderSide(
+              width: 0.5,
+              color: Colors.grey[400],
+            ),
+          );
   }
 
   Widget _buildDayWidget(BuildContext context, MapEntry<String, Day> day) {
@@ -60,10 +60,10 @@ class AvailabilitySection extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.only(
-          left: SizeConfig.instance.blockSizeHorizontal * 3,
-          right: SizeConfig.instance.blockSizeHorizontal * 3,
-          top: SizeConfig.instance.blockSizeVertical * 3,
-          bottom: SizeConfig.instance.blockSizeVertical * 3,
+          left: SizeConfig.instance.safeBlockHorizontal * 3,
+          right: SizeConfig.instance.safeBlockHorizontal * 3,
+          top: SizeConfig.instance.safeBlockVertical * 2,
+          bottom: SizeConfig.instance.safeBlockVertical * 2,
         ),
         decoration: BoxDecoration(
           border: _buildBorder(day.value),
