@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,10 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      color: color,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(height * kSearchBarBorderRadius),
+      ),
       child: Row(
         children: <Widget>[
           Flexible(

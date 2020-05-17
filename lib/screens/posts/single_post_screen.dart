@@ -252,9 +252,11 @@ class SinglePostScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                       ),
-                      height: SizeConfig.instance.safeBlockVertical * 6,
+                      height: SizeConfig.instance.safeBlockVertical * 5,
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Palette.scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(
+                            SizeConfig.instance.safeBlockVertical * 5 * 0.5),
                       ),
                       child: Row(
                         children: <Widget>[

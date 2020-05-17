@@ -20,6 +20,9 @@ const double kDotSize = 4;
 // Login/onboarding constants
 const double kLandingHorizontalPaddingBlocks = 10;
 
+// Search screen constants
+const double kSearchBarBorderRadius = 0.25;
+
 // Post screen constants
 const int kNumPostOverflowLines = 4;
 
