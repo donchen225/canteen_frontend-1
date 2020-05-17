@@ -248,6 +248,10 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
             record.availability = Object.values(document.availability);
         }
 
+        if (document.time_zone) {
+            record.time_zone = document.time_zone;
+        }
+
         algoliaRecords.push(record);
     });
 
@@ -350,6 +354,10 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
 
                 if (user.availability) {
                     record.availability = Object.values(user.availability);
+                }
+
+                if (user.time_zone) {
+                    record.time_zone = user.time_zone;
                 }
 
 
@@ -461,6 +469,10 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
 
             if (docAfterChange.availability) {
                 record.availability = Object.values(docAfterChange.availability);
+            }
+
+            if (docAfterChange.time_zone) {
+                record.time_zone = docAfterChange.time_zone;
             }
 
 
