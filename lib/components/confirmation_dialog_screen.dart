@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -85,77 +86,85 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
               Scaffold.of(context).showSnackBar(snackBar);
             }
           }),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            height: widget.height * 0.1,
-            color: Colors.red,
-            child: Row(
-              children: <Widget>[
-                ProfilePicture(
-                  photoUrl: widget.user.photoUrl,
-                  editable: false,
-                  size: widget.height * 0.1,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+      child: Container(
+        color: Colors.blue,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              height: widget.height * 0.1,
+              color: Colors.red,
+              child: Row(
+                children: <Widget>[
+                  ProfilePicture(
+                    photoUrl: widget.user.photoUrl,
+                    editable: false,
+                    size: widget.height * 0.1,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('${widget.user.displayName ?? ''}',
-                          style: Theme.of(context).textTheme.headline6),
-                      Text(
-                        '${widget.user.title ?? ''}',
-                        style: subTitleStyle,
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('${widget.user.displayName ?? ''}',
+                            style: Theme.of(context).textTheme.headline6),
+                        Text(
+                          '${widget.user.title ?? ''}',
+                          style: subTitleStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: SizeConfig.instance.blockSizeVertical * 2),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.safeBlockVertical),
-                  child: Text(
-                    '${widget.skill.name ?? ''}',
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.safeBlockVertical,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: SizeConfig.instance.safeBlockVertical),
+                    child: Text(
+                      '${widget.skill.name ?? ''}',
+                      style: subTitleStyle,
+                    ),
+                  ),
+                  Text(
+                    '\$${(widget.skill.price).toString()}' +
+                        (widget.skill.duration != null
+                            ? ' / ${widget.skill.duration} minutes'
+                            : ''),
                     style: subTitleStyle,
                   ),
-                ),
-                Text(
-                  '\$${(widget.skill.price).toString()}' +
-                      (widget.skill.duration != null
-                          ? ' / ${widget.skill.duration} minutes'
-                          : ''),
-                  style: subTitleStyle,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          TextField(
-            controller: _messageController,
-            textCapitalization: TextCapitalization.sentences,
-            autofocus: false,
-            maxLines: null,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              hintText: 'Your comment',
+            Expanded(
+              child: CalendarDateTimeSelector(
+                  user: widget.user, skill: widget.skill),
             ),
-          ),
-        ],
+            // TextField(
+            //   controller: _messageController,
+            //   textCapitalization: TextCapitalization.sentences,
+            //   autofocus: false,
+            //   maxLines: null,
+            //   decoration: InputDecoration(
+            //     border: InputBorder.none,
+            //     focusedBorder: InputBorder.none,
+            //     enabledBorder: InputBorder.none,
+            //     errorBorder: InputBorder.none,
+            //     disabledBorder: InputBorder.none,
+            //     hintText: 'Your comment',
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }

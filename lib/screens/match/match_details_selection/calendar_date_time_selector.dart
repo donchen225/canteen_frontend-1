@@ -1,34 +1,29 @@
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/models/match/match.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
-import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tuple/tuple.dart';
 
-class MatchDetailTimeSelectionScreen extends StatefulWidget {
+class CalendarDateTimeSelector extends StatefulWidget {
   final User user;
-  final Match match;
   final Skill skill;
+  final double height;
 
-  MatchDetailTimeSelectionScreen({
+  CalendarDateTimeSelector({
     @required this.user,
-    @required this.match,
     @required this.skill,
+    this.height = 400,
   });
 
   @override
-  _MatchDetailTimeSelectionScreenState createState() =>
-      _MatchDetailTimeSelectionScreenState();
+  _CalendarDateTimeSelectorState createState() =>
+      _CalendarDateTimeSelectorState();
 }
 
-class _MatchDetailTimeSelectionScreenState
-    extends State<MatchDetailTimeSelectionScreen> {
+class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
   final f = DateFormat('yMMMMd');
   Map<DateTime, List> _events;
   CalendarController _calendarController;
@@ -37,7 +32,7 @@ class _MatchDetailTimeSelectionScreenState
   DateTime startDate;
   DateTime endDate;
   final availableDateRange = 60;
-  final markerSize = 35.0;
+  double markerSize = 35.0;
   int eventDuration;
   int eventDiff = 30;
   final Color mainColor = Colors.orange;
@@ -50,7 +45,7 @@ class _MatchDetailTimeSelectionScreenState
     startDate = DateTime(now.year, now.month, now.day);
     endDate = startDate.add(Duration(days: availableDateRange));
 
-    localTimeRanges = widget.user.availability.timeRangesLocal;
+    localTimeRanges = widget.user.availability?.timeRangesLocal ?? {};
     eventDuration = widget.skill.duration;
     initializeEvents();
 
@@ -58,8 +53,6 @@ class _MatchDetailTimeSelectionScreenState
         _events[startDate]?.map<DateTime>((x) => x)?.toList() ?? [];
 
     _calendarController = CalendarController();
-    // TODO: debug why I can't set selected day here, problem in library
-    // _calendarController.setSelectedDay(now);
   }
 
   @override
@@ -101,6 +94,8 @@ class _MatchDetailTimeSelectionScreenState
   }
 
   Widget _buildDay(DateTime day) {
+    markerSize = widget.height * 0.11;
+
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -116,18 +111,21 @@ class _MatchDetailTimeSelectionScreenState
   }
 
   Widget _buildSelectedDay(DateTime day) {
-    return Container(
+    return Align(
       alignment: Alignment.center,
-      width: markerSize,
-      height: markerSize,
-      decoration: BoxDecoration(
-        color: mainColor,
-        shape: BoxShape.circle,
-        borderRadius: null,
-      ),
-      child: Text(
-        day.day.toString(),
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      child: Container(
+        alignment: Alignment.center,
+        width: markerSize,
+        height: markerSize,
+        decoration: BoxDecoration(
+          color: mainColor,
+          shape: BoxShape.circle,
+          borderRadius: null,
+        ),
+        child: Text(
+          day.day.toString(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -192,7 +190,7 @@ class _MatchDetailTimeSelectionScreenState
       startDay: now,
       initialSelectedDay: now,
       endDay: endDate,
-      rowHeight: SizeConfig.instance.blockSizeVertical * 6,
+      rowHeight: widget.height * 0.12,
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         markersColor: Colors.brown[700],
@@ -262,17 +260,18 @@ class _MatchDetailTimeSelectionScreenState
                       )),
                   // Go to payment page
                   onTap: () {
-                    BlocProvider.of<MatchDetailBloc>(context)
-                        .add(SelectVideoChatDate(
-                      matchId: widget.match.id,
-                      videoChatId: widget.match.activeVideoChat,
-                      skill: widget.skill,
-                      date: VideoChatDate(
-                          userId: widget.user.id,
-                          startTime: event,
-                          duration: eventDuration,
-                          timeZone: event.timeZoneName),
-                    ));
+                    // BlocProvider.of<MatchDetailBloc>(context).add(
+                    //   SelectVideoChatDate(
+                    //     matchId: widget.match.id,
+                    //     videoChatId: widget.match.activeVideoChat,
+                    //     skill: widget.skill,
+                    //     date: VideoChatDate(
+                    //         userId: widget.user.id,
+                    //         startTime: event,
+                    //         duration: eventDuration,
+                    //         timeZone: event.timeZoneName),
+                    //   ),
+                    // );
                   },
                 ),
               ))
@@ -290,25 +289,15 @@ class _MatchDetailTimeSelectionScreenState
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
+      height: widget.height,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Align(
+          Container(
             alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: SizeConfig.instance.blockSizeHorizontal * 3,
-                right: SizeConfig.instance.blockSizeHorizontal * 3,
-                top: SizeConfig.instance.blockSizeVertical * 2,
-              ),
-              child: Text(
-                'Select a time to video chat:',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
+            child: Text('Select a Day',
+                style: Theme.of(context).textTheme.headline6),
           ),
           Container(
             child: _buildTableCalendar(),
@@ -331,17 +320,17 @@ class _MatchDetailTimeSelectionScreenState
                     ],
                   ),
                 ),
-                Text(
-                  f.format(_calendarController.selectedDay ?? now),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                // Text(
+                //   f.format(_calendarController.selectedDay ?? now),
+                //   style: TextStyle(fontWeight: FontWeight.bold),
+                // ),
               ],
             ), // TODO: remove now
           ),
-          Expanded(
-            flex: 1,
-            child: _buildEventList(),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: _buildEventList(),
+          // ),
         ],
       ),
     );

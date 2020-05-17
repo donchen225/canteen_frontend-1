@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/match_detail_time_selection_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_waiting_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
@@ -125,14 +124,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   return MatchDetailEventSelectionScreen(
                     user: user,
                     match: widget.match,
-                  );
-                }
-
-                if (state is MatchTimeSelecting) {
-                  return MatchDetailTimeSelectionScreen(
-                    user: prospect,
-                    match: widget.match,
-                    skill: state.skill,
                   );
                 }
 

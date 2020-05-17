@@ -59,25 +59,32 @@ class TextDialogScreen extends StatelessWidget {
             }
           },
           child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.instance.blockSizeVertical * 3,
-                    left: SizeConfig.instance.blockSizeHorizontal * 6,
-                    right: SizeConfig.instance.blockSizeHorizontal * 6,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        width: 1,
-                        color: const Color(0xFFDEE0D1),
+            child: Container(
+              height: height - kToolbarHeight,
+              child: SafeArea(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.instance.blockSizeVertical * 3,
+                          left: SizeConfig.instance.blockSizeHorizontal * 6,
+                          right: SizeConfig.instance.blockSizeHorizontal * 6,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              width: 1,
+                              color: const Color(0xFFDEE0D1),
+                            ),
+                          ),
+                        ),
+                        child: child ?? Container(),
                       ),
                     ),
-                  ),
-                  child: child ?? Container(),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
