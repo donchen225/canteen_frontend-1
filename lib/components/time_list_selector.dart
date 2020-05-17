@@ -25,7 +25,8 @@ class TimeListSelector extends StatefulWidget {
 
 class _TimeListSelectorState extends State<TimeListSelector> {
   final now = DateTime.now();
-  final f = DateFormat('yMMMMd');
+  final dateFormat = DateFormat('yMMMMd');
+  final weekdayFormat = DateFormat('EEEE');
   List<DateTime> times;
   Color mainColor = Palette.orangeColor;
 
@@ -102,10 +103,12 @@ class _TimeListSelectorState extends State<TimeListSelector> {
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline6;
+    final subtitleStyle = Theme.of(context).textTheme.subtitle1;
 
     return Column(
       children: <Widget>[
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
               onTap: () => widget.onTapBack(),
@@ -120,9 +123,17 @@ class _TimeListSelectorState extends State<TimeListSelector> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Container(
-                    child: Text(
-                      f.format(widget.day),
-                      style: titleStyle,
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          weekdayFormat.format(widget.day),
+                          style: titleStyle,
+                        ),
+                        Text(
+                          dateFormat.format(widget.day),
+                          style: subtitleStyle,
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -267,8 +267,8 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.safeBlockVertical),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
