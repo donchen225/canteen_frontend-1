@@ -132,27 +132,30 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                             top: SizeConfig.instance.blockSizeHorizontal * 3,
                             bottom: SizeConfig.instance.blockSizeHorizontal * 3,
                           ),
-                          child: Container(
-                            child: Column(
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<PostScreenBloc>(context)
-                                          .add(PostsInspectUser(post.user)),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: SizeConfig
-                                                .instance.blockSizeVertical *
-                                            2),
-                                    child: PostNameTemplate(
-                                      name: post.user.displayName,
-                                      photoUrl: post.user.photoUrl,
-                                      time: post.createdOn,
-                                      color: _sideTextColor,
-                                    ),
+                          child: Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<PostScreenBloc>(context)
+                                        .add(PostsInspectUser(post.user)),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig
+                                          .instance.safeBlockVertical),
+                                  child: PostNameTemplate(
+                                    name: post.user.displayName,
+                                    photoUrl: post.user.photoUrl,
+                                    time: post.createdOn,
+                                    color: _sideTextColor,
                                   ),
                                 ),
-                                Align(
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                    bottom:
+                                        SizeConfig.instance.safeBlockVertical *
+                                            0.5),
+                                child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     post.title,
@@ -162,54 +165,53 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                         .apply(fontWeightDelta: 1),
                                   ),
                                 ),
-                                Visibility(
-                                  visible: post.message.isNotEmpty,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      post.message,
-                                      style: bodyTextTheme,
-                                      maxLines: kNumPostOverflowLines,
-                                      overflow: TextOverflow.ellipsis,
+                              ),
+                              Visibility(
+                                visible: post.message.isNotEmpty,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    post.message,
+                                    style: bodyTextTheme,
+                                    maxLines: kNumPostOverflowLines,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: SizeConfig.instance.safeBlockVertical *
+                                        2),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!(post.liked)) {
+                                          final like = Like(
+                                              from: widget.user.id,
+                                              createdOn: DateTime.now());
+                                          BlocProvider.of<PostBloc>(context)
+                                              .add(AddLike(post.id, like));
+                                        } else {
+                                          BlocProvider.of<PostBloc>(context)
+                                              .add(DeleteLike(post.id));
+                                        }
+                                      },
+                                      child: LikeButton(
+                                          post: post,
+                                          sideTextColor: _sideTextColor,
+                                          style: bodyTextTheme),
                                     ),
-                                  ),
+                                    CommentButton(
+                                        style: bodyTextTheme,
+                                        sideTextColor: _sideTextColor),
+                                    Container(),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          2),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (!(post.liked)) {
-                                            final like = Like(
-                                                from: widget.user.id,
-                                                createdOn: DateTime.now());
-                                            BlocProvider.of<PostBloc>(context)
-                                                .add(AddLike(post.id, like));
-                                          } else {
-                                            BlocProvider.of<PostBloc>(context)
-                                                .add(DeleteLike(post.id));
-                                          }
-                                        },
-                                        child: LikeButton(
-                                            post: post,
-                                            sideTextColor: _sideTextColor,
-                                            style: bodyTextTheme),
-                                      ),
-                                      CommentButton(
-                                          style: bodyTextTheme,
-                                          sideTextColor: _sideTextColor),
-                                      Container(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           )),
                     ),
                   );
