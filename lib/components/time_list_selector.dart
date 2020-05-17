@@ -38,37 +38,40 @@ class _TimeListSelectorState extends State<TimeListSelector> {
   Widget _buildTimeList() {
     return ListView(
       children: times
-          .map((event) => Container(
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(width: 0.8, color: mainColor.withOpacity(0.7)),
-                  borderRadius: BorderRadius.circular(12.0),
+          .map((event) => Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.safeBlockVertical,
                 ),
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: ListTile(
-                  title: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        DateFormat.jm().format(event),
-                        style: TextStyle(
-                            color: mainColor, fontWeight: FontWeight.bold),
-                      )),
-                  // Go to payment page
-                  onTap: () {
-                    // BlocProvider.of<MatchDetailBloc>(context).add(
-                    //   SelectVideoChatDate(
-                    //     matchId: widget.match.id,
-                    //     videoChatId: widget.match.activeVideoChat,
-                    //     skill: widget.skill,
-                    //     date: VideoChatDate(
-                    //         userId: widget.user.id,
-                    //         startTime: event,
-                    //         duration: eventDuration,
-                    //         timeZone: event.timeZoneName),
-                    //   ),
-                    // );
-                  },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 0.8, color: mainColor.withOpacity(0.7)),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: ListTile(
+                    title: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          DateFormat.jm().format(event),
+                          style: TextStyle(
+                              color: mainColor, fontWeight: FontWeight.bold),
+                        )),
+                    // Go to payment page
+                    onTap: () {
+                      // BlocProvider.of<MatchDetailBloc>(context).add(
+                      //   SelectVideoChatDate(
+                      //     matchId: widget.match.id,
+                      //     videoChatId: widget.match.activeVideoChat,
+                      //     skill: widget.skill,
+                      //     date: VideoChatDate(
+                      //         userId: widget.user.id,
+                      //         startTime: event,
+                      //         duration: eventDuration,
+                      //         timeZone: event.timeZoneName),
+                      //   ),
+                      // );
+                    },
+                  ),
                 ),
               ))
           .toList(),
@@ -109,23 +112,37 @@ class _TimeListSelectorState extends State<TimeListSelector> {
             ],
           ),
         ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.instance.safeBlockVertical * 2,
-          ),
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Select a Time',
-                style: titleStyle,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.instance.safeBlockVertical * 2,
+                ),
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                  width: 0.5,
+                  color: Palette.borderSeparatorColor,
+                ))),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Select a Time',
+                      style: titleStyle,
+                    ),
+                    Text('Duration: ${widget.duration.toString()} min'),
+                  ],
+                ),
               ),
-              Text('Duration: ${widget.duration.toString()} min'),
-            ],
-          ),
+            ),
+          ],
         ),
         Expanded(
           flex: 1,
-          child: _buildTimeList(),
+          child: Container(
+            child: _buildTimeList(),
+          ),
         ),
       ],
     );
