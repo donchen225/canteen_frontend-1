@@ -132,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedFontSize: kBottomNavigationBarFontSize,
                   unselectedFontSize: kBottomNavigationBarFontSize,
                   selectedItemColor: Colors.black,
+                  backgroundColor: Palette.appBarBackgroundColor,
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
