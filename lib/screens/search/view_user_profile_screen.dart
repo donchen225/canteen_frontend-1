@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/confirmation_dialog.dart';
+import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
@@ -44,11 +45,15 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
   }
 
   void _onTapSkillFunction(BuildContext context, Skill skill) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => ConfirmationDialog(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ConfirmationDialogScreen(
         user: widget.user,
         skill: skill,
+        height:
+            SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
         onConfirm: (comment) {
           BlocProvider.of<RequestBloc>(context).add(
             AddRequest(
@@ -62,6 +67,25 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
         },
       ),
     );
+
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) => ConfirmationDialog(
+    //     user: widget.user,
+    //     skill: skill,
+    //     onConfirm: (comment) {
+    //       BlocProvider.of<RequestBloc>(context).add(
+    //         AddRequest(
+    //           Request.create(
+    //             skill: skill,
+    //             comment: comment,
+    //             receiverId: widget.user.id,
+    //           ),
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   @override

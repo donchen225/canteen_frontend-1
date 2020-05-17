@@ -159,6 +159,9 @@ class SinglePostScreen extends StatelessWidget {
                                       builder: (context) => CommentDialogScreen(
                                         user: user,
                                         post: post,
+                                        height: SizeConfig
+                                                .instance.blockSizeVertical *
+                                            kDialogScreenHeightBlocks,
                                       ),
                                     );
                                   },
@@ -244,6 +247,8 @@ class SinglePostScreen extends StatelessWidget {
                         builder: (context) => CommentDialogScreen(
                           user: user,
                           post: post,
+                          height: SizeConfig.instance.blockSizeVertical *
+                              kDialogScreenHeightBlocks,
                         ),
                       );
                     },

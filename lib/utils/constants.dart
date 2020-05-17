@@ -14,6 +14,9 @@ const double kDisabledOpacity = 0.5;
 // BottomNavigationBar constants
 const double kBottomNavigationBarFontSize = 12;
 
+// Dialog Screen constants
+const double kDialogScreenHeightBlocks = 90;
+
 // Icon constants
 const double kDotSize = 4;
 

@@ -10,8 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
   final User user;
+  final double height;
 
-  PostDialogScreen({@required this.user});
+  PostDialogScreen({@required this.user, this.height = 500});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
@@ -35,6 +36,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
   Widget build(BuildContext context) {
     return TextDialogScreen(
       title: 'New Post',
+      height: widget.height,
       sendWidget: PostButton(onTap: (BuildContext context) {
         if (_titleController.text.isNotEmpty) {
           final now = DateTime.now();

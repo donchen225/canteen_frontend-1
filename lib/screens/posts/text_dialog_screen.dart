@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 
 class TextDialogScreen extends StatelessWidget {
   final String title;
+  final double height;
   final Widget sendWidget;
   final Widget child;
 
   TextDialogScreen(
-      {@required this.title, @required this.sendWidget, this.child});
+      {@required this.title,
+      @required this.sendWidget,
+      this.height = 500,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.instance.blockSizeVertical * 90,
+      height: height,
       decoration: BoxDecoration(
         color: const Color(0xFFFEFFFF),
         borderRadius: BorderRadius.only(

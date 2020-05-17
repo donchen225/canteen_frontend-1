@@ -1,30 +1,33 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
-import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CommentDialogScreen extends StatefulWidget {
+class ConfirmationDialogScreen extends StatefulWidget {
   final User user;
-  final DetailedPost post;
+  final Skill skill;
   final double height;
+  final Function onConfirm;
 
-  CommentDialogScreen(
-      {@required this.user, @required this.post, this.height = 500});
+  ConfirmationDialogScreen(
+      {@required this.user,
+      @required this.skill,
+      this.height = 500,
+      @required this.onConfirm});
 
   @override
-  _CommentDialogScreenState createState() => _CommentDialogScreenState();
+  _ConfirmationDialogScreenState createState() =>
+      _ConfirmationDialogScreenState();
 }
 
-class _CommentDialogScreenState extends State<CommentDialogScreen> {
+class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
   TextEditingController _messageController;
 
-  _CommentDialogScreenState();
+  _ConfirmationDialogScreenState();
 
   @override
   void initState() {
@@ -34,8 +37,10 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final subTitleStyle = Theme.of(context).textTheme.subtitle1;
+
     return TextDialogScreen(
-      title: 'Add Comment',
+      title: 'Request Time',
       height: widget.height,
       sendWidget: PostButton(
           text: 'SEND',
@@ -48,8 +53,8 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<CommentBloc>(context)
-                  .add(AddComment(postId: widget.post.id, comment: comment));
+              // BlocProvider.of<CommentBloc>(context)
+              //     .add(AddComment(postId: widget.post.id, comment: comment));
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(
@@ -81,56 +86,57 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
             }
           }),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              ProfilePicture(
-                photoUrl: widget.post.user.photoUrl,
-                editable: false,
-                size: SizeConfig.instance.blockSizeHorizontal * 6,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal),
-                child: Text('${widget.post.user.displayName ?? ''}'),
-              ),
-            ],
-          ),
           Container(
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.instance.blockSizeVertical * 2,
-            ),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: Colors.grey[200],
-                ),
-              ),
-            ),
-            child: Text(
-              widget.post.title,
-              style: TextStyle(
-                fontSize: SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: SizeConfig.instance.blockSizeVertical * 2),
+            height: widget.height * 0.1,
+            color: Colors.red,
             child: Row(
               children: <Widget>[
                 ProfilePicture(
                   photoUrl: widget.user.photoUrl,
                   editable: false,
-                  size: SizeConfig.instance.blockSizeHorizontal * 6,
+                  size: widget.height * 0.1,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.blockSizeHorizontal),
-                  child: Text('${widget.user.displayName ?? ''}'),
+                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('${widget.user.displayName ?? ''}',
+                          style: Theme.of(context).textTheme.headline6),
+                      Text(
+                        '${widget.user.title ?? ''}',
+                        style: subTitleStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding:
+                EdgeInsets.only(top: SizeConfig.instance.blockSizeVertical * 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: SizeConfig.instance.safeBlockVertical),
+                  child: Text(
+                    '${widget.skill.name ?? ''}',
+                    style: subTitleStyle,
+                  ),
+                ),
+                Text(
+                  '\$${(widget.skill.price).toString()}' +
+                      (widget.skill.duration != null
+                          ? ' / ${widget.skill.duration} minutes'
+                          : ''),
+                  style: subTitleStyle,
                 ),
               ],
             ),
@@ -138,7 +144,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
           TextField(
             controller: _messageController,
             textCapitalization: TextCapitalization.sentences,
-            autofocus: true,
+            autofocus: false,
             maxLines: null,
             decoration: InputDecoration(
               border: InputBorder.none,
