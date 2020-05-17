@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/screens/posts/discover_group_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
@@ -29,6 +30,8 @@ class _PostScreenState extends State<PostScreen> {
         onTapBack: () =>
             BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
       );
+    } else if (state is PostScreenDiscoverGroup) {
+      return DiscoverGroupScreen();
     }
   }
 
@@ -46,7 +49,9 @@ class _PostScreenState extends State<PostScreen> {
           child: _loadPostScreen(context, state),
           transitionBuilder: (Widget child, Animation<double> animation) {
             print('STATE: $state');
-            if (state is PostScreenShowProfile || state is PostScreenShowPost) {
+            if (state is PostScreenShowProfile ||
+                state is PostScreenShowPost ||
+                state is PostScreenDiscoverGroup) {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(offsetdXForward, 0),

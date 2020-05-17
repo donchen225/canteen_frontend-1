@@ -50,3 +50,5 @@ class PostScreenShowPost extends PostScreenState {
   @override
   String toString() => 'PostScreenShowPost';
 }
+
+class PostScreenDiscoverGroup extends PostScreenState {}

@@ -42,6 +42,8 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
       yield* _mapPostsInspectUserToState(event);
     } else if (event is PostsHome) {
       yield* _mapPostsHomeToState();
+    } else if (event is DiscoverGroups) {
+      yield* _mapDiscoverGroupsToState();
     } else if (event is PostsPreviousState) {
       yield* _mapPostsPreviousStateToState();
     }
@@ -71,6 +73,11 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
 
     yield PostScreenHome(
         posts: _homePosts, user: await _userRepository.currentUser());
+  }
+
+  Stream<PostScreenState> _mapDiscoverGroupsToState() async* {
+    _previousStates.add(state);
+    yield PostScreenDiscoverGroup();
   }
 
   Stream<PostScreenState> _mapPostsPreviousStateToState() async* {

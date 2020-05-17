@@ -39,4 +39,6 @@ class PostsInspectUser extends PostScreenEvent {
   }
 }
 
+class DiscoverGroups extends PostScreenEvent {}
+
 class PostsPreviousState extends PostScreenEvent {}

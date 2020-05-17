@@ -1,7 +1,9 @@
 import 'package:canteen_frontend/screens/posts/group_list_item.dart';
+import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GroupListScreen extends StatelessWidget {
   @override
@@ -14,11 +16,17 @@ class GroupListScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
-                GroupListItem(
-                  child: Text('Discover groups',
-                      style: titleTheme.apply(
-                        fontWeightDelta: 2,
-                      )),
+                GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<PostScreenBloc>(context)
+                        .add(DiscoverGroups());
+                  },
+                  child: GroupListItem(
+                    child: Text('Discover groups',
+                        style: titleTheme.apply(
+                          fontWeightDelta: 2,
+                        )),
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.only(
