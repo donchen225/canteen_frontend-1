@@ -178,7 +178,7 @@ class SinglePostScreen extends StatelessWidget {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.safeBlockVertical * 2,
+                    vertical: SizeConfig.instance.safeBlockVertical * 0.5,
                   ),
                   sliver: SliverToBoxAdapter(
                     child: BlocBuilder<CommentBloc, CommentState>(
@@ -199,7 +199,9 @@ class SinglePostScreen extends StatelessWidget {
 
                               return Padding(
                                 padding: EdgeInsets.only(
-                                  bottom: SizeConfig.instance.safeBlockVertical,
+                                  bottom:
+                                      SizeConfig.instance.safeBlockVertical *
+                                          0.5,
                                 ),
                                 child: CommentContainer(
                                   comment: comment,
@@ -217,6 +219,7 @@ class SinglePostScreen extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
+              color: Palette.containerColor,
               border: Border(
                 top: BorderSide(
                   width: 1,
