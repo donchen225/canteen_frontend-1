@@ -102,6 +102,7 @@ class _EditProfileInterestsScreenState
             Container(
               padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
               decoration: BoxDecoration(
+                color: Palette.containerColor,
                 border: Border.all(width: 1, color: Colors.grey[400]),
                 borderRadius: BorderRadius.circular(10),
               ),
