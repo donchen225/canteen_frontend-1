@@ -93,6 +93,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline6;
     final subTitleStyle = Theme.of(context).textTheme.subtitle1;
 
     return TextDialogScreen(
@@ -163,8 +164,10 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('${widget.user.displayName ?? ''}',
-                          style: Theme.of(context).textTheme.headline6),
+                      Text(
+                        '${widget.user.displayName ?? ''}',
+                        style: titleStyle,
+                      ),
                       Text(
                         '${widget.user.title ?? ''}',
                         style: subTitleStyle,
@@ -184,18 +187,26 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.safeBlockVertical),
+                    bottom: SizeConfig.instance.safeBlockVertical,
+                  ),
                   child: Text(
                     '${widget.skill.name ?? ''}',
-                    style: subTitleStyle,
+                    style: subTitleStyle.apply(
+                      fontWeightDelta: 2,
+                    ),
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: SizeConfig.instance.safeBlockVertical,
+                  ),
+                  child: Text(widget.skill.description),
                 ),
                 Text(
                   '\$${(widget.skill.price).toString()}' +
                       (widget.skill.duration != null
                           ? ' / ${widget.skill.duration} minutes'
                           : ''),
-                  style: subTitleStyle,
                 ),
               ],
             ),
