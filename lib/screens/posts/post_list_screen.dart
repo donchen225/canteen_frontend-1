@@ -139,7 +139,6 @@ class PostListScreen extends StatelessWidget {
                                         style: bodyTextTheme),
                                   ),
                                   CommentButton(
-                                      style: bodyTextTheme,
                                       sideTextColor:
                                           Palette.textSecondaryBaseColor),
                                   Container(),

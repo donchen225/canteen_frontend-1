@@ -31,7 +31,29 @@ class _PostScreenState extends State<PostScreen> {
             BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
       );
     } else if (state is PostScreenDiscoverGroup) {
+      final List<Map<String, String>> groups = [
+        {
+          'name': 'Superconnectors',
+          'description': 'This group is meant for superconnectors.',
+          'type': 'Private',
+          'members': '120',
+        },
+        {
+          'name': 'Cognitive World',
+          'description':
+              'This group is meant for Cognitive World members and people in AI.',
+          'type': 'Private',
+          'members': '80',
+        },
+        {
+          'name': 'Modernist',
+          'description': 'This group is meant for Modernist members.',
+          'type': 'Private',
+          'members': '240',
+        }
+      ];
       return DiscoverGroupScreen(
+        groups: groups,
         onTapBack: () =>
             BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
       );

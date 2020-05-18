@@ -14,6 +14,8 @@ class CommentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.bodyText1;
+
     return Container(
       child: Row(
         children: <Widget>[
