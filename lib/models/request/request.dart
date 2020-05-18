@@ -11,6 +11,7 @@ class Request {
   final String receiverId;
   final String skill;
   final String comment;
+  final DateTime time;
   final RequestStatus status;
   final DateTime createdOn;
 
@@ -22,15 +23,18 @@ class Request {
     this.id,
     this.skill,
     this.comment,
+    this.time,
   });
 
-  static Request create({Skill skill, String receiverId, String comment}) {
+  static Request create(
+      {Skill skill, String receiverId, String comment, DateTime time}) {
     return Request(
       skill: skill != null
           ? (skill.name + ' - ' + '\$${(skill.price).toString()}')
           : '',
       comment: comment,
       receiverId: receiverId,
+      time: time,
       status: RequestStatus.initialized,
     );
   }
@@ -42,6 +46,7 @@ class Request {
         receiverId: entity.receiverId,
         skill: entity.skill,
         comment: entity.comment,
+        time: entity.time,
         status: RequestStatus.values[entity.status],
         createdOn: entity.createdOn);
   }
@@ -53,6 +58,7 @@ class Request {
       receiverId: receiverId,
       skill: skill,
       comment: comment,
+      time: time,
       status: status.index,
       createdOn: createdOn,
     );
@@ -68,6 +74,7 @@ class DetailedRequest extends Request {
       @required receiverId,
       @required skill,
       @required comment,
+      @required time,
       @required status,
       @required createdOn,
       @required this.sender})
@@ -77,6 +84,7 @@ class DetailedRequest extends Request {
             receiverId: receiverId,
             skill: skill,
             comment: comment,
+            time: time,
             status: status,
             createdOn: createdOn);
 
@@ -87,6 +95,7 @@ class DetailedRequest extends Request {
         receiverId: request.receiverId,
         skill: request.skill,
         comment: request.comment,
+        time: request.time,
         status: request.status,
         createdOn: request.createdOn,
         sender: sender);

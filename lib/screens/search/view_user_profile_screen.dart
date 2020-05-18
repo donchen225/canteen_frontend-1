@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/confirmation_dialog.dart';
 import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/request/request.dart';

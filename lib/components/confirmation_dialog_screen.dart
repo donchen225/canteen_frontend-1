@@ -1,14 +1,17 @@
+import 'package:canteen_frontend/components/time_confirmation.dart';
 import 'package:canteen_frontend/components/time_list_selector.dart';
-import 'package:canteen_frontend/models/comment/comment.dart';
+import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConfirmationDialogScreen extends StatefulWidget {
   final User user;
@@ -30,14 +33,14 @@ class ConfirmationDialogScreen extends StatefulWidget {
 class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
   List<DateTime> _timeList;
   DateTime _selectedDay;
-  TextEditingController _messageController;
+  DateTime _selectedTime;
+  String _message = '';
 
   _ConfirmationDialogScreenState();
 
   @override
   void initState() {
     super.initState();
-    _messageController = TextEditingController();
   }
 
   Widget _buildTimeSelectorWidget() {
@@ -54,7 +57,9 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           });
         },
       );
-    } else {
+    } else if (_timeList != null &&
+        _selectedDay != null &&
+        _selectedTime == null) {
       return TimeListSelector(
         day: _selectedDay,
         times: _timeList,
@@ -63,6 +68,23 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           setState(() {
             _timeList = null;
             _selectedDay = null;
+          });
+        },
+        onTap: (DateTime time) {
+          setState(() {
+            _selectedTime = time;
+          });
+        },
+      );
+    } else if (_timeList != null &&
+        _selectedDay != null &&
+        _selectedTime != null) {
+      return TimeConfirmation(
+        time: _selectedTime,
+        duration: widget.skill.duration,
+        onTapBack: () {
+          setState(() {
+            _selectedTime = null;
           });
         },
       );
@@ -78,17 +100,20 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
       height: widget.height,
       sendWidget: PostButton(
           text: 'SEND',
+          enabled: _selectedTime != null,
           onTap: (BuildContext context) {
-            if (_messageController.text.isNotEmpty) {
-              final now = DateTime.now();
-              final comment = Comment(
-                message: _messageController.text,
-                from: widget.user.id,
-                createdOn: now,
-                lastUpdated: now,
+            if (_selectedTime != null) {
+              BlocProvider.of<RequestBloc>(context).add(
+                AddRequest(
+                  Request.create(
+                    skill: widget.skill,
+                    comment: _message,
+                    time: _selectedTime,
+                    receiverId: widget.user.id,
+                  ),
+                ),
               );
-              // BlocProvider.of<CommentBloc>(context)
-              //     .add(AddComment(postId: widget.post.id, comment: comment));
+
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(
@@ -107,7 +132,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                           horizontal:
                               SizeConfig.instance.blockSizeHorizontal * 3),
                       child: Text(
-                        'Please add a comment',
+                        'Please select a time',
                         style: TextStyle(
                           color: Colors.black,
                         ),
@@ -193,20 +218,6 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
               ),
             ),
           ),
-          // TextField(
-          //   controller: _messageController,
-          //   textCapitalization: TextCapitalization.sentences,
-          //   autofocus: false,
-          //   maxLines: null,
-          //   decoration: InputDecoration(
-          //     border: InputBorder.none,
-          //     focusedBorder: InputBorder.none,
-          //     enabledBorder: InputBorder.none,
-          //     errorBorder: InputBorder.none,
-          //     disabledBorder: InputBorder.none,
-          //     hintText: 'Your comment',
-          //   ),
-          // ),
         ],
       ),
     );

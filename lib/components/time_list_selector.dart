@@ -8,16 +8,19 @@ class TimeListSelector extends StatefulWidget {
   final List<DateTime> times;
   final int duration;
   final Function onTapBack;
+  final Function onTap;
 
   TimeListSelector(
       {@required this.day,
       @required this.times,
       @required this.duration,
-      @required this.onTapBack})
+      @required this.onTapBack,
+      @required this.onTap})
       : assert(day != null),
         assert(times != null),
         assert(duration != null),
-        assert(onTapBack != null);
+        assert(onTapBack != null),
+        assert(onTap != null);
 
   @override
   _TimeListSelectorState createState() => _TimeListSelectorState();
@@ -29,6 +32,7 @@ class _TimeListSelectorState extends State<TimeListSelector> {
   final weekdayFormat = DateFormat('EEEE');
   List<DateTime> times;
   Color mainColor = Palette.orangeColor;
+  DateTime selectedTime;
 
   @override
   void initState() {
@@ -63,36 +67,34 @@ class _TimeListSelectorState extends State<TimeListSelector> {
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.safeBlockVertical,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 0.8, color: mainColor.withOpacity(0.7)),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        title: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              DateFormat.jm().format(event),
-                              style: TextStyle(
-                                  color: mainColor,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        // Go to payment page
-                        onTap: () {
-                          // BlocProvider.of<MatchDetailBloc>(context).add(
-                          //   SelectVideoChatDate(
-                          //     matchId: widget.match.id,
-                          //     videoChatId: widget.match.activeVideoChat,
-                          //     skill: widget.skill,
-                          //     date: VideoChatDate(
-                          //         userId: widget.user.id,
-                          //         startTime: event,
-                          //         duration: eventDuration,
-                          //         timeZone: event.timeZoneName),
-                          //   ),
-                          // );
-                        },
+                    child: GestureDetector(
+                      onTapDown: (_) {
+                        setState(() {
+                          selectedTime = event;
+                        });
+                      },
+                      onTap: () => widget.onTap(event),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: event == selectedTime
+                              ? mainColor
+                              : Palette.containerColor,
+                          border: Border.all(
+                              width: 0.8, color: mainColor.withOpacity(0.7)),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            DateFormat.jm().format(event),
+                            style: TextStyle(
+                                color: event == selectedTime
+                                    ? Palette.containerColor
+                                    : mainColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ),
                   ))

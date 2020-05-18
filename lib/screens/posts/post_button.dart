@@ -1,11 +1,14 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class PostButton extends StatelessWidget {
   final String text;
+  final bool enabled;
   final Function(BuildContext) onTap;
 
-  PostButton({@required this.onTap, this.text = 'POST'});
+  PostButton(
+      {@required this.onTap, @required this.enabled, this.text = 'POST'});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +27,12 @@ class PostButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.button.apply(
+                color: enabled
+                    ? Palette.orangeColor
+                    : Palette.orangeColor.withOpacity(0.4),
+                fontWeightDelta: 1,
+              ),
         ),
       ),
     );

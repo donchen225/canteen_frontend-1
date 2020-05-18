@@ -8,6 +8,7 @@ class RequestEntity extends Equatable {
   final String receiverId;
   final String skill;
   final String comment;
+  final DateTime time;
   final int status;
   final DateTime createdOn;
 
@@ -17,6 +18,7 @@ class RequestEntity extends Equatable {
       @required this.receiverId,
       @required this.skill,
       @required this.comment,
+      @required this.time,
       @required this.status,
       @required this.createdOn});
 
@@ -27,17 +29,19 @@ class RequestEntity extends Equatable {
       'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
+      'time': time,
       'status': status,
       'created_on': createdOn,
     };
   }
 
   @override
-  List<Object> get props => [id, senderId, receiverId, skill, comment, status];
+  List<Object> get props =>
+      [id, senderId, receiverId, skill, comment, time, status];
 
   @override
   String toString() {
-    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, status: $status, createdOn: $createdOn }';
+    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, time: $time, status: $status, createdOn: $createdOn }';
   }
 
   static RequestEntity fromJson(Map<String, Object> json) {
@@ -47,6 +51,7 @@ class RequestEntity extends Equatable {
       receiverId: json['receiver_id'] as String,
       skill: json['skill'] as String,
       comment: json['comment'] as String,
+      time: DateTime.parse(json['time']),
       status: json['status'] as int,
       createdOn: DateTime.parse(json['created_on']),
     );
@@ -59,6 +64,7 @@ class RequestEntity extends Equatable {
       receiverId: snapshot.data['receiver_id'],
       skill: snapshot.data['skill'],
       comment: snapshot.data['comment'],
+      time: snapshot.data['time'].toDate(),
       status: snapshot.data['status'],
       createdOn: snapshot.data['created_on'].toDate(),
     );
@@ -69,6 +75,7 @@ class RequestEntity extends Equatable {
       'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
+      'time': time,
     };
   }
 }

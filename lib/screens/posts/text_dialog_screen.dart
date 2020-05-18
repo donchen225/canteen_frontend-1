@@ -8,10 +8,7 @@ class TextDialogScreen extends StatelessWidget {
   final Widget child;
 
   TextDialogScreen(
-      {@required this.title,
-      @required this.sendWidget,
-      this.height = 500,
-      this.child});
+      {@required this.title, this.sendWidget, this.height = 500, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +28,19 @@ class TextDialogScreen extends StatelessWidget {
           leading: CloseButton(),
           title: Text(title),
           actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  sendWidget,
-                ],
-              ),
-            ),
+            sendWidget != null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        sendWidget,
+                      ],
+                    ),
+                  )
+                : Container(),
           ],
           elevation: 1,
           shape: RoundedRectangleBorder(
