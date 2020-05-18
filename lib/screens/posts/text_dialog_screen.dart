@@ -66,7 +66,7 @@ class TextDialogScreen extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(
-                          top: SizeConfig.instance.blockSizeVertical * 3,
+                          top: SizeConfig.instance.blockSizeVertical * 2,
                           left: SizeConfig.instance.blockSizeHorizontal * 6,
                           right: SizeConfig.instance.blockSizeHorizontal * 6,
                         ),

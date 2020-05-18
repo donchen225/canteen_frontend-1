@@ -157,22 +157,26 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                   editable: false,
                   size: widget.height * 0.1,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '${widget.user.displayName ?? ''}',
-                        style: titleStyle,
-                      ),
-                      Text(
-                        '${widget.user.title ?? ''}',
-                        style: subTitleStyle,
-                      ),
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          '${widget.user.displayName ?? ''}',
+                          style: titleStyle,
+                        ),
+                        Text(
+                          '${widget.user.title ?? ''}',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: subTitleStyle,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

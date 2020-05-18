@@ -39,8 +39,8 @@ class Recommendation extends Equatable {
 
   static Recommendation fromJSON(Map<dynamic, dynamic> json) {
     final availability = json['availability']?.map<String, Map<String, int>>(
-            (String k, dynamic v) => MapEntry<String, Map<String, int>>(
-                k,
+            (dynamic k, dynamic v) => MapEntry<String, Map<String, int>>(
+                k as String,
                 v.map<String, int>(
                     (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
         {};
