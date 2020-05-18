@@ -229,77 +229,89 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
           Container(
             margin: EdgeInsets.only(
                 bottom: SizeConfig.instance.blockSizeVertical * 3),
-            child: Row(
+            child: Column(
               children: <Widget>[
-                Expanded(
-                  child: Container(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal,
-                            right: SizeConfig.instance.safeBlockHorizontal,
-                            bottom: SizeConfig.instance.safeBlockVertical),
-                        child: Text(
-                          'Price',
-                          style: TextStyle(fontSize: _titleFontSize),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        height: SizeConfig.instance.safeBlockVertical * 7,
-                        width: SizeConfig.instance.safeBlockHorizontal * 20,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey[400]),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            controller: _skillPriceController,
-                            textCapitalization: TextCapitalization.sentences,
-                            autofocus: true,
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                decoration: TextDecoration.none),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              counterText: "",
-                              contentPadding: EdgeInsets.all(0),
-                              isDense: true,
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.instance.safeBlockHorizontal,
+                                right: SizeConfig.instance.safeBlockHorizontal,
+                                bottom: SizeConfig.instance.safeBlockVertical),
+                            child: Text(
+                              'Price',
+                              style: TextStyle(fontSize: _titleFontSize),
                             ),
-                            keyboardType: TextInputType.number,
-                            maxLines: 1,
-                            minLines: 1,
-                            maxLength: 5,
                           ),
-                        ),
-                      ),
-                    ],
-                  )),
+                          Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            height: SizeConfig.instance.safeBlockVertical * 7,
+                            width: SizeConfig.instance.safeBlockHorizontal * 20,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[400]),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                controller: _skillPriceController,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                autofocus: true,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    decoration: TextDecoration.none),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  counterText: "",
+                                  contentPadding: EdgeInsets.all(0),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLines: 1,
+                                minLines: 1,
+                                maxLength: 5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.instance.safeBlockHorizontal,
+                                right: SizeConfig.instance.safeBlockHorizontal,
+                                bottom: SizeConfig.instance.safeBlockVertical),
+                            child: Text(
+                              'Duration',
+                              style: TextStyle(fontSize: _titleFontSize),
+                            ),
+                          ),
+                          _buildDurationPicker(context),
+                        ],
+                      )),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal,
-                            right: SizeConfig.instance.safeBlockHorizontal,
-                            bottom: SizeConfig.instance.safeBlockVertical),
-                        child: Text(
-                          'Duration',
-                          style: TextStyle(fontSize: _titleFontSize),
-                        ),
-                      ),
-                      _buildDurationPicker(context),
-                    ],
-                  )),
-                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical),
+                  child: Text(
+                      'Note: Setting the price to \$0 will enable others to connect with you without paying.'),
+                )
               ],
             ),
           ),
