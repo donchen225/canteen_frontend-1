@@ -7,10 +7,14 @@ class TimeConfirmation extends StatefulWidget {
   final DateTime time;
   final int duration;
   final Function onTapBack;
+  final Function onMessageUpdated;
 
-  TimeConfirmation(
-      {@required this.time, @required this.duration, @required this.onTapBack})
-      : assert(time != null),
+  TimeConfirmation({
+    @required this.time,
+    @required this.duration,
+    @required this.onTapBack,
+    this.onMessageUpdated,
+  })  : assert(time != null),
         assert(duration != null),
         assert(onTapBack != null);
 
@@ -27,6 +31,18 @@ class _TimeConfirmationState extends State<TimeConfirmation> {
     super.initState();
 
     _messageController = TextEditingController();
+
+    if (widget.onMessageUpdated != null) {
+      _messageController.addListener(() {
+        widget.onMessageUpdated(_messageController.text);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
   }
 
   @override

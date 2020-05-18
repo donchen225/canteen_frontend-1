@@ -82,6 +82,9 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
       return TimeConfirmation(
         time: _selectedTime,
         duration: widget.skill.duration,
+        onMessageUpdated: (String message) {
+          _message = message;
+        },
         onTapBack: () {
           setState(() {
             _selectedTime = null;
@@ -89,6 +92,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
         },
       );
     }
+    return Container();
   }
 
   @override

@@ -75,7 +75,7 @@ class RequestEntity extends Equatable {
       'receiver_id': receiverId,
       'skill': skill,
       'comment': comment,
-      'time': time,
+      'time': time.millisecondsSinceEpoch,
     };
   }
 }
