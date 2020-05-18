@@ -30,6 +30,10 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
 
     _titleController = TextEditingController();
     _messageController = TextEditingController();
+
+    _titleController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -37,46 +41,49 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
     return TextDialogScreen(
       title: 'New Post',
       height: widget.height,
-      sendWidget: PostButton(onTap: (BuildContext context) {
-        if (_titleController.text.isNotEmpty) {
-          final now = DateTime.now();
-          final post = Post(
-            title: _titleController.text,
-            message: _messageController.text,
-            from: widget.user.id,
-            createdOn: now,
-            lastUpdated: now,
-          );
-          BlocProvider.of<PostBloc>(context).add(AddPost(post));
-          Navigator.maybePop(context);
-        } else {
-          final snackBar = SnackBar(
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.white,
-            duration: Duration(seconds: 2),
-            content: Row(
-              children: <Widget>[
-                Container(
-                  width: 10,
-                  height: SizeConfig.instance.blockSizeVertical * 3,
-                  color: Colors.red,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-                  child: Text(
-                    'Please enter a question',
-                    style: TextStyle(
-                      color: Colors.black,
+      sendWidget: PostButton(
+          enabled: _titleController.text.isNotEmpty,
+          onTap: (BuildContext context) {
+            if (_titleController.text.isNotEmpty) {
+              final now = DateTime.now();
+              final post = Post(
+                title: _titleController.text,
+                message: _messageController.text,
+                from: widget.user.id,
+                createdOn: now,
+                lastUpdated: now,
+              );
+              BlocProvider.of<PostBloc>(context).add(AddPost(post));
+              Navigator.maybePop(context);
+            } else {
+              final snackBar = SnackBar(
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.white,
+                duration: Duration(seconds: 2),
+                content: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 10,
+                      height: SizeConfig.instance.blockSizeVertical * 3,
+                      color: Colors.red,
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              SizeConfig.instance.blockSizeHorizontal * 3),
+                      child: Text(
+                        'Please enter a question',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-          Scaffold.of(context).showSnackBar(snackBar);
-        }
-      }),
+              );
+              Scaffold.of(context).showSnackBar(snackBar);
+            }
+          }),
       child: Column(
         children: <Widget>[
           Row(

@@ -30,6 +30,16 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
   void initState() {
     super.initState();
     _messageController = TextEditingController();
+
+    _messageController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,6 +49,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
       height: widget.height,
       sendWidget: PostButton(
           text: 'SEND',
+          enabled: _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
             if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
