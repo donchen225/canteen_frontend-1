@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -37,16 +38,16 @@ class _BasicInfoTabState extends State<BasicInfoTab> {
       },
       child: Container(
         padding: EdgeInsets.only(
-            left: SizeConfig.instance.blockSizeHorizontal * 6,
-            right: SizeConfig.instance.blockSizeHorizontal * 3,
+            left: SizeConfig.instance.safeBlockHorizontal * 4,
+            right: SizeConfig.instance.safeBlockHorizontal * 3,
             top: SizeConfig.instance.blockSizeVertical,
             bottom: SizeConfig.instance.blockSizeVertical),
         decoration: BoxDecoration(
           color:
               nameSelected ? Colors.grey[400].withOpacity(0.6) : Colors.white,
           border: Border(
-            top: BorderSide(width: 0.5, color: Colors.grey[400]),
-            bottom: BorderSide(width: 0.5, color: Colors.grey[400]),
+            top: BorderSide(width: 0.5, color: Palette.borderSeparatorColor),
+            bottom: BorderSide(width: 0.5, color: Palette.borderSeparatorColor),
           ),
         ),
         child: Row(

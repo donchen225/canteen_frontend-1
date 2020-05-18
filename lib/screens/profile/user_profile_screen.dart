@@ -13,6 +13,7 @@ import 'package:canteen_frontend/screens/profile/edit_profile_long_info_screen.d
 import 'package:canteen_frontend/screens/profile/edit_profile_short_info_screen.dart';
 import 'package:canteen_frontend/screens/profile/edit_profile_skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/profile/profile_section.dart';
 import 'package:canteen_frontend/screens/profile/profile_section_title.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
@@ -38,6 +39,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  final horizontalPaddingBlocks = 4;
   UserProfileBloc _userProfileBloc;
 
   @override
@@ -95,6 +97,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       final user = state.user;
 
       return Scaffold(
+        backgroundColor: Palette.containerColor,
         appBar: AppBar(
           brightness: Brightness.light,
           title: Text(
@@ -144,120 +147,174 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: ProfileSectionTitle('Basic Info'),
+            ProfileSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: ProfileSectionTitle('Basic Info'),
+                  ),
+                  BasicInfoTab(
+                      title: 'Name',
+                      value: user.displayName,
+                      onTap: () {
+                        _userProfileBloc.add(EditName(user));
+                      }),
+                  BasicInfoTab(
+                      title: 'Title',
+                      value: user.title,
+                      onTap: () {
+                        _userProfileBloc.add(EditTitle(user));
+                      }),
+                ],
+              ),
             ),
-            BasicInfoTab(
-                title: 'Name',
-                value: user.displayName,
-                onTap: () {
-                  _userProfileBloc.add(EditName(user));
-                }),
-            BasicInfoTab(
-                title: 'Title',
-                value: user.title,
-                onTap: () {
-                  _userProfileBloc.add(EditTitle(user));
-                }),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: ProfileSectionTitle('About'),
+            ProfileSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: ProfileSectionTitle('About'),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _userProfileBloc.add(EditAboutSection(user));
+                    },
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                SizeConfig.instance.safeBlockHorizontal *
+                                    horizontalPaddingBlocks),
+                        child: ProfileTextCard(
+                          child: Text(user.about ?? ''),
+                        )),
+                  ),
+                ],
+              ),
             ),
-            GestureDetector(
-              onTap: () {
-                _userProfileBloc.add(EditAboutSection(user));
-              },
-              child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-                  child: ProfileTextCard(
-                    child: Text(user.about ?? ''),
-                  )),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: ProfileSectionTitle("Interests"),
-            ),
-            GestureDetector(
-              onTap: () {
-                _userProfileBloc.add(EditInterests(user));
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: ProfileTextCard(
-                        child: _buildUserInterests(user.interests),
+            ProfileSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: ProfileSectionTitle("Interests"),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _userProfileBloc.add(EditInterests(user));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.instance.safeBlockHorizontal *
+                              horizontalPaddingBlocks),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: ProfileTextCard(
+                              child: _buildUserInterests(user.interests),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: ProfileSectionTitle("I'm teaching"),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: SkillList(
-                user.teachSkill,
-                onTap: (int index) => _userProfileBloc
-                    .add(EditSkill(user, SkillType.teach, index)),
-              ),
-            ),
-            user.teachSkill.length < 3
-                ? AddIcon(
-                    160,
-                    onTap: () {
-                      _userProfileBloc.add(EditSkill(
-                          user, SkillType.teach, user.teachSkill.length));
-                    },
-                  )
-                : Container(),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: ProfileSectionTitle("I'm learning"),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
-              child: SkillList(
-                user.learnSkill,
-                onTap: (int index) => _userProfileBloc
-                    .add(EditSkill(user, SkillType.learn, index)),
-              ),
-            ),
-            user.learnSkill.length < 3
-                ? Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: AddIcon(
-                      160,
-                      onTap: () {
-                        _userProfileBloc.add(EditSkill(
-                            user, SkillType.learn, user.learnSkill.length));
-                      },
+            ProfileSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: ProfileSectionTitle("I'm teaching"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: SkillList(
+                      user.teachSkill,
+                      onTap: (int index) => _userProfileBloc
+                          .add(EditSkill(user, SkillType.teach, index)),
                     ),
-                  )
-                : Container(),
+                  ),
+                  user.teachSkill.length < 3
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: AddIcon(
+                            160,
+                            onTap: () {
+                              _userProfileBloc.add(EditSkill(user,
+                                  SkillType.teach, user.teachSkill.length));
+                            },
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            ProfileSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: ProfileSectionTitle("I'm learning"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.safeBlockHorizontal *
+                            horizontalPaddingBlocks),
+                    child: SkillList(
+                      user.learnSkill,
+                      onTap: (int index) => _userProfileBloc
+                          .add(EditSkill(user, SkillType.learn, index)),
+                    ),
+                  ),
+                  user.learnSkill.length < 3
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: AddIcon(
+                              160,
+                              onTap: () {
+                                _userProfileBloc.add(EditSkill(user,
+                                    SkillType.learn, user.learnSkill.length));
+                              },
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+                  horizontal: SizeConfig.instance.safeBlockHorizontal *
+                      horizontalPaddingBlocks),
               child: ProfileSectionTitle("Availability"),
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: SizeConfig.instance.blockSizeHorizontal * 3,
-                right: SizeConfig.instance.blockSizeHorizontal * 3,
+                left: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
+                right: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
                 bottom: SizeConfig.instance.blockSizeVertical,
               ),
               child: Text(
@@ -267,7 +324,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3),
+                  horizontal: SizeConfig.instance.safeBlockHorizontal *
+                      horizontalPaddingBlocks),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -284,7 +342,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                  horizontal: SizeConfig.instance.safeBlockHorizontal *
+                      horizontalPaddingBlocks,
                   vertical: SizeConfig.instance.blockSizeVertical),
               child: Text(
                 'Recurring Availability',
@@ -293,7 +352,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+                horizontal: SizeConfig.instance.safeBlockHorizontal *
+                    horizontalPaddingBlocks,
               ),
               child: AvailabilitySection(
                 availability: user.availability,

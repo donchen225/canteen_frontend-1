@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -10,19 +11,18 @@ class ProfileTextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.grey[200]),
-        borderRadius: BorderRadius.circular(6),
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        border: Border.all(
+          width: 0.5,
+          color: Palette.borderSeparatorColor,
+        ),
+        borderRadius: BorderRadius.circular(15),
       ),
       margin: EdgeInsets.all(0),
-      elevation: 0.3,
-      color: color,
-      child: Container(
-        height: height,
-        padding: EdgeInsets.all(SizeConfig.instance.blockSizeHorizontal * 5),
-        child: child ?? Container(),
-      ),
+      padding: EdgeInsets.all(SizeConfig.instance.safeBlockHorizontal * 4),
+      child: child ?? Container(),
     );
   }
 }
