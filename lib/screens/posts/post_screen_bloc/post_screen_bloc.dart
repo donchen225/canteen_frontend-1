@@ -40,6 +40,8 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
       yield* _mapPostsInspectPostToState(event);
     } else if (event is PostsInspectUser) {
       yield* _mapPostsInspectUserToState(event);
+    } else if (event is PostsInspectGroup) {
+      yield* _mapPostsInspectGroupToState(event);
     } else if (event is PostsHome) {
       yield* _mapPostsHomeToState();
     } else if (event is DiscoverGroups) {
@@ -60,6 +62,12 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
       PostsInspectUser event) async* {
     _previousStates.add(state);
     yield PostScreenShowProfile(event.user);
+  }
+
+  Stream<PostScreenState> _mapPostsInspectGroupToState(
+      PostsInspectGroup event) async* {
+    _previousStates.add(state);
+    yield PostScreenShowGroup(event.group, await _userRepository.currentUser());
   }
 
   // TODO: paginate results

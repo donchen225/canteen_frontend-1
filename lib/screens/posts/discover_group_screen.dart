@@ -1,11 +1,13 @@
 import 'package:canteen_frontend/screens/posts/group_card.dart';
+import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DiscoverGroupScreen extends StatelessWidget {
   final Function onTapBack;
-  final List<Map<String, String>> groups;
+  final List<Map<String, dynamic>> groups;
 
   DiscoverGroupScreen({this.onTapBack, @required this.groups});
 
@@ -42,17 +44,12 @@ class DiscoverGroupScreen extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Container(
-              height: SizeConfig.instance.scaffoldBodyHeight * 0.3,
+              height: SizeConfig.instance.scaffoldBodyHeight * 0.33,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (context, index) {
                   final group = groups[index];
-                  final color = [
-                    Colors.purple,
-                    Colors.lightBlue,
-                    Colors.lightGreen,
-                  ];
 
                   return Padding(
                     padding: EdgeInsets.only(
@@ -63,7 +60,9 @@ class DiscoverGroupScreen extends StatelessWidget {
                     child: GroupCard(
                       group: group,
                       width: 180,
-                      color: color[index],
+                      color: group['color'],
+                      onTap: () => BlocProvider.of<PostScreenBloc>(context)
+                          .add(PostsInspectGroup(group)),
                     ),
                   );
                 },

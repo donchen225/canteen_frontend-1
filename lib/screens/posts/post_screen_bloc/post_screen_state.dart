@@ -52,3 +52,16 @@ class PostScreenShowPost extends PostScreenState {
 }
 
 class PostScreenDiscoverGroup extends PostScreenState {}
+
+class PostScreenShowGroup extends PostScreenState {
+  final User user;
+  final Map<String, dynamic> group;
+
+  const PostScreenShowGroup(this.group, this.user);
+
+  @override
+  List<Object> get props => [group];
+
+  @override
+  String toString() => 'PostScreenShowGroup';
+}

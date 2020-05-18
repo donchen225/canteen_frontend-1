@@ -39,6 +39,20 @@ class PostsInspectUser extends PostScreenEvent {
   }
 }
 
+class PostsInspectGroup extends PostScreenEvent {
+  final Map<String, dynamic> group;
+
+  const PostsInspectGroup(this.group);
+
+  @override
+  List<Object> get props => [group];
+
+  @override
+  String toString() {
+    return 'PostsInspectGroup { group: $group }';
+  }
+}
+
 class DiscoverGroups extends PostScreenEvent {}
 
 class PostsPreviousState extends PostScreenEvent {}

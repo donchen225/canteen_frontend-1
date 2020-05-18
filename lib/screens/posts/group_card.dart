@@ -4,7 +4,7 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class GroupCard extends StatelessWidget {
-  final Map<String, String> group;
+  final Map<String, dynamic> group;
   final double height;
   final double width;
   final Color color;

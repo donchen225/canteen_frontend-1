@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/posts/discover_group_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/single_group_screen.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -30,13 +31,21 @@ class _PostScreenState extends State<PostScreen> {
         onTapBack: () =>
             BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
       );
+    } else if (state is PostScreenShowGroup) {
+      return SingleGroupScreen(
+        user: state.user,
+        group: state.group,
+        onTapBack: () =>
+            BlocProvider.of<PostScreenBloc>(context).add(PostsPreviousState()),
+      );
     } else if (state is PostScreenDiscoverGroup) {
-      final List<Map<String, String>> groups = [
+      final List<Map<String, dynamic>> groups = [
         {
           'name': 'Superconnectors',
           'description': 'This group is meant for superconnectors.',
           'type': 'Private',
           'members': '120',
+          'color': Colors.purple,
         },
         {
           'name': 'Cognitive World',
@@ -44,12 +53,14 @@ class _PostScreenState extends State<PostScreen> {
               'This group is meant for Cognitive World members and people in AI.',
           'type': 'Private',
           'members': '80',
+          'color': Colors.lightBlue,
         },
         {
           'name': 'Modernist',
           'description': 'This group is meant for Modernist members.',
           'type': 'Private',
           'members': '240',
+          'color': Colors.lightGreen,
         }
       ];
       return DiscoverGroupScreen(
@@ -76,7 +87,8 @@ class _PostScreenState extends State<PostScreen> {
             print('STATE: $state');
             if (state is PostScreenShowProfile ||
                 state is PostScreenShowPost ||
-                state is PostScreenDiscoverGroup) {
+                state is PostScreenDiscoverGroup ||
+                state is PostScreenShowGroup) {
               return SlideTransition(
                 position: Tween<Offset>(
                   begin: const Offset(offsetdXForward, 0),
