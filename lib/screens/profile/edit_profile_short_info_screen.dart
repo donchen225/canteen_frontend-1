@@ -42,6 +42,7 @@ class _EditProfileShortInfoScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Palette.containerColor,
       appBar: AppBar(
         brightness: Brightness.light,
         automaticallyImplyLeading: false,

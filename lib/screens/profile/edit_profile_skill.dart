@@ -122,6 +122,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
         _initialDurationIndex != -1 ? _initialDurationIndex : 0;
 
     return Scaffold(
+      backgroundColor: Palette.containerColor,
       appBar: AppBar(
         brightness: Brightness.light,
         automaticallyImplyLeading: false,
