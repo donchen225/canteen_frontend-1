@@ -31,6 +31,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     const receiverId = data.receiver_id;
     const skill = data.skill;
     const comment = data.comment;
+    const requestTime = new Date(data.time);
 
     var output = {};
     var terminate = false;
@@ -134,6 +135,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         "skill": skill,
         "status": 0,
         "comment": comment,
+        "time": requestTime,
         "created_on": admin.firestore.Timestamp.now(),
     };
 
