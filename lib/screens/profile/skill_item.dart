@@ -7,12 +7,14 @@ class SkillItem extends StatelessWidget {
   final double verticalPadding;
   final double horizontalPadding;
   final Skill skill;
+  final bool tapEnabled;
   final Function onTap;
 
   SkillItem(
       {this.verticalPadding = 0,
       this.horizontalPadding = 0,
       this.skill,
+      this.tapEnabled = false,
       this.onTap});
 
   @override
@@ -68,7 +70,9 @@ class SkillItem extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   FlatButton(
-                    color: Palette.orangeColor,
+                    color: tapEnabled
+                        ? Palette.orangeColor
+                        : Palette.orangeColor.withOpacity(0.4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -78,7 +82,13 @@ class SkillItem extends StatelessWidget {
                             color: Palette.buttonDarkTextColor,
                           ),
                     ),
-                    onPressed: () => onTap(),
+                    onPressed: onTap != null
+                        ? () {
+                            if (tapEnabled) {
+                              onTap();
+                            }
+                          }
+                        : null,
                   ),
                 ],
               ),

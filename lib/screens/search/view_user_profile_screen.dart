@@ -66,25 +66,6 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
         },
       ),
     );
-
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) => ConfirmationDialog(
-    //     user: widget.user,
-    //     skill: skill,
-    //     onConfirm: (comment) {
-    //       BlocProvider.of<RequestBloc>(context).add(
-    //         AddRequest(
-    //           Request.create(
-    //             skill: skill,
-    //             comment: comment,
-    //             receiverId: widget.user.id,
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
   }
 
   @override
@@ -244,6 +225,8 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             final skill = widget.user.teachSkill[index];
+                            final tapEnabled =
+                                skill.duration != null && skill.name != null;
 
                             return SkillItem(
                               verticalPadding:
@@ -252,6 +235,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                   SizeConfig.instance.safeBlockHorizontal *
                                       kHorizontalPaddingBlocks,
                               skill: skill,
+                              tapEnabled: tapEnabled,
                               onTap: () => _onTapSkillFunction(context, skill),
                             );
                           },

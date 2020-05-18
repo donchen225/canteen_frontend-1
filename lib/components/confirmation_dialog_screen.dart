@@ -184,7 +184,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.instance.safeBlockVertical,
+              vertical: SizeConfig.instance.safeBlockVertical * 2,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
