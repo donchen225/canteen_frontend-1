@@ -75,12 +75,15 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 0,
-        leading: BackButton(
-          onPressed: () {
-            if (widget.onTapBack != null) {
-              widget.onTapBack();
-            }
-          },
+        leading: Visibility(
+          visible: widget.onTapBack != null,
+          child: BackButton(
+            onPressed: () {
+              if (widget.onTapBack != null) {
+                widget.onTapBack();
+              }
+            },
+          ),
         ),
       ),
       body: NestedScrollView(

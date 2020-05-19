@@ -64,7 +64,7 @@ class RequestEntity extends Equatable {
       receiverId: snapshot.data['receiver_id'],
       skill: snapshot.data['skill'],
       comment: snapshot.data['comment'],
-      time: snapshot.data['time'].toDate(),
+      time: snapshot.data['time']?.toDate() ?? null,
       status: snapshot.data['status'],
       createdOn: snapshot.data['created_on'].toDate(),
     );

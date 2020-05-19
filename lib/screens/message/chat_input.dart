@@ -59,7 +59,7 @@ class _ChatInputState extends State<ChatInput> {
                       child: TextField(
                         controller: textEditingController,
                         textCapitalization: TextCapitalization.sentences,
-                        autofocus: true,
+                        autofocus: false,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Send a message...',
                           hintStyle:

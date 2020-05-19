@@ -163,7 +163,6 @@ class _ProfileListState extends State<ProfileList>
                       height: widget.skillListHeight,
                     ),
                     Container(),
-                    Container(),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,7 @@ class MatchItem extends StatelessWidget {
               right: constraints.maxWidth * 0.03,
             ),
             decoration: BoxDecoration(
-              color: Color(0xFFF0F0F0),
+              color: Palette.containerColor,
               border: Border.all(width: 0.2, color: Colors.grey[400]),
             ),
             child: Stack(

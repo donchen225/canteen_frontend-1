@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/request/detailed_request_grid.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,10 @@ class RequestGrid extends StatelessWidget {
           },
         );
       } else if (state is IndividualDetailedRequestLoaded) {
+        return ViewUserProfileScreen(
+            user: state.request.sender,
+            onTapBack: () => BlocProvider.of<RequestListBloc>(context)
+                .add(LoadRequestList()));
         return Scaffold(
             body: Stack(
           children: <Widget>[

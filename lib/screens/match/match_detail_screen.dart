@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/match/match_details_selection/match_pay
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -188,20 +189,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                     }
 
                     if (navState is ProfileScreenLoaded) {
-                      return CustomScrollView(
-                        slivers: <Widget>[
-                          SliverPadding(
-                            padding: EdgeInsets.only(
-                                top: SizeConfig.instance.blockSizeVertical * 3,
-                                left:
-                                    SizeConfig.instance.blockSizeHorizontal * 3,
-                                right:
-                                    SizeConfig.instance.blockSizeHorizontal * 3,
-                                bottom:
-                                    SizeConfig.instance.blockSizeVertical * 13),
-                            sliver: ProfileList(prospect, skillListHeight: 100),
-                          )
-                        ],
+                      return ViewUserProfileScreen(
+                        user: prospect,
                       );
                     }
 

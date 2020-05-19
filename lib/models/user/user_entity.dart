@@ -88,8 +88,8 @@ class UserEntity extends Equatable {
       phoneNumber: snap.data["phone_number"],
       onBoarded: snap.data["onboarded"],
       availability: snap.data["availability"]?.map<String, Map<String, int>>(
-              (String k, dynamic v) => MapEntry<String, Map<String, int>>(
-                  k,
+              (dynamic k, dynamic v) => MapEntry<String, Map<String, int>>(
+                  k as String,
                   v.map<String, int>(
                       (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
           {},

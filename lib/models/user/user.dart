@@ -89,13 +89,13 @@ class User {
   }
 
   static User fromAlgoliaSnapshot(AlgoliaObjectSnapshot snapshot) {
-    final availability = snapshot.data['availability']
-            ?.map<String, Map<String, int>>((String k, dynamic v) =>
-                MapEntry<String, Map<String, int>>(
-                    k,
+    final Map<String, Map<String, int>> availability =
+        snapshot.data['availability']?.map<String, Map<String, int>>(
+                (dynamic k, dynamic v) => MapEntry<String, Map<String, int>>(
+                    k as String,
                     v.map<String, int>(
                         (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
-        {};
+            {};
 
     return User(
       id: snapshot.objectID,
