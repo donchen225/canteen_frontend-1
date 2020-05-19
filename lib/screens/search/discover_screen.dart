@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/home_drawer.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -18,8 +19,8 @@ class DiscoverScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      drawer: HomeDrawer(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
@@ -29,7 +30,7 @@ class DiscoverScreen extends StatelessWidget {
               final height = kToolbarHeight * 0.7;
               return Padding(
                 padding: EdgeInsets.only(
-                  left: constraints.maxWidth * 0.05,
+                  left: (constraints.maxWidth * 0.05) + (kToolbarHeight * 0.6),
                   right: constraints.maxWidth * 0.05,
                   top: kToolbarHeight * 0.18,
                 ),
