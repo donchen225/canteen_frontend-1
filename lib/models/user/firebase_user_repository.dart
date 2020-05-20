@@ -224,8 +224,8 @@ class FirebaseUserRepository extends UserRepository {
     return user;
   }
 
-  void saveUser(User user) {
-    user = user;
+  void saveUser(User updatedUser) {
+    user = updatedUser;
   }
 
   void saveUserMap(User user) {

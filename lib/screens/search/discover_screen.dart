@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/home_drawer.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -19,8 +18,13 @@ class DiscoverScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: HomeDrawer(),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
         brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,

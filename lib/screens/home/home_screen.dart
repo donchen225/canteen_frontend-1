@@ -14,6 +14,7 @@ import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -72,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
+      drawer: HomeDrawer(userRepository: widget._userRepository),
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,
@@ -188,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (BuildContext context, HomeState state) {
           print('IN HOME SCREEN BLOC BUILDER');
           print('HOME STATE: $state');
+          print(widget._userRepository.currentUserNow());
 
           if (state is HomeUninitialized ||
               state is HomeInitializing ||

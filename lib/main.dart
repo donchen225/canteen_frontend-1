@@ -33,7 +33,6 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/home_screen.dart';
-import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
