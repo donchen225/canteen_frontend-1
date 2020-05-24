@@ -32,7 +32,7 @@ class _DurationPickerState extends State<DurationPicker> {
   Widget build(BuildContext context) {
     return Container(
       height: widget.pickerHeight,
-      color: Colors.transparent,
+      color: widget.backgroundColor,
       child: GestureDetector(
         // Blocks taps from propagating to the modal sheet and popping.
         onTap: () {},
