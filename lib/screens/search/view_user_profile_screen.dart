@@ -68,6 +68,38 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     );
   }
 
+  Widget _buildItemList(String name, BuildContext context) {
+    final skills =
+        name == 'Offerings' ? widget.user.teachSkill : widget.user.learnSkill;
+
+    return CustomScrollView(
+      key: PageStorageKey<String>(name),
+      slivers: <Widget>[
+        SliverOverlapInjector(
+          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              final skill = skills[index];
+              final tapEnabled = skill.duration != null && skill.name != null;
+
+              return SkillItem(
+                verticalPadding: SizeConfig.instance.safeBlockVertical * 2,
+                horizontalPadding: SizeConfig.instance.safeBlockHorizontal *
+                    kHorizontalPaddingBlocks,
+                skill: skill,
+                tapEnabled: tapEnabled,
+                onTap: () => _onTapSkillFunction(context, skill),
+              );
+            },
+            childCount: skills.length,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,36 +249,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
               bottom: false,
               child: Builder(
                 builder: (BuildContext context) {
-                  return CustomScrollView(
-                    key: PageStorageKey<String>(name),
-                    slivers: <Widget>[
-                      SliverOverlapInjector(
-                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            final skill = widget.user.teachSkill[index];
-                            final tapEnabled =
-                                skill.duration != null && skill.name != null;
-
-                            return SkillItem(
-                              verticalPadding:
-                                  SizeConfig.instance.safeBlockVertical * 2,
-                              horizontalPadding:
-                                  SizeConfig.instance.safeBlockHorizontal *
-                                      kHorizontalPaddingBlocks,
-                              skill: skill,
-                              tapEnabled: tapEnabled,
-                              onTap: () => _onTapSkillFunction(context, skill),
-                            );
-                          },
-                          childCount: widget.user.teachSkill.length,
-                        ),
-                      ),
-                    ],
-                  );
+                  return _buildItemList(name, context);
                 },
               ),
             );
