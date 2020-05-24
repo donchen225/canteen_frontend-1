@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_form.dart';
+import 'package:canteen_frontend/shared_blocs/login_navigation/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,14 +19,16 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () => BlocProvider.of<LoginNavigationBloc>(context)
+              .add(LoginPreviousState()),
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: Center(
-        child: BlocProvider<SignUpBloc>(
-          create: (context) => SignUpBloc(userRepository: _userRepository),
-          child: SignUpForm(userRepository: _userRepository),
-        ),
+      body: BlocProvider<SignUpBloc>(
+        create: (context) => SignUpBloc(userRepository: _userRepository),
+        child: SignUpForm(userRepository: _userRepository),
       ),
     );
   }

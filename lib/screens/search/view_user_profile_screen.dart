@@ -28,7 +28,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
 
   final List<String> tabs = [
     'Offerings',
-    'Details',
+    'Asks',
   ];
 
   @override

@@ -2,6 +2,8 @@ import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_event.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -177,15 +179,9 @@ class _LoginFormState extends State<LoginForm> {
                         "Don't have an account? ",
                       ),
                       GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return SignUpScreen(
-                                    userRepository: widget._userRepository);
-                              }),
-                            );
-                          },
+                          onTap: () =>
+                              BlocProvider.of<LoginNavigationBloc>(context)
+                                  .add(ViewSignupScreen()),
                           child: Text(
                             'Sign Up',
                             style: TextStyle(

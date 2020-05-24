@@ -49,8 +49,8 @@ class SkillItem extends StatelessWidget {
             visible: skill.description?.isNotEmpty ?? false,
             child: Padding(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.blockSizeVertical,
-                bottom: SizeConfig.instance.blockSizeVertical * 2,
+                top: SizeConfig.instance.safeBlockVertical,
+                bottom: SizeConfig.instance.safeBlockVertical,
               ),
               child: Text(skill.description),
             ),

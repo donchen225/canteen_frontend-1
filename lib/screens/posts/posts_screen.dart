@@ -44,7 +44,7 @@ class _PostScreenState extends State<PostScreen> {
           'name': 'Superconnectors',
           'description': 'This group is meant for superconnectors.',
           'type': 'Private',
-          'members': '120',
+          'members': '100',
           'color': Colors.purple,
         },
         {
@@ -52,14 +52,14 @@ class _PostScreenState extends State<PostScreen> {
           'description':
               'This group is meant for Cognitive World members and people in AI.',
           'type': 'Private',
-          'members': '80',
+          'members': '620',
           'color': Colors.lightBlue,
         },
         {
           'name': 'Modernist',
           'description': 'This group is meant for Modernist members.',
           'type': 'Private',
-          'members': '240',
+          'members': '80',
           'color': Colors.lightGreen,
         }
       ];

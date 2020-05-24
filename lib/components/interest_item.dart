@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class InterestItem extends StatelessWidget {
   final String text;
   final Function onTap;
+  final double verticalPadding = 6;
 
   InterestItem({@required this.text, this.onTap});
 
@@ -13,12 +14,12 @@ class InterestItem extends StatelessWidget {
       padding: EdgeInsets.only(
         left: SizeConfig.instance.blockSizeHorizontal * 2,
         right: SizeConfig.instance.blockSizeHorizontal * 2,
-        top: SizeConfig.instance.blockSizeHorizontal * 1.5,
-        bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
+        top: verticalPadding,
+        bottom: verticalPadding,
       ),
       margin: EdgeInsets.only(
-        top: SizeConfig.instance.blockSizeVertical,
-        bottom: SizeConfig.instance.blockSizeVertical,
+        top: SizeConfig.instance.safeBlockVertical * 0.5,
+        bottom: SizeConfig.instance.safeBlockVertical * 0.5,
       ),
       decoration: BoxDecoration(
         color: Colors.blue[50],

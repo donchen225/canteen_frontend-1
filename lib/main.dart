@@ -6,7 +6,7 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/landing/landing_screen.dart';
+import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
@@ -18,6 +18,7 @@ import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart'
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
@@ -207,12 +208,17 @@ class App extends StatelessWidget {
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Uninitialized) {
+                  print('SPLASH SCREEN');
                   return SplashScreen();
                 }
                 if (state is Unauthenticated) {
-                  return LandingScreen(userRepository: _userRepository);
+                  return BlocProvider<LoginNavigationBloc>(
+                    create: (context) => LoginNavigationBloc(),
+                    child: LoginScreen(userRepository: _userRepository),
+                  );
                 }
                 if (state is Authenticated) {
+                  print('AUTHENTICATED - RETURNING HOME SCREEN');
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider<PostScreenBloc>(
@@ -249,7 +255,6 @@ class App extends StatelessWidget {
             ),
           );
         },
-        "/splash": (context) => SplashScreen(),
       },
     );
   }
