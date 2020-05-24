@@ -318,7 +318,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: Text('Learn'),
+                    child: Text('Ask'),
                     color: _learnSkillSelected
                         ? Palette.orangeColor
                         : Palette.buttonInvalidBackgroundColor,
@@ -338,7 +338,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: Text('Teach'),
+                    child: Text('Offering'),
                     color: (_teachSkillSelected)
                         ? Palette.orangeColor
                         : Palette.buttonInvalidBackgroundColor,
