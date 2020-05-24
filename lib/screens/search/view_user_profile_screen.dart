@@ -78,24 +78,63 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
         SliverOverlapInjector(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              final skill = skills[index];
-              final tapEnabled = skill.duration != null && skill.name != null;
+        skills.length > 0
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    final skill = skills[index];
+                    final tapEnabled =
+                        skill.duration != null && skill.name != null;
 
-              return SkillItem(
-                verticalPadding: SizeConfig.instance.safeBlockVertical * 2,
-                horizontalPadding: SizeConfig.instance.safeBlockHorizontal *
-                    kHorizontalPaddingBlocks,
-                skill: skill,
-                tapEnabled: tapEnabled,
-                onTap: () => _onTapSkillFunction(context, skill),
-              );
-            },
-            childCount: skills.length,
-          ),
-        ),
+                    return SkillItem(
+                      verticalPadding:
+                          SizeConfig.instance.safeBlockVertical * 2,
+                      horizontalPadding:
+                          SizeConfig.instance.safeBlockHorizontal *
+                              kHorizontalPaddingBlocks,
+                      skill: skill,
+                      tapEnabled: tapEnabled,
+                      onTap: () => _onTapSkillFunction(context, skill),
+                    );
+                  },
+                  childCount: skills.length,
+                ),
+              )
+            : SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: SizeConfig.instance.safeBlockHorizontal * 12,
+                    right: SizeConfig.instance.safeBlockHorizontal * 12,
+                    top: SizeConfig.instance.safeBlockVertical * 15,
+                    bottom: SizeConfig.instance.safeBlockVertical * 15,
+                  ),
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "${widget.user.displayName} hasn't posted any ${name.toLowerCase()}",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .apply(fontWeightDelta: 3),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.instance.safeBlockVertical * 3,
+                        ),
+                        child: Text(
+                          "When they do, they will show up here.",
+                          style: Theme.of(context).textTheme.subtitle1.apply(
+                                color: Palette.textSecondaryBaseColor,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
       ],
     );
   }
