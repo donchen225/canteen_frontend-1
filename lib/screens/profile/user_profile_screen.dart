@@ -238,7 +238,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.instance.safeBlockHorizontal *
                             horizontalPaddingBlocks),
-                    child: ProfileSectionTitle("I'm teaching"),
+                    child: ProfileSectionTitle("Offerings"),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -273,7 +273,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.instance.safeBlockHorizontal *
                             horizontalPaddingBlocks),
-                    child: ProfileSectionTitle("I'm learning"),
+                    child: ProfileSectionTitle("Asks"),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
