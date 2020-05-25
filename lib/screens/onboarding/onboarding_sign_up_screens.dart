@@ -305,7 +305,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           // crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Container(
-              child: Text("Do you want to learn or teach?"),
+              child: Text("Do you want to add an offering or ask?"),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -318,7 +318,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: Text('Ask'),
+                    child: Text(
+                      'Ask',
+                    ),
                     color: _learnSkillSelected
                         ? Palette.orangeColor
                         : Palette.buttonInvalidBackgroundColor,
@@ -327,7 +329,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                         _learnSkillSelected = true;
                         _teachSkillSelected = false;
                         _pageValidated[1] = true;
-                        _skillType = 'learn';
+                        _skillType = 'ask';
 
                         pages[1] = _buildSkillPage();
                       });
@@ -347,7 +349,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                         _teachSkillSelected = true;
                         _learnSkillSelected = false;
                         _pageValidated[1] = true;
-                        _skillType = 'teach';
+                        _skillType = 'offering';
                         pages[1] = _buildSkillPage();
                       });
                     },
@@ -434,7 +436,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "What is the name of the skill you want to $_skillType?",
+                "What is the name of the $_skillType?",
                 textAlign: TextAlign.start,
               ),
             ),
@@ -499,7 +501,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "How long do you want to $_skillType for?",
+                "How long is the $_skillType?",
                 textAlign: TextAlign.start,
               ),
             ),
@@ -536,7 +538,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "How much do you want to $_skillType for?",
+                _skillType == 'offering'
+                    ? "How much do you want to charge for the $_skillType?"
+                    : "How much do you want to pay for the $_skillType?",
                 textAlign: TextAlign.start,
               ),
             ),
@@ -599,7 +603,9 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "What is the description of the skill you want to $_skillType?",
+                _skillType == 'offering'
+                    ? "Please describe what you are $_skillType in detail."
+                    : "Please describe what you are ${_skillType}ing in detail.",
                 textAlign: TextAlign.start,
               ),
             ),

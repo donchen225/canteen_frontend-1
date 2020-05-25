@@ -1,6 +1,4 @@
 import 'package:canteen_frontend/components/main_button.dart';
-import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/bloc.dart';
@@ -13,12 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpForm extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  SignUpForm({UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
-
   State<SignUpForm> createState() => _SignUpFormState();
 }
 

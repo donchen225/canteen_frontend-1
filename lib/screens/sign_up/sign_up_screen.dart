@@ -28,7 +28,7 @@ class SignUpScreen extends StatelessWidget {
       ),
       body: BlocProvider<SignUpBloc>(
         create: (context) => SignUpBloc(userRepository: _userRepository),
-        child: SignUpForm(userRepository: _userRepository),
+        child: SignUpForm(),
       ),
     );
   }
