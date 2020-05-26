@@ -8,6 +8,7 @@ const zoom = require('./zoom');
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
+const GROUPS_COLLECTION = 'groups';
 const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const USER_COLLECTION = 'users';
@@ -289,37 +290,6 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
         res.status(200).send("Algolia search attributes set successfully.");
         return;
     });
-});
-
-// Video chat functions
-exports.createVideoChatRoom = functions.https.onRequest(async (data, context) => {
-
-    // Check if user is authenticated
-    if (!context.auth) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-            'while authenticated.');
-    }
-
-    // Check if match exists
-
-    // Check if user has paid
-
-    // Check if zoom has already been created, if it has return that link instead
-
-    // Check if date has been accepted
-
-    // Validate zoom parameters
-
-    var response = await zoom.sendZoomRequest('topic', 'agenda', 'time', 'duration');
-
-    // Write response to Firestore
-    return await firestore.collection(VIDEO_CHAT_COLLECTION).add(response).then((doc) => {
-        return { 'zoom_url': doc['join_url'] };
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
-    })
-
 });
 
 
@@ -748,5 +718,44 @@ exports.acceptRecommendation = functions.https.onCall(async (data, context) => {
         }
     }).catch((error) => {
         console.log(`Error - Failed to update recommendation: ${error}`)
+    });
+});
+
+exports.createGroup = functions.https.onCall(async (data, context) => {
+
+    const name = data.name;
+    const description = data.description;
+    const tags = (data.tags !== undefined) ? data.tags : [];
+
+    // Checking attribute.
+    if (name && !(typeof name === 'string')) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "text" containing the message text to add.');
+    }
+
+    if (description && !(typeof description === 'string')) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "text" containing the message text to add.');
+    }
+
+    const time = admin.firestore.Timestamp.now();
+
+    // Create document
+    const doc = {
+        "name": name,
+        "description": description,
+        "tags": tags,
+        "members": 0,
+        "posts": 0,
+        "created_on": time,
+        "last_updated": time,
+    };
+
+    return firestore.collection(GROUPS_COLLECTION).add(doc).then(() => {
+        return doc;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
     });
 });

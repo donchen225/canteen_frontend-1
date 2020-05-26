@@ -1,22 +1,11 @@
-import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_button.dart';
-import 'package:canteen_frontend/screens/posts/enter_post_box.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
-import 'package:canteen_frontend/screens/posts/like_button.dart';
-import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/screens/posts/post_name_template.dart';
-import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostHomeScreen extends StatefulWidget {
   final List<Post> posts;
