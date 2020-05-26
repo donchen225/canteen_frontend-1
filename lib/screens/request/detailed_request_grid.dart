@@ -19,7 +19,7 @@ class DetailedRequestGrid extends StatelessWidget {
     final double itemWidth = SizeConfig.instance.safeBlockHorizontal / 2;
 
     return Container(
-      color: Palette.scaffoldBackgroundColor,
+      color: Palette.scaffoldBackgroundDarkColor,
       child: GridView.builder(
         padding: EdgeInsets.only(
           left: SizeConfig.instance.blockSizeHorizontal * 3,

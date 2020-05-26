@@ -23,7 +23,8 @@ class Palette {
 
   // Body colors
   static Color backgroundColor = const Color(0xFFF8F8F8);
-  static Color scaffoldBackgroundColor = const Color(0xFFEDEFF1);
+  static Color scaffoldBackgroundDarkColor = const Color(0xFFEDEFF1);
+  static Color scaffoldBackgroundLightColor = const Color(0xFFFFFFFF);
   static Color containerColor = const Color(0xFFFFFFFF);
 
   static Color titleColor = const Color(0xFF000000);

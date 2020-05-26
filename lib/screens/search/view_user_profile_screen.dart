@@ -142,7 +142,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Palette.scaffoldBackgroundColor,
+      backgroundColor: Palette.scaffoldBackgroundDarkColor,
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 0,

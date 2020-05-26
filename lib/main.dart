@@ -191,7 +191,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(),
         primaryColor: Palette.orangeColor,
-        scaffoldBackgroundColor: Palette.scaffoldBackgroundColor,
+        scaffoldBackgroundColor: Palette.scaffoldBackgroundDarkColor,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),

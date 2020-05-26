@@ -17,6 +17,7 @@ class LandingScreen extends StatelessWidget {
         kButtonAspectRatio;
 
     return Scaffold(
+      backgroundColor: Palette.scaffoldBackgroundLightColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.instance.safeBlockHorizontal *

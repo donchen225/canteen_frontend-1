@@ -257,7 +257,7 @@ class SinglePostScreen extends StatelessWidget {
                       ),
                       height: SizeConfig.instance.safeBlockVertical * 5,
                       decoration: BoxDecoration(
-                        color: Palette.scaffoldBackgroundColor,
+                        color: Palette.scaffoldBackgroundDarkColor,
                         borderRadius: BorderRadius.circular(
                             SizeConfig.instance.safeBlockVertical * 5 * 0.5),
                       ),
