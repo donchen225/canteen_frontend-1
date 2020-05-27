@@ -26,6 +26,7 @@ class LoginScreen extends StatelessWidget {
     if (state is LoginScreenState) {
       return Scaffold(
         extendBodyBehindAppBar: true,
+        backgroundColor: Palette.scaffoldBackgroundLightColor,
         appBar: AppBar(
           leading: BackButton(
             onPressed: () => BlocProvider.of<LoginNavigationBloc>(context)
