@@ -45,10 +45,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     switch (this.currentIndex) {
       case 0:
-        yield SearchScreenLoaded(reset: reset);
+        yield PostScreenLoaded(reset: reset);
         break;
       case 1:
-        yield PostScreenLoaded(reset: reset);
+        yield SearchScreenLoaded(reset: reset);
         break;
       case 2:
         yield MessageScreenLoaded(reset: reset);
@@ -71,7 +71,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // Load user settings
       _settingBloc.add(InitializeSettings(hasOnboarded: true));
 
-      yield SearchScreenLoaded(reset: false);
+      yield PostScreenLoaded(reset: false);
       // yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
@@ -83,8 +83,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     // Upload user settings here
 
-    yield SearchScreenLoaded(reset: false);
-    // yield RecommendedScreenLoaded();
+    yield PostScreenLoaded(reset: false);
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {

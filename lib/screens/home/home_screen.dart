@@ -138,13 +138,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.home,
-                      ),
+                      icon: const Icon(IconData(0xf38f,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf391,
+                      icon: const Icon(IconData(0xf2f5,
                           fontFamily: CupertinoIcons.iconFont,
                           fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
@@ -159,22 +159,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     //   title: Text(''),
                     // ),
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.sms,
-                      ),
+                      icon: const Icon(IconData(0xf2eb,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
 
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.notifications,
-                      ),
+                      icon: const Icon(IconData(0xf39b,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.person,
-                      ),
+                      icon: const Icon(IconData(0xf3a0,
+                          fontFamily: CupertinoIcons.iconFont,
+                          fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
                   ],
