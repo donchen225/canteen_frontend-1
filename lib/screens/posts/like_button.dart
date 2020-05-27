@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -25,14 +26,13 @@ class LikeButton extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(
-                  right: SizeConfig.instance.blockSizeHorizontal * 2),
+              padding: EdgeInsets.only(right: kButtonTextSpacing),
               child: Container(
                 child: Image.asset(
                   'assets/up-arrow.png',
                   color: post.liked ? Colors.blue : _sideTextColor,
-                  height: style.fontSize * 1.2,
-                  width: style.fontSize * 1.2,
+                  height: style.fontSize,
+                  width: style.fontSize,
                   fit: BoxFit.cover,
                 ),
               ),

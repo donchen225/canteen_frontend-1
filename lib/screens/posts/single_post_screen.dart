@@ -166,6 +166,8 @@ class SinglePostScreen extends StatelessWidget {
                                     );
                                   },
                                   child: CommentButton(
+                                      post: post,
+                                      style: bodyTextTheme,
                                       sideTextColor: _sideTextColor),
                                 ),
                                 Container(),
