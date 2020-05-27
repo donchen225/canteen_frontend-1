@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dot_spacer.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/material.dart';
@@ -8,12 +9,14 @@ class PostNameTemplate extends StatelessWidget {
   final String photoUrl;
   final DateTime time;
   final Color color;
+  final bool showDate;
 
   PostNameTemplate(
       {@required this.name,
       @required this.title,
       @required this.photoUrl,
-      @required this.time,
+      this.time,
+      this.showDate = true,
       this.color = const Color(0xFF9E9E9E)});
 
   String formatTime(DateTime time) {
@@ -31,6 +34,7 @@ class PostNameTemplate extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.bodyText1;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
           children: <Widget>[
@@ -38,21 +42,20 @@ class PostNameTemplate extends StatelessWidget {
               name ?? '',
               style: textStyle.apply(fontWeightDelta: 1),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal),
-              child: Container(
-                width: SizeConfig.instance.blockSizeHorizontal,
-                height: SizeConfig.instance.blockSizeHorizontal,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+            Visibility(
+              visible: showDate,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.blockSizeHorizontal),
+                child: DotSpacer(),
               ),
             ),
-            Text(
-              formatTime(time),
-              style: textStyle.apply(color: color),
+            Visibility(
+              visible: showDate,
+              child: Text(
+                time != null ? formatTime(time) : '',
+                style: textStyle.apply(color: color),
+              ),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dot_spacer.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -9,12 +10,14 @@ import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class SinglePostScreen extends StatelessWidget {
   final User user;
@@ -64,10 +67,29 @@ class SinglePostScreen extends StatelessWidget {
                             onTap: () =>
                                 BlocProvider.of<PostScreenBloc>(context)
                                     .add(PostsInspectUser(post.user)),
-                            child: PostNameTemplate(
-                              name: post.user.displayName,
-                              photoUrl: post.user.photoUrl,
-                              time: post.createdOn,
+                            child: Row(
+                              children: <Widget>[
+                                ProfilePicture(
+                                  photoUrl: post.user.photoUrl,
+                                  editable: false,
+                                  size:
+                                      SizeConfig.instance.safeBlockHorizontal *
+                                          12,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig
+                                            .instance.safeBlockHorizontal *
+                                        2,
+                                  ),
+                                  child: PostNameTemplate(
+                                    name: post.user.displayName,
+                                    title: post.user.title,
+                                    photoUrl: post.user.photoUrl,
+                                    showDate: false,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -82,28 +104,32 @@ class SinglePostScreen extends StatelessWidget {
                           ),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            post.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .apply(fontWeightDelta: 2),
+                            post.message,
+                            style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
-                        Visibility(
-                          visible: post.message?.isNotEmpty ?? false,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: SizeConfig.instance.safeBlockVertical,
-                                left: SizeConfig.instance.safeBlockHorizontal *
-                                    kHorizontalPaddingBlocks,
-                                right: SizeConfig.instance.safeBlockHorizontal *
-                                    kHorizontalPaddingBlocks,
-                              ),
-                              child: Text(post.message,
-                                  style: Theme.of(context).textTheme.bodyText1),
-                            ),
+                        Container(
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
+                            right: SizeConfig.instance.safeBlockHorizontal *
+                                kHorizontalPaddingBlocks,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: <Widget>[
+                              Text(DateFormat('yMMMMd').format(post.createdOn),
+                                  style: bodyTextTheme.apply(
+                                      color: Palette.textSecondaryBaseColor)),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig
+                                          .instance.safeBlockHorizontal),
+                                  child: DotSpacer()),
+                              Text(DateFormat.jm().format(post.createdOn),
+                                  style: bodyTextTheme.apply(
+                                      color: Palette.textSecondaryBaseColor)),
+                            ],
                           ),
                         ),
                         Padding(
