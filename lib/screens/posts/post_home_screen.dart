@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
+import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +24,7 @@ class PostHomeScreen extends StatefulWidget {
 class _PostHomeScreenState extends State<PostHomeScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  bool _showFAB = true;
   final List<String> tabChoices = [
     'Home',
     'Groups',
@@ -31,6 +34,14 @@ class _PostHomeScreenState extends State<PostHomeScreen>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: tabChoices.length);
+
+    _tabController.addListener(_showFloatingActionButton);
+  }
+
+  void _showFloatingActionButton() {
+    setState(() {
+      _showFAB = _tabController.index == 0;
+    });
   }
 
   @override
@@ -42,6 +53,24 @@ class _PostHomeScreenState extends State<PostHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: Visibility(
+          visible: _showFAB,
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => PostDialogScreen(
+                  user: widget.user,
+                  height: SizeConfig.instance.blockSizeVertical *
+                      kDialogScreenHeightBlocks,
+                ),
+              );
+            },
+          ),
+        ),
         appBar: AppBar(
           brightness: Brightness.light,
           title: Text(
