@@ -87,7 +87,7 @@ class PostListScreen extends StatelessWidget {
                                       time: post.createdOn,
                                       color: Palette.textSecondaryBaseColor,
                                     ),
-                                    Container(
+                                    Padding(
                                       padding: EdgeInsets.symmetric(
                                           vertical: SizeConfig
                                               .instance.safeBlockVertical),

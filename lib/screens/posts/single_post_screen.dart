@@ -205,44 +205,32 @@ class SinglePostScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.safeBlockVertical * 0.5,
-                  ),
-                  sliver: SliverToBoxAdapter(
-                    child: BlocBuilder<CommentBloc, CommentState>(
-                        builder: (BuildContext context, CommentState state) {
-                      if (state is CommentsLoading) {
-                        return CupertinoActivityIndicator();
-                      }
+                SliverToBoxAdapter(
+                  child: BlocBuilder<CommentBloc, CommentState>(
+                      builder: (BuildContext context, CommentState state) {
+                    if (state is CommentsLoading) {
+                      return CupertinoActivityIndicator();
+                    }
 
-                      if (state is CommentsLoaded) {
-                        final comments = state.comments;
+                    if (state is CommentsLoaded) {
+                      final comments = state.comments;
 
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: state.comments.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final comment = comments[index];
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: state.comments.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final comment = comments[index];
 
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      SizeConfig.instance.safeBlockVertical *
-                                          0.5,
-                                ),
-                                child: CommentContainer(
-                                  comment: comment,
-                                ),
-                              );
-                            });
-                      }
+                            return CommentContainer(
+                              comment: comment,
+                            );
+                          });
+                    }
 
-                      return Container();
-                    }),
-                  ),
-                )
+                    return Container();
+                  }),
+                ),
               ],
             ),
           ),
