@@ -140,7 +140,7 @@ class ProfileCard extends StatelessWidget {
                                             .textTheme
                                             .subtitle2
                                             .apply(
-                                              color: Palette.orangeColor,
+                                              color: Palette.primaryColor,
                                               fontWeightDelta: 2,
                                             ),
                                       ),

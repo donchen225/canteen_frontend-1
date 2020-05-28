@@ -106,7 +106,7 @@ class _SkillListState extends State<SkillList> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           FlatButton(
-                            color: Palette.orangeColor,
+                            color: Palette.primaryColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),

@@ -190,7 +190,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(),
-        primaryColor: Palette.orangeColor,
+        primaryColor: Palette.primaryColor,
         scaffoldBackgroundColor: Palette.scaffoldBackgroundDarkColor,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,

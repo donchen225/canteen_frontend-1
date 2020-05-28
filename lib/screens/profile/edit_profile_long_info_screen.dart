@@ -58,7 +58,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
                 'Cancel',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -76,7 +76,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
                 'Done',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),

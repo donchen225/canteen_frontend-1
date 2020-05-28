@@ -75,7 +75,7 @@ class OnboardingCompleteScreen extends StatelessWidget {
                               BlocProvider.of<HomeBloc>(context)
                                   .add(InitializeHome());
                             },
-                            color: Palette.orangeColor,
+                            color: Palette.primaryColor,
                             text: 'Continue',
                           ),
                         ),

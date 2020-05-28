@@ -72,7 +72,8 @@ class _MatchDetailEventSelectionScreenState
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 2,
-                        color: selected[i] ? Palette.orangeColor : Colors.black,
+                        color:
+                            selected[i] ? Palette.primaryColor : Colors.black,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -174,7 +175,7 @@ class _MatchDetailEventSelectionScreenState
                       left: SizeConfig.instance.blockSizeHorizontal * 6,
                       right: SizeConfig.instance.blockSizeHorizontal * 6,
                     ),
-                    color: Palette.orangeColor,
+                    color: Palette.primaryColor,
                     disabledColor: Palette.disabledButtonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),

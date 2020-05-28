@@ -130,7 +130,7 @@ class MatchPaymentConfirmationScreen extends StatelessWidget {
                             left: SizeConfig.instance.blockSizeHorizontal * 6,
                             right: SizeConfig.instance.blockSizeHorizontal * 6,
                           ),
-                          color: Palette.orangeColor,
+                          color: Palette.primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),

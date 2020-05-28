@@ -29,8 +29,8 @@ class PostButton extends StatelessWidget {
           text,
           style: Theme.of(context).textTheme.button.apply(
                 color: enabled
-                    ? Palette.orangeColor
-                    : Palette.orangeColor.withOpacity(0.4),
+                    ? Palette.primaryColor
+                    : Palette.primaryColor.withOpacity(0.4),
                 fontWeightDelta: 1,
               ),
         ),

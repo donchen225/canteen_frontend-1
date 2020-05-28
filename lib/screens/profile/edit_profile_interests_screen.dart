@@ -68,7 +68,7 @@ class _EditProfileInterestsScreenState
                 'Cancel',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -88,7 +88,7 @@ class _EditProfileInterestsScreenState
                 'Done',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -131,7 +131,7 @@ class _EditProfileInterestsScreenState
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           color: _textController.text.length > 1
-                              ? Palette.orangeColor
+                              ? Palette.primaryColor
                               : Colors.grey,
                         ),
                       )),

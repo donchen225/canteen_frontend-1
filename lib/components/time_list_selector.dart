@@ -31,7 +31,7 @@ class _TimeListSelectorState extends State<TimeListSelector> {
   final dateFormat = DateFormat('yMMMMd');
   final weekdayFormat = DateFormat('EEEE');
   List<DateTime> times;
-  Color mainColor = Palette.orangeColor;
+  Color mainColor = Palette.primaryColor;
   DateTime selectedTime;
 
   @override

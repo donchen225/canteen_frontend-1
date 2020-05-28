@@ -60,7 +60,7 @@ class _EditProfileShortInfoScreenState
                 'Cancel',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -78,7 +78,7 @@ class _EditProfileShortInfoScreenState
                 'Done',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -100,7 +100,7 @@ class _EditProfileShortInfoScreenState
           style: TextStyle(
               fontSize: SizeConfig.instance.blockSizeHorizontal * 7,
               fontWeight: FontWeight.w600,
-              color: Palette.orangeColor,
+              color: Palette.primaryColor,
               decoration: TextDecoration.none),
           decoration: InputDecoration(
             focusedBorder: UnderlineInputBorder(

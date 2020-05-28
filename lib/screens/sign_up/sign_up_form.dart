@@ -131,7 +131,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     height: SizeConfig.instance.safeBlockHorizontal *
                         (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                         kButtonAspectRatio,
-                    color: Palette.orangeColor,
+                    color: Palette.primaryColor,
                     text: 'Next',
                     onPressed: isRegisterButtonEnabled(state)
                         ? _onFormSubmitted

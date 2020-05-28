@@ -140,7 +140,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                 'Cancel',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -178,7 +178,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                 'Done',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),

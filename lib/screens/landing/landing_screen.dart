@@ -49,7 +49,7 @@ class LandingScreen extends StatelessWidget {
                         Text(
                           'Canteen',
                           style: Theme.of(context).textTheme.headline3.apply(
-                                color: Palette.orangeColor,
+                                color: Palette.primaryColor,
                               ),
                         ),
                       ],
@@ -82,7 +82,7 @@ class LandingScreen extends StatelessWidget {
                         child: RaisedButton(
                           elevation: 0,
                           highlightElevation: 0,
-                          color: Palette.orangeColor,
+                          color: Palette.primaryColor,
                           splashColor: Colors.transparent,
                           highlightColor: Colors.grey.withOpacity(0.2),
                           shape: RoundedRectangleBorder(

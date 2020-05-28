@@ -167,10 +167,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           TextField(
             controller: nameController,
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Palette.orangeColor,
+            cursorColor: Palette.primaryColor,
             style: TextStyle(
                 fontSize: 25,
-                color: Palette.orangeColor,
+                color: Palette.primaryColor,
                 fontWeight: FontWeight.w700,
                 decoration: TextDecoration.none),
             decoration: InputDecoration(
@@ -193,10 +193,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                 child: TextField(
                   controller: priceController,
                   textCapitalization: TextCapitalization.sentences,
-                  cursorColor: Palette.orangeColor,
+                  cursorColor: Palette.primaryColor,
                   style: TextStyle(
                       fontSize: 25,
-                      color: Palette.orangeColor,
+                      color: Palette.primaryColor,
                       fontWeight: FontWeight.w700,
                       decoration: TextDecoration.none),
                   decoration: InputDecoration(
@@ -218,10 +218,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           TextField(
             controller: descriptionController,
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Palette.orangeColor,
+            cursorColor: Palette.primaryColor,
             style: TextStyle(
                 fontSize: 25,
-                color: Palette.orangeColor,
+                color: Palette.primaryColor,
                 fontWeight: FontWeight.w700,
                 decoration: TextDecoration.none),
             decoration: InputDecoration(
@@ -253,7 +253,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: pageValidation,
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -295,7 +295,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[1],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -322,7 +322,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                       'Ask',
                     ),
                     color: _learnSkillSelected
-                        ? Palette.orangeColor
+                        ? Palette.primaryColor
                         : Palette.buttonInvalidBackgroundColor,
                     onPressed: () {
                       setState(() {
@@ -342,7 +342,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                     ),
                     child: Text('Offering'),
                     color: (_teachSkillSelected)
-                        ? Palette.orangeColor
+                        ? Palette.primaryColor
                         : Palette.buttonInvalidBackgroundColor,
                     onPressed: () {
                       setState(() {
@@ -373,7 +373,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[0],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -391,10 +391,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             TextField(
               controller: controller,
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Palette.orangeColor,
+              cursorColor: Palette.primaryColor,
               style: TextStyle(
                   fontSize: 25,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                   decoration: TextDecoration.none),
               decoration: InputDecoration(
@@ -425,7 +425,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       pageColor: Palette.backgroundColor,
       iconColor: null,
       nextValidated: _pageValidated[2],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -443,10 +443,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             TextField(
               controller: controller,
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Palette.orangeColor,
+              cursorColor: Palette.primaryColor,
               style: TextStyle(
                   fontSize: 25,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                   decoration: TextDecoration.none),
               decoration: InputDecoration(
@@ -489,7 +489,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[3],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -526,7 +526,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[4],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -551,10 +551,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
                 textCapitalization: TextCapitalization.sentences,
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
-                cursorColor: Palette.orangeColor,
+                cursorColor: Palette.primaryColor,
                 style: TextStyle(
                     fontSize: 25,
-                    color: Palette.orangeColor,
+                    color: Palette.primaryColor,
                     fontWeight: FontWeight.w700,
                     decoration: TextDecoration.none),
                 inputFormatters: <TextInputFormatter>[
@@ -592,7 +592,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
       // iconImageAssetPath: 'assets/taxi-driver.png',
       iconColor: null,
       nextValidated: _pageValidated[5],
-      bubbleBackgroundColor: Palette.orangeColor,
+      bubbleBackgroundColor: Palette.primaryColor,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal:
@@ -612,10 +612,10 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
             TextField(
               controller: controller,
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Palette.orangeColor,
+              cursorColor: Palette.primaryColor,
               style: TextStyle(
                   fontSize: 14,
-                  color: Palette.orangeColor,
+                  color: Palette.primaryColor,
                   fontWeight: FontWeight.w700,
                   decoration: TextDecoration.none),
               decoration: InputDecoration(
@@ -717,7 +717,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           width: SizeConfig.instance.blockSizeHorizontal * 12,
           decoration: BoxDecoration(
             color: validateSkillPage()
-                ? Palette.orangeColor
+                ? Palette.primaryColor
                 : Palette.buttonInvalidBackgroundColor,
             shape: BoxShape.circle,
           ),
@@ -734,7 +734,7 @@ class _OnboardingSignUpScreensState extends State<OnboardingSignUpScreens> {
           width: SizeConfig.instance.blockSizeHorizontal * 12,
           decoration: BoxDecoration(
             color: (_pageValidated[_currentIndex])
-                ? Palette.orangeColor
+                ? Palette.primaryColor
                 : Palette.buttonInvalidBackgroundColor,
             shape: BoxShape.circle,
           ),

@@ -71,8 +71,8 @@ class SkillItem extends StatelessWidget {
                   ),
                   FlatButton(
                     color: tapEnabled
-                        ? Palette.orangeColor
-                        : Palette.orangeColor.withOpacity(0.4),
+                        ? Palette.primaryColor
+                        : Palette.primaryColor.withOpacity(0.4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

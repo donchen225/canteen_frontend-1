@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBadge(int count, Widget child) {
     return Badge(
-      badgeColor: Palette.orangeColor,
+      badgeColor: Palette.primaryColor,
       toAnimate: false,
       badgeContent: Text(
         count.toString(),
@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   showUnselectedLabels: false,
                   selectedFontSize: kBottomNavigationBarFontSize,
                   unselectedFontSize: kBottomNavigationBarFontSize,
-                  selectedItemColor: Colors.black,
+                  selectedItemColor: Palette.primaryColor,
                   backgroundColor: Palette.appBarBackgroundColor,
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[

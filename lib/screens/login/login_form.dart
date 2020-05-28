@@ -159,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
                         height: SizeConfig.instance.safeBlockHorizontal *
                             (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                             kButtonAspectRatio,
-                        color: Palette.orangeColor,
+                        color: Palette.primaryColor,
                         text: 'Log In',
                         onPressed: isLoginButtonEnabled(state)
                             ? _onFormSubmitted

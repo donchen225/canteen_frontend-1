@@ -9,7 +9,7 @@ class Palette {
 
   // Base colors
   static Color whiteColor = const Color(0xFFFFFFFF);
-  static Color orangeColor = const Color(0xFFEE8442);
+  static Color primaryColor = const Color(0xFF1DA1F2); // orange: 0xFFEE8442
 
   // Button colors
   static Color buttonDarkTextColor = const Color(0xFFFFFFFF);
