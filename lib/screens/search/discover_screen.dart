@@ -1,5 +1,5 @@
+import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
@@ -25,18 +25,9 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: Align(
-          alignment: Alignment.centerRight,
-          child: IconButton(
-            icon: ProfilePicture(
-              photoUrl: userPhotoUrl,
-              editable: false,
-              size: kProfileIconSize,
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          ),
+        leading: ProfileSideBarButton(
+          userPhotoUrl: userPhotoUrl,
+          onPressed: () => Scaffold.of(context).openDrawer(),
         ),
         brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,

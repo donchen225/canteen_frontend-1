@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
@@ -72,6 +73,10 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           ),
         ),
         appBar: AppBar(
+          leading: ProfileSideBarButton(
+            userPhotoUrl: widget.user.photoUrl,
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
           brightness: Brightness.light,
           title: Text(
             'Groups',
