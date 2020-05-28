@@ -15,7 +15,6 @@ class NotificationScreen extends StatelessWidget {
           userPhotoUrl: userPhotoUrl,
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
-        brightness: Brightness.light,
         title: Text(
           'Notifications',
           style: Theme.of(context).textTheme.headline6.apply(

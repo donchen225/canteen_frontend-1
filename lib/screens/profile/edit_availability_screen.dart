@@ -85,7 +85,6 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
     return Scaffold(
       backgroundColor: Palette.containerColor,
       appBar: AppBar(
-        brightness: Brightness.light,
         automaticallyImplyLeading: false,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,

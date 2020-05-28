@@ -76,7 +76,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         builder: (BuildContext context, MatchDetailState state) {
           return Scaffold(
             appBar: AppBar(
-              brightness: Brightness.light,
               title: Text(
                 prospect.displayName ?? prospect.email,
                 style: TextStyle(fontSize: 22, color: Colors.black),

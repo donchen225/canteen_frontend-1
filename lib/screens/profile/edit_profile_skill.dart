@@ -124,7 +124,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     return Scaffold(
       backgroundColor: Palette.containerColor,
       appBar: AppBar(
-        brightness: Brightness.light,
         automaticallyImplyLeading: false,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,

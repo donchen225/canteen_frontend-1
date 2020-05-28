@@ -190,6 +190,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(),
+        brightness: Brightness.light,
+        appBarTheme: AppBarTheme(brightness: Brightness.light),
         primaryColor: Palette.primaryColor,
         scaffoldBackgroundColor: Palette.scaffoldBackgroundDarkColor,
         highlightColor: Colors.transparent,

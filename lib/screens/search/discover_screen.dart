@@ -29,7 +29,6 @@ class DiscoverScreen extends StatelessWidget {
           userPhotoUrl: userPhotoUrl,
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
-        brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
         flexibleSpace: SafeArea(

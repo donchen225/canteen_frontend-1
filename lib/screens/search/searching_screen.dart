@@ -38,7 +38,6 @@ class _SearchingScreenState extends State<SearchingScreen> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          brightness: Brightness.light,
           backgroundColor: Palette.appBarBackgroundColor,
           elevation: 1,
           flexibleSpace: SafeArea(

@@ -42,7 +42,6 @@ class _MessageScreenState extends State<MessageScreen>
           userPhotoUrl: userPhotoUrl,
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
-        brightness: Brightness.light,
         title: Text(
           'Messages',
           style: Theme.of(context).textTheme.headline6.apply(

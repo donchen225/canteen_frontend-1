@@ -41,7 +41,6 @@ class _SearchResultScreenState extends State<SearchResultScreen>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
         flexibleSpace: SafeArea(

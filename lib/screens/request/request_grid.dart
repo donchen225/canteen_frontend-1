@@ -31,65 +31,6 @@ class RequestGrid extends StatelessWidget {
             user: state.request.sender,
             onTapBack: () => BlocProvider.of<RequestListBloc>(context)
                 .add(LoadRequestList()));
-        return Scaffold(
-            body: Stack(
-          children: <Widget>[
-            Container(
-              child: CustomScrollView(slivers: <Widget>[
-                SliverAppBar(
-                  pinned: true,
-                  brightness: Brightness.light,
-                  backgroundColor: Palette.backgroundColor,
-                  title: Text(
-                    state.request.sender.displayName ?? '',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                      bottom: SizeConfig.instance.blockSizeVertical * 13,
-                      left: SizeConfig.instance.blockSizeHorizontal * 3,
-                      right: SizeConfig.instance.blockSizeHorizontal * 3),
-                  sliver: ProfileList(
-                    state.request.sender,
-                    key: Key('search-show-profile'),
-                    skillListHeight:
-                        SizeConfig.instance.blockSizeHorizontal * 33,
-                  ),
-                ),
-              ]),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    BlocProvider.of<RequestBloc>(context)
-                        .add(DeclineRequest(state.request));
-                  },
-                  child: Icon(Icons.clear),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    BlocProvider.of<RequestBloc>(context)
-                        .add(AcceptRequest(state.request));
-                  },
-                  child: Icon(Icons.check),
-                ),
-              ),
-            ),
-          ],
-        ));
       }
       return Container();
     });

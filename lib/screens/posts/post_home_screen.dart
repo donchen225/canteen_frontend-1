@@ -77,7 +77,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
             userPhotoUrl: widget.user.photoUrl,
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
-          brightness: Brightness.light,
           title: Text(
             'Groups',
             style: Theme.of(context).textTheme.headline6.apply(
