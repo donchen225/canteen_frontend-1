@@ -1,9 +1,12 @@
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +19,24 @@ class DiscoverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
+        leading: Align(
+          alignment: Alignment.centerRight,
+          child: IconButton(
+            icon: ProfilePicture(
+              photoUrl: userPhotoUrl,
+              editable: false,
+              size: kProfileIconSize,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
         ),
         brightness: Brightness.light,
         backgroundColor: Palette.appBarBackgroundColor,
@@ -34,9 +47,9 @@ class DiscoverScreen extends StatelessWidget {
               final height = kToolbarHeight * 0.7;
               return Padding(
                 padding: EdgeInsets.only(
-                  left: (constraints.maxWidth * 0.05) + (kToolbarHeight * 0.6),
-                  right: constraints.maxWidth * 0.05,
-                  top: kToolbarHeight * 0.18,
+                  left: (constraints.maxWidth * 0.08) + kProfileIconSize,
+                  right: constraints.maxWidth * 0.08,
+                  top: kToolbarHeight * 0.15,
                 ),
                 child: Align(
                   alignment: Alignment.topCenter,

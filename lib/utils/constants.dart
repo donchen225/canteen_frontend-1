@@ -11,6 +11,9 @@ const double kButtonAspectRatio = 6;
 const double kButtonHeightToFontRatio = 2.66;
 const double kDisabledOpacity = 0.5;
 
+// AppBar constants
+const double kProfileIconSize = 32;
+
 // BottomNavigationBar constants
 const double kBottomNavigationBarFontSize = 12;
 

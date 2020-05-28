@@ -50,7 +50,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                   padding: EdgeInsets.only(
                     left: constraints.maxWidth * 0.05,
                     right: constraints.maxWidth * 0.05,
-                    top: kToolbarHeight * 0.18,
+                    top: kToolbarHeight * 0.15,
                   ),
                   child: Align(
                     alignment: Alignment.topCenter,

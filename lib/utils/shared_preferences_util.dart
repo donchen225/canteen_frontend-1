@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceConstants {
   static const userId = "user_id";
+  static const userPhotoUrl = "user_photo_url";
   static const pushNotifications = "push_notifications";
   static const timeZone = "time_zone";
   static const timeZoneName = "time_zone_name";
