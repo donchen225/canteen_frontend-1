@@ -20,7 +20,7 @@ class AddIcon extends StatelessWidget {
             width: 2,
             color: Palette.backgroundColor,
           ),
-          color: Colors.blue[500],
+          color: Palette.primaryColor,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
