@@ -192,7 +192,7 @@ class App extends StatelessWidget {
         textTheme: GoogleFonts.montserratTextTheme(),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(brightness: Brightness.light),
-        primaryColor: Palette.primaryColor,
+        primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Palette.scaffoldBackgroundDarkColor,
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
