@@ -1,5 +1,5 @@
+import 'package:canteen_frontend/screens/match/arguments.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,17 +28,10 @@ class MatchList extends StatelessWidget {
               return MatchItem(
                   match: match,
                   onTap: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) {
-                        BlocProvider.of<MatchDetailBloc>(context)
-                            .add(LoadMatchDetails(match: match));
-                        return BlocProvider<MatchDetailNavigationBloc>(
-                          create: (BuildContext context) =>
-                              MatchDetailNavigationBloc(),
-                          child: MatchDetailScreen(match: match),
-                        );
-                      }),
-                    );
+                    BlocProvider.of<MatchDetailBloc>(context)
+                        .add(LoadMatchDetails(match: match));
+                    Navigator.of(context).pushNamed(MatchDetailScreen.routeName,
+                        arguments: MatchArguments(match: match));
                   });
             },
           );

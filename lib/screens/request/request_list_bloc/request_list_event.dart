@@ -23,15 +23,3 @@ class UpdateRequestList extends RequestListEvent {
   @override
   String toString() => 'UpdateRequestList { requestList: $requestList }';
 }
-
-class InspectDetailedRequest extends RequestListEvent {
-  final DetailedRequest request;
-
-  const InspectDetailedRequest(this.request);
-
-  @override
-  List<Object> get props => [request];
-
-  @override
-  String toString() => 'InspectDetailedRequest { request: $request }';
-}

@@ -1,8 +1,6 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/match/match.dart';
-import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/match_waiting_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
@@ -16,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MatchDetailScreen extends StatefulWidget {
+  static const routeName = '/match';
   final DetailedMatch match;
 
   MatchDetailScreen({Key key, @required this.match}) : super(key: key);
@@ -27,7 +26,6 @@ class MatchDetailScreen extends StatefulWidget {
 class _MatchDetailScreenState extends State<MatchDetailScreen>
     with SingleTickerProviderStateMixin {
   MatchDetailBloc _matchDetailBloc;
-  MatchDetailNavigationBloc _matchDetailNavigationBloc;
   TabController _tabController;
 
   final List<Text> tabChoices = [
@@ -54,8 +52,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
     super.initState();
     _tabController = TabController(vsync: this, length: tabChoices.length);
     _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);
-    _matchDetailNavigationBloc =
-        BlocProvider.of<MatchDetailNavigationBloc>(context);
   }
 
   @override
@@ -74,6 +70,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         builder: (BuildContext context, MatchDetailState state) {
           return Scaffold(
             appBar: AppBar(
+              leading: BackButton(
+                color: Palette.primaryColor,
+              ),
               title: Text(
                 prospect.displayName ?? prospect.email,
                 style: TextStyle(fontSize: 22, color: Colors.black),
@@ -102,9 +101,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                           ),
                         );
                       }).toList(),
-                      onTap: (index) {
-                        _matchDetailNavigationBloc.add(TabTapped(index: index));
-                      },
                       labelColor: Colors.black,
                       unselectedLabelColor: Colors.grey.shade400,
                     )
@@ -148,51 +144,23 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   );
                 }
 
-                if (_matchDetailNavigationBloc.state
-                    is MatchNavigationUninitialized) {
-                  _matchDetailNavigationBloc.add(TabTapped(index: 0));
-                }
-
-                return BlocBuilder<MatchDetailNavigationBloc,
-                    MatchDetailNavigationState>(
-                  bloc: _matchDetailNavigationBloc,
-                  builder: (BuildContext context,
-                      MatchDetailNavigationState navState) {
-                    if (navState is MatchNavigationUninitialized ||
-                        navState is PageLoading ||
-                        navState is CurrentIndexChanged) {
-                      return Center(child: CupertinoActivityIndicator());
-                    }
-
-                    if (state is MatchWaiting &&
-                        !(navState is ProfileScreenLoaded)) {
-                      return MatchWaitingScreen();
-                    }
-
-                    if (navState is ChatScreenLoaded) {
-                      return ChatScreen(
-                        user: prospect,
-                        match: widget.match,
-                      );
-                    }
-
-                    if (navState is VideoChatDetailScreenLoaded) {
-                      return VideoChatDetailScreen(
-                        user: user,
-                        match: widget.match,
-                        userDates: null,
-                        partnerDates: null,
-                      );
-                    }
-
-                    if (navState is ProfileScreenLoaded) {
-                      return ViewUserProfileScreen(
-                        user: prospect,
-                      );
-                    }
-
-                    return Container();
-                  },
+                return TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    ChatScreen(
+                      user: prospect,
+                      match: widget.match,
+                    ),
+                    VideoChatDetailScreen(
+                      user: user,
+                      match: widget.match,
+                      userDates: null,
+                      partnerDates: null,
+                    ),
+                    ViewUserProfileScreen(
+                      user: prospect,
+                    ),
+                  ],
                 );
               },
             ),

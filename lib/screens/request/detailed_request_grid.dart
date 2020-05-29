@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -8,10 +10,7 @@ class DetailedRequestGrid extends StatelessWidget {
   final List<DetailedRequest> items;
   final key;
 
-  final Function onTap;
-
-  DetailedRequestGrid({@required this.items, this.key, this.onTap})
-      : super(key: key);
+  DetailedRequestGrid({@required this.items, this.key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,13 @@ class DetailedRequestGrid extends StatelessWidget {
           final user = request.sender;
 
           return GestureDetector(
-            onTap: onTap != null ? () => onTap(request) : () {},
+            onTap: () => Navigator.pushNamed(
+              context,
+              ViewUserProfileScreen.routeName,
+              arguments: UserArguments(
+                user: user,
+              ),
+            ),
             child: Card(
               elevation: 0.2,
               shape: RoundedRectangleBorder(

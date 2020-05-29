@@ -40,8 +40,6 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
   Stream<RequestListState> mapEventToState(RequestListEvent event) async* {
     if (event is UpdateRequestList) {
       yield* _mapUpdateRequestListToState(event);
-    } else if (event is InspectDetailedRequest) {
-      yield* _mapInspectDetailedRequestToState(event);
     } else if (event is LoadRequestList) {
       yield* _mapLoadRequestListToState(event);
     }
@@ -51,11 +49,6 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
       UpdateRequestList event) async* {
     yield DetailedRequestListLoaded(
         await _getDetailedRequestList(event.requestList));
-  }
-
-  Stream<RequestListState> _mapInspectDetailedRequestToState(
-      InspectDetailedRequest event) async* {
-    yield IndividualDetailedRequestLoaded(event.request);
   }
 
   Stream<RequestListState> _mapLoadRequestListToState(

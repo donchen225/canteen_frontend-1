@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/detailed_request_grid.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,14 +16,6 @@ class RequestGrid extends StatelessWidget {
       } else if (state is DetailedRequestListLoaded) {
         return DetailedRequestGrid(
           items: state.requestList,
-          onTap: (request) {
-            BlocProvider.of<RequestListBloc>(context)
-                .add(InspectDetailedRequest(request));
-          },
-        );
-      } else if (state is IndividualDetailedRequestLoaded) {
-        return ViewUserProfileScreen(
-          user: state.request.sender,
         );
       }
       return Container();
