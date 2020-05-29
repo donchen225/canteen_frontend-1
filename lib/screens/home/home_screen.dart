@@ -1,4 +1,6 @@
 import 'package:badges/badges.dart';
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
@@ -7,18 +9,14 @@ import 'package:canteen_frontend/screens/match/message_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
-import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
+import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/search_screen.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _previousIndex;
   int _currentIndex = 0;
   final _postScreen = GlobalKey<NavigatorState>();
+  final _searchScreen = GlobalKey<NavigatorState>();
+  final _messageScreen = GlobalKey<NavigatorState>();
+  final _notificationScreen = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -77,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //     (Route<dynamic> route) => false);
           break;
         case 1:
+          _searchScreen.currentState.popUntil((route) => route.isFirst);
           break;
         case 2:
           break;
@@ -103,47 +105,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHomeScreen(HomeState state) {
-    if (state is HomeUninitialized ||
-        state is HomeInitializing ||
-        state is PageLoading ||
-        state is CurrentIndexChanged) {
-      return Center(child: CupertinoActivityIndicator());
-    }
+  // TODO: move onboarding to main.dart
+  // Widget _buildHomeScreen(HomeState state) {
+  //   if (state is OnboardScreenLoaded) {
+  //     print('ONBOARDSCREEN LOADED');
+  //     return BlocProvider<OnboardingBloc>(
+  //       create: (context) =>
+  //           OnboardingBloc(userRepository: widget._userRepository),
+  //       child: OnboardingScreen(),
+  //     );
+  //   }
+  //   return Container();
+  // }
 
-    if (state is PostScreenLoaded) {
-      return Navigator(
-        key: _postScreen,
-        onGenerateRoute: (RouteSettings settings) {
-          return buildPostScreenRoutes(settings);
-        },
-      );
+  Future _getDrawerUserNavFunction() {
+    switch (_currentIndex) {
+      case 0:
+        return _postScreen.currentState.pushNamed(
+          ViewUserProfileScreen.routeName,
+          arguments: UserArguments(
+            user: widget._userRepository.currentUserNow(),
+          ),
+        );
+      case 1:
+        return _searchScreen.currentState.pushNamed(
+          ViewUserProfileScreen.routeName,
+          arguments: UserArguments(
+            user: widget._userRepository.currentUserNow(),
+          ),
+        );
     }
-
-    if (state is SearchScreenLoaded) {
-      return SearchScreen();
-    }
-    if (state is MessageScreenLoaded) {
-      return MessageScreen();
-    }
-    if (state is NotificationScreenLoaded) {
-      return NotificationScreen();
-    }
-    if (state is UserProfileScreenLoaded) {
-      return UserProfileScreen(
-        userRepository: widget._userRepository,
-      );
-    }
-
-    if (state is OnboardScreenLoaded) {
-      print('ONBOARDSCREEN LOADED');
-      return BlocProvider<OnboardingBloc>(
-        create: (context) =>
-            OnboardingBloc(userRepository: widget._userRepository),
-        child: OnboardingScreen(),
-      );
-    }
-    return Container();
   }
 
   @override
@@ -154,12 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: null,
       drawerEnableOpenDragGesture: false,
       drawer: HomeDrawer(
-        onUserTap: () => _postScreen.currentState.pushNamed(
-          ViewUserProfileScreen.routeName,
-          arguments: UserPostArguments(
-            user: widget._userRepository.currentUserNow(),
-          ),
-        ),
+        onUserTap: () => _getDrawerUserNavFunction(),
       ),
       bottomNavigationBar: Theme(
         data: ThemeData(
@@ -181,12 +167,6 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
 
               BlocProvider.of<PostBloc>(context).add(LoadPosts());
-            }
-
-            if (state is PostScreenLoaded) {
-              // if (state.reset) {
-              //   BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
-              // }
             }
 
             if (state is SearchScreenLoaded) {
@@ -234,22 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
-                    // BottomNavigationBarItem(
-                    //   icon: _buildBadge(
-                    //     navBarState.numRequests,
-                    //     Icon(
-                    //       Icons.email,
-                    //     ),
-                    //   ),
-                    //   title: Text(''),
-                    // ),
                     BottomNavigationBarItem(
                       icon: const Icon(IconData(0xf2eb,
                           fontFamily: CupertinoIcons.iconFont,
                           fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
-
                     BottomNavigationBarItem(
                       icon: const Icon(IconData(0xf39b,
                           fontFamily: CupertinoIcons.iconFont,
@@ -273,7 +243,12 @@ class _HomeScreenState extends State<HomeScreen> {
               return buildPostScreenRoutes(settings);
             },
           ),
-          SearchScreen(),
+          Navigator(
+            key: _searchScreen,
+            onGenerateRoute: (RouteSettings settings) {
+              return buildSearchScreenRoutes(settings);
+            },
+          ),
           MessageScreen(),
           NotificationScreen(),
         ],

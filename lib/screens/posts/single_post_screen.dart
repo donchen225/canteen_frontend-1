@@ -1,8 +1,8 @@
 import 'package:canteen_frontend/components/dot_spacer.dart';
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
@@ -11,7 +11,6 @@ import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -65,7 +64,7 @@ class SinglePostScreen extends StatelessWidget {
                             onTap: () => Navigator.pushNamed(
                               context,
                               ViewUserProfileScreen.routeName,
-                              arguments: UserPostArguments(
+                              arguments: UserArguments(
                                 user: post.user,
                               ),
                             ),

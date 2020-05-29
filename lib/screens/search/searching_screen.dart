@@ -1,5 +1,7 @@
+import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_results_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'dart:math' as math;
 class SearchingScreen extends StatefulWidget {
   final String initialQuery;
   final List<String> searchHistory;
+  static const routeName = '/search';
 
   SearchingScreen({this.initialQuery, this.searchHistory});
 
@@ -82,14 +85,20 @@ class _SearchingScreenState extends State<SearchingScreen> {
                                 // TODO: add minimum of 2 characters
                                 BlocProvider.of<SearchBloc>(context)
                                     .add(SearchStarted(query));
+                                Navigator.pushNamed(
+                                  context,
+                                  SearchResultScreen.routeName,
+                                  arguments: SearchResultsArguments(
+                                    query: query,
+                                  ),
+                                );
                               },
                             ),
                           ),
                         ),
                         GestureDetector(
                           onTap: () {
-                            BlocProvider.of<SearchBloc>(context)
-                                .add(SearchPreviousState());
+                            Navigator.of(context).maybePop();
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -116,6 +125,13 @@ class _SearchingScreenState extends State<SearchingScreen> {
                 onTap: () {
                   BlocProvider.of<SearchBloc>(context)
                       .add(SearchStarted(query));
+                  Navigator.pushNamed(
+                    context,
+                    SearchResultScreen.routeName,
+                    arguments: SearchResultsArguments(
+                      query: query,
+                    ),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.only(

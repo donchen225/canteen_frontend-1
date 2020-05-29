@@ -1,7 +1,8 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 MaterialPageRoute buildPostScreenRoutes(RouteSettings settings) {
@@ -12,7 +13,7 @@ MaterialPageRoute buildPostScreenRoutes(RouteSettings settings) {
           case PostHomeScreen.routeName:
             return PostHomeScreen();
           case ViewUserProfileScreen.routeName:
-            final UserPostArguments args = settings.arguments;
+            final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(user: args.user);
           case SinglePostScreen.routeName:
             final SinglePostArguments args = settings.arguments;

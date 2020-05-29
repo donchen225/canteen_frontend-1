@@ -1,10 +1,6 @@
-import 'package:canteen_frontend/components/profile_list.dart';
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/detailed_request_grid.dart';
-import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
-import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

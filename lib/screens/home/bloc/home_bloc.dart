@@ -24,38 +24,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    if (event is PageTapped) {
-      yield* _mapPageTappedToState(event);
-    } else if (event is CheckOnboardStatus) {
+    if (event is CheckOnboardStatus) {
       yield* _mapCheckOnboardStatusToState();
     } else if (event is InitializeHome) {
       yield* _mapInitializeHomeToState();
     } else if (event is ClearHome) {
       yield* _mapClearHomeToState();
-    }
-  }
-
-  Stream<HomeState> _mapPageTappedToState(PageTapped event) async* {
-    _previousIndex = currentIndex;
-    currentIndex = event.index;
-    yield CurrentIndexChanged(currentIndex: currentIndex);
-    yield PageLoading();
-
-    final reset = _previousIndex != currentIndex ? false : true;
-
-    switch (this.currentIndex) {
-      case 0:
-        yield PostScreenLoaded(reset: reset);
-        break;
-      case 1:
-        yield SearchScreenLoaded(reset: reset);
-        break;
-      case 2:
-        yield MessageScreenLoaded(reset: reset);
-        break;
-      case 3:
-        yield NotificationScreenLoaded(reset: reset);
-        break;
     }
   }
 
@@ -73,10 +47,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       yield OnboardScreenLoaded();
     }
-  }
-
-  Stream<HomeState> _mapViewUserProfileToState() async* {
-    yield UserProfileScreenLoaded(reset: true);
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {

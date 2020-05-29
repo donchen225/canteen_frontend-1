@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -8,7 +10,6 @@ import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -64,7 +65,7 @@ class PostListScreen extends StatelessWidget {
                               onTap: () => Navigator.pushNamed(
                                 context,
                                 ViewUserProfileScreen.routeName,
-                                arguments: UserPostArguments(
+                                arguments: UserArguments(
                                   user: post.user,
                                 ),
                               ),

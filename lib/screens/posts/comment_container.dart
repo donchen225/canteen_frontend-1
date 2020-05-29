@@ -1,9 +1,9 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/comment/comment.dart';
-import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class CommentContainer extends StatelessWidget {
                     onTap: () => Navigator.pushNamed(
                       context,
                       ViewUserProfileScreen.routeName,
-                      arguments: UserPostArguments(
+                      arguments: UserArguments(
                         user: comment.user,
                       ),
                     ),

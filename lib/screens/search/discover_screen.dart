@@ -1,9 +1,12 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -13,9 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DiscoverScreen extends StatelessWidget {
-  final List<User> userList;
-
-  DiscoverScreen(this.userList) : assert(userList != null);
+  static const routeName = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,19 @@ class DiscoverScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                BlocProvider.of<SearchBloc>(context).add(EnterSearchQuery());
+                final searchHistory =
+                    BlocProvider.of<SearchBloc>(context).searchHistory;
+                Navigator.pushNamed(
+                  context,
+                  SearchingScreen.routeName,
+                  arguments: SearchArguments(
+                    searchHistory: searchHistory
+                        .map((q) => q.displayQuery)
+                        .toList()
+                        .reversed
+                        .toList(),
+                  ),
+                );
               },
               child: SearchBar(
                 height: kToolbarHeight * 0.7,
@@ -104,9 +117,12 @@ class DiscoverScreen extends StatelessWidget {
                             user: user,
                             height:
                                 SizeConfig.instance.scaffoldBodyHeight * 0.49,
-                            onTap: () =>
-                                BlocProvider.of<SearchBloc>(context).add(
-                              SearchInspectUser(user),
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ViewUserProfileScreen.routeName,
+                              arguments: UserArguments(
+                                user: user,
+                              ),
                             ),
                           ),
                         );
@@ -134,29 +150,44 @@ class DiscoverScreen extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: Container(
-              height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: userList.length,
-                itemBuilder: (context, index) {
-                  final user = userList[index];
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.instance.safeBlockHorizontal * 6,
-                      bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                      top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                    ),
-                    child: ProfileCard(
-                      user: user,
-                      height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                      onTap: () => BlocProvider.of<SearchBloc>(context).add(
-                        SearchInspectUser(user),
-                      ),
+            child: BlocBuilder<SearchBloc, SearchState>(
+              builder: (BuildContext context, SearchState state) {
+                if (state is SearchUninitialized) {
+                  final userList = state.allUsers;
+
+                  return Container(
+                    height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: userList.length,
+                      itemBuilder: (context, index) {
+                        final user = userList[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.instance.safeBlockHorizontal * 6,
+                            bottom:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                          ),
+                          child: ProfileCard(
+                            user: user,
+                            height:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ViewUserProfileScreen.routeName,
+                              arguments: UserArguments(
+                                user: user,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
-                },
-              ),
+                }
+                return Container();
+              },
             ),
           ),
         ],

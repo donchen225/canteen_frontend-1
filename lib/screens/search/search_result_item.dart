@@ -1,10 +1,10 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchResultItem extends StatelessWidget {
   final User user;
@@ -18,9 +18,13 @@ class SearchResultItem extends StatelessWidget {
     final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
 
     return GestureDetector(
-      onTap: () {
-        BlocProvider.of<SearchBloc>(context).add(SearchInspectUser(user));
-      },
+      onTap: () => Navigator.pushNamed(
+        context,
+        ViewUserProfileScreen.routeName,
+        arguments: UserArguments(
+          user: user,
+        ),
+      ),
       child: Container(
         height: height,
         decoration: BoxDecoration(

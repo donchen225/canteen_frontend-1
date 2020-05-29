@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_detail_navigation_bloc/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
@@ -6,13 +7,10 @@ import 'package:canteen_frontend/screens/match/match_details_selection/video_cha
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
-import 'package:canteen_frontend/components/profile_list.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

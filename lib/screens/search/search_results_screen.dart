@@ -1,18 +1,20 @@
-import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_result_item.dart';
+import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final String query;
-  final List<User> results;
+  static const routeName = '/results';
 
-  SearchResultScreen({this.query, this.results}) : assert(query != null);
+  SearchResultScreen({this.query}) : assert(query != null);
 
   @override
   _SearchResultScreenState createState() => _SearchResultScreenState();
@@ -65,16 +67,27 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                           minHeight: height,
                           minWidth: height,
                         ),
-                        onPressed: () {
-                          BlocProvider.of<SearchBloc>(context)
-                              .add(SearchPreviousState());
-                        },
+                        onPressed: () => Navigator.of(context).maybePop(),
                       ),
                       Flexible(
                         child: GestureDetector(
                           onTap: () {
-                            BlocProvider.of<SearchBloc>(context).add(
-                                EnterSearchQuery(initialQuery: widget.query));
+                            final searchHistory =
+                                BlocProvider.of<SearchBloc>(context)
+                                    .searchHistory;
+                            // TODO: change to fade transition
+                            Navigator.pushNamed(
+                              context,
+                              SearchingScreen.routeName,
+                              arguments: SearchArguments(
+                                initialQuery: widget.query,
+                                searchHistory: searchHistory
+                                    .map((q) => q.displayQuery)
+                                    .toList()
+                                    .reversed
+                                    .toList(),
+                              ),
+                            );
                           },
                           child: SearchBar(
                             height: height,
@@ -103,34 +116,43 @@ class _SearchResultScreenState extends State<SearchResultScreen>
         bottom: TabBar(
           indicatorSize: TabBarIndicatorSize.label,
           controller: _tabController,
+          labelColor: Palette.primaryColor,
+          unselectedLabelColor: Palette.appBarTextColor,
+          labelStyle: Theme.of(context).textTheme.headline6,
           tabs: tabChoices.map((text) {
             return Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: kTabBarTextPadding,
               ),
               child: Tab(
-                child: Text(
-                  text,
-                  style: Theme.of(context).textTheme.headline6.apply(
-                        fontFamily: '.SF UI Text',
-                        fontSizeFactor: kTabBarTextScaleFactor,
-                        color: Palette.appBarTextColor,
-                      ),
-                ),
+                text: text,
               ),
             );
           }).toList(),
         ),
       ),
-      body: ListView.builder(
-          itemCount: widget.results.length,
-          itemBuilder: (BuildContext context, int index) {
-            final user = widget.results[index];
-            return SearchResultItem(
-              user: user,
-              height: SizeConfig.instance.safeBlockVertical * 14,
+      body: BlocBuilder<SearchBloc, SearchState>(
+        builder: (BuildContext context, SearchState state) {
+          if (state is SearchCompleteShowResults) {
+            final results = state.results;
+
+            return ListView.builder(
+              itemCount: results.length,
+              itemBuilder: (BuildContext context, int index) {
+                final user = results[index];
+                return SearchResultItem(
+                  user: user,
+                  height: SizeConfig.instance.safeBlockVertical * 14,
+                );
+              },
             );
-          }),
+          }
+
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        },
+      ),
     );
   }
 }
