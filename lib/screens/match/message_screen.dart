@@ -63,20 +63,16 @@ class _MessageScreenState extends State<MessageScreen>
         bottom: TabBar(
           indicatorSize: TabBarIndicatorSize.label,
           controller: _tabController,
+          labelColor: Palette.primaryColor,
+          unselectedLabelColor: Palette.appBarTextColor,
+          labelStyle: Theme.of(context).textTheme.headline6,
           tabs: tabChoices.map((text) {
             return Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: kTabBarTextPadding,
               ),
               child: Tab(
-                child: Text(
-                  text,
-                  style: Theme.of(context).textTheme.headline6.apply(
-                        fontFamily: '.SF UI Text',
-                        fontSizeFactor: kTabBarTextScaleFactor,
-                        color: Palette.appBarTextColor,
-                      ),
-                ),
+                text: text,
               ),
             );
           }).toList(),
