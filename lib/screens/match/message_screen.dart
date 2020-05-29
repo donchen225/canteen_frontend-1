@@ -38,19 +38,27 @@ class _MessageScreenState extends State<MessageScreen>
 
     return Scaffold(
       appBar: AppBar(
-        leading: ProfileSideBarButton(
-          userPhotoUrl: userPhotoUrl,
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
-        title: Text(
-          'Messages',
-          style: Theme.of(context).textTheme.headline6.apply(
-                fontFamily: '.SF UI Text',
-                color: Palette.appBarTextColor,
-              ),
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ProfileSideBarButton(
+              userPhotoUrl: userPhotoUrl,
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+            Text(
+              'Messages',
+              style: Theme.of(context).textTheme.headline6.apply(
+                    fontFamily: '.SF UI Text',
+                    color: Palette.appBarTextColor,
+                  ),
+            ),
+            Container(
+              width: kProfileIconSize,
+            )
+          ],
         ),
         backgroundColor: Palette.appBarBackgroundColor,
-        automaticallyImplyLeading: false,
         elevation: 1,
         bottom: TabBar(
           indicatorSize: TabBarIndicatorSize.label,
