@@ -83,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _searchScreen.currentState.popUntil((route) => route.isFirst);
           break;
         case 2:
+          _messageScreen.currentState.popUntil((route) => route.isFirst);
           break;
         case 3:
           _notificationScreen.currentState.popUntil((route) => route.isFirst);
