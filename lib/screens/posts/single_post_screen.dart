@@ -41,7 +41,7 @@ class SinglePostScreen extends StatelessWidget {
         leading: BackButton(
           color: Palette.primaryColor,
         ),
-        title: Text('Posts'),
+        title: Text('Post', style: Theme.of(context).textTheme.headline6),
       ),
       body: Column(
         children: <Widget>[
