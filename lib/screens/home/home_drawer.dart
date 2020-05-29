@@ -72,9 +72,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                       ),
                                     ),
                                   ),
-                                  Text(userName,
-                                      style:
-                                          titleStyle.apply(fontWeightDelta: 1)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).maybePop();
+                                      if (widget.onUserTap != null) {
+                                        widget.onUserTap();
+                                      }
+                                    },
+                                    child: Text(userName,
+                                        style: titleStyle.apply(
+                                            fontWeightDelta: 1)),
+                                  ),
                                 ],
                               ),
                             ),
