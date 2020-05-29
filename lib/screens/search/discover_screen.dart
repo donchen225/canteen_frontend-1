@@ -55,10 +55,10 @@ class DiscoverScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "What are you looking for?",
-                          style: Theme.of(context).textTheme.subtitle1.apply(
-                                fontFamily: '.SF UI Text',
-                                fontWeightDelta: 2,
-                              ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .apply(color: Palette.textSecondaryBaseColor),
                         ),
                       ),
                     ),

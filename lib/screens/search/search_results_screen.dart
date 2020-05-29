@@ -83,10 +83,11 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 widget.query,
-                                style:
-                                    Theme.of(context).textTheme.subtitle1.apply(
-                                          fontFamily: '.SF UI Text',
-                                        ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .apply(
+                                        color: Palette.textSecondaryBaseColor),
                               ),
                             ),
                           ),

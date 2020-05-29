@@ -68,9 +68,7 @@ class ProfileCard extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             user.displayName ?? '',
-                            style: Theme.of(context).textTheme.subtitle1.apply(
-                                  fontWeightDelta: 2,
-                                ),
+                            style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
                         Visibility(
@@ -78,7 +76,7 @@ class ProfileCard extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(user.title ?? '',
-                                style: Theme.of(context).textTheme.subtitle2),
+                                style: Theme.of(context).textTheme.bodyText2),
                           ),
                         ),
                       ],
