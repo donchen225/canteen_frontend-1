@@ -21,8 +21,7 @@ class PostListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle bodyTextTheme = Theme.of(context).textTheme.bodyText1;
-    print(bodyTextTheme.fontSize);
+    final TextStyle buttonTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return BlocBuilder<PostBloc, PostState>(
       builder: (BuildContext context, PostState state) {
@@ -126,13 +125,13 @@ class PostListScreen extends StatelessWidget {
                                                   post: post,
                                                   sideTextColor: Palette
                                                       .textSecondaryBaseColor,
-                                                  style: bodyTextTheme),
+                                                  style: buttonTextStyle),
                                             ),
                                           ),
                                           Expanded(
                                             child: CommentButton(
                                                 post: post,
-                                                style: bodyTextTheme,
+                                                style: buttonTextStyle,
                                                 sideTextColor: Palette
                                                     .textSecondaryBaseColor),
                                           ),
