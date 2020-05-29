@@ -25,48 +25,39 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: ProfileSideBarButton(
-          userPhotoUrl: userPhotoUrl,
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+        automaticallyImplyLeading: false,
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
-        flexibleSpace: SafeArea(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              final height = kToolbarHeight * 0.7;
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: (constraints.maxWidth * 0.08) + kProfileIconSize,
-                  right: constraints.maxWidth * 0.08,
-                  top: kToolbarHeight * 0.15,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ProfileSideBarButton(
+              userPhotoUrl: userPhotoUrl,
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+            GestureDetector(
+              onTap: () {
+                BlocProvider.of<SearchBloc>(context).add(EnterSearchQuery());
+              },
+              child: SearchBar(
+                height: kToolbarHeight * 0.7,
+                width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                    kProfileIconSize * 2 -
+                    NavigationToolbar.kMiddleSpacing * 4,
+                color: Colors.grey[200],
+                child: Text(
+                  "What are you looking for?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .apply(color: Palette.textSecondaryBaseColor),
                 ),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<SearchBloc>(context)
-                          .add(EnterSearchQuery());
-                    },
-                    child: SearchBar(
-                      height: height,
-                      color: Colors.grey[200],
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "What are you looking for?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .apply(color: Palette.textSecondaryBaseColor),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+              ),
+            ),
+            Container(
+              width: kProfileIconSize,
+            )
+          ],
         ),
       ),
       body: CustomScrollView(

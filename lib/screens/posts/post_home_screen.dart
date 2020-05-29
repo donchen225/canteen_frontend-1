@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +21,8 @@ class _PostHomeScreenState extends State<PostHomeScreen>
   TabController _tabController;
   bool _showFAB = true;
   final List<String> tabChoices = [
-    'Home',
-    'Groups',
+    'Posts',
+    'Members',
   ];
 
   @override
@@ -50,23 +52,41 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
     return Scaffold(
         appBar: AppBar(
-          leading: ProfileSideBarButton(
-            userPhotoUrl: userPhotoUrl,
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-          title: Text(
-            'Groups',
-            style: Theme.of(context).textTheme.headline6.apply(
-                  fontFamily: '.SF UI Text',
-                  color: Palette.appBarTextColor,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ProfileSideBarButton(
+                userPhotoUrl: userPhotoUrl,
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+              SearchBar(
+                height: kToolbarHeight * 0.7,
+                width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                    kProfileIconSize * 2 -
+                    NavigationToolbar.kMiddleSpacing * 4,
+                color: Colors.grey[200],
+                child: Text(
+                  "Search Group",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .apply(color: Palette.textSecondaryBaseColor),
                 ),
+              ),
+              Container(
+                width: kProfileIconSize,
+              )
+            ],
           ),
           backgroundColor: Palette.appBarBackgroundColor,
-          automaticallyImplyLeading: false,
           elevation: 1,
           bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               controller: _tabController,
+              labelColor: Palette.primaryColor,
+              unselectedLabelColor: Palette.appBarTextColor,
+              labelStyle: Theme.of(context).textTheme.headline6,
               tabs: tabChoices
                   .map(
                     (text) => Padding(
@@ -74,14 +94,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                         horizontal: kTabBarTextPadding,
                       ),
                       child: Tab(
-                        child: Text(
-                          text,
-                          style: Theme.of(context).textTheme.headline6.apply(
-                                fontFamily: '.SF UI Text',
-                                fontSizeFactor: kTabBarTextScaleFactor,
-                                color: Palette.appBarTextColor,
-                              ),
-                        ),
+                        text: text,
                       ),
                     ),
                   )

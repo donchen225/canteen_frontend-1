@@ -15,19 +15,16 @@ class ProfileSideBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: IconButton(
-        icon: ProfilePicture(
-          photoUrl: userPhotoUrl,
-          editable: false,
-          size: kProfileIconSize,
-        ),
-        onPressed: () {
-          if (onPressed != null) {
-            onPressed();
-          }
-        },
+    return GestureDetector(
+      onTap: () {
+        if (onPressed != null) {
+          onPressed();
+        }
+      },
+      child: ProfilePicture(
+        photoUrl: userPhotoUrl,
+        editable: false,
+        size: kProfileIconSize,
       ),
     );
   }
