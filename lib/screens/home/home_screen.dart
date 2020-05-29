@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/match/message_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
@@ -17,6 +18,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_screen.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
@@ -151,7 +153,14 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBodyBehindAppBar: true,
       appBar: null,
       drawerEnableOpenDragGesture: false,
-      drawer: HomeDrawer(userRepository: widget._userRepository),
+      drawer: HomeDrawer(
+        onUserTap: () => _postScreen.currentState.pushNamed(
+          ViewUserProfileScreen.routeName,
+          arguments: UserPostArguments(
+            user: widget._userRepository.currentUserNow(),
+          ),
+        ),
+      ),
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,

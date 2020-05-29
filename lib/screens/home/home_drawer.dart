@@ -1,18 +1,17 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_item.dart';
 
 class HomeDrawer extends StatefulWidget {
-  final UserRepository userRepository;
+  final Function onUserTap;
 
-  HomeDrawer({this.userRepository}) : assert(userRepository != null);
+  HomeDrawer({this.onUserTap});
 
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
@@ -21,7 +20,10 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
-    final user = widget.userRepository.currentUserNow();
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+    final userName =
+        CachedSharedPreferences.getString(PreferenceConstants.userName);
     final titleStyle = Theme.of(context).textTheme.headline6;
     final subtitleStyle = Theme.of(context).textTheme.subtitle2.apply(
           color: Palette.textSecondaryBaseColor,
@@ -60,14 +62,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).maybePop();
+                                        if (widget.onUserTap != null) {
+                                          widget.onUserTap();
+                                        }
                                       },
                                       child: ProfilePicture(
-                                        photoUrl: user.photoUrl,
+                                        photoUrl: userPhotoUrl,
                                         size: constraints.maxWidth * 0.35,
                                       ),
                                     ),
                                   ),
-                                  Text(user.displayName,
+                                  Text(userName,
                                       style:
                                           titleStyle.apply(fontWeightDelta: 1)),
                                 ],
