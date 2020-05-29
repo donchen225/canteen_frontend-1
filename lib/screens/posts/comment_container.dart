@@ -58,6 +58,7 @@ class CommentContainer extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       comment.message,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
                 ],

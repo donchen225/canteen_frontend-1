@@ -30,13 +30,14 @@ class SinglePostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle bodyTextTheme = Theme.of(context).textTheme.bodyText1;
+    final TextStyle secondaryTextTheme = Theme.of(context).textTheme.bodyText2;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 1,
         leading: BackButton(
+          color: Palette.primaryColor,
           onPressed: () {
             if (onTapBack != null) {
               onTapBack();
@@ -119,7 +120,7 @@ class SinglePostScreen extends StatelessWidget {
                           child: Row(
                             children: <Widget>[
                               Text(DateFormat('yMMMMd').format(post.createdOn),
-                                  style: bodyTextTheme.apply(
+                                  style: secondaryTextTheme.apply(
                                       color: Palette.textSecondaryBaseColor)),
                               Padding(
                                   padding: EdgeInsets.symmetric(
@@ -127,7 +128,7 @@ class SinglePostScreen extends StatelessWidget {
                                           .instance.safeBlockHorizontal),
                                   child: DotSpacer()),
                               Text(DateFormat.jm().format(post.createdOn),
-                                  style: bodyTextTheme.apply(
+                                  style: secondaryTextTheme.apply(
                                       color: Palette.textSecondaryBaseColor)),
                             ],
                           ),
@@ -172,7 +173,7 @@ class SinglePostScreen extends StatelessWidget {
                                   },
                                   child: LikeButton(
                                     post: post,
-                                    style: bodyTextTheme,
+                                    style: secondaryTextTheme,
                                     sideTextColor: _sideTextColor,
                                   ),
                                 ),
@@ -193,7 +194,7 @@ class SinglePostScreen extends StatelessWidget {
                                   },
                                   child: CommentButton(
                                       post: post,
-                                      style: bodyTextTheme,
+                                      style: secondaryTextTheme,
                                       sideTextColor: _sideTextColor),
                                 ),
                                 Container(),
@@ -281,7 +282,10 @@ class SinglePostScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             'Add a comment',
-                            style: TextStyle(color: Colors.grey[600]),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .apply(color: Palette.textSecondaryBaseColor),
                           ),
                         ],
                       ),
