@@ -6,6 +6,7 @@ import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/message_screen.dart';
+import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
@@ -121,29 +122,28 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   Future _getDrawerUserNavFunction() {
+    GlobalKey<NavigatorState> key;
     switch (_currentIndex) {
       case 0:
-        return _postScreen.currentState.pushNamed(
-          ViewUserProfileScreen.routeName,
-          arguments: UserArguments(
-            user: widget._userRepository.currentUserNow(),
-          ),
-        );
+        key = _postScreen;
+        break;
       case 1:
-        return _searchScreen.currentState.pushNamed(
-          ViewUserProfileScreen.routeName,
-          arguments: UserArguments(
-            user: widget._userRepository.currentUserNow(),
-          ),
-        );
+        key = _searchScreen;
+        break;
+      case 2:
+        key = _messageScreen;
+        break;
       case 3:
-        return _notificationScreen.currentState.pushNamed(
-          ViewUserProfileScreen.routeName,
-          arguments: UserArguments(
-            user: widget._userRepository.currentUserNow(),
-          ),
-        );
+        key = _notificationScreen;
+        break;
     }
+
+    return key.currentState.pushNamed(
+      ViewUserProfileScreen.routeName,
+      arguments: UserArguments(
+        user: widget._userRepository.currentUserNow(),
+      ),
+    );
   }
 
   @override
@@ -258,7 +258,12 @@ class _HomeScreenState extends State<HomeScreen> {
               return buildSearchScreenRoutes(settings);
             },
           ),
-          MessageScreen(),
+          Navigator(
+            key: _messageScreen,
+            onGenerateRoute: (RouteSettings settings) {
+              return buildMessageScreenRoutes(settings);
+            },
+          ),
           Navigator(
             key: _notificationScreen,
             onGenerateRoute: (RouteSettings settings) {

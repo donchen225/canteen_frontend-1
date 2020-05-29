@@ -7,6 +7,8 @@ import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 
 class MessageScreen extends StatefulWidget {
+  static const routeName = '/';
+
   MessageScreen({Key key}) : super(key: key);
 
   @override
