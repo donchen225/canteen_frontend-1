@@ -5,17 +5,16 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentDialogScreen extends StatefulWidget {
-  final User user;
   final DetailedPost post;
   final double height;
 
-  CommentDialogScreen(
-      {@required this.user, @required this.post, this.height = 500});
+  CommentDialogScreen({@required this.post, this.height = 500});
 
   @override
   _CommentDialogScreenState createState() => _CommentDialogScreenState();
@@ -44,6 +43,13 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+    final userName =
+        CachedSharedPreferences.getString(PreferenceConstants.userName);
+
     return TextDialogScreen(
       title: 'Add Comment',
       height: widget.height,
@@ -55,7 +61,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
               final now = DateTime.now();
               final comment = Comment(
                 message: _messageController.text,
-                from: widget.user.id,
+                from: currentUserId,
                 createdOn: now,
                 lastUpdated: now,
               );
@@ -134,14 +140,14 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
             child: Row(
               children: <Widget>[
                 ProfilePicture(
-                  photoUrl: widget.user.photoUrl,
+                  photoUrl: userPhotoUrl,
                   editable: false,
                   size: SizeConfig.instance.blockSizeHorizontal * 6,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.blockSizeHorizontal),
-                  child: Text('${widget.user.displayName ?? ''}'),
+                  child: Text('${userName ?? ''}'),
                 ),
               ],
             ),

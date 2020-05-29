@@ -109,6 +109,7 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> updateName(String name) {
+    CachedSharedPreferences.setString(PreferenceConstants.userName, name);
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.update(userCollection.document(_firebaseUser.uid), {
         "display_name": name,
@@ -212,6 +213,8 @@ class FirebaseUserRepository extends UserRepository {
       if (user == null) {
         CachedSharedPreferences.setString(
             PreferenceConstants.userPhotoUrl, currentUser.photoUrl);
+        CachedSharedPreferences.setString(
+            PreferenceConstants.userName, currentUser.displayName);
       }
 
       saveUser(currentUser);

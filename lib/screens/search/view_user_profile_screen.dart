@@ -14,9 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewUserProfileScreen extends StatefulWidget {
   final User user;
-  final Function onTapBack;
+  static const routeName = '/user';
 
-  ViewUserProfileScreen({this.user, this.onTapBack}) : assert(user != null);
+  ViewUserProfileScreen({this.user}) : assert(user != null);
 
   @override
   _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
@@ -149,16 +149,9 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 0,
-        leading: Visibility(
-          visible: widget.onTapBack != null,
-          child: BackButton(
-            color: Palette.primaryColor,
-            onPressed: () {
-              if (widget.onTapBack != null) {
-                widget.onTapBack();
-              }
-            },
-          ),
+        leading: BackButton(
+          color: Palette.primaryColor,
+          onPressed: () => Navigator.of(context).maybePop(),
         ),
       ),
       body: NestedScrollView(

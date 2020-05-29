@@ -11,7 +11,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_screen_bloc/post_screen_bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/post_list_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
@@ -229,8 +229,8 @@ class App extends StatelessWidget {
                   print('AUTHENTICATED - RETURNING HOME SCREEN');
                   return MultiBlocProvider(
                     providers: [
-                      BlocProvider<PostScreenBloc>(
-                        create: (context) => PostScreenBloc(
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
                           postBloc: BlocProvider.of<PostBloc>(context),
                           userRepository: _userRepository,
                         ),

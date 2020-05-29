@@ -1,12 +1,12 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
+import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
-import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentContainer extends StatelessWidget {
   final DetailedComment comment;
@@ -39,10 +39,13 @@ class CommentContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      BlocProvider.of<PostScreenBloc>(context)
-                          .add(PostsInspectUser(comment.user));
-                    },
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      ViewUserProfileScreen.routeName,
+                      arguments: UserPostArguments(
+                        user: comment.user,
+                      ),
+                    ),
                     child: PostNameTemplate(
                       name: comment.user.displayName,
                       title: comment.user.title,

@@ -31,8 +31,6 @@ class _SearchScreenState extends State<SearchScreen> {
     } else if (state is SearchShowProfile) {
       return ViewUserProfileScreen(
         user: state.user,
-        onTapBack: () =>
-            BlocProvider.of<SearchBloc>(context).add(SearchPreviousState()),
       );
     }
   }

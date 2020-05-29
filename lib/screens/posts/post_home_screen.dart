@@ -1,22 +1,14 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
-import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PostHomeScreen extends StatefulWidget {
-  final List<Post> posts;
-  final User user;
-
-  PostHomeScreen({this.posts, this.user})
-      : assert(posts != null),
-        assert(user != null);
+  static const routeName = '/';
 
   @override
   _PostHomeScreenState createState() => _PostHomeScreenState();
@@ -53,10 +45,13 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+
     return Scaffold(
         appBar: AppBar(
           leading: ProfileSideBarButton(
-            userPhotoUrl: widget.user.photoUrl,
+            userPhotoUrl: userPhotoUrl,
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
           title: Text(
@@ -97,23 +92,23 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => PostDialogScreen(
-                  user: widget.user,
-                  height: SizeConfig.instance.blockSizeVertical *
-                      kDialogScreenHeightBlocks,
-                ),
-              );
+              // showModalBottomSheet(
+              //   context: context,
+              //   isScrollControlled: true,
+              //   backgroundColor: Colors.transparent,
+              //   builder: (context) => PostDialogScreen(
+              //     user: widget.user,
+              //     height: SizeConfig.instance.blockSizeVertical *
+              //         kDialogScreenHeightBlocks,
+              //   ),
+              // );
             },
           ),
         ),
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            PostListScreen(user: widget.user),
+            PostListScreen(),
             GroupListScreen(),
           ],
         ));

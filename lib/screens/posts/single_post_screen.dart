@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/dot_spacer.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
@@ -9,10 +10,11 @@ import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
-import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/search/view_user_profile_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,16 +22,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class SinglePostScreen extends StatelessWidget {
-  final User user;
   final DetailedPost post;
-  final Function onTapBack;
   final Color _sideTextColor = Colors.grey[500];
+  static const routeName = '/post';
 
-  SinglePostScreen(
-      {@required this.post, @required this.user, @required this.onTapBack});
+  SinglePostScreen({@required this.post});
 
   @override
   Widget build(BuildContext context) {
+    final curentUserId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
     final TextStyle secondaryTextTheme = Theme.of(context).textTheme.bodyText2;
 
     return Scaffold(
@@ -38,11 +40,6 @@ class SinglePostScreen extends StatelessWidget {
         elevation: 1,
         leading: BackButton(
           color: Palette.primaryColor,
-          onPressed: () {
-            if (onTapBack != null) {
-              onTapBack();
-            }
-          },
         ),
         title: Text('Posts'),
       ),
@@ -65,9 +62,13 @@ class SinglePostScreen extends StatelessWidget {
                                 kHorizontalPaddingBlocks,
                           ),
                           child: GestureDetector(
-                            onTap: () =>
-                                BlocProvider.of<PostScreenBloc>(context)
-                                    .add(PostsInspectUser(post.user)),
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ViewUserProfileScreen.routeName,
+                              arguments: UserPostArguments(
+                                user: post.user,
+                              ),
+                            ),
                             child: Row(
                               children: <Widget>[
                                 ProfilePicture(
@@ -162,7 +163,7 @@ class SinglePostScreen extends StatelessWidget {
                                   onTap: () {
                                     if (!(post.liked)) {
                                       final like = Like(
-                                          from: user.id,
+                                          from: curentUserId,
                                           createdOn: DateTime.now());
                                       BlocProvider.of<PostBloc>(context)
                                           .add(AddLike(post.id, like));
@@ -184,7 +185,6 @@ class SinglePostScreen extends StatelessWidget {
                                       isScrollControlled: true,
                                       backgroundColor: Colors.transparent,
                                       builder: (context) => CommentDialogScreen(
-                                        user: user,
                                         post: post,
                                         height: SizeConfig
                                                 .instance.blockSizeVertical *
@@ -261,7 +261,6 @@ class SinglePostScreen extends StatelessWidget {
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         builder: (context) => CommentDialogScreen(
-                          user: user,
                           post: post,
                           height: SizeConfig.instance.blockSizeVertical *
                               kDialogScreenHeightBlocks,

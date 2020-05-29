@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/utils/constants.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CommentButton extends StatelessWidget {

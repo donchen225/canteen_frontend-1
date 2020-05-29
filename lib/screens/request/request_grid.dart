@@ -28,9 +28,8 @@ class RequestGrid extends StatelessWidget {
         );
       } else if (state is IndividualDetailedRequestLoaded) {
         return ViewUserProfileScreen(
-            user: state.request.sender,
-            onTapBack: () => BlocProvider.of<RequestListBloc>(context)
-                .add(LoadRequestList()));
+          user: state.request.sender,
+        );
       }
       return Container();
     });

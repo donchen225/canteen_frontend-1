@@ -8,8 +8,8 @@ import 'package:canteen_frontend/screens/notifications/notification_screen.dart'
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_screen_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/posts_screen.dart';
+import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
+import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
@@ -37,6 +37,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
+  int _previousIndex;
+  int _currentIndex = 0;
+  final _postScreen = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -47,7 +50,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onItemTapped(int index) {
-    _homeBloc.add(PageTapped(index: index));
+    setState(() {
+      _previousIndex = _currentIndex;
+      _currentIndex = index;
+    });
+
+    if (_previousIndex != null && _previousIndex == _currentIndex) {
+      switch (_currentIndex) {
+        case 0:
+          // TODO: clean up this animation so only one screen is shown
+          _postScreen.currentState.popUntil((route) => route.isFirst);
+          // _postScreen.currentState.pushAndRemoveUntil(
+          //     PageRouteBuilder(
+          //       pageBuilder: (c, a1, a2) => PostHomeScreen(),
+          //       transitionsBuilder: (c, anim, a2, child) => SlideTransition(
+          //         position: Tween<Offset>(
+          //           begin: const Offset(-1, 0),
+          //           end: Offset.zero,
+          //         ).animate(anim),
+          //         child: child,
+          //       ),
+          //       transitionDuration: Duration(milliseconds: 200),
+          //     ),
+          //     (Route<dynamic> route) => false);
+          break;
+        case 1:
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+      }
+    }
   }
 
   Widget _buildBadge(int count, Widget child) {
@@ -76,8 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (state is PostScreenLoaded) {
-      return PostScreen();
+      return Navigator(
+        key: _postScreen,
+        onGenerateRoute: (RouteSettings settings) {
+          return buildPostScreenRoutes(settings);
+        },
+      );
     }
+
     if (state is SearchScreenLoaded) {
       return SearchScreen();
     }
@@ -125,8 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   'IN HOME INITIALIZING - LOADING MATCHES/REQUESTS/RECOMMENDATIONS');
               BlocProvider.of<SearchBloc>(context).add(SearchHome());
 
-              BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
-
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -137,9 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is PostScreenLoaded) {
-              if (state.reset) {
-                BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
-              }
+              // if (state.reset) {
+              //   BlocProvider.of<PostScreenBloc>(context).add(PostsHome());
+              // }
             }
 
             if (state is SearchScreenLoaded) {
@@ -166,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (BuildContext context,
                       HomeNavigationBarState navBarState) {
                 return BottomNavigationBar(
-                  currentIndex: _homeBloc.currentIndex,
+                  currentIndex: _currentIndex,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   selectedFontSize: kBottomNavigationBarFontSize,
@@ -217,15 +255,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        bloc: _homeBloc,
-        builder: (BuildContext context, HomeState state) {
-          print('IN HOME SCREEN BLOC BUILDER');
-          print('HOME STATE: $state');
-          print(widget._userRepository.currentUserNow());
-
-          return _buildHomeScreen(state);
-        },
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          Navigator(
+            key: _postScreen,
+            onGenerateRoute: (RouteSettings settings) {
+              return buildPostScreenRoutes(settings);
+            },
+          ),
+          SearchScreen(),
+          MessageScreen(),
+          NotificationScreen(),
+        ],
       ),
     );
   }
