@@ -19,6 +19,8 @@ class SkillItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline6;
+
     return Container(
       padding: EdgeInsets.only(
         top: verticalPadding,
@@ -40,9 +42,7 @@ class SkillItem extends StatelessWidget {
           Container(
             child: Text(
               skill.name,
-              style: TextStyle(
-                  fontSize: SizeConfig.instance.blockSizeHorizontal * 4 * 1.2,
-                  fontWeight: FontWeight.bold),
+              style: titleStyle,
             ),
           ),
           Visibility(
@@ -67,7 +67,7 @@ class SkillItem extends StatelessWidget {
                         (skill.duration != null
                             ? ' / ${skill.duration} minutes'
                             : ''),
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: titleStyle,
                   ),
                   FlatButton(
                     color: tapEnabled
@@ -79,6 +79,7 @@ class SkillItem extends StatelessWidget {
                     child: Text(
                       'Connect',
                       style: Theme.of(context).textTheme.button.apply(
+                            fontWeightDelta: 1,
                             color: Palette.buttonDarkTextColor,
                           ),
                     ),

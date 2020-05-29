@@ -22,6 +22,7 @@ class PostListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle bodyTextTheme = Theme.of(context).textTheme.bodyText1;
+    print(bodyTextTheme.fontSize);
 
     return BlocBuilder<PostBloc, PostState>(
       builder: (BuildContext context, PostState state) {
@@ -95,9 +96,6 @@ class PostListScreen extends StatelessWidget {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           post.message,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
                                         ),
                                       ),
                                     ),

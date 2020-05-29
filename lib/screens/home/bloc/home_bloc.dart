@@ -56,9 +56,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       case 3:
         yield NotificationScreenLoaded(reset: reset);
         break;
-      case 4:
-        yield UserProfileScreenLoaded(reset: reset);
-        break;
     }
   }
 
@@ -76,6 +73,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       yield OnboardScreenLoaded();
     }
+  }
+
+  Stream<HomeState> _mapViewUserProfileToState() async* {
+    yield UserProfileScreenLoaded(reset: true);
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {

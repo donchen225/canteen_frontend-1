@@ -31,7 +31,8 @@ class PostNameTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.bodyText1;
+    final titleTextStyle = Theme.of(context).textTheme.headline6;
+    final secondaryTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +41,7 @@ class PostNameTemplate extends StatelessWidget {
           children: <Widget>[
             Text(
               name ?? '',
-              style: textStyle.apply(fontWeightDelta: 1),
+              style: titleTextStyle,
             ),
             Visibility(
               visible: showDate,
@@ -54,7 +55,7 @@ class PostNameTemplate extends StatelessWidget {
               visible: showDate,
               child: Text(
                 time != null ? formatTime(time) : '',
-                style: textStyle.apply(color: color),
+                style: secondaryTextStyle.apply(color: color),
               ),
             ),
           ],
@@ -65,7 +66,7 @@ class PostNameTemplate extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title ?? '',
-              style: textStyle.apply(color: color),
+              style: secondaryTextStyle.apply(color: color),
             ),
           ),
         ),

@@ -67,12 +67,50 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildHomeScreen(HomeState state) {
+    if (state is HomeUninitialized ||
+        state is HomeInitializing ||
+        state is PageLoading ||
+        state is CurrentIndexChanged) {
+      return Center(child: CupertinoActivityIndicator());
+    }
+
+    if (state is PostScreenLoaded) {
+      return PostScreen();
+    }
+    if (state is SearchScreenLoaded) {
+      return SearchScreen();
+    }
+    if (state is MessageScreenLoaded) {
+      return MessageScreen();
+    }
+    if (state is NotificationScreenLoaded) {
+      return NotificationScreen();
+    }
+    if (state is UserProfileScreenLoaded) {
+      return UserProfileScreen(
+        userRepository: widget._userRepository,
+      );
+    }
+
+    if (state is OnboardScreenLoaded) {
+      print('ONBOARDSCREEN LOADED');
+      return BlocProvider<OnboardingBloc>(
+        create: (context) =>
+            OnboardingBloc(userRepository: widget._userRepository),
+        child: OnboardingScreen(),
+      );
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     print('HOME SCREEN BUILD');
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
+      drawerEnableOpenDragGesture: false,
       drawer: HomeDrawer(userRepository: widget._userRepository),
       bottomNavigationBar: Theme(
         data: ThemeData(
@@ -171,12 +209,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontPackage: CupertinoIcons.iconFontPackage)),
                       title: Text(''),
                     ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf3a0,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
-                      title: Text(''),
-                    ),
                   ],
                   onTap: _onItemTapped,
                 );
@@ -192,40 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
           print('HOME STATE: $state');
           print(widget._userRepository.currentUserNow());
 
-          if (state is HomeUninitialized ||
-              state is HomeInitializing ||
-              state is PageLoading ||
-              state is CurrentIndexChanged) {
-            return Center(child: CupertinoActivityIndicator());
-          }
-
-          if (state is PostScreenLoaded) {
-            return PostScreen();
-          }
-          if (state is SearchScreenLoaded) {
-            return SearchScreen();
-          }
-          if (state is MessageScreenLoaded) {
-            return MessageScreen();
-          }
-          if (state is NotificationScreenLoaded) {
-            return NotificationScreen();
-          }
-          if (state is UserProfileScreenLoaded) {
-            return UserProfileScreen(
-              userRepository: widget._userRepository,
-            );
-          }
-
-          if (state is OnboardScreenLoaded) {
-            print('ONBOARDSCREEN LOADED');
-            return BlocProvider<OnboardingBloc>(
-              create: (context) =>
-                  OnboardingBloc(userRepository: widget._userRepository),
-              child: OnboardingScreen(),
-            );
-          }
-          return Container();
+          return _buildHomeScreen(state);
         },
       ),
     );

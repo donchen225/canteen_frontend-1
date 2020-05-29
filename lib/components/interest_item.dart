@@ -9,7 +9,7 @@ class InterestItem extends StatelessWidget {
 
   InterestItem({@required this.text, this.onTap});
 
-  Widget _buildItem({bool clickable}) {
+  Widget _buildItem(BuildContext context, {bool clickable}) {
     return Container(
       padding: EdgeInsets.only(
         left: SizeConfig.instance.blockSizeHorizontal * 2,
@@ -30,9 +30,9 @@ class InterestItem extends StatelessWidget {
         children: <Widget>[
           Text(
             '#' + text,
-            style: TextStyle(
-              color: Palette.textClickableColor,
-            ),
+            style: Theme.of(context).textTheme.bodyText2.apply(
+                  color: Palette.textClickableColor,
+                ),
           ),
           Visibility(
             visible: clickable,
@@ -62,9 +62,9 @@ class InterestItem extends StatelessWidget {
                   onTap(text);
                 }
               },
-              child: _buildItem(clickable: true));
+              child: _buildItem(context, clickable: true));
         } else {
-          return _buildItem(clickable: false);
+          return _buildItem(context, clickable: false);
         }
       },
     );

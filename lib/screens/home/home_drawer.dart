@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_item.dart';
 
@@ -55,9 +57,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                               .instance.safeBlockVertical *
                                           2,
                                     ),
-                                    child: ProfilePicture(
-                                      photoUrl: user.photoUrl,
-                                      size: constraints.maxWidth * 0.35,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).maybePop();
+                                      },
+                                      child: ProfilePicture(
+                                        photoUrl: user.photoUrl,
+                                        size: constraints.maxWidth * 0.35,
+                                      ),
                                     ),
                                   ),
                                   Text(user.displayName,

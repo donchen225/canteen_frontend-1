@@ -189,7 +189,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        textTheme: GoogleFonts.montserratTextTheme(),
+        fontFamily: '.SF UI Pro',
+        textTheme: TextTheme(
+          headline6: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+          bodyText1: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
+          bodyText2: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+          button: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
+        ),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(brightness: Brightness.light),
         primarySwatch: Colors.blue,

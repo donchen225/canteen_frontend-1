@@ -149,6 +149,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
         leading: Visibility(
           visible: widget.onTapBack != null,
           child: BackButton(
+            color: Palette.primaryColor,
             onPressed: () {
               if (widget.onTapBack != null) {
                 widget.onTapBack();

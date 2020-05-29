@@ -54,24 +54,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: Visibility(
-          visible: _showFAB,
-          child: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => PostDialogScreen(
-                  user: widget.user,
-                  height: SizeConfig.instance.blockSizeVertical *
-                      kDialogScreenHeightBlocks,
-                ),
-              );
-            },
-          ),
-        ),
         appBar: AppBar(
           leading: ProfileSideBarButton(
             userPhotoUrl: widget.user.photoUrl,
@@ -109,6 +91,24 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     ),
                   )
                   .toList()),
+        ),
+        floatingActionButton: Visibility(
+          visible: _showFAB,
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => PostDialogScreen(
+                  user: widget.user,
+                  height: SizeConfig.instance.blockSizeVertical *
+                      kDialogScreenHeightBlocks,
+                ),
+              );
+            },
+          ),
         ),
         body: TabBarView(
           controller: _tabController,
