@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/message_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
+import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -83,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case 2:
           break;
         case 3:
+          _notificationScreen.currentState.popUntil((route) => route.isFirst);
           break;
       }
     }
@@ -129,6 +131,13 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       case 1:
         return _searchScreen.currentState.pushNamed(
+          ViewUserProfileScreen.routeName,
+          arguments: UserArguments(
+            user: widget._userRepository.currentUserNow(),
+          ),
+        );
+      case 3:
+        return _notificationScreen.currentState.pushNamed(
           ViewUserProfileScreen.routeName,
           arguments: UserArguments(
             user: widget._userRepository.currentUserNow(),
@@ -250,7 +259,12 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           MessageScreen(),
-          NotificationScreen(),
+          Navigator(
+            key: _notificationScreen,
+            onGenerateRoute: (RouteSettings settings) {
+              return buildNotificationScreenRoutes(settings);
+            },
+          ),
         ],
       ),
     );

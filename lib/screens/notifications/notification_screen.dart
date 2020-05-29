@@ -5,6 +5,8 @@ import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatelessWidget {
+  static const routeName = '/';
+
   @override
   Widget build(BuildContext context) {
     final userPhotoUrl =
