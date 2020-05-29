@@ -141,6 +141,9 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
 
   @override
   Widget build(BuildContext context) {
+    final titleTextStyle = Theme.of(context).textTheme.headline6;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
       appBar: AppBar(
@@ -235,7 +238,8 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                             padding: EdgeInsets.symmetric(
                               vertical: SizeConfig.instance.safeBlockVertical,
                             ),
-                            child: Text(widget.user.about ?? ''),
+                            child: Text(widget.user.about ?? '',
+                                style: bodyTextStyle),
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
@@ -266,13 +270,16 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                   TabBar(
                     controller: _tabController,
                     indicatorSize: TabBarIndicatorSize.label,
+                    labelColor: Palette.primaryColor,
+                    unselectedLabelColor: Palette.textColor,
+                    labelStyle: titleTextStyle,
                     // These are the widgets to put in each tab in the tab bar.
                     tabs: tabs
                         .map((String name) => Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: kTabBarTextPadding,
                               ),
-                              child: Tab(text: name),
+                              child: Tab(child: Text(name)),
                             ))
                         .toList(),
                   ),

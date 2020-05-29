@@ -95,6 +95,9 @@ class PostListScreen extends StatelessWidget {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           post.message,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
                                         ),
                                       ),
                                     ),

@@ -34,6 +34,7 @@ class Palette {
   static Color textFieldLightBackgroundColor = const Color(0xFFF5F5F5);
 
   // Text colors
+  static Color textColor = const Color(0xFF000000);
   static Color textClickableColor = const Color(0xFF2196F3);
   static Color textSecondaryBaseColor = const Color(0xFF9E9E9E);
 
