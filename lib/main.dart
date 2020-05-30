@@ -191,6 +191,8 @@ class App extends StatelessWidget {
       theme: ThemeData(
         fontFamily: '.SF UI Pro',
         textTheme: TextTheme(
+          headline4: TextStyle(fontSize: 34),
+          headline5: TextStyle(fontSize: 24),
           headline6: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
           bodyText1: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
           bodyText2: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),

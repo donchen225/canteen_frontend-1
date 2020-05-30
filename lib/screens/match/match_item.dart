@@ -77,8 +77,7 @@ class MatchItem extends StatelessWidget {
                                 child: Text(
                                   opponentList[0].displayName ?? '',
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: constraints.maxHeight * 0.18),
+                                  style: Theme.of(context).textTheme.headline6,
                                 ),
                               ),
                             ),
@@ -88,10 +87,6 @@ class MatchItem extends StatelessWidget {
                                 match.lastMessage != null
                                     ? (match.lastMessage as TextMessage).text
                                     : '',
-                                style: Theme.of(context).textTheme.bodyText1,
-                                // style: TextStyle(
-                                //     color: Colors.grey[600],
-                                //     fontSize: constraints.maxHeight * 0.14),
                                 textAlign: TextAlign.start,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

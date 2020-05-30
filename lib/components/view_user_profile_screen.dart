@@ -209,7 +209,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                             widget.user.displayName,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline6
+                                                .headline5
                                                 .apply(fontWeightDelta: 2),
                                           ),
                                         ),
