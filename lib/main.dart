@@ -193,9 +193,9 @@ class App extends StatelessWidget {
         textTheme: TextTheme(
           headline4: TextStyle(fontSize: 34),
           headline5: TextStyle(fontSize: 24),
-          headline6: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-          bodyText1: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
-          bodyText2: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+          headline6: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+          bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
           button: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
         ),
         brightness: Brightness.light,
