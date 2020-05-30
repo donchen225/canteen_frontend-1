@@ -95,7 +95,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   BlocProvider.of<PostBloc>(context).add(ClearPosts());
                   BlocProvider.of<RecommendedBloc>(context)
                       .add(ClearRecommended());
-                  BlocProvider.of<HomeBloc>(context).add(ClearHome());
                   BlocProvider.of<SettingBloc>(context).add(ClearSettings());
                   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                 },

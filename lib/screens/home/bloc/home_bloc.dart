@@ -28,8 +28,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapCheckOnboardStatusToState();
     } else if (event is InitializeHome) {
       yield* _mapInitializeHomeToState();
-    } else if (event is ClearHome) {
-      yield* _mapClearHomeToState();
     }
   }
 
@@ -42,7 +40,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // Load user settings
       _settingBloc.add(InitializeSettings(hasOnboarded: true));
 
-      yield PostScreenLoaded(reset: false);
+      yield HomeLoaded();
       // yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
@@ -54,12 +52,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     // Upload user settings here
 
-    yield PostScreenLoaded(reset: false);
-  }
-
-  Stream<HomeState> _mapClearHomeToState() async* {
-    _previousIndex = 0;
-    currentIndex = 0;
-    yield HomeUninitialized();
+    yield HomeLoaded();
   }
 }

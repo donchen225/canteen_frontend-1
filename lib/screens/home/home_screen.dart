@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
@@ -17,6 +18,7 @@ import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -175,19 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
               BlocProvider.of<PostBloc>(context).add(LoadPosts());
             }
-
-            if (state is SearchScreenLoaded) {
-              if (state.reset) {
-                BlocProvider.of<SearchBloc>(context).add(SearchHome());
-              }
-            }
-
-            if (state is UserProfileScreenLoaded) {
-              if (state.reset) {
-                BlocProvider.of<UserProfileBloc>(context)
-                    .add(ShowUserProfile());
-              }
-            }
           },
           child: BlocBuilder<HomeBloc, HomeState>(
             bloc: _homeBloc,
@@ -242,34 +231,59 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          Navigator(
-            key: _postScreen,
-            onGenerateRoute: (RouteSettings settings) {
-              return buildPostScreenRoutes(settings);
-            },
-          ),
-          Navigator(
-            key: _searchScreen,
-            onGenerateRoute: (RouteSettings settings) {
-              return buildSearchScreenRoutes(settings);
-            },
-          ),
-          Navigator(
-            key: _messageScreen,
-            onGenerateRoute: (RouteSettings settings) {
-              return buildMessageScreenRoutes(settings);
-            },
-          ),
-          Navigator(
-            key: _notificationScreen,
-            onGenerateRoute: (RouteSettings settings) {
-              return buildNotificationScreenRoutes(settings);
-            },
-          ),
-        ],
+      body: BlocBuilder<HomeBloc, HomeState>(
+        bloc: _homeBloc,
+        builder: (BuildContext context, HomeState state) {
+          if (state is HomeUninitialized || state is HomeInitializing) {
+            return Center(
+              child: Container(
+                height: SizeConfig.instance.blockSizeHorizontal * 30,
+                width: SizeConfig.instance.blockSizeHorizontal * 30,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/loading-icon.png'),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          if (state is OnboardScreenLoaded) {
+            return OnboardingScreen();
+          }
+
+          if (state is HomeLoaded) {
+            return IndexedStack(
+              index: _currentIndex,
+              children: [
+                Navigator(
+                  key: _postScreen,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildPostScreenRoutes(settings);
+                  },
+                ),
+                Navigator(
+                  key: _searchScreen,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildSearchScreenRoutes(settings);
+                  },
+                ),
+                Navigator(
+                  key: _messageScreen,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildMessageScreenRoutes(settings);
+                  },
+                ),
+                Navigator(
+                  key: _notificationScreen,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildNotificationScreenRoutes(settings);
+                  },
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
