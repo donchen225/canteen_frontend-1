@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class PostButton extends StatelessWidget {
@@ -8,7 +7,7 @@ class PostButton extends StatelessWidget {
   final Function(BuildContext) onTap;
 
   PostButton(
-      {@required this.onTap, @required this.enabled, this.text = 'POST'});
+      {@required this.onTap, @required this.enabled, this.text = 'Post'});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +19,20 @@ class PostButton extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.only(
-          top: SizeConfig.instance.blockSizeVertical * 2,
-          bottom: SizeConfig.instance.blockSizeVertical * 2,
-          left: SizeConfig.instance.blockSizeHorizontal * 3,
-          right: SizeConfig.instance.blockSizeHorizontal * 3,
+          top: 8,
+          bottom: 8,
+          left: 15,
+          right: 15,
         ),
+        decoration: BoxDecoration(
+            color: enabled
+                ? Palette.primaryColor
+                : Palette.primaryColor.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(20)),
         child: Text(
           text,
           style: Theme.of(context).textTheme.button.apply(
-                color: enabled
-                    ? Palette.primaryColor
-                    : Palette.primaryColor.withOpacity(0.4),
+                color: Colors.white,
                 fontWeightDelta: 1,
               ),
         ),

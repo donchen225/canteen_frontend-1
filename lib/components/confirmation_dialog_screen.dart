@@ -104,7 +104,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
       title: 'Request Time',
       height: widget.height,
       sendWidget: PostButton(
-          text: 'SEND',
+          text: 'Send',
           enabled: _selectedTime != null,
           onTap: (BuildContext context) {
             if (_selectedTime != null) {

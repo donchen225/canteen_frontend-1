@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';

@@ -1,5 +1,8 @@
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+
+import 'dart:math' as math;
 
 class TextDialogScreen extends StatelessWidget {
   final String title;
@@ -12,77 +15,93 @@ class TextDialogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFEFFFF),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15),
-          topRight: Radius.circular(15),
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFFEFFFF),
-          leading: CloseButton(),
-          title: Text(title),
-          actions: <Widget>[
-            sendWidget != null
-                ? Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.instance.blockSizeHorizontal * 3,
+    final double additionalTopPadding =
+        math.max(SizeConfig.instance.paddingTop, 0.0);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFFEFFFF),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight + additionalTopPadding),
+        child: SafeArea(
+          child: AppBar(
+            backgroundColor: const Color(0xFFFEFFFF),
+            flexibleSpace: Container(
+              padding: EdgeInsets.only(
+                top: additionalTopPadding,
+                left: SizeConfig.instance.safeBlockHorizontal * 5,
+                right: SizeConfig.instance.safeBlockHorizontal * 5,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).maybePop();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: height,
+                      child: Text('Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .apply(color: Palette.primaryColor)),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        sendWidget,
-                      ],
-                    ),
-                  )
-                : Container(),
-          ],
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(15),
+                  ),
+                  sendWidget != null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            sendWidget,
+                          ],
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(15),
+              ),
             ),
           ),
         ),
-        body: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
+      ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
 
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: SingleChildScrollView(
-            child: Container(
-              height: height - kToolbarHeight,
-              child: SafeArea(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          top: SizeConfig.instance.blockSizeVertical * 2,
-                          left: SizeConfig.instance.blockSizeHorizontal * 6,
-                          right: SizeConfig.instance.blockSizeHorizontal * 6,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              width: 1,
-                              color: const Color(0xFFDEE0D1),
-                            ),
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            height: height - kToolbarHeight,
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.blockSizeVertical * 2,
+                        left: SizeConfig.instance.blockSizeHorizontal * 6,
+                        right: SizeConfig.instance.blockSizeHorizontal * 6,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            width: 1,
+                            color: const Color(0xFFDEE0D1),
                           ),
                         ),
-                        child: child ?? Container(),
                       ),
+                      child: child ?? Container(),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

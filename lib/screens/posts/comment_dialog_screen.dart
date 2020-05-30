@@ -54,7 +54,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
       title: 'Add Comment',
       height: widget.height,
       sendWidget: PostButton(
-          text: 'SEND',
+          text: 'Send',
           enabled: _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
             if (_messageController.text.isNotEmpty) {
@@ -127,7 +127,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
               ),
             ),
             child: Text(
-              widget.post.title,
+              widget.post.message,
               style: TextStyle(
                 fontSize: SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
                 fontWeight: FontWeight.bold,

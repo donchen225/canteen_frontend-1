@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
+import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -105,16 +106,15 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              // showModalBottomSheet(
-              //   context: context,
-              //   isScrollControlled: true,
-              //   backgroundColor: Colors.transparent,
-              //   builder: (context) => PostDialogScreen(
-              //     user: widget.user,
-              //     height: SizeConfig.instance.blockSizeVertical *
-              //         kDialogScreenHeightBlocks,
-              //   ),
-              // );
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => PostDialogScreen(
+                  height: SizeConfig.instance.blockSizeVertical *
+                      kDialogScreenHeightBlocks,
+                ),
+              );
             },
           ),
         ),

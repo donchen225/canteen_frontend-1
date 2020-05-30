@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 class Post extends Equatable {
   final String id;
   final String from;
-  final String title;
   final String message;
   final List<String> tags;
   final int commentCount;
@@ -17,7 +16,6 @@ class Post extends Equatable {
   const Post(
       {this.id,
       @required this.from,
-      @required this.title,
       this.message,
       this.tags,
       this.commentCount = 0,
@@ -29,7 +27,6 @@ class Post extends Equatable {
   List<Object> get props => [
         id,
         from,
-        title,
         message,
         tags,
         commentCount,
@@ -40,14 +37,13 @@ class Post extends Equatable {
 
   @override
   String toString() {
-    return 'Post { id: $id, from: $from, title: $title, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'Post { id: $id, from: $from, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Post fromEntity(PostEntity entity) {
     return Post(
       id: entity.id,
       from: entity.from,
-      title: entity.title,
       message: entity.message,
       tags: entity.tags,
       commentCount: entity.commentCount,
@@ -61,7 +57,6 @@ class Post extends Equatable {
     return PostEntity(
       id: id,
       from: from,
-      title: title,
       message: message,
       tags: tags,
       commentCount: commentCount,
@@ -79,7 +74,6 @@ class DetailedPost extends Post {
   DetailedPost({
     @required id,
     @required from,
-    @required title,
     @required message,
     @required tags,
     @required commentCount,
@@ -91,7 +85,6 @@ class DetailedPost extends Post {
   }) : super(
             id: id,
             from: from,
-            title: title,
             message: message,
             tags: tags,
             commentCount: commentCount,
@@ -107,7 +100,6 @@ class DetailedPost extends Post {
     return DetailedPost(
       id: post.id,
       from: post.from,
-      title: post.title,
       message: post.message,
       tags: post.tags,
       commentCount: post.commentCount,

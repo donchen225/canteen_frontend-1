@@ -18,7 +18,7 @@ const double kProfileIconSize = 35;
 const double kBottomNavigationBarFontSize = 12;
 
 // Dialog Screen constants
-const double kDialogScreenHeightBlocks = 90;
+const double kDialogScreenHeightBlocks = 100;
 
 // Icon constants
 const double kDotSize = 4;

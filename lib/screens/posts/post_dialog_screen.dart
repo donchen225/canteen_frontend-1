@@ -1,25 +1,23 @@
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
-  final User user;
   final double height;
 
-  PostDialogScreen({@required this.user, this.height = 500});
+  PostDialogScreen({this.height = 500});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
 }
 
 class _PostDialogScreenState extends State<PostDialogScreen> {
-  TextEditingController _titleController;
   TextEditingController _messageController;
 
   _PostDialogScreenState();
@@ -28,28 +26,33 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
   void initState() {
     super.initState();
 
-    _titleController = TextEditingController();
     _messageController = TextEditingController();
 
-    _titleController.addListener(() {
+    _messageController.addListener(() {
       setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+    final userName =
+        CachedSharedPreferences.getString(PreferenceConstants.userName);
+
     return TextDialogScreen(
       title: 'New Post',
       height: widget.height,
       sendWidget: PostButton(
-          enabled: _titleController.text.isNotEmpty,
+          enabled: _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
-            if (_titleController.text.isNotEmpty) {
+            if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
               final post = Post(
-                title: _titleController.text,
                 message: _messageController.text,
-                from: widget.user.id,
+                from: currentUserId,
                 createdOn: now,
                 lastUpdated: now,
               );
@@ -89,26 +92,16 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
           Row(
             children: <Widget>[
               ProfilePicture(
-                photoUrl: widget.user.photoUrl,
+                photoUrl: userPhotoUrl,
                 editable: false,
                 size: SizeConfig.instance.blockSizeHorizontal * 6,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.instance.blockSizeHorizontal),
-                child: Text('${widget.user.displayName ?? ''}'),
+                child: Text('${userName ?? ''}'),
               ),
             ],
-          ),
-          TextField(
-            controller: _titleController,
-            textCapitalization: TextCapitalization.sentences,
-            autofocus: true,
-            maxLines: null,
-            decoration: InputDecoration(
-              hintText: 'Enter your question',
-              hintStyle: TextStyle(fontWeight: FontWeight.bold),
-            ),
           ),
           TextField(
             controller: _messageController,

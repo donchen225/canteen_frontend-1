@@ -18,6 +18,7 @@ class SizeConfig {
   double safeScreenHeight;
   double scaffoldBodyHeight;
 
+  double paddingTop;
   double paddingBottom;
 
   static final SizeConfig instance = SizeConfig._();
@@ -36,6 +37,7 @@ class SizeConfig {
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
+    paddingTop = _mediaQueryData.padding.top;
     paddingBottom = _mediaQueryData.padding.bottom;
 
     _safeAreaHorizontal =
