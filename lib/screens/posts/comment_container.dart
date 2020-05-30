@@ -26,10 +26,19 @@ class CommentContainer extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ProfilePicture(
-              photoUrl: comment.user.photoUrl,
-              editable: false,
-              size: SizeConfig.instance.safeBlockHorizontal * 12,
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(
+                context,
+                ViewUserProfileScreen.routeName,
+                arguments: UserArguments(
+                  user: comment.user,
+                ),
+              ),
+              child: ProfilePicture(
+                photoUrl: comment.user.photoUrl,
+                editable: false,
+                size: SizeConfig.instance.safeBlockHorizontal * 12,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
