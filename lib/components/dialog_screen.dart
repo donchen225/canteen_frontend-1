@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +8,14 @@ class DialogScreen extends StatelessWidget {
   final double height;
   final Widget sendWidget;
   final Widget child;
+  final Function onCancel;
 
   DialogScreen(
-      {this.title = '', this.sendWidget, this.height = 500, this.child});
+      {this.title = '',
+      this.sendWidget,
+      this.height = 500,
+      this.onCancel,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,11 @@ class DialogScreen extends StatelessWidget {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).maybePop();
+                      if (onCancel != null) {
+                        onCancel();
+                      } else {
+                        Navigator.of(context).maybePop();
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,

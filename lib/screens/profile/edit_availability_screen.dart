@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/screens/profile/availability_picker.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -82,69 +83,41 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.containerColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                widget.onCancelNavigation();
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text('Edit ' + widget.fieldName),
-            GestureDetector(
-              onTap: () {
-                print('ON TAP DONE');
+    return DialogScreen(
+      title: 'Edit ${widget.fieldName}',
+      onCancel: () => widget.onCancelNavigation(),
+      sendWidget: GestureDetector(
+        onTap: () {
+          print('ON TAP DONE');
 
-                if (startTime != widget.startTime ||
-                    endTime != widget.endTime) {
-                  final startTimeSeconds =
-                      (startTime.hour * 60 + startTime.minute) * 60;
-                  final endTimeSeconds =
-                      !(endTime.hour == 0 && endTime.minute == 0)
-                          ? (endTime.hour * 60 + endTime.minute) * 60
-                          : 24 * 60 * 60;
+          if (startTime != widget.startTime || endTime != widget.endTime) {
+            final startTimeSeconds =
+                (startTime.hour * 60 + startTime.minute) * 60;
+            final endTimeSeconds = !(endTime.hour == 0 && endTime.minute == 0)
+                ? (endTime.hour * 60 + endTime.minute) * 60
+                : 24 * 60 * 60;
 
-                  if (endTimeSeconds > startTimeSeconds) {
-                    widget.onComplete(
-                        widget.day, startTimeSeconds, endTimeSeconds);
-                  } else {
-                    setState(() {
-                      _errorText =
-                          'Your end time cannot be before your start time.';
-                    });
-                  }
-                } else {
-                  widget.onCompleteNavigation();
-                }
-              },
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+            if (endTimeSeconds > startTimeSeconds) {
+              widget.onComplete(widget.day, startTimeSeconds, endTimeSeconds);
+            } else {
+              setState(() {
+                _errorText = 'Your end time cannot be before your start time.';
+              });
+            }
+          } else {
+            widget.onCompleteNavigation();
+          }
+        },
+        child: Text(
+          'Done',
+          style: TextStyle(
+            fontSize: 14,
+            color: Palette.primaryColor,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
-      body: Container(
+      child: Container(
           padding: EdgeInsets.only(
               top: SizeConfig.instance.blockSizeVertical * 6,
               left: SizeConfig.instance.blockSizeHorizontal * 6,

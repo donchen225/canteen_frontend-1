@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
@@ -121,71 +122,45 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _initialDurationIndex =
         _initialDurationIndex != -1 ? _initialDurationIndex : 0;
 
-    return Scaffold(
-      backgroundColor: Palette.containerColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                _userProfileBloc.add(LoadUserProfile(widget.user));
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text(widget.skillType == SkillType.teach
-                ? 'Edit Teach Skill'
-                : 'Edit Learn Skill'),
-            GestureDetector(
-              onTap: () {
-                final price = int.parse(_skillPriceController.text);
-                final duration = durationOptions[
-                    _selectedDurationIndex ?? _initialDurationIndex];
+    return DialogScreen(
+      title: 'Edit ${widget.skillType == SkillType.teach ? "Offering" : "Ask"}',
+      onCancel: () => _userProfileBloc.add(LoadUserProfile(widget.user)),
+      sendWidget: GestureDetector(
+        onTap: () {
+          final price = int.parse(_skillPriceController.text);
+          final duration =
+              durationOptions[_selectedDurationIndex ?? _initialDurationIndex];
 
-                if (skill.name != _skillNameController.text ||
-                    skill.price != price ||
-                    skill.description != _skillDescriptionController.text ||
-                    skill.duration != duration) {
-                  print('UPDATING SKILL');
-                  _userProfileBloc.add(UpdateSkill(
-                      widget.user,
-                      Skill(
-                          _skillNameController.text,
-                          _skillDescriptionController.text,
-                          price,
-                          duration,
-                          widget.skillType),
-                      widget.skillType,
-                      widget.skillIndex ?? 0));
-                } else {
-                  print('NOT UPDATING SKILL');
-                  _userProfileBloc.add(LoadUserProfile(widget.user));
-                }
-              },
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+          if (skill.name != _skillNameController.text ||
+              skill.price != price ||
+              skill.description != _skillDescriptionController.text ||
+              skill.duration != duration) {
+            print('UPDATING SKILL');
+            _userProfileBloc.add(UpdateSkill(
+                widget.user,
+                Skill(
+                    _skillNameController.text,
+                    _skillDescriptionController.text,
+                    price,
+                    duration,
+                    widget.skillType),
+                widget.skillType,
+                widget.skillIndex ?? 0));
+          } else {
+            print('NOT UPDATING SKILL');
+            _userProfileBloc.add(LoadUserProfile(widget.user));
+          }
+        },
+        child: Text(
+          'Done',
+          style: TextStyle(
+            fontSize: 14,
+            color: Palette.primaryColor,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
-      body: ListView(
+      child: ListView(
         padding: EdgeInsets.only(
           left: SizeConfig.instance.blockSizeHorizontal * 6,
           right: SizeConfig.instance.blockSizeHorizontal * 6,

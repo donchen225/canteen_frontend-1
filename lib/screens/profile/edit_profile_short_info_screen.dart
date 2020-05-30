@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -41,51 +42,27 @@ class _EditProfileShortInfoScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.containerColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                widget.onCancelNavigation();
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text('Edit ' + widget.fieldName),
-            GestureDetector(
-              onTap: () {
-                if (widget.initialText != _textController.text) {
-                  widget.onComplete(_textController.text);
-                } else {
-                  widget.onCompleteNavigation();
-                }
-              },
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+    return DialogScreen(
+      title: 'Edit ${widget.fieldName}',
+      onCancel: () => widget.onCancelNavigation(),
+      sendWidget: GestureDetector(
+        onTap: () {
+          if (widget.initialText != _textController.text) {
+            widget.onComplete(_textController.text);
+          } else {
+            widget.onCompleteNavigation();
+          }
+        },
+        child: Text(
+          'Done',
+          style: TextStyle(
+            fontSize: 14,
+            color: Palette.primaryColor,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
-      body: Container(
+      child: Container(
         height: MediaQuery.of(context).size.height * 0.25,
         padding: EdgeInsets.only(
             top: SizeConfig.instance.blockSizeVertical * 6,
