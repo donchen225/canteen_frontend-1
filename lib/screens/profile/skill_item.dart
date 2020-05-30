@@ -52,7 +52,8 @@ class SkillItem extends StatelessWidget {
                 top: SizeConfig.instance.safeBlockVertical,
                 bottom: SizeConfig.instance.safeBlockVertical,
               ),
-              child: Text(skill.description),
+              child: Text(skill.description,
+                  style: Theme.of(context).textTheme.bodyText1),
             ),
           ),
           Visibility(
