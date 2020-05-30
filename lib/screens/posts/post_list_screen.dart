@@ -33,138 +33,146 @@ class PostListScreen extends StatelessWidget {
         }
 
         if (state is PostsLoaded) {
-          return CustomScrollView(slivers: <Widget>[
-            SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                final post = state.posts[index];
+          return CustomScrollView(
+            key: PageStorageKey<String>('posts'),
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  final post = state.posts[index];
 
-                return GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<CommentBloc>(context)
-                        .add(LoadComments(postId: post.id));
-                    Navigator.pushNamed(
-                      context,
-                      SinglePostScreen.routeName,
-                      arguments: SinglePostArguments(
-                        post: post,
-                      ),
-                    );
-                  },
-                  child: PostContainer(
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.instance.blockSizeHorizontal * 4,
-                        right: SizeConfig.instance.blockSizeHorizontal * 4,
-                        top: SizeConfig.instance.blockSizeHorizontal * 3,
-                        bottom: SizeConfig.instance.blockSizeHorizontal * 3,
-                      ),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                ViewUserProfileScreen.routeName,
-                                arguments: UserArguments(
-                                  user: post.user,
+                  return GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<CommentBloc>(context)
+                          .add(LoadComments(postId: post.id));
+                      Navigator.pushNamed(
+                        context,
+                        SinglePostScreen.routeName,
+                        arguments: SinglePostArguments(
+                          post: post,
+                        ),
+                      );
+                    },
+                    child: PostContainer(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.instance.blockSizeHorizontal * 4,
+                          right: SizeConfig.instance.blockSizeHorizontal * 4,
+                          top: SizeConfig.instance.blockSizeHorizontal * 3,
+                          bottom: SizeConfig.instance.blockSizeHorizontal * 3,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  ViewUserProfileScreen.routeName,
+                                  arguments: UserArguments(
+                                    user: post.user,
+                                  ),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  child: ProfilePicture(
+                                    photoUrl: post.user.photoUrl,
+                                    editable: false,
+                                    size: SizeConfig
+                                            .instance.safeBlockHorizontal *
+                                        15,
+                                  ),
                                 ),
                               ),
-                              child: Container(
-                                alignment: Alignment.topCenter,
-                                child: ProfilePicture(
-                                  photoUrl: post.user.photoUrl,
-                                  editable: false,
-                                  size:
-                                      SizeConfig.instance.safeBlockHorizontal *
-                                          15,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left:
-                                      SizeConfig.instance.blockSizeHorizontal *
-                                          2,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    PostNameTemplate(
-                                      name: post.user.displayName,
-                                      title: post.user.title,
-                                      photoUrl: post.user.photoUrl,
-                                      time: post.createdOn,
-                                      color: Palette.textSecondaryBaseColor,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: SizeConfig
-                                              .instance.safeBlockVertical),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          post.message,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig
+                                            .instance.blockSizeHorizontal *
+                                        2,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      PostNameTemplate(
+                                        name: post.user.displayName,
+                                        title: post.user.title,
+                                        photoUrl: post.user.photoUrl,
+                                        time: post.createdOn,
+                                        color: Palette.textSecondaryBaseColor,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: SizeConfig
+                                                .instance.safeBlockVertical),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            post.message,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                if (!(post.liked)) {
-                                                  final like = Like(
-                                                      from: curentUserId,
-                                                      createdOn:
-                                                          DateTime.now());
-                                                  BlocProvider.of<PostBloc>(
-                                                          context)
-                                                      .add(AddLike(
-                                                          post.id, like));
-                                                } else {
-                                                  BlocProvider.of<PostBloc>(
-                                                          context)
-                                                      .add(DeleteLike(post.id));
-                                                }
-                                              },
-                                              child: LikeButton(
-                                                  post: post,
-                                                  sideTextColor: Palette
-                                                      .textSecondaryBaseColor,
-                                                  style: buttonTextStyle),
+                                      Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (!(post.liked)) {
+                                                    final like = Like(
+                                                        from: curentUserId,
+                                                        createdOn:
+                                                            DateTime.now());
+                                                    BlocProvider.of<PostBloc>(
+                                                            context)
+                                                        .add(AddLike(
+                                                            post.id, like));
+                                                  } else {
+                                                    BlocProvider.of<PostBloc>(
+                                                            context)
+                                                        .add(DeleteLike(
+                                                            post.id));
+                                                  }
+                                                },
+                                                child: LikeButton(
+                                                    post: post,
+                                                    sideTextColor: Palette
+                                                        .textSecondaryBaseColor,
+                                                    style: buttonTextStyle),
+                                              ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: CommentButton(
-                                                post: post,
-                                                style: buttonTextStyle,
-                                                sideTextColor: Palette
-                                                    .textSecondaryBaseColor),
-                                          ),
-                                          Expanded(
-                                            child: Container(),
-                                          ),
-                                        ],
+                                            Expanded(
+                                              child: CommentButton(
+                                                  post: post,
+                                                  style: buttonTextStyle,
+                                                  sideTextColor: Palette
+                                                      .textSecondaryBaseColor),
+                                            ),
+                                            Expanded(
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )),
-                );
-              }, childCount: state.posts.length),
-            ),
-          ]);
+                            ],
+                          ),
+                        )),
+                  );
+                }, childCount: state.posts.length),
+              ),
+            ],
+          );
         }
 
         return Container();
