@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
@@ -124,10 +125,13 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                             height: kProfileSize,
                             child: Row(
                               children: <Widget>[
-                                ProfilePicture(
-                                  photoUrl: userPhotoUrl,
-                                  shape: BoxShape.circle,
-                                  editable: false,
+                                // ProfilePicture(
+                                //   photoUrl: userPhotoUrl,
+                                //   shape: BoxShape.circle,
+                                //   editable: false,
+                                //   size: kProfileSize,
+                                // ),
+                                AppLogo(
                                   size: kProfileSize,
                                 ),
                                 Expanded(
@@ -166,6 +170,19 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyText1,
+                                        ),
+                                        FlatButton(
+                                          color: Palette.primaryColor,
+                                          child: Text(
+                                            'JOIN',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .button
+                                                .apply(
+                                                    color: Palette.whiteColor,
+                                                    fontWeightDelta: 1),
+                                          ),
+                                          onPressed: () {},
                                         ),
                                       ],
                                     ),
