@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
@@ -26,6 +27,8 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'dart:math' as math;
 
 class UserProfileScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -93,32 +96,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildUserProfile(UserProfileState state) {
+    final double additionalTopPadding =
+        math.max(SizeConfig.instance.paddingTop, 0.0);
+
     if (state is UserProfileLoaded) {
       final user = state.user;
 
-      return Scaffold(
-        backgroundColor: Palette.containerColor,
-        appBar: AppBar(
-          title: Text(
-            'Profile',
-            style: TextStyle(
-              color: Palette.appBarTextColor,
-            ),
+      return DialogScreen(
+        title: 'Edit Profile',
+        sendWidget: GestureDetector(
+          onTap: () {
+            Navigator.of(context).maybePop();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: Text('Done',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .apply(color: Palette.primaryColor)),
           ),
-          backgroundColor: Palette.appBarBackgroundColor,
-          elevation: 1,
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.settings),
-              color: Palette.appBarTextColor,
-              onPressed: () {
-                BlocProvider.of<UserProfileBloc>(context).add(ShowSettings());
-              },
-            )
-          ],
         ),
-        body: ListView(
+        child: ListView(
           padding: EdgeInsets.only(
               bottom: SizeConfig.instance.blockSizeVertical * 9),
           children: <Widget>[

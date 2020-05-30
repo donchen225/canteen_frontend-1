@@ -12,7 +12,10 @@ MaterialPageRoute buildNotificationScreenRoutes(RouteSettings settings) {
             return NotificationScreen();
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
-            return ViewUserProfileScreen(user: args.user);
+            return ViewUserProfileScreen(
+              user: args.user,
+              editable: args.editable ?? false,
+            );
         }
       });
 }

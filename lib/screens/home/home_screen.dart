@@ -5,12 +5,8 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/message_screen.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
-import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
-import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_bloc.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
@@ -143,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ViewUserProfileScreen.routeName,
       arguments: UserArguments(
         user: widget._userRepository.currentUserNow(),
+        editable: true,
       ),
     );
   }

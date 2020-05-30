@@ -17,7 +17,10 @@ MaterialPageRoute buildMessageScreenRoutes(RouteSettings settings) {
             return MatchDetailScreen(match: args.match);
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
-            return ViewUserProfileScreen(user: args.user);
+            return ViewUserProfileScreen(
+              user: args.user,
+              editable: args.editable ?? false,
+            );
         }
       });
 }

@@ -2,9 +2,12 @@ import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -14,9 +17,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewUserProfileScreen extends StatefulWidget {
   final User user;
+  final bool editable;
   static const routeName = '/user';
 
-  ViewUserProfileScreen({this.user}) : assert(user != null);
+  ViewUserProfileScreen({this.user, this.editable = false})
+      : assert(user != null);
 
   @override
   _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
@@ -93,7 +98,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                           SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
                       skill: skill,
-                      tapEnabled: tapEnabled,
+                      tapEnabled: tapEnabled && !widget.editable,
                       onTap: () => _onTapSkillFunction(context, skill),
                     );
                   },
@@ -172,21 +177,14 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                       child: Column(
                         children: <Widget>[
                           Container(
-                            height:
-                                SizeConfig.instance.safeBlockHorizontal * 30,
-                            padding: EdgeInsets.only(
-                              bottom: SizeConfig.instance.safeBlockVertical,
-                            ),
+                            height: kProfileSize,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 ProfilePicture(
                                   photoUrl: widget.user.photoUrl,
                                   shape: BoxShape.circle,
                                   editable: false,
-                                  size:
-                                      SizeConfig.instance.safeBlockHorizontal *
-                                          30,
+                                  size: kProfileSize,
                                 ),
                                 Expanded(
                                   child: Container(
@@ -234,7 +232,35 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                             child: Text(widget.user.about ?? '',
                                 style: bodyTextStyle),
                           ),
-                          Align(
+                          Container(
+                            width: double.infinity,
+                            child: FlatButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => UserProfileScreen(
+                                    userRepository: FirebaseUserRepository(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Edit Profile',
+                                style: Theme.of(context).textTheme.button.apply(
+                                    fontWeightDelta: 1,
+                                    color: Palette.primaryColor),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 1, color: Palette.primaryColor),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                                top: SizeConfig.instance.safeBlockVertical *
+                                    0.5),
                             alignment: Alignment.centerLeft,
                             child: Wrap(
                                 children: widget.user.interests

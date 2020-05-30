@@ -14,6 +14,9 @@ const double kDisabledOpacity = 0.5;
 // AppBar constants
 const double kProfileIconSize = 35;
 
+// Profile constants
+const double kProfileSize = 120;
+
 // BottomNavigationBar constants
 const double kBottomNavigationBarFontSize = 12;
 
