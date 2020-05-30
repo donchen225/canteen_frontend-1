@@ -18,6 +18,9 @@ class Palette {
   static Color buttonInvalidTextColor = const Color(0xFFCDCDCD);
   static Color disabledButtonColor = const Color(0xFF9E9E9E);
 
+  // Settings colors
+  static Color tabSelectedColor = const Color(0xFFE0E0E0);
+
   // AppBar colors
   static Color appBarBackgroundColor = const Color(0xFFFFFFFF);
   static Color appBarTextColor = const Color(0xFF303030);

@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_results_screen.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
+import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
@@ -21,13 +22,14 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
           case SearchResultScreen.routeName:
             final SearchResultsArguments args = settings.arguments;
             return SearchResultScreen(query: args.query);
-
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
               user: args.user,
               editable: args.editable ?? false,
             );
+          case SettingsScreen.routeName:
+            return SettingsScreen();
         }
       });
 }

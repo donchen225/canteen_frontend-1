@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/notifications/notification_screen.dart';
+import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 MaterialPageRoute buildNotificationScreenRoutes(RouteSettings settings) {
@@ -16,6 +17,8 @@ MaterialPageRoute buildNotificationScreenRoutes(RouteSettings settings) {
               user: args.user,
               editable: args.editable ?? false,
             );
+          case SettingsScreen.routeName:
+            return SettingsScreen();
         }
       });
 }

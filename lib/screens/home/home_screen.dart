@@ -16,6 +16,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -146,6 +147,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future _getDrawerSettingsFunction() {
+    GlobalKey<NavigatorState> key;
+    switch (_currentIndex) {
+      case 0:
+        key = _postScreen;
+        break;
+      case 1:
+        key = _searchScreen;
+        break;
+      case 2:
+        key = _messageScreen;
+        break;
+      case 3:
+        key = _notificationScreen;
+        break;
+    }
+
+    return key.currentState.pushNamed(
+      SettingsScreen.routeName,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print('HOME SCREEN BUILD');
@@ -155,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawerEnableOpenDragGesture: false,
       drawer: HomeDrawer(
         onUserTap: () => _getDrawerUserNavFunction(),
+        onSettingsTap: () => _getDrawerSettingsFunction(),
       ),
       bottomNavigationBar: Theme(
         data: ThemeData(

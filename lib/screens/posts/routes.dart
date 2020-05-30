@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
+import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 MaterialPageRoute buildPostScreenRoutes(RouteSettings settings) {
@@ -23,6 +24,8 @@ MaterialPageRoute buildPostScreenRoutes(RouteSettings settings) {
             return SinglePostScreen(
               post: args.post,
             );
+          case SettingsScreen.routeName:
+            return SettingsScreen();
         }
       });
 }

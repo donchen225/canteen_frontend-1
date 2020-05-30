@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsScreen extends StatefulWidget {
+  static const routeName = '/settings';
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -42,8 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             backgroundColor: Palette.appBarBackgroundColor,
             leading: BackButton(
               color: Palette.appBarTextColor,
-              onPressed: () => BlocProvider.of<UserProfileBloc>(context)
-                  .add(ShowUserProfile()),
+              onPressed: () => Navigator.of(context).maybePop(),
             ),
             elevation: 1),
         body: ListView(

@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/components/app_logo.dart';
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -10,8 +9,9 @@ import 'drawer_item.dart';
 
 class HomeDrawer extends StatefulWidget {
   final Function onUserTap;
+  final Function onSettingsTap;
 
-  HomeDrawer({this.onUserTap});
+  HomeDrawer({this.onUserTap, this.onSettingsTap});
 
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
@@ -34,158 +34,180 @@ class _HomeDrawerState extends State<HomeDrawer> {
       child: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: constraints.maxWidth * 0.05,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: constraints.maxWidth,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig
-                                              .instance.safeBlockVertical *
-                                          2,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).maybePop();
-                                        if (widget.onUserTap != null) {
-                                          widget.onUserTap();
-                                        }
-                                      },
-                                      child: ProfilePicture(
-                                        photoUrl: userPhotoUrl,
-                                        size: constraints.maxWidth * 0.35,
-                                      ),
-                                    ),
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    width: constraints.maxWidth,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        SizeConfig.instance.safeBlockVertical *
+                                            2,
                                   ),
-                                  GestureDetector(
+                                  child: GestureDetector(
                                     onTap: () {
                                       Navigator.of(context).maybePop();
                                       if (widget.onUserTap != null) {
                                         widget.onUserTap();
                                       }
                                     },
-                                    child: Text(userName,
-                                        style: titleStyle.apply(
-                                            fontWeightDelta: 1)),
+                                    child: ProfilePicture(
+                                      photoUrl: userPhotoUrl,
+                                      size: constraints.maxWidth * 0.35,
+                                    ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Current Group',
-                                  style: subtitleStyle,
                                 ),
-                                DrawerItem(
-                                  leading: AppLogo(
-                                    size: 30,
-                                  ),
-                                  height: itemHeight,
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'Cognitive World',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1
-                                            .apply(
-                                              fontWeightDelta: 2,
-                                            ),
-                                      ),
-                                      Text('620 members'),
-                                    ],
-                                  ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).maybePop();
+                                    if (widget.onUserTap != null) {
+                                      widget.onUserTap();
+                                    }
+                                  },
+                                  child: Text(userName,
+                                      style:
+                                          titleStyle.apply(fontWeightDelta: 1)),
                                 ),
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: ListView(
-                      // Important: Remove any padding from the ListView.
-                      padding: EdgeInsets.zero,
-                      children: <Widget>[
-                        Text("Groups you're in", style: subtitleStyle),
-                        DrawerItem(
-                          leading: AppLogo(
-                            size: 30,
-                          ),
-                          height: itemHeight,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Superconnectors',
-                                style:
-                                    Theme.of(context).textTheme.subtitle1.apply(
-                                          fontWeightDelta: 2,
-                                        ),
-                              ),
-                              Text('100 members'),
-                            ],
                           ),
                         ),
-                        DrawerItem(
-                          leading: AppLogo(
-                            size: 30,
-                          ),
-                          height: itemHeight,
-                          title: Column(
+                        Container(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(
-                                'Modernist',
-                                style:
-                                    Theme.of(context).textTheme.subtitle1.apply(
-                                          fontWeightDelta: 2,
-                                        ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: constraints.maxWidth * 0.05,
+                                ),
+                                child: Text(
+                                  'Current Group',
+                                  style: subtitleStyle,
+                                ),
                               ),
-                              Text('80 members'),
+                              DrawerItem(
+                                leading: AppLogo(
+                                  size: 30,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: constraints.maxWidth * 0.05,
+                                ),
+                                height: itemHeight,
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Cognitive World',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle1
+                                          .apply(
+                                            fontWeightDelta: 2,
+                                          ),
+                                    ),
+                                    Text('620 members'),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
-                  DrawerItem(
-                    height: itemHeight,
-                    leading: Icon(
-                      Icons.settings,
-                      color: Palette.textSecondaryBaseColor,
-                    ),
-                    title: Text('Settings',
-                        style: Theme.of(context).textTheme.subtitle1),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: ListView(
+                    // Important: Remove any padding from the ListView.
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth * 0.05,
+                        ),
+                        child: Text("Groups you're in", style: subtitleStyle),
+                      ),
+                      DrawerItem(
+                        leading: AppLogo(
+                          size: 30,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth * 0.05,
+                        ),
+                        height: itemHeight,
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Superconnectors',
+                              style:
+                                  Theme.of(context).textTheme.subtitle1.apply(
+                                        fontWeightDelta: 2,
+                                      ),
+                            ),
+                            Text('100 members'),
+                          ],
+                        ),
+                      ),
+                      DrawerItem(
+                        leading: AppLogo(
+                          size: 30,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth * 0.05,
+                        ),
+                        height: itemHeight,
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Modernist',
+                              style:
+                                  Theme.of(context).textTheme.subtitle1.apply(
+                                        fontWeightDelta: 2,
+                                      ),
+                            ),
+                            Text('80 members'),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                DrawerItem(
+                  height: itemHeight,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: constraints.maxWidth * 0.05,
+                  ),
+                  leading: Icon(
+                    Icons.settings,
+                    color: Palette.textSecondaryBaseColor,
+                  ),
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                    if (widget.onSettingsTap != null) {
+                      widget.onSettingsTap();
+                    }
+                  },
+                  title: Text('Settings',
+                      style: Theme.of(context).textTheme.subtitle1),
+                ),
+              ],
             );
           },
         ),
