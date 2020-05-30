@@ -232,29 +232,35 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                             child: Text(widget.user.about ?? '',
                                 style: bodyTextStyle),
                           ),
-                          Container(
-                            width: double.infinity,
-                            child: FlatButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => UserProfileScreen(
-                                    userRepository: FirebaseUserRepository(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Edit Profile',
-                                style: Theme.of(context).textTheme.button.apply(
-                                    fontWeightDelta: 1,
-                                    color: Palette.primaryColor),
+                          Visibility(
+                            visible: widget.editable,
+                            child: Container(
+                              width: double.infinity,
+                              child: FlatButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => UserProfileScreen(
+                                      userRepository: FirebaseUserRepository(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Edit Profile',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .apply(
+                                          fontWeightDelta: 1,
+                                          color: Palette.primaryColor),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        width: 1, color: Palette.primaryColor),
+                                    borderRadius: BorderRadius.circular(10.0)),
                               ),
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: 1, color: Palette.primaryColor),
-                                  borderRadius: BorderRadius.circular(10.0)),
                             ),
                           ),
                           Container(

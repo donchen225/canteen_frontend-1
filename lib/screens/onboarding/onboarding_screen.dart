@@ -22,6 +22,7 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('IN ONBOARDING SCREEN');
     return BlocBuilder<OnboardingBloc, OnboardingState>(
         builder: (BuildContext context, OnboardingState state) {
       return AnimatedSwitcher(

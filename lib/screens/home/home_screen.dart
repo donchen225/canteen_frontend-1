@@ -7,10 +7,10 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
+import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
@@ -107,19 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: child,
     );
   }
-
-  // TODO: move onboarding to main.dart
-  // Widget _buildHomeScreen(HomeState state) {
-  //   if (state is OnboardScreenLoaded) {
-  //     print('ONBOARDSCREEN LOADED');
-  //     return BlocProvider<OnboardingBloc>(
-  //       create: (context) =>
-  //           OnboardingBloc(userRepository: widget._userRepository),
-  //       child: OnboardingScreen(),
-  //     );
-  //   }
-  //   return Container();
-  // }
 
   Future _getDrawerUserNavFunction() {
     GlobalKey<NavigatorState> key;
@@ -273,7 +260,11 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           if (state is OnboardScreenLoaded) {
-            return OnboardingScreen();
+            return BlocProvider<OnboardingBloc>(
+              create: (context) =>
+                  OnboardingBloc(userRepository: widget._userRepository),
+              child: OnboardingScreen(),
+            );
           }
 
           if (state is HomeLoaded) {
