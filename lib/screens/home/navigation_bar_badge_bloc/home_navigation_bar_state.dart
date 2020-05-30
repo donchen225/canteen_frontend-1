@@ -2,17 +2,18 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 @immutable
-abstract class HomeNavigationBarState extends Equatable {
+abstract class HomeNavigationBarBadgeState extends Equatable {
   final int numRequests;
   final int numRecommended;
 
-  const HomeNavigationBarState({this.numRequests = 0, this.numRecommended = 0});
+  const HomeNavigationBarBadgeState(
+      {this.numRequests = 0, this.numRecommended = 0});
 
   @override
   List<Object> get props => [];
 }
 
-class HomeNavigationBarLoaded extends HomeNavigationBarState {
+class HomeNavigationBarLoaded extends HomeNavigationBarBadgeState {
   final int numRequests;
   final int numRecommended;
 
@@ -23,4 +24,4 @@ class HomeNavigationBarLoaded extends HomeNavigationBarState {
   List<Object> get props => [numRequests, numRecommended];
 }
 
-class HomeNavigationBarLoading extends HomeNavigationBarState {}
+class HomeNavigationBarLoading extends HomeNavigationBarBadgeState {}

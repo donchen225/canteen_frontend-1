@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:canteen_frontend/screens/home/navigation_bar_bloc/home_navigation_bar_event.dart';
-import 'package:canteen_frontend/screens/home/navigation_bar_bloc/home_navigation_bar_state.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_event.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_state.dart';
 import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-class HomeNavigationBarBloc
-    extends Bloc<HomeNavigationBarEvent, HomeNavigationBarState> {
+class HomeNavigationBarBadgeBloc
+    extends Bloc<HomeNavigationBarBadgeEvent, HomeNavigationBarBadgeState> {
   final RequestBloc _requestBloc;
   StreamSubscription _requestSubscription;
 
-  HomeNavigationBarBloc(
+  HomeNavigationBarBadgeBloc(
       {@required RequestBloc requestBloc,
       @required RecommendedBloc recommendedBloc})
       : assert(requestBloc != null),
@@ -26,12 +26,12 @@ class HomeNavigationBarBloc
   }
 
   @override
-  HomeNavigationBarState get initialState =>
+  HomeNavigationBarBadgeState get initialState =>
       HomeNavigationBarLoaded(numRequests: 0);
 
   @override
-  Stream<HomeNavigationBarState> mapEventToState(
-      HomeNavigationBarEvent event) async* {
+  Stream<HomeNavigationBarBadgeState> mapEventToState(
+      HomeNavigationBarBadgeEvent event) async* {
     if (event is LoadBadgeCounts) {
       yield* _mapLoadBadgeCountsToState();
     } else if (event is UpdateBadgeCount) {
@@ -41,9 +41,9 @@ class HomeNavigationBarBloc
     }
   }
 
-  Stream<HomeNavigationBarState> _mapLoadBadgeCountsToState() async* {}
+  Stream<HomeNavigationBarBadgeState> _mapLoadBadgeCountsToState() async* {}
 
-  Stream<HomeNavigationBarState> _mapUpdateBadgeCountToState(
+  Stream<HomeNavigationBarBadgeState> _mapUpdateBadgeCountToState(
       UpdateBadgeCount event) async* {
     yield HomeNavigationBarLoaded(
       numRequests: event.numRequests,
@@ -51,7 +51,7 @@ class HomeNavigationBarBloc
     );
   }
 
-  Stream<HomeNavigationBarState> _mapClearBadgeCountsToState() async* {
+  Stream<HomeNavigationBarBadgeState> _mapClearBadgeCountsToState() async* {
     yield HomeNavigationBarLoaded(
       numRequests: 0,
       numRecommended: 0,

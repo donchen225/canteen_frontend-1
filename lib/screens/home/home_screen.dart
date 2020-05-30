@@ -3,7 +3,7 @@ import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
@@ -196,9 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Visibility(visible: false, child: Container());
               }
 
-              return BlocBuilder<HomeNavigationBarBloc, HomeNavigationBarState>(
+              return BlocBuilder<HomeNavigationBarBadgeBloc,
+                      HomeNavigationBarBadgeState>(
                   builder: (BuildContext context,
-                      HomeNavigationBarState navBarState) {
+                      HomeNavigationBarBadgeState navBarState) {
                 return BottomNavigationBar(
                   currentIndex: _currentIndex,
                   showSelectedLabels: false,

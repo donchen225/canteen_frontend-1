@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/home/navigation_bar_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: ListTile(
                 title: Text('Log out'),
                 onTap: () {
-                  BlocProvider.of<HomeNavigationBarBloc>(context)
+                  BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
                       .add(ClearBadgeCounts());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());

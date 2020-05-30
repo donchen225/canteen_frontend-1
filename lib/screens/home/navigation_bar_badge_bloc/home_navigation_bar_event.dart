@@ -2,16 +2,16 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 @immutable
-abstract class HomeNavigationBarEvent extends Equatable {
-  const HomeNavigationBarEvent();
+abstract class HomeNavigationBarBadgeEvent extends Equatable {
+  const HomeNavigationBarBadgeEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadBadgeCounts extends HomeNavigationBarEvent {}
+class LoadBadgeCounts extends HomeNavigationBarBadgeEvent {}
 
-class UpdateBadgeCount extends HomeNavigationBarEvent {
+class UpdateBadgeCount extends HomeNavigationBarBadgeEvent {
   final int numRequests;
   final int numRecommended;
 
@@ -25,4 +25,4 @@ class UpdateBadgeCount extends HomeNavigationBarEvent {
       'UpdateBadgeCount { numRequests: $numRequests numRecommended: $numRecommended }';
 }
 
-class ClearBadgeCounts extends HomeNavigationBarEvent {}
+class ClearBadgeCounts extends HomeNavigationBarBadgeEvent {}
