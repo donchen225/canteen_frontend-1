@@ -12,7 +12,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final UserRepository _userRepository;
   final PostBloc _postBloc;
   StreamSubscription _postSubscription;
-  List<Post> _homePosts = [];
+  List<Post> _posts = [];
 
   PostListBloc({@required postBloc, @required userRepository})
       : assert(userRepository != null),
@@ -21,7 +21,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         _postBloc = postBloc {
     _postSubscription = _postBloc.listen((state) {
       if (state is PostsLoaded) {
-        _homePosts = state.posts;
+        add(LoadPostList(state.posts));
+        _posts = state.posts;
       }
     });
   }
@@ -41,7 +42,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   Stream<PostListState> _mapLoadPostListToState(LoadPostList event) async* {
     // TODO: add force reload of posts
     yield PostListLoaded(
-        posts: _homePosts, user: await _userRepository.currentUser());
+        posts: _posts, user: await _userRepository.currentUser());
   }
 
   @override

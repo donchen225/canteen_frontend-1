@@ -11,6 +11,8 @@ class PostListState extends Equatable {
   List<Object> get props => [];
 }
 
+class PostListUninitialized extends PostListState {}
+
 class PostListLoaded extends PostListState {
   final List<Post> posts;
   final User user;

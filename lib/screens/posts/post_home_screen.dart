@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
@@ -11,6 +12,7 @@ import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostHomeScreen extends StatefulWidget {
   static const routeName = '/';
@@ -103,142 +105,161 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           },
         ),
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                color: Palette.containerColor,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: SizeConfig.instance.safeBlockVertical * 2,
-                        left: SizeConfig.instance.safeBlockHorizontal *
-                            kHorizontalPaddingBlocks,
-                        right: SizeConfig.instance.safeBlockHorizontal *
-                            kHorizontalPaddingBlocks,
-                      ),
+      body: BlocBuilder<PostListBloc, PostListState>(
+        builder: (BuildContext context, PostListState state) {
+          if (state is PostListUninitialized) {
+            return Container();
+          }
+
+          if (state is PostListLoading) {
+            return Center(child: CupertinoActivityIndicator());
+          }
+
+          if (state is PostListLoaded) {
+            return NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Palette.containerColor,
                       child: Column(
                         children: <Widget>[
-                          Container(
-                            height: kProfileSize,
-                            child: Row(
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.instance.safeBlockVertical * 2,
+                              left: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                              right: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                            ),
+                            child: Column(
                               children: <Widget>[
-                                // ProfilePicture(
-                                //   photoUrl: userPhotoUrl,
-                                //   shape: BoxShape.circle,
-                                //   editable: false,
-                                //   size: kProfileSize,
-                                // ),
-                                AppLogo(
-                                  size: kProfileSize,
+                                Container(
+                                  height: kProfileSize,
+                                  child: Row(
+                                    children: <Widget>[
+                                      // ProfilePicture(
+                                      //   photoUrl: userPhotoUrl,
+                                      //   shape: BoxShape.circle,
+                                      //   editable: false,
+                                      //   size: kProfileSize,
+                                      // ),
+                                      AppLogo(
+                                        size: kProfileSize,
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.topLeft,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.instance
+                                                      .safeBlockHorizontal *
+                                                  kHorizontalPaddingBlocks),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  bottom: SizeConfig.instance
+                                                          .safeBlockVertical *
+                                                      0.5,
+                                                ),
+                                                child: Text(
+                                                  'Modernist',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .apply(
+                                                          fontWeightDelta: 2),
+                                                ),
+                                              ),
+                                              Text(
+                                                'Group description' ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
+                                              ),
+                                              Text(
+                                                '600 members' ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
+                                              ),
+                                              FlatButton(
+                                                color: Palette.primaryColor,
+                                                child: Text(
+                                                  'JOIN',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .button
+                                                      .apply(
+                                                          color: Palette
+                                                              .whiteColor,
+                                                          fontWeightDelta: 1),
+                                                ),
+                                                onPressed: () {},
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig
-                                                .instance.safeBlockHorizontal *
-                                            kHorizontalPaddingBlocks),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: SizeConfig.instance
-                                                    .safeBlockVertical *
-                                                0.5,
-                                          ),
-                                          child: Text(
-                                            'Modernist',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .apply(fontWeightDelta: 2),
-                                          ),
-                                        ),
-                                        Text(
-                                          'Group description' ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                        Text(
-                                          '600 members' ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                        FlatButton(
-                                          color: Palette.primaryColor,
-                                          child: Text(
-                                            'JOIN',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .button
-                                                .apply(
-                                                    color: Palette.whiteColor,
-                                                    fontWeightDelta: 1),
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ],
-                                    ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        SizeConfig.instance.safeBlockVertical,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.instance.safeBlockVertical,
-                            ),
-                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
+                    sliver: SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                            indicatorSize: TabBarIndicatorSize.label,
+                            controller: _tabController,
+                            labelColor: Palette.primaryColor,
+                            unselectedLabelColor: Palette.appBarTextColor,
+                            labelStyle: Theme.of(context).textTheme.headline6,
+                            tabs: tabs
+                                .map(
+                                  (text) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: kTabBarTextPadding,
+                                    ),
+                                    child: Tab(
+                                      text: text,
+                                    ),
+                                  ),
+                                )
+                                .toList()),
+                      ),
+                    ),
+                  ),
+                ];
+              },
+              body: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  PostListScreen(),
+                  GroupListScreen(),
+                ],
               ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                      indicatorSize: TabBarIndicatorSize.label,
-                      controller: _tabController,
-                      labelColor: Palette.primaryColor,
-                      unselectedLabelColor: Palette.appBarTextColor,
-                      labelStyle: Theme.of(context).textTheme.headline6,
-                      tabs: tabs
-                          .map(
-                            (text) => Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: kTabBarTextPadding,
-                              ),
-                              child: Tab(
-                                text: text,
-                              ),
-                            ),
-                          )
-                          .toList()),
-                ),
-              ),
-            ),
-          ];
+            );
+          }
         },
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            PostListScreen(),
-            GroupListScreen(),
-          ],
-        ),
       ),
     );
   }

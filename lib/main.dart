@@ -136,11 +136,6 @@ void main() async {
             );
           },
         ),
-        BlocProvider<SearchBloc>(
-          create: (context) => SearchBloc(
-            userRepository: userRepository,
-          ),
-        ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
             userRepository: userRepository,
@@ -231,24 +226,6 @@ class App extends StatelessWidget {
                   print('AUTHENTICATED - RETURNING HOME SCREEN');
                   return MultiBlocProvider(
                     providers: [
-                      BlocProvider<PostListBloc>(
-                        create: (context) => PostListBloc(
-                          postBloc: BlocProvider.of<PostBloc>(context),
-                          userRepository: _userRepository,
-                        ),
-                      ),
-                      BlocProvider<MatchListBloc>(
-                        create: (context) => MatchListBloc(
-                          matchBloc: BlocProvider.of<MatchBloc>(context),
-                        ),
-                      ),
-                      BlocProvider<RequestListBloc>(
-                        create: (context) => RequestListBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          userRepository: _userRepository,
-                          requestRepository: _requestRepository,
-                        ),
-                      ),
                       BlocProvider<UserProfileBloc>(
                         create: (context) => UserProfileBloc(
                           userRepository: _userRepository,
@@ -257,7 +234,9 @@ class App extends StatelessWidget {
                         ),
                       ),
                     ],
-                    child: HomeScreen(userRepository: _userRepository),
+                    child: HomeScreen(
+                        userRepository: _userRepository,
+                        requestRepository: _requestRepository),
                   );
                 }
                 return Container();
