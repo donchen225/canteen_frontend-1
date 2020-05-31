@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_event.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_state.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -12,11 +11,8 @@ class HomeNavigationBarBadgeBloc
   final RequestBloc _requestBloc;
   StreamSubscription _requestSubscription;
 
-  HomeNavigationBarBadgeBloc(
-      {@required RequestBloc requestBloc,
-      @required RecommendedBloc recommendedBloc})
+  HomeNavigationBarBadgeBloc({@required RequestBloc requestBloc})
       : assert(requestBloc != null),
-        assert(recommendedBloc != null),
         _requestBloc = requestBloc {
     _requestSubscription = _requestBloc.listen((state) {
       if (state is RequestsLoaded) {

@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
@@ -14,10 +15,10 @@ import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
+import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
@@ -54,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _searchScreen = GlobalKey<NavigatorState>();
   final _messageScreen = GlobalKey<NavigatorState>();
   final _notificationScreen = GlobalKey<NavigatorState>();
+  final RecommendationRepository _recommendationRepository =
+      RecommendationRepository();
 
   @override
   void initState() {
@@ -193,8 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
-              BlocProvider.of<RecommendedBloc>(context).add(LoadRecommended());
-
               BlocProvider.of<PostBloc>(context).add(LoadPosts());
             }
           },
@@ -298,6 +299,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       create: (context) => SearchBloc(
                         userRepository: widget._userRepository,
                       )..add(SearchHome()),
+                    ),
+                    BlocProvider<DiscoverBloc>(
+                      create: (context) => DiscoverBloc(
+                        userRepository: widget._userRepository,
+                        recommendationRepository: _recommendationRepository,
+                      )..add(LoadDiscover()),
                     ),
                   ],
                   child: Navigator(

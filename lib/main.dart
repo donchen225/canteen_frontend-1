@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/post/post_repository.dart';
-import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
@@ -11,13 +10,8 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_list_bloc/post_list_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/recommended_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -36,11 +30,9 @@ import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/home_screen.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/splash/splash_screen.dart';
-import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/simple_bloc_delegate.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
@@ -53,8 +45,6 @@ void main() async {
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
   final PostRepository postRepository = PostRepository();
-  final RecommendationRepository recommendationRepository =
-      RecommendationRepository();
   final VideoChatRepository videoChatRepository = VideoChatRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
@@ -110,14 +100,6 @@ void main() async {
             );
           },
         ),
-        BlocProvider<RecommendedBloc>(
-          create: (context) {
-            return RecommendedBloc(
-              userRepository: userRepository,
-              recommendationRepository: recommendationRepository,
-            );
-          },
-        ),
         BlocProvider<PostBloc>(
           create: (context) {
             return PostBloc(
@@ -149,8 +131,7 @@ void main() async {
         ),
         BlocProvider<HomeNavigationBarBadgeBloc>(
           create: (BuildContext context) => HomeNavigationBarBadgeBloc(
-              requestBloc: BlocProvider.of<RequestBloc>(context),
-              recommendedBloc: BlocProvider.of<RecommendedBloc>(context)),
+              requestBloc: BlocProvider.of<RequestBloc>(context)),
         ),
       ],
       child: App(

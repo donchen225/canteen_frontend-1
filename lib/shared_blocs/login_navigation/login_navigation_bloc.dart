@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_event.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,9 +1,8 @@
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/recommended/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -92,8 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());
                   BlocProvider.of<PostBloc>(context).add(ClearPosts());
-                  BlocProvider.of<RecommendedBloc>(context)
-                      .add(ClearRecommended());
+                  BlocProvider.of<DiscoverBloc>(context).add(ClearDiscover());
                   BlocProvider.of<SettingBloc>(context).add(ClearSettings());
                   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                 },

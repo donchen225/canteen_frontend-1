@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
