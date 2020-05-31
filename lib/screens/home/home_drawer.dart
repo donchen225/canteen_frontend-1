@@ -37,7 +37,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             return Column(
               children: <Widget>[
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Container(
                     width: constraints.maxWidth,
                     child: Column(
@@ -87,6 +87,38 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              // Padding(
+                              //   padding: EdgeInsets.only(
+                              //     left: constraints.maxWidth * 0.05,
+                              //     right: constraints.maxWidth * 0.05,
+                              //     top: 10,
+                              //     bottom: 10,
+                              //   ),
+                              //   child: Row(
+                              //     mainAxisAlignment:
+                              //         MainAxisAlignment.spaceBetween,
+                              //     children: <Widget>[
+                              //       Text(
+                              //         '\$ 10.00 in Canteen',
+                              //         style:
+                              //             Theme.of(context).textTheme.bodyText1,
+                              //       ),
+                              //       FlatButton(
+                              //         color: Palette.primaryColor,
+                              //         child: Text(
+                              //           'Transfer',
+                              //           style: Theme.of(context)
+                              //               .textTheme
+                              //               .button
+                              //               .apply(
+                              //                   fontWeightDelta: 1,
+                              //                   color: Palette.whiteColor),
+                              //         ),
+                              //         onPressed: () {},
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: constraints.maxWidth * 0.05,
@@ -129,7 +161,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                 ),
                 Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: ListView(
                     // Important: Remove any padding from the ListView.
                     padding: EdgeInsets.zero,
