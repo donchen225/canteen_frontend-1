@@ -3,6 +3,7 @@ import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/group_card.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -155,9 +156,10 @@ class DiscoverScreen extends StatelessWidget {
                     height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.users.length,
+                      itemCount: state.groups.length,
                       itemBuilder: (context, index) {
-                        final user = state.users[index];
+                        final group = state.groups[index];
+                        print(group);
                         return Padding(
                           padding: EdgeInsets.only(
                             left: SizeConfig.instance.safeBlockHorizontal * 6,
@@ -165,18 +167,23 @@ class DiscoverScreen extends StatelessWidget {
                                 SizeConfig.instance.scaffoldBodyHeight * 0.03,
                             top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                           ),
-                          child: ProfileCard(
-                            user: user,
+                          child: GroupCard(
+                            group: group,
                             height:
                                 SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              ViewUserProfileScreen.routeName,
-                              arguments: UserArguments(
-                                user: user,
-                              ),
-                            ),
                           ),
+                          // ProfileCard(
+                          //   user: user,
+                          //   height:
+                          //       SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                          //   onTap: () => Navigator.pushNamed(
+                          //     context,
+                          //     ViewUserProfileScreen.routeName,
+                          //     arguments: UserArguments(
+                          //       user: user,
+                          //     ),
+                          //   ),
+                          // ),
                         );
                       },
                     ),

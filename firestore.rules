@@ -23,6 +23,10 @@ service cloud.firestore {
       allow read, write: if isAuthenticated();
     }
 
+    match /groups/{groupId} {
+      allow read, write: if isAuthenticated();
+    }
+
     match /posts/{postId}/comments/{commentId} {
       allow read, write: if isAuthenticated();
     }

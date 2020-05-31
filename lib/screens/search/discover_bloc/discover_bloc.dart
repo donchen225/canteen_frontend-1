@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
-import 'package:canteen_frontend/models/search/search_query.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/discover_event.dart';
@@ -12,17 +13,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   final UserRepository _userRepository;
   final RecommendationRepository _recommendationRepository;
-  StreamSubscription _recommendedSubscription;
+  final GroupRepository _groupRepository;
   List<User> _latestUsers = [];
-  List<User> _searchResults = [];
+  List<Group> _latestGroups = [];
   List<User> _recommendations = [];
 
-  DiscoverBloc(
-      {@required UserRepository userRepository,
-      @required RecommendationRepository recommendationRepository})
-      : assert(userRepository != null),
+  DiscoverBloc({
+    @required UserRepository userRepository,
+    @required RecommendationRepository recommendationRepository,
+    @required GroupRepository groupRepository,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
-        _recommendationRepository = recommendationRepository;
+        _recommendationRepository = recommendationRepository,
+        _groupRepository = groupRepository;
 
   @override
   DiscoverState get initialState => DiscoverUninitialized();
@@ -41,15 +44,24 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   Stream<DiscoverState> _mapLoadDiscoverToState(LoadDiscover event) async* {
     yield DiscoverLoading();
 
-    if (_latestUsers.length == 0) {
-      final users = await _userRepository.getAllUsers();
-      _latestUsers = users;
-    }
+    final usersFuture = _latestUsers.length == 0
+        ? _userRepository.getAllUsers()
+        : Future.value(_latestUsers);
 
-    await _loadRecommended();
+    final groupsFuture = _latestGroups.length == 0
+        ? _groupRepository.getAllGroups()
+        : Future.value(_latestGroups);
+
+    await Future.wait<void>([
+      usersFuture.then((users) => _latestUsers = users),
+      _loadRecommended(),
+      groupsFuture.then((groups) => _latestGroups = groups)
+    ]);
 
     yield DiscoverLoaded(
-        users: _latestUsers, recommendations: _recommendations);
+        users: _latestUsers,
+        recommendations: _recommendations,
+        groups: _latestGroups);
   }
 
   Stream<DiscoverState> _mapClearDiscoverToState() async* {

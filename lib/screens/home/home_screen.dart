@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -57,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _notificationScreen = GlobalKey<NavigatorState>();
   final RecommendationRepository _recommendationRepository =
       RecommendationRepository();
+  final GroupRepository _groupRepository = GroupRepository();
 
   @override
   void initState() {
@@ -302,9 +304,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     BlocProvider<DiscoverBloc>(
                       create: (context) => DiscoverBloc(
-                        userRepository: widget._userRepository,
-                        recommendationRepository: _recommendationRepository,
-                      )..add(LoadDiscover()),
+                          userRepository: widget._userRepository,
+                          recommendationRepository: _recommendationRepository,
+                          groupRepository: _groupRepository)
+                        ..add(LoadDiscover()),
                     ),
                   ],
                   child: Navigator(
