@@ -151,49 +151,35 @@ class DiscoverScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: BlocBuilder<SearchBloc, SearchState>(
-                    builder: (BuildContext context, SearchState state) {
-                      if (state is SearchUninitialized) {
-                        final userList = state.allUsers;
-
-                        return Container(
-                          height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: userList.length,
-                            itemBuilder: (context, index) {
-                              final user = userList[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  left:
-                                      SizeConfig.instance.safeBlockHorizontal *
-                                          6,
-                                  bottom:
-                                      SizeConfig.instance.scaffoldBodyHeight *
-                                          0.03,
-                                  top: SizeConfig.instance.scaffoldBodyHeight *
-                                      0.03,
-                                ),
-                                child: ProfileCard(
-                                  user: user,
-                                  height:
-                                      SizeConfig.instance.scaffoldBodyHeight *
-                                          0.44,
-                                  onTap: () => Navigator.pushNamed(
-                                    context,
-                                    ViewUserProfileScreen.routeName,
-                                    arguments: UserArguments(
-                                      user: user,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                  child: Container(
+                    height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.users.length,
+                      itemBuilder: (context, index) {
+                        final user = state.users[index];
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.instance.safeBlockHorizontal * 6,
+                            bottom:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                          ),
+                          child: ProfileCard(
+                            user: user,
+                            height:
+                                SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ViewUserProfileScreen.routeName,
+                              arguments: UserArguments(
+                                user: user,
+                              ),
+                            ),
                           ),
                         );
-                      }
-                      return Container();
-                    },
+                      },
+                    ),
                   ),
                 ),
                 SliverToBoxAdapter(
