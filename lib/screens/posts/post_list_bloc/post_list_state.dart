@@ -14,15 +14,17 @@ class PostListState extends Equatable {
 class PostListUninitialized extends PostListState {}
 
 class PostListLoaded extends PostListState {
-  final List<Post> posts;
+  final List<DetailedPost> posts;
   final User user;
+  final String groupId;
 
-  const PostListLoaded({this.posts, this.user})
+  const PostListLoaded({this.posts, this.user, this.groupId})
       : assert(posts != null),
-        assert(user != null);
+        assert(user != null),
+        assert(groupId != null);
 
   @override
-  List<Object> get props => [posts, user];
+  List<Object> get props => [posts, user, groupId];
 
   @override
   String toString() => 'PostListLoaded';

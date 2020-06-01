@@ -11,7 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tuple/tuple.dart';
 
 class PostRepository {
-  final postCollection = Firestore.instance.collection('posts');
+  final groupCollection = Firestore.instance.collection('groups');
+  final postsCollection = 'posts';
   final commentsCollection = 'comments';
   final likesCollection = 'likes';
   List<DetailedPost> _detailedPosts = [];
@@ -85,51 +86,72 @@ class PostRepository {
     }
   }
 
-  Future<void> addPost(Post post) async {
+  Future<void> addPost(String groupId, Post post) async {
     print('ADD POST');
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
-        postCollection.document(),
+        groupCollection
+            .document(groupId)
+            .collection(postsCollection)
+            .document(),
         post.toEntity().toDocument(),
       );
     });
   }
 
-  Future<void> addComment(String postId, Comment comment) async {
+  Future<void> addComment(
+      String groupId, String postId, Comment comment) async {
     print('ADD COMMENT');
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
-        postCollection
+        groupCollection
+            .document(groupId)
+            .collection(postsCollection)
             .document(postId)
             .collection(commentsCollection)
             .document(),
         comment.toEntity().toDocument(),
       );
 
-      await tx.update(postCollection.document(postId),
+      await tx.update(
+          groupCollection
+              .document(groupId)
+              .collection(postsCollection)
+              .document(postId),
           {"comment_count": FieldValue.increment(1)});
     });
   }
 
-  Future<void> addLike(String postId, Like like) async {
+  Future<void> addLike(String groupId, String postId, Like like) async {
     print('ADD LIKE');
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
-        postCollection.document(postId).collection(likesCollection).document(),
+        groupCollection
+            .document(groupId)
+            .collection(postsCollection)
+            .document(postId)
+            .collection(likesCollection)
+            .document(),
         like.toEntity().toDocument(),
       );
 
-      await tx.update(postCollection.document(postId),
+      await tx.update(
+          groupCollection
+              .document(groupId)
+              .collection(postsCollection)
+              .document(postId),
           {"like_count": FieldValue.increment(1)});
     });
   }
 
-  Future<void> deleteLike(String postId) async {
+  Future<void> deleteLike(String groupId, String postId) async {
     print('DELETE LIKE');
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    final id = await postCollection
+    final id = await groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .document(postId)
         .collection(likesCollection)
         .where('from', isEqualTo: userId)
@@ -142,22 +164,30 @@ class PostRepository {
 
     if (id != null && id.isNotEmpty) {
       return Firestore.instance.runTransaction((Transaction tx) async {
-        await tx.delete(postCollection
+        await tx.delete(groupCollection
+            .document(groupId)
+            .collection(postsCollection)
             .document(postId)
             .collection(likesCollection)
             .document(id));
 
-        await tx.update(postCollection.document(postId),
+        await tx.update(
+            groupCollection
+                .document(groupId)
+                .collection(postsCollection)
+                .document(postId),
             {"like_count": FieldValue.increment(-1)});
       });
     }
   }
 
-  Future<bool> checkLike(String postId) async {
+  Future<bool> checkLike(String groupId, String postId) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    return postCollection
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .document(postId)
         .collection(likesCollection)
         .where('from', isEqualTo: userId)
@@ -167,12 +197,16 @@ class PostRepository {
     });
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(String postId) {
+  Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(
+      String groupId, String postId) {
     final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
     print('LAST FETCH: $lastFetch');
     print('GET COMMENTS: $postId');
-    final collection =
-        postCollection.document(postId).collection(commentsCollection);
+    final collection = groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId)
+        .collection(commentsCollection);
 
     // Only query comments since last fetch
     final query = lastFetch == null
@@ -192,8 +226,11 @@ class PostRepository {
     });
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts() {
-    return postCollection
+  Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts(String groupId) {
+    print('GETTING POSTS');
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .orderBy("last_updated", descending: true)
         .snapshots()
         .map((snapshot) {

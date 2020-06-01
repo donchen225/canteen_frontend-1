@@ -11,9 +11,10 @@ abstract class PostState extends Equatable {
 class PostsLoading extends PostState {}
 
 class PostsLoaded extends PostState {
+  final String groupId;
   final List<DetailedPost> posts;
 
-  const PostsLoaded({this.posts = const []});
+  const PostsLoaded({this.groupId, this.posts = const []});
 
   @override
   List<Object> get props => [posts];

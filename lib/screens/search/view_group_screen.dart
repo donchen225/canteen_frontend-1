@@ -56,7 +56,6 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('KEY: ${widget.key.toString()}');
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 

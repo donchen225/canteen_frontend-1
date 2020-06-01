@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -24,15 +25,18 @@ class PostListScreen extends StatelessWidget {
         CachedSharedPreferences.getString(PreferenceConstants.userId);
     final TextStyle buttonTextStyle = Theme.of(context).textTheme.bodyText2;
 
-    return BlocBuilder<PostBloc, PostState>(
-      builder: (BuildContext context, PostState state) {
-        if (state is PostsLoading) {
+    return BlocBuilder<PostListBloc, PostListState>(
+      builder: (BuildContext context, PostListState state) {
+        print('POST LIST SCREEN');
+        print(state);
+
+        if (state is PostListLoading) {
           return Center(
             child: CupertinoActivityIndicator(),
           );
         }
 
-        if (state is PostsLoaded) {
+        if (state is PostListLoaded) {
           return CustomScrollView(
             key: PageStorageKey<String>('posts'),
             slivers: <Widget>[
@@ -47,13 +51,14 @@ class PostListScreen extends StatelessWidget {
 
                   return GestureDetector(
                     onTap: () {
-                      BlocProvider.of<CommentBloc>(context)
-                          .add(LoadComments(postId: post.id));
+                      BlocProvider.of<CommentBloc>(context).add(LoadComments(
+                          groupId: state.groupId, postId: post.id));
                       Navigator.pushNamed(
                         context,
                         SinglePostScreen.routeName,
                         arguments: SinglePostArguments(
                           post: post,
+                          groupId: state.groupId,
                         ),
                       );
                     },
@@ -133,12 +138,17 @@ class PostListScreen extends StatelessWidget {
                                                     BlocProvider.of<PostBloc>(
                                                             context)
                                                         .add(AddLike(
-                                                            post.id, like));
+                                                            groupId:
+                                                                state.groupId,
+                                                            postId: post.id,
+                                                            like: like));
                                                   } else {
                                                     BlocProvider.of<PostBloc>(
                                                             context)
                                                         .add(DeleteLike(
-                                                            post.id));
+                                                            groupId:
+                                                                state.groupId,
+                                                            postId: post.id));
                                                   }
                                                 },
                                                 child: LikeButton(

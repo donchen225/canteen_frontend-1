@@ -63,7 +63,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
           commentsSubscriptionMap[event.postId];
       commentsSubscription?.cancel();
       commentsSubscription = _postRepository
-          .getComments(event.postId)
+          .getComments(event.groupId, event.postId)
           .listen((comments) => add(CommentsUpdated(event.postId, comments)));
 
       commentsSubscriptionMap[event.postId] = commentsSubscription;
@@ -117,7 +117,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   }
 
   Stream<CommentState> _mapAddCommentToState(AddComment event) async* {
-    _postRepository.addComment(event.postId, event.comment);
+    _postRepository.addComment(event.groupId, event.postId, event.comment);
   }
 
   Stream<CommentState> _mapClearCommentsToState() async* {

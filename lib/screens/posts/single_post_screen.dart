@@ -24,8 +24,9 @@ class SinglePostScreen extends StatelessWidget {
   final DetailedPost post;
   final Color _sideTextColor = Colors.grey[500];
   static const routeName = '/post';
+  final String groupId;
 
-  SinglePostScreen({@required this.post});
+  SinglePostScreen({@required this.post, @required this.groupId});
 
   @override
   Widget build(BuildContext context) {
@@ -164,11 +165,16 @@ class SinglePostScreen extends StatelessWidget {
                                       final like = Like(
                                           from: curentUserId,
                                           createdOn: DateTime.now());
-                                      BlocProvider.of<PostBloc>(context)
-                                          .add(AddLike(post.id, like));
+                                      BlocProvider.of<PostBloc>(context).add(
+                                          AddLike(
+                                              groupId: groupId,
+                                              postId: post.id,
+                                              like: like));
                                     } else {
-                                      BlocProvider.of<PostBloc>(context)
-                                          .add(DeleteLike(post.id));
+                                      BlocProvider.of<PostBloc>(context).add(
+                                          DeleteLike(
+                                              groupId: groupId,
+                                              postId: post.id));
                                     }
                                   },
                                   child: LikeButton(

@@ -11,9 +11,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -107,7 +105,6 @@ void main() async {
             return PostBloc(
               userRepository: userRepository,
               postRepository: postRepository,
-              userBloc: BlocProvider.of<UserBloc>(context),
             );
           },
         ),
@@ -197,7 +194,6 @@ class App extends StatelessWidget {
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Uninitialized) {
-                  print('SPLASH SCREEN');
                   return SplashScreen();
                 }
                 if (state is Unauthenticated) {
@@ -207,26 +203,10 @@ class App extends StatelessWidget {
                   );
                 }
                 if (state is Authenticated) {
-                  print('AUTHENTICATED - RETURNING HOME SCREEN');
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<UserProfileBloc>(
-                        create: (context) => UserProfileBloc(
-                          userRepository: _userRepository,
-                          settingsRepository: _settingsRepository,
-                          userBloc: BlocProvider.of<UserBloc>(context),
-                        ),
-                      ),
-                      BlocProvider<GroupBloc>(
-                        create: (context) => GroupBloc(
-                          userRepository: _userRepository,
-                          groupRepository: _groupRepository,
-                        )..add(LoadUserGroups()),
-                      ),
-                    ],
-                    child: HomeScreen(
-                        userRepository: _userRepository,
-                        requestRepository: _requestRepository),
+                  return HomeScreen(
+                    userRepository: _userRepository,
+                    requestRepository: _requestRepository,
+                    settingsRepository: _settingsRepository,
                   );
                 }
                 return Container();

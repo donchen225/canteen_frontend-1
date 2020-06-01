@@ -13,16 +13,19 @@ abstract class PostEvent extends Equatable {
 }
 
 class LoadPosts extends PostEvent {
-  const LoadPosts();
+  final String groupId;
+
+  const LoadPosts({this.groupId});
 
   @override
-  String toString() => 'LoadPosts';
+  String toString() => 'LoadPosts { groupId: $groupId }';
 }
 
 class AddPost extends PostEvent {
+  final String groupId;
   final Post post;
 
-  const AddPost(this.post);
+  const AddPost({this.groupId, this.post});
 
   @override
   List<Object> get props => [post];
@@ -32,28 +35,31 @@ class AddPost extends PostEvent {
 }
 
 class AddLike extends PostEvent {
+  final String groupId;
   final String postId;
   final Like like;
 
-  const AddLike(this.postId, this.like);
+  const AddLike({this.groupId, this.postId, this.like});
 
   @override
-  List<Object> get props => [postId, like];
+  List<Object> get props => [groupId, postId, like];
 
   @override
-  String toString() => 'AddLike { postId: $postId, like: $like }';
+  String toString() =>
+      'AddLike { groupId: $groupId, postId: $postId, like: $like }';
 }
 
 class DeleteLike extends PostEvent {
+  final String groupId;
   final String postId;
 
-  const DeleteLike(this.postId);
+  const DeleteLike({this.groupId, this.postId});
 
   @override
-  List<Object> get props => [postId];
+  List<Object> get props => [groupId, postId];
 
   @override
-  String toString() => 'DeleteLike { postId: $postId }';
+  String toString() => 'DeleteLike { groupId: $groupId, postId: $postId }';
 }
 
 class UpdatePost extends PostEvent {
@@ -81,15 +87,16 @@ class DeletePost extends PostEvent {
 }
 
 class PostsUpdated extends PostEvent {
+  final String groupId;
   final List<Tuple2<DocumentChangeType, Post>> updates;
 
-  const PostsUpdated(this.updates);
+  const PostsUpdated({this.groupId, this.updates});
 
   @override
-  List<Object> get props => [updates];
+  List<Object> get props => [groupId, updates];
 
   @override
-  String toString() => 'PostsUpdated { updates: $updates }';
+  String toString() => 'PostsUpdated { groupId: $groupId, updates: $updates }';
 }
 
 class ClearPosts extends PostEvent {}

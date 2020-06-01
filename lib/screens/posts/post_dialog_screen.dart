@@ -56,7 +56,8 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<PostBloc>(context).add(AddPost(post));
+              BlocProvider.of<PostBloc>(context)
+                  .add(AddPost(post: post)); // TODO: add groupId
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

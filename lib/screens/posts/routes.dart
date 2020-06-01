@@ -25,6 +25,7 @@ MaterialPageRoute buildPostScreenRoutes(RouteSettings settings, {Key homeKey}) {
             final SinglePostArguments args = settings.arguments;
             return SinglePostScreen(
               post: args.post,
+              groupId: args.groupId,
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

@@ -16,28 +16,15 @@ import 'package:tuple/tuple.dart';
 class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
-  UserBloc _userBloc;
-  User _self;
   StreamSubscription _postSubscription;
-  StreamSubscription _userSubscription;
 
-  PostBloc(
-      {@required PostRepository postRepository,
-      @required UserRepository userRepository,
-      @required UserBloc userBloc})
-      : assert(postRepository != null),
+  PostBloc({
+    @required PostRepository postRepository,
+    @required UserRepository userRepository,
+  })  : assert(postRepository != null),
         assert(userRepository != null),
-        assert(userBloc != null),
         _postRepository = postRepository,
-        _userRepository = userRepository,
-        _userBloc = userBloc {
-    _userSubscription = _userBloc.listen((state) {
-      print('POST BLOC USER SUBSCRIPTION RECEIVED EVENT');
-      if (state is UserLoaded) {
-        _self = state.user;
-      }
-    });
-  }
+        _userRepository = userRepository;
 
   @override
   PostState get initialState => PostsEmpty();
@@ -45,7 +32,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
     if (event is LoadPosts) {
-      yield* _mapLoadPostsToState();
+      yield* _mapLoadPostsToState(event);
     } else if (event is PostsUpdated) {
       yield* _mapPostsUpdateToState(event);
     } else if (event is AddPost) {
@@ -59,18 +46,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     }
   }
 
-  Stream<PostState> _mapLoadPostsToState() async* {
+  Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
     try {
       _postSubscription?.cancel();
-      _postSubscription = _postRepository.getPosts().listen((posts) {
-        add(PostsUpdated(posts));
+      _postSubscription =
+          _postRepository.getPosts(event.groupId).listen((posts) {
+        print('LOADING POSTS: $posts');
+        add(PostsUpdated(groupId: event.groupId, updates: posts));
       });
-
-      if (_self == null) {
-        print('USER IS NULL!!!!');
-        _self = await _userRepository.currentUser();
-        print('USER IS STILL NULL!!!!');
-      }
     } catch (exception) {
       print(exception.errorMessage());
     }
@@ -91,7 +74,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     final userLikedFuture = Future.wait(updatedPosts.map((update) async {
       if (update.item1 == DocumentChangeType.modified ||
           update.item1 == DocumentChangeType.added) {
-        return _postRepository.checkLike(update.item2.id);
+        return _postRepository.checkLike(event.groupId, update.item2.id);
       }
       return Future<bool>.value(false);
     }));
@@ -118,23 +101,23 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     }
 
-    yield PostsLoaded(posts: _postRepository.currentDetailedPosts());
+    yield PostsLoaded(
+        groupId: event.groupId, posts: _postRepository.currentDetailedPosts());
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
-    _postRepository.addPost(event.post);
+    _postRepository.addPost(event.groupId, event.post);
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
-    _postRepository.addLike(event.postId, event.like);
+    _postRepository.addLike(event.groupId, event.postId, event.like);
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
-    _postRepository.deleteLike(event.postId);
+    _postRepository.deleteLike(event.groupId, event.postId);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {
-    _self = null;
     _postRepository.clearPosts();
     _postSubscription?.cancel();
     yield PostsEmpty();
@@ -144,7 +127,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Future<void> close() {
     _postRepository.clearPosts();
     _postSubscription?.cancel();
-    _userSubscription?.cancel();
     return super.close();
   }
 }

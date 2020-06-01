@@ -12,7 +12,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   final UserRepository _userRepository;
   final PostBloc _postBloc;
   StreamSubscription _postSubscription;
-  List<Post> _posts = [];
+  Map<String, List<Post>> _postList = {};
 
   PostListBloc({@required postBloc, @required userRepository})
       : assert(userRepository != null),
@@ -21,8 +21,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         _postBloc = postBloc {
     _postSubscription = _postBloc.listen((state) {
       if (state is PostsLoaded) {
-        add(LoadPostList(state.posts));
-        _posts = state.posts;
+        add(LoadPostList(groupId: state.groupId, posts: state.posts));
+        _postList[state.groupId] = state.posts;
       }
     });
   }
@@ -42,7 +42,9 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   Stream<PostListState> _mapLoadPostListToState(LoadPostList event) async* {
     // TODO: add force reload of posts
     yield PostListLoaded(
-        posts: _posts, user: await _userRepository.currentUser());
+        posts: event.posts,
+        user: await _userRepository.currentUser(),
+        groupId: event.groupId);
   }
 
   @override

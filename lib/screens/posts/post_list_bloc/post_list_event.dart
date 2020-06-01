@@ -9,12 +9,13 @@ abstract class PostListEvent extends Equatable {
 }
 
 class LoadPostList extends PostListEvent {
+  final String groupId;
   final List<Post> posts;
 
-  LoadPostList(this.posts);
+  LoadPostList({this.groupId, this.posts});
 
   @override
-  List<Object> get props => [posts];
+  List<Object> get props => [groupId, posts];
 
   @override
   String toString() => 'LoadPostList';

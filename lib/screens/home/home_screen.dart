@@ -5,6 +5,7 @@ import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
@@ -16,6 +17,7 @@ import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
@@ -23,6 +25,8 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -33,15 +37,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
+  final SettingsRepository _settingsRepository;
 
-  HomeScreen(
-      {Key key,
-      @required UserRepository userRepository,
-      @required RequestRepository requestRepository})
-      : assert(userRepository != null),
+  HomeScreen({
+    Key key,
+    @required UserRepository userRepository,
+    @required RequestRepository requestRepository,
+    @required SettingsRepository settingsRepository,
+  })  : assert(userRepository != null),
         assert(requestRepository != null),
+        assert(settingsRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
+        _settingsRepository = settingsRepository,
         super(key: key);
 
   @override
@@ -198,8 +206,6 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-
-              BlocProvider.of<PostBloc>(context).add(LoadPosts());
             }
           },
           child: BlocBuilder<HomeBloc, HomeState>(
@@ -281,72 +287,89 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           if (state is HomeLoaded) {
-            return IndexedStack(
-              index: _currentIndex,
-              children: [
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<UserProfileBloc>(
+                  create: (context) => UserProfileBloc(
+                    userRepository: widget._userRepository,
+                    settingsRepository: widget._settingsRepository,
+                    userBloc: BlocProvider.of<UserBloc>(context),
+                  ),
+                ),
+                BlocProvider<GroupBloc>(
+                  create: (context) => GroupBloc(
+                    userRepository: widget._userRepository,
+                    groupRepository: _groupRepository,
+                  )..add(LoadUserGroups()),
+                ),
                 BlocProvider<PostListBloc>(
                   create: (context) => PostListBloc(
                     postBloc: BlocProvider.of<PostBloc>(context),
                     userRepository: widget._userRepository,
                   ),
-                  child: Navigator(
+                ),
+              ],
+              child: IndexedStack(
+                index: _currentIndex,
+                children: [
+                  Navigator(
                     key: _postScreen,
                     onGenerateRoute: (RouteSettings settings) {
                       return buildPostScreenRoutes(settings);
                     },
                   ),
-                ),
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider<SearchBloc>(
-                      create: (context) => SearchBloc(
-                        userRepository: widget._userRepository,
-                      )..add(SearchHome()),
-                    ),
-                    BlocProvider<DiscoverBloc>(
-                      create: (context) => DiscoverBloc(
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider<SearchBloc>(
+                        create: (context) => SearchBloc(
                           userRepository: widget._userRepository,
-                          recommendationRepository: _recommendationRepository,
-                          groupRepository: _groupRepository)
-                        ..add(LoadDiscover()),
+                        )..add(SearchHome()),
+                      ),
+                      BlocProvider<DiscoverBloc>(
+                        create: (context) => DiscoverBloc(
+                            userRepository: widget._userRepository,
+                            recommendationRepository: _recommendationRepository,
+                            groupRepository: _groupRepository)
+                          ..add(LoadDiscover()),
+                      ),
+                    ],
+                    child: Navigator(
+                      key: _searchScreen,
+                      onGenerateRoute: (RouteSettings settings) {
+                        return buildSearchScreenRoutes(settings);
+                      },
                     ),
-                  ],
-                  child: Navigator(
-                    key: _searchScreen,
+                  ),
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider<RequestListBloc>(
+                        create: (context) => RequestListBloc(
+                          requestBloc: BlocProvider.of<RequestBloc>(context),
+                          userRepository: widget._userRepository,
+                          requestRepository: widget._requestRepository,
+                        ),
+                      ),
+                      BlocProvider<MatchListBloc>(
+                        create: (context) => MatchListBloc(
+                          matchBloc: BlocProvider.of<MatchBloc>(context),
+                        ),
+                      ),
+                    ],
+                    child: Navigator(
+                      key: _messageScreen,
+                      onGenerateRoute: (RouteSettings settings) {
+                        return buildMessageScreenRoutes(settings);
+                      },
+                    ),
+                  ),
+                  Navigator(
+                    key: _notificationScreen,
                     onGenerateRoute: (RouteSettings settings) {
-                      return buildSearchScreenRoutes(settings);
+                      return buildNotificationScreenRoutes(settings);
                     },
                   ),
-                ),
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider<RequestListBloc>(
-                      create: (context) => RequestListBloc(
-                        requestBloc: BlocProvider.of<RequestBloc>(context),
-                        userRepository: widget._userRepository,
-                        requestRepository: widget._requestRepository,
-                      ),
-                    ),
-                    BlocProvider<MatchListBloc>(
-                      create: (context) => MatchListBloc(
-                        matchBloc: BlocProvider.of<MatchBloc>(context),
-                      ),
-                    ),
-                  ],
-                  child: Navigator(
-                    key: _messageScreen,
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildMessageScreenRoutes(settings);
-                    },
-                  ),
-                ),
-                Navigator(
-                  key: _notificationScreen,
-                  onGenerateRoute: (RouteSettings settings) {
-                    return buildNotificationScreenRoutes(settings);
-                  },
-                ),
-              ],
+                ],
+              ),
             );
           }
         },

@@ -12,25 +12,29 @@ abstract class CommentEvent extends Equatable {
 }
 
 class LoadComments extends CommentEvent {
+  final String groupId;
   final String postId;
 
-  const LoadComments({@required this.postId});
+  const LoadComments({@required this.groupId, @required this.postId});
 
   @override
   String toString() => 'LoadComments';
 }
 
 class AddComment extends CommentEvent {
+  final String groupId;
   final String postId;
   final Comment comment;
 
-  const AddComment({@required this.postId, @required this.comment});
+  const AddComment(
+      {@required this.groupId, @required this.postId, @required this.comment});
 
   @override
-  List<Object> get props => [postId, comment];
+  List<Object> get props => [groupId, postId, comment];
 
   @override
-  String toString() => 'AddComment { postId: $postId comment: $comment }';
+  String toString() =>
+      'AddComment { groupId: $groupId, postId: $postId comment: $comment }';
 }
 
 class UpdateComment extends CommentEvent {
