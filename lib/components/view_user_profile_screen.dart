@@ -4,7 +4,6 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';

@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_results_screen.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
+import 'package:canteen_frontend/screens/search/view_group_screen.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +29,11 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
             return ViewUserProfileScreen(
               user: args.user,
               editable: args.editable ?? false,
+            );
+          case ViewGroupScreen.routeName:
+            final GroupArguments args = settings.arguments;
+            return ViewGroupScreen(
+              group: args.group,
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

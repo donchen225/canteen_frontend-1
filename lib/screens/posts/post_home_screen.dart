@@ -1,11 +1,12 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -16,6 +17,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostHomeScreen extends StatefulWidget {
   static const routeName = '/';
+
+  PostHomeScreen({Key key}) : super(key: key);
 
   @override
   _PostHomeScreenState createState() => _PostHomeScreenState();
@@ -53,6 +56,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('KEY: ${widget.key.toString()}');
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
@@ -105,17 +109,23 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           },
         ),
       ),
-      body: BlocBuilder<PostListBloc, PostListState>(
-        builder: (BuildContext context, PostListState state) {
-          if (state is PostListUninitialized) {
+      body: BlocBuilder<GroupBloc, GroupState>(
+        builder: (BuildContext context, GroupState state) {
+          if (state is GroupUninitialized) {
             return Container();
           }
 
-          if (state is PostListLoading) {
+          if (state is GroupLoading) {
             return Center(child: CupertinoActivityIndicator());
           }
 
-          if (state is PostListLoaded) {
+          if (state is GroupLoaded) {
+            final group = state.group;
+            final isNotMember = BlocProvider.of<GroupBloc>(context)
+                .currentUserGroups
+                .where((g) => g.groupId == group.id)
+                .isEmpty;
+
             return NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
@@ -136,7 +146,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                             child: Column(
                               children: <Widget>[
                                 Container(
-                                  height: kProfileSize,
                                   child: Row(
                                     children: <Widget>[
                                       // ProfilePicture(
@@ -166,7 +175,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                       0.5,
                                                 ),
                                                 child: Text(
-                                                  'Modernist',
+                                                  group.name,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5
@@ -175,30 +184,34 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                 ),
                                               ),
                                               Text(
-                                                'Group description' ?? '',
+                                                group.description ?? '',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyText2,
                                               ),
                                               Text(
-                                                '600 members' ?? '',
+                                                '${group.members?.toString() ?? "0"} members' ??
+                                                    '',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyText2,
                                               ),
-                                              FlatButton(
-                                                color: Palette.primaryColor,
-                                                child: Text(
-                                                  'JOIN',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .button
-                                                      .apply(
-                                                          color: Palette
-                                                              .whiteColor,
-                                                          fontWeightDelta: 1),
+                                              Visibility(
+                                                visible: isNotMember,
+                                                child: FlatButton(
+                                                  color: Palette.primaryColor,
+                                                  child: Text(
+                                                    'JOIN',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .button
+                                                        .apply(
+                                                            color: Palette
+                                                                .whiteColor,
+                                                            fontWeightDelta: 1),
+                                                  ),
+                                                  onPressed: () {},
                                                 ),
-                                                onPressed: () {},
                                               ),
                                             ],
                                           ),

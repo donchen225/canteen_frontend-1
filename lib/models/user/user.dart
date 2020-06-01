@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/availability/availability.dart';
+import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
@@ -27,6 +28,7 @@ class User {
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
   final bool isEmailVerified;
+  final List<Group> groups;
 
   User({
     this.providerId,
@@ -47,11 +49,12 @@ class User {
     this.lastSignInTimestamp,
     this.isAnonymous,
     this.isEmailVerified,
+    this.groups,
   });
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded, availability: $availability, timeZone: $timeZone }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded, availability: $availability, timeZone: $timeZone, groups: $groups }';
   }
 
   static User fromEntity(UserEntity entity) {

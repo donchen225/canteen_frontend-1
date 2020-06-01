@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_item.dart';
 
@@ -18,6 +20,8 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  final double itemHeight = 60.0;
+
   @override
   Widget build(BuildContext context) {
     final userPhotoUrl =
@@ -28,7 +32,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final subtitleStyle = Theme.of(context).textTheme.subtitle2.apply(
           color: Palette.textSecondaryBaseColor,
         );
-    final itemHeight = 60.0;
+
+    final currentGroup = BlocProvider.of<GroupBloc>(context).currentGroup;
 
     return Drawer(
       child: SafeArea(
@@ -141,7 +146,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      'Cognitive World',
+                                      currentGroup.name,
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1
@@ -149,7 +154,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                             fontWeightDelta: 2,
                                           ),
                                     ),
-                                    Text('620 members'),
+                                    Text(
+                                        '${currentGroup.members?.toString() ?? 0} members'),
                                   ],
                                 ),
                               ),

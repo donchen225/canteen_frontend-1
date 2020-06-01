@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
@@ -12,6 +13,7 @@ import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -147,6 +149,7 @@ class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
   final SettingsRepository _settingsRepository;
+  final GroupRepository _groupRepository = GroupRepository();
 
   App(
       {Key key,
@@ -168,7 +171,7 @@ class App extends StatelessWidget {
         fontFamily: '.SF UI Pro',
         textTheme: TextTheme(
           headline4: TextStyle(fontSize: 34),
-          headline5: TextStyle(fontSize: 24),
+          headline5: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           headline6: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
           bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
@@ -213,6 +216,12 @@ class App extends StatelessWidget {
                           settingsRepository: _settingsRepository,
                           userBloc: BlocProvider.of<UserBloc>(context),
                         ),
+                      ),
+                      BlocProvider<GroupBloc>(
+                        create: (context) => GroupBloc(
+                          userRepository: _userRepository,
+                          groupRepository: _groupRepository,
+                        )..add(LoadUserGroups()),
                       ),
                     ],
                     child: HomeScreen(

@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _searchScreen = GlobalKey<NavigatorState>();
   final _messageScreen = GlobalKey<NavigatorState>();
   final _notificationScreen = GlobalKey<NavigatorState>();
+  final _postHomeKey = UniqueKey();
   final RecommendationRepository _recommendationRepository =
       RecommendationRepository();
   final GroupRepository _groupRepository = GroupRepository();

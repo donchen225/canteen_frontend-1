@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/models/group/group.dart';
+
 class SearchArguments {
   final String initialQuery;
   final List<String> searchHistory;
@@ -10,5 +12,13 @@ class SearchResultsArguments {
 
   SearchResultsArguments({
     this.query,
+  });
+}
+
+class GroupArguments {
+  final Group group;
+
+  GroupArguments({
+    this.group,
   });
 }

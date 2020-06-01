@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_card.dart';
@@ -8,6 +9,8 @@ import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
+import 'package:canteen_frontend/screens/search/view_group_screen.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -168,22 +171,16 @@ class DiscoverScreen extends StatelessWidget {
                             top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                           ),
                           child: GroupCard(
-                            group: group,
-                            height:
-                                SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                          ),
-                          // ProfileCard(
-                          //   user: user,
-                          //   height:
-                          //       SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                          //   onTap: () => Navigator.pushNamed(
-                          //     context,
-                          //     ViewUserProfileScreen.routeName,
-                          //     arguments: UserArguments(
-                          //       user: user,
-                          //     ),
-                          //   ),
-                          // ),
+                              group: group,
+                              height:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  ViewGroupScreen.routeName,
+                                  arguments: GroupArguments(group: group),
+                                );
+                              }),
                         );
                       },
                     ),

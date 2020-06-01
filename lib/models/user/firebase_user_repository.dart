@@ -210,6 +210,7 @@ class FirebaseUserRepository extends UserRepository {
     return userCollection.document(userId).snapshots().map((snapshot) {
       final currentUser = User.fromEntity(UserEntity.fromSnapshot(snapshot));
 
+      // This block is only the run the first time the user is fetched
       if (user == null) {
         CachedSharedPreferences.setString(
             PreferenceConstants.userPhotoUrl, currentUser.photoUrl);
