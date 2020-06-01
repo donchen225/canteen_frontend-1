@@ -199,13 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocListener<HomeBloc, HomeState>(
           listener: (BuildContext context, HomeState state) {
             print('HOME SCREEN BLOC LISTENER INITIALIZED');
-            if (state is HomeInitializing) {
-              print(
-                  'IN HOME INITIALIZING - LOADING MATCHES/REQUESTS/RECOMMENDATIONS');
-
+            if (state is HomeLoaded) {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+
+              BlocProvider.of<GroupBloc>(context).add(LoadUserGroups());
             }
           },
           child: BlocBuilder<HomeBloc, HomeState>(
@@ -295,12 +294,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     settingsRepository: widget._settingsRepository,
                     userBloc: BlocProvider.of<UserBloc>(context),
                   ),
-                ),
-                BlocProvider<GroupBloc>(
-                  create: (context) => GroupBloc(
-                    userRepository: widget._userRepository,
-                    groupRepository: _groupRepository,
-                  )..add(LoadUserGroups()),
                 ),
                 BlocProvider<PostListBloc>(
                   create: (context) => PostListBloc(

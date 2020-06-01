@@ -48,10 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {
-    yield HomeInitializing();
-
     // Upload user settings here
-
     yield HomeLoaded();
   }
 }
