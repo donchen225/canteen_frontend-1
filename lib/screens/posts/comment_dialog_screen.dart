@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';

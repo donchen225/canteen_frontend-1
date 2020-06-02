@@ -23,6 +23,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
       if (state is PostsLoaded) {
         add(LoadPostList(groupId: state.groupId, posts: state.posts));
         _postList[state.groupId] = state.posts;
+      } else if (state is PostsPrivate) {
+        add(DenyPostList());
       }
     });
   }
@@ -36,6 +38,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   ) async* {
     if (event is LoadPostList) {
       yield* _mapLoadPostListToState(event);
+    } else if (event is DenyPostList) {
+      yield* _mapDenyPostListToState();
     }
   }
 
@@ -45,6 +49,10 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         posts: event.posts,
         user: await _userRepository.currentUser(),
         groupId: event.groupId);
+  }
+
+  Stream<PostListState> _mapDenyPostListToState() async* {
+    yield PostListPrivate();
   }
 
   @override

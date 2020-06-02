@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
+import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
@@ -38,18 +39,22 @@ class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
   final SettingsRepository _settingsRepository;
+  final PostRepository _postRepository;
 
   HomeScreen({
     Key key,
     @required UserRepository userRepository,
     @required RequestRepository requestRepository,
     @required SettingsRepository settingsRepository,
+    @required PostRepository postRepository,
   })  : assert(userRepository != null),
         assert(requestRepository != null),
         assert(settingsRepository != null),
+        assert(postRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
         _settingsRepository = settingsRepository,
+        _postRepository = postRepository,
         super(key: key);
 
   @override
@@ -64,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final _searchScreen = GlobalKey<NavigatorState>();
   final _messageScreen = GlobalKey<NavigatorState>();
   final _notificationScreen = GlobalKey<NavigatorState>();
-  final _postHomeKey = UniqueKey();
   final RecommendationRepository _recommendationRepository =
       RecommendationRepository();
   final GroupRepository _groupRepository = GroupRepository();
@@ -295,21 +299,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     userBloc: BlocProvider.of<UserBloc>(context),
                   ),
                 ),
-                BlocProvider<PostListBloc>(
-                  create: (context) => PostListBloc(
-                    postBloc: BlocProvider.of<PostBloc>(context),
-                    userRepository: widget._userRepository,
-                  ),
-                ),
               ],
               child: IndexedStack(
                 index: _currentIndex,
                 children: [
-                  Navigator(
-                    key: _postScreen,
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildPostScreenRoutes(settings);
-                    },
+                  BlocProvider<PostListBloc>(
+                    create: (context) => PostListBloc(
+                      postBloc: BlocProvider.of<PostBloc>(context),
+                      userRepository: widget._userRepository,
+                    ),
+                    child: Navigator(
+                      key: _postScreen,
+                      onGenerateRoute: (RouteSettings settings) {
+                        return buildPostScreenRoutes(settings);
+                      },
+                    ),
                   ),
                   MultiBlocProvider(
                     providers: [
@@ -324,6 +328,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             recommendationRepository: _recommendationRepository,
                             groupRepository: _groupRepository)
                           ..add(LoadDiscover()),
+                      ),
+                      BlocProvider<PostBloc>(
+                        create: (context) {
+                          return PostBloc(
+                            userRepository: widget._userRepository,
+                            postRepository: widget._postRepository,
+                          );
+                        },
+                      ),
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          userRepository: widget._userRepository,
+                        ),
                       ),
                     ],
                     child: Navigator(

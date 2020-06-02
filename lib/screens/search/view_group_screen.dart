@@ -8,7 +8,6 @@ import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,8 +55,10 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    final userPhotoUrl =
-        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+    final isNotMember = BlocProvider.of<GroupBloc>(context)
+        .currentUserGroups
+        .where((g) => g.groupId == widget.group.id)
+        .isEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +92,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
         elevation: 0,
       ),
       floatingActionButton: Visibility(
-        visible: _showFAB,
+        visible: _showFAB && !isNotMember,
         child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -109,11 +110,6 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
       ),
       body: Builder(
         builder: (BuildContext context) {
-          final isNotMember = BlocProvider.of<GroupBloc>(context)
-              .currentUserGroups
-              .where((g) => g.groupId == widget.group.id)
-              .isEmpty;
-
           return NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {

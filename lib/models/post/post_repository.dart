@@ -226,18 +226,29 @@ class PostRepository {
     });
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts(String groupId) {
-    print('GETTING POSTS');
-    return groupCollection
+  Future<Tuple2<List<Post>, DocumentSnapshot>> getPosts(String groupId,
+      {DocumentSnapshot startAfterDocument}) {
+    Query query = groupCollection
         .document(groupId)
         .collection(postsCollection)
         .orderBy("last_updated", descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.documentChanges
-          .map((doc) => Tuple2<DocumentChangeType, Post>(
-              doc.type, Post.fromEntity(PostEntity.fromSnapshot(doc.document))))
-          .toList();
+        .limit(25);
+
+    if (startAfterDocument != null && startAfterDocument.exists) {
+      query = query.startAfterDocument(startAfterDocument);
+    }
+
+    return query.getDocuments().then((querySnapshot) {
+      return Tuple2<List<Post>, DocumentSnapshot>(
+          querySnapshot.documents
+              .map((doc) => Post.fromEntity(PostEntity.fromSnapshot(doc)))
+              .toList(),
+          querySnapshot.documents.isNotEmpty
+              ? querySnapshot.documents.last
+              : null);
+    }).catchError((error) {
+      print('Error fetching posts: $error');
+      throw error;
     });
   }
 }

@@ -101,7 +101,7 @@ class ProfileCard extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  skill?.name != null
+                                  skill?.name != null && skill.name.isNotEmpty
                                       ? skill.name[0].toUpperCase() +
                                           skill.name.substring(1)
                                       : '',

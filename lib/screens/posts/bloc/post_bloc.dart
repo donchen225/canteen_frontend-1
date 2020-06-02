@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,6 @@ import 'package:tuple/tuple.dart';
 class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
-  StreamSubscription _postSubscription;
 
   PostBloc({
     @required PostRepository postRepository,
@@ -48,35 +48,26 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
     try {
-      _postSubscription?.cancel();
-      _postSubscription =
-          _postRepository.getPosts(event.groupId).listen((posts) {
-        print('LOADING POSTS: $posts');
-        add(PostsUpdated(groupId: event.groupId, updates: posts));
-      });
-    } catch (exception) {
-      print(exception.errorMessage());
+      final posts = await _postRepository.getPosts(event.groupId);
+      add(PostsUpdated(groupId: event.groupId, updates: posts));
+    } on PlatformException catch (error) {
+      if (error.code == 'Error 7') {
+        print('INSUFFICIENT PERMISSIONS');
+        yield PostsPrivate();
+      }
     }
   }
 
   Stream<PostState> _mapPostsUpdateToState(PostsUpdated event) async* {
     yield PostsLoading();
-    final updatedPosts = event.updates;
+    final updatedPosts = event.updates.item1;
 
     final userListFuture = Future.wait(updatedPosts.map((update) async {
-      if (update.item1 == DocumentChangeType.modified ||
-          update.item1 == DocumentChangeType.added) {
-        return _userRepository.getUser(update.item2.from);
-      }
-      return Future<User>.value(null);
+      return _userRepository.getUser(update.from);
     }));
 
     final userLikedFuture = Future.wait(updatedPosts.map((update) async {
-      if (update.item1 == DocumentChangeType.modified ||
-          update.item1 == DocumentChangeType.added) {
-        return _postRepository.checkLike(event.groupId, update.item2.id);
-      }
-      return Future<bool>.value(false);
+      return _postRepository.checkLike(event.groupId, update.id);
     }));
 
     final userList = await userListFuture;
@@ -85,20 +76,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     for (int i = 0; i < updatedPosts.length; i++) {
       User user = userList[i];
       bool liked = userLiked[i];
-      Tuple2<DocumentChangeType, Post> update = updatedPosts[i];
+      Post update = updatedPosts[i];
 
-      if (update.item1 == DocumentChangeType.added ||
-          update.item1 == DocumentChangeType.modified) {
-        final detailedPost = DetailedPost.fromPost(update.item2, user, liked);
-
-        if (update.item1 == DocumentChangeType.added) {
-          _postRepository.saveDetailedPost(detailedPost);
-        } else {
-          _postRepository.updateDetailedPost(update.item1, detailedPost);
-        }
-      } else if (update.item1 == DocumentChangeType.removed) {
-        _postRepository.updateDetailedPost(update.item1, update.item2);
-      }
+      final detailedPost = DetailedPost.fromPost(update, user, liked);
+      _postRepository.saveDetailedPost(detailedPost);
     }
 
     yield PostsLoaded(
@@ -119,14 +100,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Stream<PostState> _mapClearPostsToState() async* {
     _postRepository.clearPosts();
-    _postSubscription?.cancel();
     yield PostsEmpty();
   }
 
   @override
   Future<void> close() {
     _postRepository.clearPosts();
-    _postSubscription?.cancel();
     return super.close();
   }
 }

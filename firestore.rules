@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     match /users/{userId}/groups/{document=**} {
-      allow create, update, read: if isOwner(userId);
+      allow read: if isAuthenticated();
     }
 
     match /matches/{document=**} {
@@ -31,17 +31,29 @@ service cloud.firestore {
       allow read, write: if isAuthenticated();
     }
 
+    match /groups/{groupId}/posts/{postId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+    }
+
+    match /groups/{groupId}/posts/{postId}/comments/{commentId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+    }
+
+    match /groups/{groupId}/posts/{postId}/likes/{likeId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+    }
+
     match /posts/{postId}/comments/{commentId} {
       allow read, write: if isAuthenticated();
     }
 
     match /posts/{postId}/likes/{likeId} {
-      allow read,write: if isAuthenticated();
+      allow read, write: if isAuthenticated();
     }
 
     match /requests/{requestId} {
       allow read: if resource.data.receiver_id == request.auth.uid;
-      allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/user/$(request.resource.data.receiver_id));
+      allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/users/$(request.resource.data.receiver_id));
       allow update: if request.resource.data.receiver_id == request.auth.uid;
     }
 

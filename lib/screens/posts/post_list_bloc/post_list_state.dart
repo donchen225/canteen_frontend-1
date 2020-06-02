@@ -31,3 +31,5 @@ class PostListLoaded extends PostListState {
 }
 
 class PostListLoading extends PostListState {}
+
+class PostListPrivate extends PostListState {}

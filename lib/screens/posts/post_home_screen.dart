@@ -100,6 +100,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => PostDialogScreen(
+                groupId: BlocProvider.of<GroupBloc>(context).currentGroup.id,
                 height: SizeConfig.instance.blockSizeVertical *
                     kDialogScreenHeightBlocks,
               ),

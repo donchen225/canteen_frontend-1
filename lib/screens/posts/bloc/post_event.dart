@@ -88,7 +88,7 @@ class DeletePost extends PostEvent {
 
 class PostsUpdated extends PostEvent {
   final String groupId;
-  final List<Tuple2<DocumentChangeType, Post>> updates;
+  final Tuple2<List<Post>, DocumentSnapshot> updates;
 
   const PostsUpdated({this.groupId, this.updates});
 

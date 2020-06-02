@@ -36,6 +36,21 @@ class PostListScreen extends StatelessWidget {
           );
         }
 
+        if (state is PostListPrivate) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
+              ),
+              child: Text(
+                'Posts are private. Join the group to view posts.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+          );
+        }
+
         if (state is PostListLoaded) {
           return CustomScrollView(
             key: PageStorageKey<String>('posts'),

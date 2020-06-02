@@ -23,4 +23,6 @@ class PostsLoaded extends PostState {
   String toString() => 'PostsLoaded { posts: $posts }';
 }
 
+class PostsPrivate extends PostState {}
+
 class PostsEmpty extends PostState {}

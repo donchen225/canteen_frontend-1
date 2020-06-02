@@ -20,3 +20,5 @@ class LoadPostList extends PostListEvent {
   @override
   String toString() => 'LoadPostList';
 }
+
+class DenyPostList extends PostListEvent {}

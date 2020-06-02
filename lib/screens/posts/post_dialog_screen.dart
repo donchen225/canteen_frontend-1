@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
+  final String groupId;
   final double height;
 
-  PostDialogScreen({this.height = 500});
+  PostDialogScreen({@required this.groupId, this.height = 500});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
@@ -19,6 +20,12 @@ class PostDialogScreen extends StatefulWidget {
 
 class _PostDialogScreenState extends State<PostDialogScreen> {
   TextEditingController _messageController;
+  final currentUserId =
+      CachedSharedPreferences.getString(PreferenceConstants.userId);
+  final userPhotoUrl =
+      CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+  final userName =
+      CachedSharedPreferences.getString(PreferenceConstants.userName);
 
   _PostDialogScreenState();
 
@@ -35,13 +42,6 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId =
-        CachedSharedPreferences.getString(PreferenceConstants.userId);
-    final userPhotoUrl =
-        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
-    final userName =
-        CachedSharedPreferences.getString(PreferenceConstants.userName);
-
     return TextDialogScreen(
       title: 'New Post',
       height: widget.height,
@@ -57,7 +57,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                 lastUpdated: now,
               );
               BlocProvider.of<PostBloc>(context)
-                  .add(AddPost(post: post)); // TODO: add groupId
+                  .add(AddPost(groupId: widget.groupId, post: post));
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

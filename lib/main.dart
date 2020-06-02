@@ -138,6 +138,7 @@ void main() async {
         userRepository: userRepository,
         requestRepository: requestRepository,
         settingsRepository: settingsRepository,
+        postRepository: postRepository,
       ),
     ),
   );
@@ -147,19 +148,23 @@ class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
   final SettingsRepository _settingsRepository;
+  final PostRepository _postRepository;
   final GroupRepository _groupRepository = GroupRepository();
 
   App(
       {Key key,
       @required UserRepository userRepository,
       @required RequestRepository requestRepository,
-      @required SettingsRepository settingsRepository})
+      @required SettingsRepository settingsRepository,
+      @required PostRepository postRepository})
       : assert(userRepository != null),
         assert(requestRepository != null),
         assert(settingsRepository != null),
+        assert(postRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
         _settingsRepository = settingsRepository,
+        _postRepository = postRepository,
         super(key: key);
 
   @override
@@ -213,6 +218,7 @@ class App extends StatelessWidget {
                       userRepository: _userRepository,
                       requestRepository: _requestRepository,
                       settingsRepository: _settingsRepository,
+                      postRepository: _postRepository,
                     ),
                   );
                 }
