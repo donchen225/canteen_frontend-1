@@ -768,7 +768,7 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     });
 });
 
-exports.getPosts = functions.https.onCall(async (data, context) => {
+exports.joinGroup = functions.https.onCall(async (data, context) => {
 
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
@@ -776,25 +776,92 @@ exports.getPosts = functions.https.onCall(async (data, context) => {
             'while authenticated.');
     }
 
-    const uid = context.auth.uid;
-
+    const userId = context.auth.uid;
     const groupId = data.group_id;
+    const accessCode = data.access_code;
 
-    const groupRef = firestore.collection(GROUPS_COLLECTION).doc(groupId);
+    // Checking attribute.
+    if (groupId && !(typeof groupId === 'string')) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "groupId" containing the group to join.');
+    }
 
-    return groupRef.get().then(async (documentSnapshot) => {
-        if (!(documentSnapshot.exists)) {
-            return;
+    const group = await firestore.collection(GROUPS_COLLECTION).doc(groupId).get().then((docSnapshot) => {
+        if (!(docSnapshot.exists)) {
+            throw new Error("The group does not exist.");
         }
-
-        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').get().then((querySnapshot) => {
-            return querySnapshot.docs.map((doc) => {
-                const recDoc = doc.data();
-                recDoc['id'] = doc.id;
-                return recDoc;
-            });
-        });
-    }).catch((error) => {
-        console.log(error);
+        return docSnapshot.data();
+    }, (error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
     });
+
+    var validated = true;
+
+    // Check if group is private and verify access code
+    if (group.type === 'private') {
+        validated = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('access_code').limit(1).get().then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                throw new Error("Access code not available.");
+            }
+
+            const codeDoc = querySnapshot.docs[0].data();
+            return codeDoc.code === accessCode;
+        }, (error) => {
+            validated = false;
+            throw new functions.https.HttpsError('unknown', error.message, error);
+        });
+    }
+
+    if (!(validated)) {
+        throw new functions.https.HttpsError('unknown', 'Access code is incorrect.');
+    }
+
+    // Check if user is in group members
+    await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).get().then((docSnapshot) => {
+        if (docSnapshot.exists) {
+            throw new Error("You are already a member in this group.");
+        }
+        return;
+    }, (error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    // Get user
+    const user = await firestore.collection(USER_COLLECTION).doc(userId).get().then((docSnapshot) => {
+        if (!(docSnapshot.exists)) {
+            throw new Error("The user does not exist.");
+        }
+        return docSnapshot.data();
+    }, (error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    const time = admin.firestore.Timestamp.now();
+
+    // Create group member document
+    const groupMemberDoc = {
+        "display_name": user.display_name,
+        "title": user.title,
+        "photo_url": user.photo_url,
+        "joined_on": time,
+    };
+
+    // Add user to group members
+    await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).set(groupMemberDoc).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    // Create user group document
+    const userGroupDoc = {
+        "role": "member",
+        "joined_on": time,
+    };
+
+    // Add group to user groups
+    await firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    return groupMemberDoc;
 });
