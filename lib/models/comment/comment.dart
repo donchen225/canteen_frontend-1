@@ -18,16 +18,6 @@ class Comment extends Equatable {
       @required this.lastUpdated,
       @required this.createdOn});
 
-  Map<String, Object> toJson() {
-    return {
-      'id': id,
-      'from': from,
-      'message': message,
-      'last_updated': lastUpdated,
-      'created_on': createdOn,
-    };
-  }
-
   @override
   List<Object> get props => [
         id,

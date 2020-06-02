@@ -726,6 +726,7 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     const name = data.name;
     const description = data.description;
     const tags = (data.tags !== undefined) ? data.tags : [];
+    const type = data.type;
 
     // Checking attribute.
     if (name && !(typeof name === 'string')) {
@@ -740,6 +741,12 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
             'one arguments "text" containing the message text to add.');
     }
 
+    if (type && !(typeof type === 'string')) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "text" containing the message text to add.');
+    }
+
     const time = admin.firestore.Timestamp.now();
 
     // Create document
@@ -747,6 +754,7 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         "name": name,
         "description": description,
         "tags": tags,
+        "type": type,
         "members": 0,
         "posts": 0,
         "created_on": time,
@@ -757,5 +765,36 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+});
+
+exports.getPosts = functions.https.onCall(async (data, context) => {
+
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+
+    const uid = context.auth.uid;
+
+    const groupId = data.group_id;
+
+    const groupRef = firestore.collection(GROUPS_COLLECTION).doc(groupId);
+
+    return groupRef.get().then(async (documentSnapshot) => {
+        if (!(documentSnapshot.exists)) {
+            return;
+        }
+
+        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').get().then((querySnapshot) => {
+            return querySnapshot.docs.map((doc) => {
+                const recDoc = doc.data();
+                recDoc['id'] = doc.id;
+                return recDoc;
+            });
+        });
+    }).catch((error) => {
+        console.log(error);
     });
 });

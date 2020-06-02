@@ -7,6 +7,7 @@ class GroupEntity extends Equatable {
   final String name;
   final String description;
   final List<String> tags;
+  final String type;
   final int posts;
   final int members;
   final DateTime lastUpdated;
@@ -17,6 +18,7 @@ class GroupEntity extends Equatable {
       @required this.name,
       @required this.description,
       @required this.tags,
+      @required this.type,
       @required this.posts,
       @required this.members,
       @required this.lastUpdated,
@@ -28,6 +30,7 @@ class GroupEntity extends Equatable {
       'name': name,
       'description': description,
       'tags': tags,
+      'type': type,
       'posts': posts,
       'members': members,
       'last_updated': lastUpdated,
@@ -36,12 +39,21 @@ class GroupEntity extends Equatable {
   }
 
   @override
-  List<Object> get props =>
-      [id, name, description, tags, posts, members, lastUpdated, createdOn];
+  List<Object> get props => [
+        id,
+        name,
+        description,
+        tags,
+        type,
+        posts,
+        members,
+        lastUpdated,
+        createdOn
+      ];
 
   @override
   String toString() {
-    return 'GroupEntity { id: $id, name: $name, description: $description, tags: $tags, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'GroupEntity { id: $id, name: $name, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static GroupEntity fromJson(Map<String, Object> json) {
@@ -50,6 +62,7 @@ class GroupEntity extends Equatable {
       name: json['name'] as String,
       description: json['description'] as String,
       tags: json['tags'] as List<String>,
+      type: json['type'] as String,
       posts: json['comment_count'] as int,
       members: json['like_count'] as int,
       createdOn: DateTime.parse(json['created_on']),
@@ -64,6 +77,7 @@ class GroupEntity extends Equatable {
       description: snapshot.data['description'],
       tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
           [],
+      type: snapshot.data['type'],
       posts: snapshot.data['comment_count'],
       members: snapshot.data['like_count'],
       createdOn: snapshot.data["created_on"].toDate(),
@@ -77,6 +91,7 @@ class GroupEntity extends Equatable {
       'name': name,
       'description': description,
       'tags': tags,
+      'type': type,
       'comment_count': posts,
       'like_count': members,
       'created_on': createdOn,

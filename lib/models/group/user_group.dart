@@ -16,15 +16,6 @@ class UserGroup extends Equatable {
     @required this.joinedOn,
   });
 
-  Map<String, Object> toJson() {
-    return {
-      'id': id,
-      'group_id': groupId,
-      'role': role,
-      'joined_on': joinedOn,
-    };
-  }
-
   @override
   List<Object> get props => [id, groupId, role, joinedOn];
 

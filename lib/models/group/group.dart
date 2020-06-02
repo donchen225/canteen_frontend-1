@@ -7,6 +7,7 @@ class Group extends Equatable {
   final String name;
   final String description;
   final List<String> tags;
+  final String type;
   final int posts;
   final int members;
   final DateTime lastUpdated;
@@ -17,31 +18,28 @@ class Group extends Equatable {
       @required this.name,
       @required this.description,
       @required this.tags,
+      @required this.type,
       @required this.posts,
       @required this.members,
       @required this.lastUpdated,
       @required this.createdOn});
 
-  Map<String, Object> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'tags': tags,
-      'posts': posts,
-      'members': members,
-      'last_updated': lastUpdated,
-      'created_on': createdOn,
-    };
-  }
-
   @override
-  List<Object> get props =>
-      [id, name, description, tags, posts, members, lastUpdated, createdOn];
+  List<Object> get props => [
+        id,
+        name,
+        description,
+        tags,
+        type,
+        posts,
+        members,
+        lastUpdated,
+        createdOn
+      ];
 
   @override
   String toString() {
-    return 'Group { id: $id, name: $name, description: $description, tags: $tags, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'Group { id: $id, name: $name, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Group fromEntity(GroupEntity entity) {
@@ -50,6 +48,7 @@ class Group extends Equatable {
       name: entity.name,
       description: entity.description,
       tags: entity.tags,
+      type: entity.type,
       posts: entity.posts,
       members: entity.members,
       createdOn: entity.createdOn,
@@ -63,6 +62,7 @@ class Group extends Equatable {
       name: name,
       description: description,
       tags: tags,
+      type: type,
       posts: posts,
       members: members,
       lastUpdated: lastUpdated,
