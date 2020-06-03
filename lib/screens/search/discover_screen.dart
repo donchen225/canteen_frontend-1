@@ -109,35 +109,39 @@ class DiscoverScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Container(
-                    height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.recommendations.length,
-                      itemBuilder: (context, index) {
-                        final user = state.recommendations[index];
+                  child: Visibility(
+                    visible: state.recommendations.length > 0,
+                    child: Container(
+                      height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.recommendations.length,
+                        itemBuilder: (context, index) {
+                          final user = state.recommendations[index];
 
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal * 6,
-                            bottom:
-                                SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                            top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                          ),
-                          child: ProfileCard(
-                            user: user,
-                            height:
-                                SizeConfig.instance.scaffoldBodyHeight * 0.49,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              ViewUserProfileScreen.routeName,
-                              arguments: UserArguments(
-                                user: user,
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.instance.safeBlockHorizontal * 6,
+                              bottom:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                              top:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            ),
+                            child: ProfileCard(
+                              user: user,
+                              height:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.49,
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                ViewUserProfileScreen.routeName,
+                                arguments: UserArguments(
+                                  user: user,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -196,7 +200,7 @@ class DiscoverScreen extends StatelessWidget {
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
                       right: SizeConfig.instance.safeBlockHorizontal * 6,
                     ),
-                    child: Text('Most Popular',
+                    child: Text('Most Requested',
                         style: Theme.of(context).textTheme.headline5.apply(
                               fontFamily: '.SF UI Text',
                               fontWeightDelta: 2,
@@ -216,31 +220,37 @@ class DiscoverScreen extends StatelessWidget {
                             itemCount: userList.length,
                             itemBuilder: (context, index) {
                               final user = userList[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  left:
-                                      SizeConfig.instance.safeBlockHorizontal *
-                                          6,
-                                  bottom:
-                                      SizeConfig.instance.scaffoldBodyHeight *
-                                          0.03,
-                                  top: SizeConfig.instance.scaffoldBodyHeight *
-                                      0.03,
-                                ),
-                                child: ProfileCard(
-                                  user: user,
-                                  height:
-                                      SizeConfig.instance.scaffoldBodyHeight *
-                                          0.44,
-                                  onTap: () => Navigator.pushNamed(
-                                    context,
-                                    ViewUserProfileScreen.routeName,
-                                    arguments: UserArguments(
-                                      user: user,
+
+                              if (user.teachSkill.isNotEmpty &&
+                                  user.teachSkill[0].name.isNotEmpty) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig
+                                            .instance.safeBlockHorizontal *
+                                        6,
+                                    bottom:
+                                        SizeConfig.instance.scaffoldBodyHeight *
+                                            0.03,
+                                    top:
+                                        SizeConfig.instance.scaffoldBodyHeight *
+                                            0.03,
+                                  ),
+                                  child: ProfileCard(
+                                    user: user,
+                                    height:
+                                        SizeConfig.instance.scaffoldBodyHeight *
+                                            0.44,
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      ViewUserProfileScreen.routeName,
+                                      arguments: UserArguments(
+                                        user: user,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
+                              return Container();
                             },
                           ),
                         );

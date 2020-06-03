@@ -1,8 +1,8 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/models/group/group.dart';
-import 'package:canteen_frontend/screens/posts/member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/search/group_member_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
@@ -26,6 +26,7 @@ class ViewGroupScreen extends StatefulWidget {
 class _ViewGroupScreenState extends State<ViewGroupScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  GroupBloc _groupBloc;
   bool _showFAB = true;
   bool _joined = false;
 
@@ -37,9 +38,12 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
   @override
   void initState() {
     super.initState();
+
+    _groupBloc = BlocProvider.of<GroupBloc>(context);
     _tabController = TabController(vsync: this, length: tabs.length);
 
     _tabController.addListener(_showFloatingActionButton);
+    _tabController.addListener(_loadGroupMembers);
 
     _joined = BlocProvider.of<GroupHomeBloc>(context)
         .currentUserGroups
@@ -51,6 +55,14 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
     setState(() {
       _showFAB = _tabController.index == 0;
     });
+  }
+
+  void _loadGroupMembers() {
+    if (_tabController.index == 1) {
+      if (!(_groupBloc.currentGroup is DetailedGroup)) {
+        _groupBloc.add(LoadGroupMembers(_groupBloc.currentGroup.id));
+      }
+    }
   }
 
   @override
@@ -187,7 +199,11 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   '',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText2,
+                                                  .bodyText2
+                                                  .apply(
+                                                    color: Palette
+                                                        .textSecondaryBaseColor,
+                                                  ),
                                             ),
                                             FlatButton(
                                               color: _joined
@@ -218,10 +234,8 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                               ),
                                               onPressed: () {
                                                 if (!(_joined)) {
-                                                  BlocProvider.of<GroupBloc>(
-                                                          context)
-                                                      .add(JoinGroup(
-                                                          widget.group.id));
+                                                  _groupBloc.add(JoinGroup(
+                                                      widget.group.id));
                                                   setState(() {
                                                     _joined = !_joined;
                                                   });
@@ -283,7 +297,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               controller: _tabController,
               children: <Widget>[
                 PostListScreen(),
-                MemberListScreen(),
+                GroupMemberListScreen(),
               ],
             ),
           );

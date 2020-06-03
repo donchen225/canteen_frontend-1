@@ -23,7 +23,7 @@ class GroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
-    final titleStyle = Theme.of(context).textTheme.subtitle1;
+    final titleStyle = Theme.of(context).textTheme.headline5;
     final subtitleStyle = Theme.of(context).textTheme.subtitle2;
 
     return CustomCard(

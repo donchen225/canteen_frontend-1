@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/models/group/group.dart';
-import 'package:canteen_frontend/screens/posts/member_list_screen.dart';
+import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -241,7 +241,11 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                     '',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText2,
+                                                    .bodyText2
+                                                    .apply(
+                                                      color: Palette
+                                                          .textSecondaryBaseColor,
+                                                    ),
                                               ),
                                               Visibility(
                                                 visible: isNotMember,
@@ -314,7 +318,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                 controller: _tabController,
                 children: <Widget>[
                   PostListScreen(),
-                  MemberListScreen(),
+                  GroupHomeMemberListScreen(),
                 ],
               ),
             );

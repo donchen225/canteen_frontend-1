@@ -842,8 +842,8 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     // Create group member document
     const groupMemberDoc = {
         "display_name": user.display_name,
-        "title": user.title,
-        "photo_url": user.photo_url,
+        "title": user.title || "",
+        "photo_url": user.photo_url || "",
         "joined_on": time,
     };
 

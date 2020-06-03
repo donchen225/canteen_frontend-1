@@ -31,3 +31,15 @@ class JoinGroup extends GroupEvent {
   @override
   String toString() => 'LoadGroup { groupId: $groupId }';
 }
+
+class LoadGroupMembers extends GroupEvent {
+  final String groupId;
+
+  const LoadGroupMembers(this.groupId);
+
+  @override
+  List<Object> get props => [groupId];
+
+  @override
+  String toString() => 'LoadGroupMembers { groupId: $groupId }';
+}
