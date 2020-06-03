@@ -38,8 +38,8 @@ class LandingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          height: SizeConfig.instance.safeBlockHorizontal * 10,
-                          width: SizeConfig.instance.safeBlockHorizontal * 10,
+                          height: SizeConfig.instance.safeBlockHorizontal * 15,
+                          width: SizeConfig.instance.safeBlockHorizontal * 15,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage('assets/loading-icon.png'),
@@ -49,8 +49,7 @@ class LandingScreen extends StatelessWidget {
                         Text(
                           'Canteen',
                           style: Theme.of(context).textTheme.headline3.apply(
-                                color: Palette.primaryColor,
-                              ),
+                              color: Palette.textColor, fontWeightDelta: 1),
                         ),
                       ],
                     ),
@@ -63,7 +62,7 @@ class LandingScreen extends StatelessWidget {
                       'The most engaging communication platform for online communities.',
                       style: Theme.of(context).textTheme.headline4.apply(
                             fontWeightDelta: 2,
-                            color: Colors.black,
+                            color: Palette.textColor,
                           ),
                     ),
                   ),

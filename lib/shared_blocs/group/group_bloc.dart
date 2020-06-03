@@ -52,10 +52,14 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       return _groupRepository.getGroup(userGroup.id);
     }));
 
-    currentGroup = groups[0];
-    currentGroups = groups;
+    if (groups.isNotEmpty) {
+      currentGroup = groups[0];
+      currentGroups = groups;
 
-    yield GroupLoaded(group: currentGroup);
+      yield GroupLoaded(group: currentGroup);
+    } else {
+      yield GroupEmpty();
+    }
   }
 
   Stream<GroupState> _mapLoadGroupToState(LoadGroup event) async* {

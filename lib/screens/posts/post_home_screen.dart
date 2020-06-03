@@ -90,23 +90,30 @@ class _PostHomeScreenState extends State<PostHomeScreen>
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 0,
       ),
-      floatingActionButton: Visibility(
-        visible: _showFAB,
-        child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (context) => PostDialogScreen(
-                groupId: BlocProvider.of<GroupBloc>(context).currentGroup.id,
-                height: SizeConfig.instance.blockSizeVertical *
-                    kDialogScreenHeightBlocks,
-              ),
-            );
-          },
-        ),
+      floatingActionButton: BlocBuilder<GroupBloc, GroupState>(
+        builder: (BuildContext context, GroupState state) {
+          final visible = state is GroupLoaded ? true : false;
+
+          return Visibility(
+            visible: _showFAB && visible,
+            child: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => PostDialogScreen(
+                    groupId:
+                        BlocProvider.of<GroupBloc>(context).currentGroup.id,
+                    height: SizeConfig.instance.blockSizeVertical *
+                        kDialogScreenHeightBlocks,
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
       body: BlocBuilder<GroupBloc, GroupState>(
         builder: (BuildContext context, GroupState state) {
@@ -116,6 +123,38 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
           if (state is GroupLoading) {
             return Center(child: CupertinoActivityIndicator());
+          }
+
+          if (state is GroupEmpty) {
+            return Container(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'You are not in any groups.',
+                    style: Theme.of(context).textTheme.headline4.apply(
+                          fontWeightDelta: 1,
+                          color: Palette.textColor,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.safeBlockVertical * 2,
+                    ),
+                    child: Text(
+                      'Join a group in the Discover tab.',
+                      style: Theme.of(context).textTheme.headline6.apply(
+                            color: Palette.textColor,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
 
           if (state is GroupLoaded) {

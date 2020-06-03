@@ -90,7 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       .add(ClearBadgeCounts());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());
-                  BlocProvider.of<PostBloc>(context).add(ClearPosts());
                   BlocProvider.of<SettingBloc>(context).add(ClearSettings());
                   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                 },

@@ -187,7 +187,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   .bodyText2,
                                             ),
                                             Visibility(
-                                              visible: _joined,
+                                              visible: !_joined,
                                               child: FlatButton(
                                                 color: _joined
                                                     ? Palette.whiteColor

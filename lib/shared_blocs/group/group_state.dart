@@ -23,3 +23,5 @@ class GroupLoaded extends GroupState {
 }
 
 class GroupLoading extends GroupState {}
+
+class GroupEmpty extends GroupState {}

@@ -98,6 +98,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ),
                         ),
                         Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(
+                              bottom: SizeConfig.instance.safeBlockVertical),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -142,33 +145,37 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   style: subtitleStyle,
                                 ),
                               ),
-                              DrawerItem(
-                                leading: AppLogo(
-                                  size: 30,
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: constraints.maxWidth * 0.05,
-                                ),
-                                height: itemHeight,
-                                onTap: () {
-                                  Navigator.of(context).maybePop();
-                                },
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      currentGroup.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1
-                                          .apply(
-                                            fontWeightDelta: 2,
-                                          ),
-                                    ),
-                                    Text(
-                                        '${currentGroup.members?.toString() ?? 0} members'),
-                                  ],
+                              Visibility(
+                                visible: currentGroup != null,
+                                child: DrawerItem(
+                                  leading: AppLogo(
+                                    size: 30,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: constraints.maxWidth * 0.05,
+                                  ),
+                                  height: itemHeight,
+                                  onTap: () {
+                                    Navigator.of(context).maybePop();
+                                  },
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        currentGroup?.name ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .apply(
+                                              fontWeightDelta: 2,
+                                            ),
+                                      ),
+                                      Text(
+                                          '${currentGroup?.members?.toString() ?? 0} members'),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
