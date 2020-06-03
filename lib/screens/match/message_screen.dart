@@ -50,10 +50,10 @@ class _MessageScreenState extends State<MessageScreen>
             ),
             Text(
               'Messages',
-              style: Theme.of(context).textTheme.headline6.apply(
-                    fontFamily: '.SF UI Text',
-                    color: Palette.appBarTextColor,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .apply(color: Palette.textColor),
             ),
             Container(
               width: kProfileIconSize,

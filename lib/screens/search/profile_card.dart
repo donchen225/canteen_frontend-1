@@ -71,12 +71,13 @@ class ProfileCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
-                        Visibility(
-                          visible: user.title?.isNotEmpty ?? false,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(user.title ?? '',
-                                style: Theme.of(context).textTheme.bodyText2),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            user.title ?? '',
+                            style: Theme.of(context).textTheme.bodyText2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
