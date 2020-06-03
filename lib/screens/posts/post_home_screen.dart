@@ -1,10 +1,8 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -68,20 +66,11 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               userPhotoUrl: userPhotoUrl,
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            SearchBar(
-              height: kToolbarHeight * 0.7,
-              width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 2 -
-                  NavigationToolbar.kMiddleSpacing * 4,
-              color: Colors.grey[200],
-              child: Text(
-                "Search Group",
+            Text('Canteen',
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1
-                    .apply(color: Palette.textSecondaryBaseColor),
-              ),
-            ),
+                    .headline5
+                    .apply(color: Palette.textColor)),
             Container(
               width: kProfileIconSize,
             )
