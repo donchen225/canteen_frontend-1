@@ -14,6 +14,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final UserRepository _userRepository;
   Group currentGroup;
   List<UserGroup> currentUserGroups = [];
+  List<Group> currentGroups = [];
 
   GroupBloc(
       {@required GroupRepository groupRepository,
@@ -37,6 +38,8 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       yield* _mapLoadGroupToState(event);
     } else if (event is LoadCurrentGroup) {
       yield* _mapLoadCurrentGroupToState();
+    } else if (event is JoinGroup) {
+      yield* _mapJoinGroupToState(event);
     }
   }
 
@@ -45,10 +48,12 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
     currentUserGroups = userGroups;
 
-    final group =
-        await _groupRepository.getGroup(currentUserGroups[0]?.groupId ?? '');
+    final groups = await Future.wait(currentUserGroups.map((userGroup) {
+      return _groupRepository.getGroup(userGroup.id);
+    }));
 
-    currentGroup = group;
+    currentGroup = groups[0];
+    currentGroups = groups;
 
     yield GroupLoaded(group: currentGroup);
   }
@@ -64,5 +69,11 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       //_userRepository
       yield GroupLoaded(group: currentGroup);
     }
+  }
+
+  Stream<GroupState> _mapJoinGroupToState(JoinGroup event) async* {
+    await _groupRepository.joinGroup(event.groupId);
+    final group = await _groupRepository.getGroup(event.groupId);
+    yield GroupLoaded(group: group);
   }
 }

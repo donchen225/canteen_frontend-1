@@ -7,7 +7,6 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
-import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -25,18 +24,18 @@ class PostListScreen extends StatelessWidget {
         CachedSharedPreferences.getString(PreferenceConstants.userId);
     final TextStyle buttonTextStyle = Theme.of(context).textTheme.bodyText2;
 
-    return BlocBuilder<PostListBloc, PostListState>(
-      builder: (BuildContext context, PostListState state) {
+    return BlocBuilder<PostBloc, PostState>(
+      builder: (BuildContext context, PostState state) {
         print('POST LIST SCREEN');
         print(state);
 
-        if (state is PostListLoading) {
+        if (state is PostsLoading) {
           return Center(
             child: CupertinoActivityIndicator(),
           );
         }
 
-        if (state is PostListPrivate) {
+        if (state is PostsPrivate) {
           return Center(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -51,7 +50,7 @@ class PostListScreen extends StatelessWidget {
           );
         }
 
-        if (state is PostListLoaded) {
+        if (state is PostsLoaded) {
           return CustomScrollView(
             key: PageStorageKey<String>('posts'),
             slivers: <Widget>[

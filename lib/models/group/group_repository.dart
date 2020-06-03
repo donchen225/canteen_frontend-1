@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_entity.dart';
 import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/group/user_group_entity.dart';
+import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -15,6 +16,15 @@ class GroupRepository {
 
   GroupRepository();
 
+  Future<void> joinGroup(String groupId, {String accessCode}) async {
+    return CloudFunctionManager.joinGroup.call({
+      "group_id": groupId,
+      "access_code": accessCode,
+    }).then((result) {}, onError: (error) {
+      print('ERROR JOINING GROUP: $error');
+    });
+  }
+
   Future<List<UserGroup>> getUserGroups() async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
@@ -22,6 +32,7 @@ class GroupRepository {
     return userCollection
         .document(userId)
         .collection(groups)
+        .orderBy('joined_on', descending: false)
         .getDocuments()
         .then((querySnapshot) {
       return querySnapshot.documents

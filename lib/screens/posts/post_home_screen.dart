@@ -108,179 +108,170 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           },
         ),
       ),
-      body: BlocListener<GroupBloc, GroupState>(
-        listener: (BuildContext context, GroupState state) {
-          if (state is GroupLoaded) {
-            BlocProvider.of<PostBloc>(context)
-                .add(LoadPosts(groupId: state.group.id));
+      body: BlocBuilder<GroupBloc, GroupState>(
+        builder: (BuildContext context, GroupState state) {
+          if (state is GroupUninitialized) {
+            return Container();
           }
-        },
-        child: BlocBuilder<GroupBloc, GroupState>(
-          builder: (BuildContext context, GroupState state) {
-            if (state is GroupUninitialized) {
-              return Container();
-            }
 
-            if (state is GroupLoading) {
-              return Center(child: CupertinoActivityIndicator());
-            }
+          if (state is GroupLoading) {
+            return Center(child: CupertinoActivityIndicator());
+          }
 
-            if (state is GroupLoaded) {
-              final group = state.group;
-              final isNotMember = BlocProvider.of<GroupBloc>(context)
-                  .currentUserGroups
-                  .where((g) => g.groupId == group.id)
-                  .isEmpty;
+          if (state is GroupLoaded) {
+            final group = state.group;
+            final isNotMember = BlocProvider.of<GroupBloc>(context)
+                .currentUserGroups
+                .where((g) => g.id == group.id)
+                .isEmpty;
 
-              return NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverToBoxAdapter(
-                      child: Container(
-                        color: Palette.containerColor,
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.instance.safeBlockVertical * 2,
-                                left: SizeConfig.instance.safeBlockHorizontal *
-                                    kHorizontalPaddingBlocks,
-                                right: SizeConfig.instance.safeBlockHorizontal *
-                                    kHorizontalPaddingBlocks,
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    child: Row(
-                                      children: <Widget>[
-                                        // ProfilePicture(
-                                        //   photoUrl: userPhotoUrl,
-                                        //   shape: BoxShape.circle,
-                                        //   editable: false,
-                                        //   size: kProfileSize,
-                                        // ),
-                                        AppLogo(
-                                          size: kProfileSize,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            alignment: Alignment.topLeft,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: SizeConfig.instance
-                                                        .safeBlockHorizontal *
-                                                    kHorizontalPaddingBlocks),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                    bottom: SizeConfig.instance
-                                                            .safeBlockVertical *
-                                                        0.5,
-                                                  ),
+            return NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Palette.containerColor,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.instance.safeBlockVertical * 2,
+                              left: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                              right: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      // ProfilePicture(
+                                      //   photoUrl: userPhotoUrl,
+                                      //   shape: BoxShape.circle,
+                                      //   editable: false,
+                                      //   size: kProfileSize,
+                                      // ),
+                                      AppLogo(
+                                        size: kProfileSize,
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.topLeft,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig.instance
+                                                      .safeBlockHorizontal *
+                                                  kHorizontalPaddingBlocks),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  bottom: SizeConfig.instance
+                                                          .safeBlockVertical *
+                                                      0.5,
+                                                ),
+                                                child: Text(
+                                                  group.name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .apply(
+                                                          fontWeightDelta: 2),
+                                                ),
+                                              ),
+                                              Text(
+                                                group.description ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2,
+                                              ),
+                                              Text(
+                                                '${group.members?.toString() ?? "0"} members' ??
+                                                    '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2,
+                                              ),
+                                              Visibility(
+                                                visible: isNotMember,
+                                                child: FlatButton(
+                                                  color: Palette.primaryColor,
                                                   child: Text(
-                                                    group.name,
+                                                    'JOIN',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline5
+                                                        .button
                                                         .apply(
-                                                            fontWeightDelta: 2),
+                                                            color: Palette
+                                                                .whiteColor,
+                                                            fontWeightDelta: 1),
                                                   ),
+                                                  onPressed: () {},
                                                 ),
-                                                Text(
-                                                  group.description ?? '',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText2,
-                                                ),
-                                                Text(
-                                                  '${group.members?.toString() ?? "0"} members' ??
-                                                      '',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText2,
-                                                ),
-                                                Visibility(
-                                                  visible: isNotMember,
-                                                  child: FlatButton(
-                                                    color: Palette.primaryColor,
-                                                    child: Text(
-                                                      'JOIN',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .button
-                                                          .apply(
-                                                              color: Palette
-                                                                  .whiteColor,
-                                                              fontWeightDelta:
-                                                                  1),
-                                                    ),
-                                                    onPressed: () {},
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical:
-                                          SizeConfig.instance.safeBlockVertical,
-                                    ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        SizeConfig.instance.safeBlockVertical,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      sliver: SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _SliverAppBarDelegate(
-                          TabBar(
-                              indicatorSize: TabBarIndicatorSize.label,
-                              controller: _tabController,
-                              labelColor: Palette.primaryColor,
-                              unselectedLabelColor: Palette.appBarTextColor,
-                              labelStyle: Theme.of(context).textTheme.headline6,
-                              tabs: tabs
-                                  .map(
-                                    (text) => Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: kTabBarTextPadding,
-                                      ),
-                                      child: Tab(
-                                        text: text,
-                                      ),
+                  ),
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
+                    sliver: SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                            indicatorSize: TabBarIndicatorSize.label,
+                            controller: _tabController,
+                            labelColor: Palette.primaryColor,
+                            unselectedLabelColor: Palette.appBarTextColor,
+                            labelStyle: Theme.of(context).textTheme.headline6,
+                            tabs: tabs
+                                .map(
+                                  (text) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: kTabBarTextPadding,
                                     ),
-                                  )
-                                  .toList()),
-                        ),
+                                    child: Tab(
+                                      text: text,
+                                    ),
+                                  ),
+                                )
+                                .toList()),
                       ),
                     ),
-                  ];
-                },
-                body: TabBarView(
-                  controller: _tabController,
-                  children: <Widget>[
-                    PostListScreen(),
-                    GroupListScreen(),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+                  ),
+                ];
+              },
+              body: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  PostListScreen(),
+                  GroupListScreen(),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }

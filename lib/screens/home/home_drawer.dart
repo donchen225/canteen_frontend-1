@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -21,6 +21,14 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   final double itemHeight = 60.0;
+  GroupBloc _groupBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _groupBloc = BlocProvider.of<GroupBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +41,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
           color: Palette.textSecondaryBaseColor,
         );
 
-    final currentGroup = BlocProvider.of<GroupBloc>(context).currentGroup;
+    final currentGroup = _groupBloc.currentGroup;
+    final userGroups = _groupBloc.currentGroups;
 
     return Drawer(
       child: SafeArea(
@@ -141,6 +150,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   horizontal: constraints.maxWidth * 0.05,
                                 ),
                                 height: itemHeight,
+                                onTap: () {
+                                  Navigator.of(context).maybePop();
+                                },
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -168,9 +180,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
                 Expanded(
                   flex: 6,
-                  child: ListView(
-                    // Important: Remove any padding from the ListView.
-                    padding: EdgeInsets.zero,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -178,50 +189,44 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         ),
                         child: Text("Groups you're in", style: subtitleStyle),
                       ),
-                      DrawerItem(
-                        leading: AppLogo(
-                          size: 30,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: constraints.maxWidth * 0.05,
-                        ),
-                        height: itemHeight,
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Superconnectors',
-                              style:
-                                  Theme.of(context).textTheme.subtitle1.apply(
-                                        fontWeightDelta: 2,
-                                      ),
-                            ),
-                            Text('100 members'),
-                          ],
-                        ),
-                      ),
-                      DrawerItem(
-                        leading: AppLogo(
-                          size: 30,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: constraints.maxWidth * 0.05,
-                        ),
-                        height: itemHeight,
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Modernist',
-                              style:
-                                  Theme.of(context).textTheme.subtitle1.apply(
-                                        fontWeightDelta: 2,
-                                      ),
-                            ),
-                            Text('80 members'),
-                          ],
+                      Expanded(
+                        child: ListView.builder(
+                          // Important: Remove any padding from the ListView.
+                          padding: EdgeInsets.zero,
+                          itemCount: userGroups.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final group = userGroups[index];
+                            return DrawerItem(
+                              leading: AppLogo(
+                                size: 30,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: constraints.maxWidth * 0.05,
+                              ),
+                              height: itemHeight,
+                              onTap: () {
+                                BlocProvider.of<GroupBloc>(context)
+                                    .add(LoadGroup(group));
+                                Navigator.of(context).maybePop();
+                              },
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    group.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .apply(
+                                          fontWeightDelta: 2,
+                                        ),
+                                  ),
+                                  Text('${group.members.toString()} members'),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

@@ -852,6 +852,8 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    firestore.collection(GROUPS_COLLECTION).doc(groupId).update({ members: admin.firestore.FieldValue.increment(1) });
+
     // Create user group document
     const userGroupDoc = {
         "role": "member",
@@ -859,7 +861,7 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     };
 
     // Add group to user groups
-    await firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
+    firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 

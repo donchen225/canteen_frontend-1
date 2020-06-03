@@ -303,11 +303,18 @@ class _HomeScreenState extends State<HomeScreen> {
               child: IndexedStack(
                 index: _currentIndex,
                 children: [
-                  BlocProvider<PostListBloc>(
-                    create: (context) => PostListBloc(
-                      postBloc: BlocProvider.of<PostBloc>(context),
-                      userRepository: widget._userRepository,
-                    ),
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider<PostBloc>(
+                        create: (context) {
+                          return PostBloc(
+                            userRepository: widget._userRepository,
+                            postRepository: widget._postRepository,
+                            groupBloc: BlocProvider.of<GroupBloc>(context),
+                          );
+                        },
+                      ),
+                    ],
                     child: Navigator(
                       key: _postScreen,
                       onGenerateRoute: (RouteSettings settings) {
@@ -317,6 +324,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   MultiBlocProvider(
                     providers: [
+                      BlocProvider<GroupBloc>(
+                        create: (context) => GroupBloc(
+                          userRepository: widget._userRepository,
+                          groupRepository: _groupRepository,
+                        ),
+                      ),
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(
                           userRepository: widget._userRepository,
@@ -334,14 +347,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           return PostBloc(
                             userRepository: widget._userRepository,
                             postRepository: widget._postRepository,
+                            groupBloc: BlocProvider.of<GroupBloc>(context),
                           );
                         },
-                      ),
-                      BlocProvider<PostListBloc>(
-                        create: (context) => PostListBloc(
-                          postBloc: BlocProvider.of<PostBloc>(context),
-                          userRepository: widget._userRepository,
-                        ),
                       ),
                     ],
                     child: Navigator(

@@ -14,9 +14,7 @@ class RequestRepository {
   Future<void> addRequest(Request request) {
     return CloudFunctionManager.addRequest
         .call(request.toEntity().toDocument())
-        .then((result) {
-      print(result.data);
-    }, onError: (error) {
+        .then((result) {}, onError: (error) {
       print('ERROR ADDING REQUEST: $error');
     });
   }

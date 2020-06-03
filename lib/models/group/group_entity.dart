@@ -78,8 +78,8 @@ class GroupEntity extends Equatable {
       tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
           [],
       type: snapshot.data['type'],
-      posts: snapshot.data['comment_count'],
-      members: snapshot.data['like_count'],
+      posts: snapshot.data['posts'],
+      members: snapshot.data['members'],
       createdOn: snapshot.data["created_on"].toDate(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
     );

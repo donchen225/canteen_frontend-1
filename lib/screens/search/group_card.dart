@@ -53,7 +53,7 @@ class GroupCard extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: height * 0.02),
                     child: Text(
-                      'Public Group',
+                      '${group.type[0].toUpperCase() + group.type.substring(1)} Group',
                       style: subtitleStyle.apply(
                           color: Palette.textSecondaryBaseColor),
                     ),

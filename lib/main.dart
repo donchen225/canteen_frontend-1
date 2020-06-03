@@ -101,14 +101,6 @@ void main() async {
             );
           },
         ),
-        BlocProvider<PostBloc>(
-          create: (context) {
-            return PostBloc(
-              userRepository: userRepository,
-              postRepository: postRepository,
-            );
-          },
-        ),
         BlocProvider<CommentBloc>(
           create: (context) {
             return CommentBloc(

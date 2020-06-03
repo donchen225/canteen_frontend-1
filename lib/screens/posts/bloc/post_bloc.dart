@@ -5,26 +5,36 @@ import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
-import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:tuple/tuple.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
+  GroupBloc _groupBloc;
+  StreamSubscription _groupSubscription;
+  Map<String, List<Post>> _postList = {};
 
   PostBloc({
     @required PostRepository postRepository,
     @required UserRepository userRepository,
+    GroupBloc groupBloc,
   })  : assert(postRepository != null),
         assert(userRepository != null),
         _postRepository = postRepository,
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        _groupBloc = groupBloc {
+    _groupSubscription = _groupBloc.listen((state) {
+      if (state is GroupLoaded) {
+        add(LoadPosts(groupId: state.group.id));
+      }
+    });
+  }
 
   @override
   PostState get initialState => PostsEmpty();
@@ -49,6 +59,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
     try {
       final posts = await _postRepository.getPosts(event.groupId);
+      print('POSTS: $posts');
       add(PostsUpdated(groupId: event.groupId, updates: posts));
     } on PlatformException catch (error) {
       if (error.code == 'Error 7') {
@@ -73,17 +84,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     final userList = await userListFuture;
     final userLiked = await userLikedFuture;
 
+    List<DetailedPost> posts = [];
     for (int i = 0; i < updatedPosts.length; i++) {
       User user = userList[i];
       bool liked = userLiked[i];
       Post update = updatedPosts[i];
 
-      final detailedPost = DetailedPost.fromPost(update, user, liked);
-      _postRepository.saveDetailedPost(detailedPost);
+      posts.add(DetailedPost.fromPost(update, user, liked));
     }
 
-    yield PostsLoaded(
-        groupId: event.groupId, posts: _postRepository.currentDetailedPosts());
+    _postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {

@@ -2,7 +2,6 @@ import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
-import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
@@ -27,6 +26,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   bool _showFAB = true;
+  bool _joined = false;
 
   final List<String> tabs = [
     'Posts',
@@ -57,7 +57,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
   Widget build(BuildContext context) {
     final isNotMember = BlocProvider.of<GroupBloc>(context)
         .currentUserGroups
-        .where((g) => g.groupId == widget.group.id)
+        .where((g) => g.id == widget.group.id)
         .isEmpty;
 
     return Scaffold(
@@ -182,18 +182,44 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                             Visibility(
                                               visible: isNotMember,
                                               child: FlatButton(
-                                                color: Palette.primaryColor,
+                                                color: _joined
+                                                    ? Palette.whiteColor
+                                                    : Palette.primaryColor,
+                                                shape: RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                    color: _joined
+                                                        ? Palette.primaryColor
+                                                        : Palette.whiteColor,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
                                                 child: Text(
-                                                  'JOIN',
+                                                  _joined ? 'JOINED' : 'JOIN',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .button
                                                       .apply(
-                                                          color: Palette
-                                                              .whiteColor,
+                                                          color: _joined
+                                                              ? Palette
+                                                                  .primaryColor
+                                                              : Palette
+                                                                  .whiteColor,
                                                           fontWeightDelta: 1),
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  if (!(_joined)) {
+                                                    BlocProvider.of<GroupBloc>(
+                                                            context)
+                                                        .add(JoinGroup(
+                                                            widget.group.id));
+                                                    setState(() {
+                                                      _joined = !_joined;
+                                                    });
+                                                  }
+                                                  // TODO: add option to leave group
+                                                },
                                               ),
                                             ),
                                           ],
