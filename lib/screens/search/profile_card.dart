@@ -18,7 +18,7 @@ class ProfileCard extends StatelessWidget {
     this.onTap,
     this.skillIndex = 0,
     this.height = 400,
-    this.width = 300,
+    this.width = 250,
     @required this.user,
   }) : super(key: key);
 
@@ -107,7 +107,7 @@ class ProfileCard extends StatelessWidget {
                                       : '',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline5
+                                      .headline6
                                       .apply(
                                         color: Palette.titleColor,
                                         fontWeightDelta: 2,

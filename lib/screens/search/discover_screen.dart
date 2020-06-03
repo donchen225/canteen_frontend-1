@@ -161,7 +161,7 @@ class DiscoverScreen extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+                    height: 300,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.groups.length,
@@ -177,8 +177,7 @@ class DiscoverScreen extends StatelessWidget {
                           ),
                           child: GroupCard(
                               group: group,
-                              height:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                              height: 300 * 0.9,
                               onTap: () {
                                 BlocProvider.of<GroupBloc>(context)
                                     .add(LoadGroup(group));
@@ -214,7 +213,7 @@ class DiscoverScreen extends StatelessWidget {
                         final userList = state.allUsers;
 
                         return Container(
-                          height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+                          height: 350,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: userList.length,

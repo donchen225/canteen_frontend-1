@@ -15,7 +15,7 @@ class GroupCard extends StatelessWidget {
   GroupCard(
       {@required this.group,
       this.height = 400,
-      this.width = 300,
+      this.width = 250,
       this.color = const Color(0xFFFFFF),
       this.onTap})
       : assert(group != null);
@@ -35,7 +35,7 @@ class GroupCard extends StatelessWidget {
           Expanded(
               flex: 3,
               child: AppLogo(
-                size: height * 0.3,
+                size: height * 0.25,
               )),
           Expanded(
             flex: 4,
