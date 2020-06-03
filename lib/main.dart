@@ -9,10 +9,10 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
-import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -201,8 +201,8 @@ class App extends StatelessWidget {
                   );
                 }
                 if (state is Authenticated) {
-                  return BlocProvider<GroupBloc>(
-                    create: (context) => GroupBloc(
+                  return BlocProvider<GroupHomeBloc>(
+                    create: (context) => GroupHomeBloc(
                       userRepository: _userRepository,
                       groupRepository: _groupRepository,
                     ),

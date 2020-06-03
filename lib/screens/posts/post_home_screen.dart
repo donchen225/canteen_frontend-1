@@ -4,6 +4,7 @@ import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -79,9 +80,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 0,
       ),
-      floatingActionButton: BlocBuilder<GroupBloc, GroupState>(
-        builder: (BuildContext context, GroupState state) {
-          final visible = state is GroupLoaded ? true : false;
+      floatingActionButton: BlocBuilder<GroupHomeBloc, GroupHomeState>(
+        builder: (BuildContext context, GroupHomeState state) {
+          final visible = state is GroupHomeLoaded ? true : false;
 
           return Visibility(
             visible: _showFAB && visible,
@@ -94,7 +95,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   backgroundColor: Colors.transparent,
                   builder: (context) => PostDialogScreen(
                     groupId:
-                        BlocProvider.of<GroupBloc>(context).currentGroup.id,
+                        BlocProvider.of<GroupHomeBloc>(context).currentGroup.id,
                     height: SizeConfig.instance.blockSizeVertical *
                         kDialogScreenHeightBlocks,
                   ),
@@ -104,17 +105,17 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           );
         },
       ),
-      body: BlocBuilder<GroupBloc, GroupState>(
-        builder: (BuildContext context, GroupState state) {
-          if (state is GroupUninitialized) {
+      body: BlocBuilder<GroupHomeBloc, GroupHomeState>(
+        builder: (BuildContext context, GroupHomeState state) {
+          if (state is GroupHomeUninitialized) {
             return Container();
           }
 
-          if (state is GroupLoading) {
+          if (state is GroupHomeLoading) {
             return Center(child: CupertinoActivityIndicator());
           }
 
-          if (state is GroupEmpty) {
+          if (state is GroupHomeEmpty) {
             return Container(
               width: double.infinity,
               child: Column(
@@ -146,9 +147,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
             );
           }
 
-          if (state is GroupLoaded) {
+          if (state is GroupHomeLoaded) {
             final group = state.group;
-            final isNotMember = BlocProvider.of<GroupBloc>(context)
+            final isNotMember = BlocProvider.of<GroupHomeBloc>(context)
                 .currentUserGroups
                 .where((g) => g.id == group.id)
                 .isEmpty;

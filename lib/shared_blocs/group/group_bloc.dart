@@ -6,6 +6,7 @@ import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_event.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_state.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
@@ -15,14 +16,18 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   Group currentGroup;
   List<UserGroup> currentUserGroups = [];
   List<Group> currentGroups = [];
+  GroupHomeBloc _groupHomeBloc;
 
-  GroupBloc(
-      {@required GroupRepository groupRepository,
-      @required UserRepository userRepository})
-      : assert(groupRepository != null),
+  GroupBloc({
+    @required GroupRepository groupRepository,
+    @required UserRepository userRepository,
+    @required GroupHomeBloc groupHomeBloc,
+  })  : assert(groupRepository != null),
         assert(userRepository != null),
+        assert(groupHomeBloc != null),
         _groupRepository = groupRepository,
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        _groupHomeBloc = groupHomeBloc;
 
   // Load local settings if exists
   @override
@@ -32,33 +37,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   Stream<GroupState> mapEventToState(
     GroupEvent event,
   ) async* {
-    if (event is LoadUserGroups) {
-      yield* _mapLoadUserGroupsToState();
-    } else if (event is LoadGroup) {
+    if (event is LoadGroup) {
       yield* _mapLoadGroupToState(event);
-    } else if (event is LoadCurrentGroup) {
-      yield* _mapLoadCurrentGroupToState();
     } else if (event is JoinGroup) {
       yield* _mapJoinGroupToState(event);
-    }
-  }
-
-  Stream<GroupState> _mapLoadUserGroupsToState() async* {
-    final userGroups = await _groupRepository.getUserGroups();
-
-    currentUserGroups = userGroups;
-
-    final groups = await Future.wait(currentUserGroups.map((userGroup) {
-      return _groupRepository.getGroup(userGroup.id);
-    }));
-
-    if (groups.isNotEmpty) {
-      currentGroup = groups[0];
-      currentGroups = groups;
-
-      yield GroupLoaded(group: currentGroup);
-    } else {
-      yield GroupEmpty();
     }
   }
 
@@ -67,18 +49,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     yield GroupLoaded(group: event.group);
   }
 
-  Stream<GroupState> _mapLoadCurrentGroupToState() async* {
-    if (currentGroup != null) {
-      yield GroupLoaded(group: currentGroup);
-    } else {
-      //_userRepository
-      yield GroupLoaded(group: currentGroup);
-    }
-  }
-
   Stream<GroupState> _mapJoinGroupToState(JoinGroup event) async* {
     await _groupRepository.joinGroup(event.groupId);
     final group = await _groupRepository.getGroup(event.groupId);
+    _groupHomeBloc.add(LoadUserGroups());
     yield GroupLoaded(group: group);
   }
 }

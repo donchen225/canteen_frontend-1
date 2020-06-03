@@ -8,10 +8,6 @@ abstract class GroupEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadUserGroups extends GroupEvent {}
-
-class LoadCurrentGroup extends GroupEvent {}
-
 class LoadGroup extends GroupEvent {
   final Group group;
 

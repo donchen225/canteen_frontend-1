@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,23 +18,37 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
   GroupBloc _groupBloc;
+  GroupHomeBloc _groupHomeBloc;
   StreamSubscription _groupSubscription;
+  StreamSubscription _groupHomeSubscription;
   Map<String, List<Post>> _postList = {};
 
   PostBloc({
     @required PostRepository postRepository,
     @required UserRepository userRepository,
     GroupBloc groupBloc,
+    GroupHomeBloc groupHomeBloc,
   })  : assert(postRepository != null),
         assert(userRepository != null),
         _postRepository = postRepository,
         _userRepository = userRepository,
-        _groupBloc = groupBloc {
-    _groupSubscription = _groupBloc.listen((state) {
-      if (state is GroupLoaded) {
-        add(LoadPosts(groupId: state.group.id));
-      }
-    });
+        _groupBloc = groupBloc,
+        _groupHomeBloc = groupHomeBloc {
+    if (_groupBloc != null) {
+      _groupSubscription = _groupBloc.listen((state) {
+        if (state is GroupLoaded) {
+          add(LoadPosts(groupId: state.group.id));
+        }
+      });
+    }
+
+    if (_groupHomeBloc != null) {
+      _groupHomeSubscription = _groupHomeBloc.listen((state) {
+        if (state is GroupHomeLoaded) {
+          add(LoadPosts(groupId: state.group.id));
+        }
+      });
+    }
   }
 
   @override

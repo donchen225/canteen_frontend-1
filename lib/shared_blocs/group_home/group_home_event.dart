@@ -1,0 +1,25 @@
+import 'package:canteen_frontend/models/group/group.dart';
+import 'package:equatable/equatable.dart';
+
+abstract class GroupHomeEvent extends Equatable {
+  const GroupHomeEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoadUserGroups extends GroupHomeEvent {}
+
+class LoadCurrentGroup extends GroupHomeEvent {}
+
+class LoadHomeGroup extends GroupHomeEvent {
+  final Group group;
+
+  const LoadHomeGroup(this.group);
+
+  @override
+  List<Object> get props => [group];
+
+  @override
+  String toString() => 'LoadGroup { group: $group }';
+}

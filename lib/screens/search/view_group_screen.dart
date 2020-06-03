@@ -5,6 +5,7 @@ import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -39,6 +40,11 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
     _tabController = TabController(vsync: this, length: tabs.length);
 
     _tabController.addListener(_showFloatingActionButton);
+
+    _joined = BlocProvider.of<GroupHomeBloc>(context)
+        .currentUserGroups
+        .where((g) => g.id == widget.group.id)
+        .isNotEmpty;
   }
 
   void _showFloatingActionButton() {
@@ -55,10 +61,6 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    _joined = BlocProvider.of<GroupBloc>(context)
-        .currentUserGroups
-        .where((g) => g.id == widget.group.id)
-        .isNotEmpty;
     print(_joined);
 
     return Scaffold(
@@ -102,6 +104,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => PostDialogScreen(
+                groupId: widget.group.id,
                 height: SizeConfig.instance.blockSizeVertical *
                     kDialogScreenHeightBlocks,
               ),
@@ -186,48 +189,45 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   .textTheme
                                                   .bodyText2,
                                             ),
-                                            Visibility(
-                                              visible: !_joined,
-                                              child: FlatButton(
-                                                color: _joined
-                                                    ? Palette.whiteColor
-                                                    : Palette.primaryColor,
-                                                shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                    color: _joined
-                                                        ? Palette.primaryColor
-                                                        : Palette.whiteColor,
-                                                    width: 2,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
+                                            FlatButton(
+                                              color: _joined
+                                                  ? Palette.whiteColor
+                                                  : Palette.primaryColor,
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color: _joined
+                                                      ? Palette.primaryColor
+                                                      : Colors.transparent,
+                                                  width: 2,
                                                 ),
-                                                child: Text(
-                                                  _joined ? 'JOINED' : 'JOIN',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .button
-                                                      .apply(
-                                                          color: _joined
-                                                              ? Palette
-                                                                  .primaryColor
-                                                              : Palette
-                                                                  .whiteColor,
-                                                          fontWeightDelta: 1),
-                                                ),
-                                                onPressed: () {
-                                                  if (!(_joined)) {
-                                                    BlocProvider.of<GroupBloc>(
-                                                            context)
-                                                        .add(JoinGroup(
-                                                            widget.group.id));
-                                                    setState(() {
-                                                      _joined = !_joined;
-                                                    });
-                                                  }
-                                                  // TODO: add option to leave group
-                                                },
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
                                               ),
+                                              child: Text(
+                                                _joined ? 'JOINED' : 'JOIN',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .button
+                                                    .apply(
+                                                        color: _joined
+                                                            ? Palette
+                                                                .primaryColor
+                                                            : Palette
+                                                                .whiteColor,
+                                                        fontWeightDelta: 1),
+                                              ),
+                                              onPressed: () {
+                                                if (!(_joined)) {
+                                                  BlocProvider.of<GroupBloc>(
+                                                          context)
+                                                      .add(JoinGroup(
+                                                          widget.group.id));
+                                                  setState(() {
+                                                    _joined = !_joined;
+                                                  });
+                                                }
+                                                // TODO: add option to leave group
+                                              },
                                             ),
                                           ],
                                         ),

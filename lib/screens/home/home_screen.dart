@@ -26,6 +26,7 @@ import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -207,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
-              BlocProvider.of<GroupBloc>(context).add(LoadUserGroups());
+              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
             }
           },
           child: BlocBuilder<HomeBloc, HomeState>(
@@ -309,7 +310,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           return PostBloc(
                             userRepository: widget._userRepository,
                             postRepository: widget._postRepository,
-                            groupBloc: BlocProvider.of<GroupBloc>(context),
+                            groupHomeBloc:
+                                BlocProvider.of<GroupHomeBloc>(context),
                           );
                         },
                       ),
@@ -327,7 +329,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         create: (context) => GroupBloc(
                           userRepository: widget._userRepository,
                           groupRepository: _groupRepository,
-                        )..add(LoadUserGroups()),
+                          groupHomeBloc:
+                              BlocProvider.of<GroupHomeBloc>(context),
+                        ),
                       ),
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(

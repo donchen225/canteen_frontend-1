@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -21,13 +21,13 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   final double itemHeight = 60.0;
-  GroupBloc _groupBloc;
+  GroupHomeBloc _groupHomeBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _groupBloc = BlocProvider.of<GroupBloc>(context);
+    _groupHomeBloc = BlocProvider.of<GroupHomeBloc>(context);
   }
 
   @override
@@ -41,8 +41,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
           color: Palette.textSecondaryBaseColor,
         );
 
-    final currentGroup = _groupBloc.currentGroup;
-    final userGroups = _groupBloc.currentGroups;
+    final currentGroup = _groupHomeBloc.currentGroup;
+    final userGroups = _groupHomeBloc.currentGroups;
 
     return Drawer(
       child: SafeArea(
@@ -212,8 +212,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               ),
                               height: itemHeight,
                               onTap: () {
-                                BlocProvider.of<GroupBloc>(context)
-                                    .add(LoadGroup(group));
+                                BlocProvider.of<GroupHomeBloc>(context)
+                                    .add(LoadHomeGroup(group));
                                 Navigator.of(context).maybePop();
                               },
                               title: Column(
