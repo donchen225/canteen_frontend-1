@@ -26,16 +26,6 @@ class LoadUserProfile extends UserProfileEvent {
 
 class ClearProfile extends UserProfileEvent {}
 
-class ShowUserProfile extends UserProfileEvent {
-  const ShowUserProfile();
-
-  @override
-  List<Object> get props => null;
-
-  @override
-  String toString() => 'ShowUserProfile';
-}
-
 class EditAboutSection extends UserProfileEvent {
   final User user;
 

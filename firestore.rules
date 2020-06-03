@@ -36,6 +36,11 @@ service cloud.firestore {
       allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
+    match /groups/{groupId}/members/{memberId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+      allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+    }
+
     match /groups/{groupId}/posts/{postId}/comments/{commentId} {
       allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
       allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';

@@ -23,3 +23,15 @@ class LoadHomeGroup extends GroupHomeEvent {
   @override
   String toString() => 'LoadGroup { group: $group }';
 }
+
+class LoadHomeGroupMembers extends GroupHomeEvent {
+  final String groupId;
+
+  const LoadHomeGroupMembers(this.groupId);
+
+  @override
+  List<Object> get props => [groupId];
+
+  @override
+  String toString() => 'LoadHomeGroupMembers { groupId: $groupId }';
+}

@@ -1,6 +1,6 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/models/group/group.dart';
-import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
+import 'package:canteen_frontend/screens/posts/member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';

@@ -1,9 +1,9 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/screens/posts/group_list_screen.dart';
+import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/screens/posts/member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -26,6 +26,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   bool _showFAB = true;
+  GroupHomeBloc _groupHomeBloc;
 
   final List<String> tabs = [
     'Posts',
@@ -35,15 +36,27 @@ class _PostHomeScreenState extends State<PostHomeScreen>
   @override
   void initState() {
     super.initState();
+
+    _groupHomeBloc = BlocProvider.of<GroupHomeBloc>(context);
     _tabController = TabController(vsync: this, length: tabs.length);
 
     _tabController.addListener(_showFloatingActionButton);
+    _tabController.addListener(_loadGroupMembers);
   }
 
   void _showFloatingActionButton() {
     setState(() {
       _showFAB = _tabController.index == 0;
     });
+  }
+
+  void _loadGroupMembers() {
+    if (_tabController.index == 1) {
+      if (!(_groupHomeBloc.currentGroup is DetailedGroup)) {
+        _groupHomeBloc
+            .add(LoadHomeGroupMembers(_groupHomeBloc.currentGroup.id));
+      }
+    }
   }
 
   @override
@@ -81,6 +94,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
         elevation: 0,
       ),
       floatingActionButton: BlocBuilder<GroupHomeBloc, GroupHomeState>(
+        bloc: _groupHomeBloc,
         builder: (BuildContext context, GroupHomeState state) {
           final visible = state is GroupHomeLoaded ? true : false;
 
@@ -94,8 +108,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (context) => PostDialogScreen(
-                    groupId:
-                        BlocProvider.of<GroupHomeBloc>(context).currentGroup.id,
+                    groupId: _groupHomeBloc.currentGroup.id,
                     height: SizeConfig.instance.blockSizeVertical *
                         kDialogScreenHeightBlocks,
                   ),

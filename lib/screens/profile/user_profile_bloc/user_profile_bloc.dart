@@ -75,8 +75,6 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapUpdateAvailabilityToState(event);
     } else if (event is ShowSettings) {
       yield* _mapShowSettingsToState();
-    } else if (event is ShowUserProfile) {
-      yield* _mapShowUserProfileToState();
     }
   }
 
@@ -162,18 +160,6 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Stream<UserProfileState> _mapShowSettingsToState() async* {
     yield SettingsMenu();
-  }
-
-  Stream<UserProfileState> _mapShowUserProfileToState() async* {
-    final userState = _userBloc.state;
-    final settings = _settingsRepository.getCurrentSettings();
-    if (userState is UserLoaded && settings != null) {
-      yield UserProfileLoaded(userState.user, settings);
-    } else {
-      yield UserProfileLoading();
-      yield UserProfileLoaded(await _userRepository.currentUser(),
-          settings ?? await _settingsRepository.getSettings());
-    }
   }
 
   @override

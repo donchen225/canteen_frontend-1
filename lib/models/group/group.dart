@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/group/group_entity.dart';
+import 'package:canteen_frontend/models/group/group_member.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -68,5 +69,45 @@ class Group extends Equatable {
       lastUpdated: lastUpdated,
       createdOn: createdOn,
     );
+  }
+}
+
+class DetailedGroup extends Group {
+  final List<GroupMember> memberList;
+
+  DetailedGroup(
+      {@required id,
+      @required name,
+      @required description,
+      @required tags,
+      @required type,
+      @required posts,
+      @required members,
+      @required lastUpdated,
+      @required createdOn,
+      @required this.memberList})
+      : super(
+            id: id,
+            name: name,
+            description: description,
+            tags: tags,
+            type: type,
+            posts: posts,
+            members: members,
+            lastUpdated: lastUpdated,
+            createdOn: createdOn);
+
+  static DetailedGroup fromGroup(Group group, List<GroupMember> memberList) {
+    return DetailedGroup(
+        id: group.id,
+        name: group.name,
+        description: group.description,
+        tags: group.tags,
+        type: group.type,
+        posts: group.posts,
+        members: group.members,
+        createdOn: group.createdOn,
+        lastUpdated: group.lastUpdated,
+        memberList: memberList);
   }
 }

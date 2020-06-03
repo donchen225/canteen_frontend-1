@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_entity.dart';
+import 'package:canteen_frontend/models/group/group_member.dart';
+import 'package:canteen_frontend/models/group/group_member_entity.dart';
 import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/group/user_group_entity.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
@@ -13,6 +15,7 @@ class GroupRepository {
   final groupCollection = Firestore.instance.collection('groups');
   static const String groups = "groups";
   static const String posts = "posts";
+  static const String members = "members";
 
   GroupRepository();
 
@@ -48,6 +51,19 @@ class GroupRepository {
         return null;
       }
       return Group.fromEntity(GroupEntity.fromSnapshot(documentSnapshot));
+    });
+  }
+
+  Future<List<GroupMember>> getGroupMembers(String groupId) async {
+    return groupCollection
+        .document(groupId)
+        .collection(members)
+        .getDocuments()
+        .then((querySnapshot) {
+      return querySnapshot.documents
+          .map((document) =>
+              GroupMember.fromEntity(GroupMemberEntity.fromSnapshot(document)))
+          .toList();
     });
   }
 
