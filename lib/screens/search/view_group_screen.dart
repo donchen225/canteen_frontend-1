@@ -55,10 +55,11 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isNotMember = BlocProvider.of<GroupBloc>(context)
+    _joined = BlocProvider.of<GroupBloc>(context)
         .currentUserGroups
         .where((g) => g.id == widget.group.id)
-        .isEmpty;
+        .isNotEmpty;
+    print(_joined);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +93,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
         elevation: 0,
       ),
       floatingActionButton: Visibility(
-        visible: _showFAB && !isNotMember,
+        visible: _showFAB && _joined,
         child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -186,7 +187,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   .bodyText2,
                                             ),
                                             Visibility(
-                                              visible: isNotMember,
+                                              visible: _joined,
                                               child: FlatButton(
                                                 color: _joined
                                                     ? Palette.whiteColor
@@ -282,7 +283,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               controller: _tabController,
               children: <Widget>[
                 PostListScreen(),
-                GroupListScreen(),
+                MemberListScreen(),
               ],
             ),
           );

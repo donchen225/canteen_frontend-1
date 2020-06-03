@@ -272,7 +272,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                 controller: _tabController,
                 children: <Widget>[
                   PostListScreen(),
-                  GroupListScreen(),
+                  MemberListScreen(),
                 ],
               ),
             );

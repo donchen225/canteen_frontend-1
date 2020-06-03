@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         create: (context) => GroupBloc(
                           userRepository: widget._userRepository,
                           groupRepository: _groupRepository,
-                        ),
+                        )..add(LoadUserGroups()),
                       ),
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(

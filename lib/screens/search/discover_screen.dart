@@ -11,6 +11,7 @@ import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_group_screen.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -175,8 +176,8 @@ class DiscoverScreen extends StatelessWidget {
                               height:
                                   SizeConfig.instance.scaffoldBodyHeight * 0.44,
                               onTap: () {
-                                BlocProvider.of<PostBloc>(context)
-                                    .add(LoadPosts(groupId: group.id));
+                                BlocProvider.of<GroupBloc>(context)
+                                    .add(LoadGroup(group));
                                 Navigator.pushNamed(
                                   context,
                                   ViewGroupScreen.routeName,
