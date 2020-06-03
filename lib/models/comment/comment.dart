@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/comment/comment_entity.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 

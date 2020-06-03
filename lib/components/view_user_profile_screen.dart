@@ -164,6 +164,8 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
           final user = state.user;
           return _buildProfile(context, user);
         }
+
+        return Container();
       },
     );
   }

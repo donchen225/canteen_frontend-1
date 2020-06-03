@@ -191,6 +191,7 @@ class SinglePostScreen extends StatelessWidget {
                                       backgroundColor: Colors.transparent,
                                       builder: (context) => CommentDialogScreen(
                                         post: post,
+                                        groupId: groupId,
                                         height: SizeConfig
                                                 .instance.blockSizeVertical *
                                             kDialogScreenHeightBlocks,
@@ -267,6 +268,7 @@ class SinglePostScreen extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         builder: (context) => CommentDialogScreen(
                           post: post,
+                          groupId: groupId,
                           height: SizeConfig.instance.blockSizeVertical *
                               kDialogScreenHeightBlocks,
                         ),

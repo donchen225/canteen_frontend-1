@@ -12,8 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CommentDialogScreen extends StatefulWidget {
   final DetailedPost post;
   final double height;
+  final String groupId;
 
-  CommentDialogScreen({@required this.post, this.height = 500});
+  CommentDialogScreen(
+      {@required this.post, @required this.groupId, this.height = 500});
 
   @override
   _CommentDialogScreenState createState() => _CommentDialogScreenState();
@@ -64,8 +66,10 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<CommentBloc>(context)
-                  .add(AddComment(postId: widget.post.id, comment: comment));
+              BlocProvider.of<CommentBloc>(context).add(AddComment(
+                  groupId: widget.groupId,
+                  postId: widget.post.id,
+                  comment: comment));
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

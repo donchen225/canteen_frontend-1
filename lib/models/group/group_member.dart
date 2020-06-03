@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/group/group_member_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
