@@ -206,9 +206,13 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   ),
                                             ),
                                             FlatButton(
-                                              color: _joined
-                                                  ? Palette.whiteColor
-                                                  : Palette.primaryColor,
+                                              color:
+                                                  widget.group.type == 'public'
+                                                      ? _joined
+                                                          ? Palette.whiteColor
+                                                          : Palette.primaryColor
+                                                      : Palette.primaryColor
+                                                          .withOpacity(0.3),
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(
                                                   color: _joined
@@ -233,13 +237,17 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                         fontWeightDelta: 1),
                                               ),
                                               onPressed: () {
-                                                if (!(_joined)) {
-                                                  _groupBloc.add(JoinGroup(
-                                                      widget.group.id));
-                                                  setState(() {
-                                                    _joined = !_joined;
-                                                  });
+                                                if (widget.group.type ==
+                                                    'public') {
+                                                  if (!(_joined)) {
+                                                    _groupBloc.add(JoinGroup(
+                                                        widget.group.id));
+                                                    setState(() {
+                                                      _joined = !_joined;
+                                                    });
+                                                  }
                                                 }
+
                                                 // TODO: add option to leave group
                                               },
                                             ),
