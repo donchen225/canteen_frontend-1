@@ -99,7 +99,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
-    _postRepository.addPost(event.groupId, event.post);
+    await _postRepository.addPost(event.groupId, event.post);
+    add(LoadPosts(groupId: event.groupId));
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {

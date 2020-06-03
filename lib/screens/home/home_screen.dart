@@ -16,7 +16,6 @@ import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';

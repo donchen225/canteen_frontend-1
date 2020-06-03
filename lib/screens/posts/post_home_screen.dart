@@ -182,11 +182,17 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                           fontWeightDelta: 2),
                                                 ),
                                               ),
-                                              Text(
-                                                group.description ?? '',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2,
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: SizeConfig.instance
+                                                      .safeBlockVertical,
+                                                ),
+                                                child: Text(
+                                                  group.description ?? '',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                ),
                                               ),
                                               Text(
                                                 '${group.members?.toString() ?? "0"} members' ??

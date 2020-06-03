@@ -59,6 +59,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   }
 
   Stream<GroupState> _mapLoadGroupToState(LoadGroup event) async* {
+    currentGroup = event.group;
     yield GroupLoaded(group: event.group);
   }
 

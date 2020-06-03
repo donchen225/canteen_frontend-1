@@ -166,11 +166,17 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                     .apply(fontWeightDelta: 2),
                                               ),
                                             ),
-                                            Text(
-                                              widget.group.description ?? '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2,
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig
+                                                    .instance.safeBlockVertical,
+                                              ),
+                                              child: Text(
+                                                widget.group.description ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1,
+                                              ),
                                             ),
                                             Text(
                                               '${widget.group.members?.toString() ?? "0"} members' ??
