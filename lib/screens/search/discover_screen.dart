@@ -207,55 +207,41 @@ class DiscoverScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: BlocBuilder<SearchBloc, SearchState>(
-                    builder: (BuildContext context, SearchState state) {
-                      if (state is SearchUninitialized) {
-                        final userList = state.allUsers;
+                  child: Container(
+                    height: 350,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.users.length,
+                      itemBuilder: (context, index) {
+                        final user = state.users[index];
 
-                        return Container(
-                          height: 350,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: userList.length,
-                            itemBuilder: (context, index) {
-                              final user = userList[index];
-
-                              if (user.teachSkill.isNotEmpty &&
-                                  user.teachSkill[0].name.isNotEmpty) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    left: SizeConfig
-                                            .instance.safeBlockHorizontal *
-                                        6,
-                                    bottom:
-                                        SizeConfig.instance.scaffoldBodyHeight *
-                                            0.03,
-                                    top:
-                                        SizeConfig.instance.scaffoldBodyHeight *
-                                            0.03,
-                                  ),
-                                  child: ProfileCard(
-                                    user: user,
-                                    height:
-                                        SizeConfig.instance.scaffoldBodyHeight *
-                                            0.44,
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      ViewUserProfileScreen.routeName,
-                                      arguments: UserArguments(
-                                        user: user,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              return Container();
-                            },
-                          ),
-                        );
-                      }
-                      return Container();
-                    },
+                        if (user.teachSkill.isNotEmpty &&
+                            user.teachSkill[0].name.isNotEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.instance.safeBlockHorizontal * 6,
+                              bottom:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                              top:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            ),
+                            child: ProfileCard(
+                              user: user,
+                              height:
+                                  SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                ViewUserProfileScreen.routeName,
+                                arguments: UserArguments(
+                                  user: user,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
                   ),
                 ),
               ],
