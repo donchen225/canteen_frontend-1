@@ -27,8 +27,8 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
-              user: args.user,
-              editable: args.editable ?? false,
+              user: args?.user ?? null,
+              editable: args?.editable ?? false,
             );
           case ViewGroupScreen.routeName:
             final GroupArguments args = settings.arguments;

@@ -18,8 +18,8 @@ MaterialPageRoute buildPostScreenRoutes(RouteSettings settings, {Key homeKey}) {
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
-              user: args.user,
-              editable: args.editable ?? false,
+              user: args?.user ?? null,
+              editable: args?.editable ?? false,
             );
           case SinglePostScreen.routeName:
             final SinglePostArguments args = settings.arguments;

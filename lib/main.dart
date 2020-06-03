@@ -14,6 +14,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/profile_bloc/profile_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
@@ -201,11 +202,20 @@ class App extends StatelessWidget {
                   );
                 }
                 if (state is Authenticated) {
-                  return BlocProvider<GroupHomeBloc>(
-                    create: (context) => GroupHomeBloc(
-                      userRepository: _userRepository,
-                      groupRepository: _groupRepository,
-                    ),
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<GroupHomeBloc>(
+                        create: (context) => GroupHomeBloc(
+                          userRepository: _userRepository,
+                          groupRepository: _groupRepository,
+                        ),
+                      ),
+                      BlocProvider<ProfileBloc>(
+                        create: (context) => ProfileBloc(
+                          userRepository: _userRepository,
+                        ),
+                      ),
+                    ],
                     child: HomeScreen(
                       userRepository: _userRepository,
                       requestRepository: _requestRepository,

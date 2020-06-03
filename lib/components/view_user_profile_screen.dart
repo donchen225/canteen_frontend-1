@@ -8,9 +8,11 @@ import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,8 +21,7 @@ class ViewUserProfileScreen extends StatefulWidget {
   final bool editable;
   static const routeName = '/user';
 
-  ViewUserProfileScreen({this.user, this.editable = false})
-      : assert(user != null);
+  ViewUserProfileScreen({this.user, this.editable = false});
 
   @override
   _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
@@ -47,13 +48,13 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     super.dispose();
   }
 
-  void _onTapSkillFunction(BuildContext context, Skill skill) {
+  void _onTapSkillFunction(BuildContext context, User user, Skill skill) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ConfirmationDialogScreen(
-        user: widget.user,
+        user: user,
         skill: skill,
         height:
             SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
@@ -63,7 +64,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
               Request.create(
                 skill: skill,
                 comment: comment,
-                receiverId: widget.user.id,
+                receiverId: user.id,
               ),
             ),
           );
@@ -72,9 +73,8 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     );
   }
 
-  Widget _buildItemList(String name, BuildContext context) {
-    final skills =
-        name == 'Offerings' ? widget.user.teachSkill : widget.user.learnSkill;
+  Widget _buildItemList(BuildContext context, String name, User user) {
+    final skills = name == 'Offerings' ? user.teachSkill : user.learnSkill;
 
     return CustomScrollView(
       key: PageStorageKey<String>(name),
@@ -98,7 +98,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                               kHorizontalPaddingBlocks,
                       skill: skill,
                       tapEnabled: tapEnabled && !widget.editable,
-                      onTap: () => _onTapSkillFunction(context, skill),
+                      onTap: () => _onTapSkillFunction(context, user, skill),
                     );
                   },
                   childCount: skills.length,
@@ -117,7 +117,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "${widget.user.displayName} hasn't posted any ${name.toLowerCase()}",
+                        "${user.displayName} hasn't posted any ${name.toLowerCase()}",
                         textAlign: TextAlign.center,
                         style: Theme.of(context)
                             .textTheme
@@ -143,11 +143,202 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildProfileWidget(BuildContext context, User user) {
+    return user != null
+        ? _buildProfile(context, user)
+        : _buildBlocProfile(context);
+  }
+
+  Widget _buildBlocProfile(BuildContext context) {
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (BuildContext context, ProfileState state) {
+        if (state is ProfileUninitialized) {
+          return Container();
+        }
+
+        if (state is ProfileLoading) {
+          return Center(child: CupertinoActivityIndicator());
+        }
+
+        if (state is ProfileLoaded) {
+          final user = state.user;
+          return _buildProfile(context, user);
+        }
+      },
+    );
+  }
+
+  NestedScrollView _buildProfile(BuildContext context, User user) {
     final titleTextStyle = Theme.of(context).textTheme.headline6;
     final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    return NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverToBoxAdapter(
+            child: Container(
+              color: Palette.containerColor,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: SizeConfig.instance.safeBlockHorizontal *
+                          kHorizontalPaddingBlocks,
+                      right: SizeConfig.instance.safeBlockHorizontal *
+                          kHorizontalPaddingBlocks,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: kProfileSize,
+                          child: Row(
+                            children: <Widget>[
+                              ProfilePicture(
+                                photoUrl: user.photoUrl,
+                                shape: BoxShape.circle,
+                                editable: false,
+                                size: kProfileSize,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.topLeft,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig
+                                              .instance.safeBlockHorizontal *
+                                          kHorizontalPaddingBlocks),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          bottom: SizeConfig
+                                                  .instance.safeBlockVertical *
+                                              0.5,
+                                        ),
+                                        child: Text(
+                                          user.displayName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .apply(fontWeightDelta: 2),
+                                        ),
+                                      ),
+                                      Text(
+                                        user.title ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.instance.safeBlockVertical,
+                          ),
+                          child: Text(user.about ?? '', style: bodyTextStyle),
+                        ),
+                        Visibility(
+                          visible: widget.editable,
+                          child: Container(
+                            width: double.infinity,
+                            child: FlatButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => UserProfileScreen(
+                                    userRepository: FirebaseUserRepository(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Edit Profile',
+                                style: Theme.of(context).textTheme.button.apply(
+                                    fontWeightDelta: 1,
+                                    color: Palette.primaryColor),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 1, color: Palette.primaryColor),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.instance.safeBlockVertical * 0.5),
+                          alignment: Alignment.centerLeft,
+                          child: Wrap(
+                              children: user.interests
+                                      ?.map((x) => Padding(
+                                            padding: EdgeInsets.only(
+                                                right: SizeConfig.instance
+                                                        .blockSizeHorizontal *
+                                                    3),
+                                            child: InterestItem(text: x),
+                                          ))
+                                      ?.toList() ??
+                                  []),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  labelColor: Palette.primaryColor,
+                  unselectedLabelColor: Palette.textColor,
+                  labelStyle: titleTextStyle,
+                  // These are the widgets to put in each tab in the tab bar.
+                  tabs: tabs
+                      .map((String name) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: kTabBarTextPadding,
+                            ),
+                            child: Tab(child: Text(name)),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+          ),
+        ];
+      },
+      body: TabBarView(
+        controller: _tabController,
+        children: tabs.map((String name) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: Builder(
+              builder: (BuildContext context) {
+                return _buildItemList(context, name, user);
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
       appBar: AppBar(
@@ -158,175 +349,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
           onPressed: () => Navigator.of(context).maybePop(),
         ),
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                color: Palette.containerColor,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.instance.safeBlockHorizontal *
-                            kHorizontalPaddingBlocks,
-                        right: SizeConfig.instance.safeBlockHorizontal *
-                            kHorizontalPaddingBlocks,
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: kProfileSize,
-                            child: Row(
-                              children: <Widget>[
-                                ProfilePicture(
-                                  photoUrl: widget.user.photoUrl,
-                                  shape: BoxShape.circle,
-                                  editable: false,
-                                  size: kProfileSize,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig
-                                                .instance.safeBlockHorizontal *
-                                            kHorizontalPaddingBlocks),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: SizeConfig.instance
-                                                    .safeBlockVertical *
-                                                0.5,
-                                          ),
-                                          child: Text(
-                                            widget.user.displayName,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .apply(fontWeightDelta: 2),
-                                          ),
-                                        ),
-                                        Text(
-                                          widget.user.title ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.instance.safeBlockVertical,
-                            ),
-                            child: Text(widget.user.about ?? '',
-                                style: bodyTextStyle),
-                          ),
-                          Visibility(
-                            visible: widget.editable,
-                            child: Container(
-                              width: double.infinity,
-                              child: FlatButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) => UserProfileScreen(
-                                      userRepository: FirebaseUserRepository(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Edit Profile',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      .apply(
-                                          fontWeightDelta: 1,
-                                          color: Palette.primaryColor),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        width: 1, color: Palette.primaryColor),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                                top: SizeConfig.instance.safeBlockVertical *
-                                    0.5),
-                            alignment: Alignment.centerLeft,
-                            child: Wrap(
-                                children: widget.user.interests
-                                        ?.map((x) => Padding(
-                                              padding: EdgeInsets.only(
-                                                  right: SizeConfig.instance
-                                                          .blockSizeHorizontal *
-                                                      3),
-                                              child: InterestItem(text: x),
-                                            ))
-                                        ?.toList() ??
-                                    []),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverPersistentHeader(
-                pinned: true,
-                delegate: _SliverAppBarDelegate(
-                  TabBar(
-                    controller: _tabController,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelColor: Palette.primaryColor,
-                    unselectedLabelColor: Palette.textColor,
-                    labelStyle: titleTextStyle,
-                    // These are the widgets to put in each tab in the tab bar.
-                    tabs: tabs
-                        .map((String name) => Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: kTabBarTextPadding,
-                              ),
-                              child: Tab(child: Text(name)),
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: _tabController,
-          children: tabs.map((String name) {
-            return SafeArea(
-              top: false,
-              bottom: false,
-              child: Builder(
-                builder: (BuildContext context) {
-                  return _buildItemList(name, context);
-                },
-              ),
-            );
-          }).toList(),
-        ),
-      ),
+      body: _buildProfileWidget(context, widget.user),
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/group_list_item.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -35,7 +37,14 @@ class MemberListScreen extends StatelessWidget {
                   final member = members[index];
 
                   return GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      BlocProvider.of<ProfileBloc>(context)
+                          .add(LoadProfile(member.id));
+                      Navigator.pushNamed(
+                        context,
+                        ViewUserProfileScreen.routeName,
+                      );
+                    },
                     child: Container(
                       height: itemHeight,
                       decoration: BoxDecoration(
