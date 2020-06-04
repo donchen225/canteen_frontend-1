@@ -126,61 +126,47 @@ class PostRepository {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.set(
-        groupCollection
-            .document(groupId)
-            .collection(postsCollection)
-            .document(postId)
-            .collection(likesCollection)
-            .document(userId),
-        like.toEntity().toDocument(),
-      );
+    final post = groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId);
 
-      await tx.update(
-          groupCollection
-              .document(groupId)
-              .collection(postsCollection)
-              .document(postId),
-          {"like_count": FieldValue.increment(1)});
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      final userLike =
+          await tx.get(post.collection(likesCollection).document(userId));
+
+      if (!(userLike.exists)) {
+        await tx.set(
+          post.collection(likesCollection).document(userId),
+          like.toEntity().toDocument(),
+        );
+
+        await tx.update(post, {"like_count": FieldValue.increment(1)});
+      }
     });
   }
 
   Future<void> deleteLike(String groupId, String postId) async {
-    print('DELETE LIKE');
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    final id = await groupCollection
+    final post = groupCollection
         .document(groupId)
         .collection(postsCollection)
-        .document(postId)
-        .collection(likesCollection)
-        .where('from', isEqualTo: userId)
-        .getDocuments()
-        .then((snapshot) {
-      if (snapshot.documents.isNotEmpty) {
-        return snapshot.documents.first.documentID;
+        .document(postId);
+
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      final userLike =
+          await tx.get(post.collection(likesCollection).document(userId));
+
+      if (!(userLike.exists)) {
+        await tx.delete(
+          post.collection(likesCollection).document(userId),
+        );
+
+        await tx.update(post, {"like_count": FieldValue.increment(-1)});
       }
     });
-
-    if (id != null && id.isNotEmpty) {
-      return Firestore.instance.runTransaction((Transaction tx) async {
-        await tx.delete(groupCollection
-            .document(groupId)
-            .collection(postsCollection)
-            .document(postId)
-            .collection(likesCollection)
-            .document(id));
-
-        await tx.update(
-            groupCollection
-                .document(groupId)
-                .collection(postsCollection)
-                .document(postId),
-            {"like_count": FieldValue.increment(-1)});
-      });
-    }
   }
 
   Future<bool> checkLike(String groupId, String postId) async {
