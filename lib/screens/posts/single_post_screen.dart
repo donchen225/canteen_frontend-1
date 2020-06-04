@@ -159,7 +159,9 @@ class SinglePostScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                GestureDetector(
+                                LikeButton(
+                                  post: post,
+                                  color: _sideTextColor,
                                   onTap: () {
                                     if (!(post.liked)) {
                                       final like = Like(
@@ -177,11 +179,6 @@ class SinglePostScreen extends StatelessWidget {
                                               postId: post.id));
                                     }
                                   },
-                                  child: LikeButton(
-                                    post: post,
-                                    style: secondaryTextTheme,
-                                    sideTextColor: _sideTextColor,
-                                  ),
                                 ),
                                 GestureDetector(
                                   onTap: () {

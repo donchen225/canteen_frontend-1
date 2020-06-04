@@ -142,7 +142,10 @@ class PostListScreen extends StatelessWidget {
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Expanded(
-                                              child: GestureDetector(
+                                              child: LikeButton(
+                                                post: post,
+                                                color: Palette
+                                                    .textSecondaryBaseColor,
                                                 onTap: () {
                                                   if (!(post.liked)) {
                                                     final like = Like(
@@ -165,11 +168,6 @@ class PostListScreen extends StatelessWidget {
                                                             postId: post.id));
                                                   }
                                                 },
-                                                child: LikeButton(
-                                                    post: post,
-                                                    sideTextColor: Palette
-                                                        .textSecondaryBaseColor,
-                                                    style: buttonTextStyle),
                                               ),
                                             ),
                                             Expanded(

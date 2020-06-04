@@ -123,7 +123,9 @@ class PostRepository {
   }
 
   Future<void> addLike(String groupId, String postId, Like like) async {
-    print('ADD LIKE');
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
         groupCollection
@@ -131,7 +133,7 @@ class PostRepository {
             .collection(postsCollection)
             .document(postId)
             .collection(likesCollection)
-            .document(),
+            .document(userId),
         like.toEntity().toDocument(),
       );
 
@@ -190,10 +192,10 @@ class PostRepository {
         .collection(postsCollection)
         .document(postId)
         .collection(likesCollection)
-        .where('from', isEqualTo: userId)
-        .getDocuments()
+        .document(userId)
+        .get()
         .then((snapshot) {
-      return snapshot.documents.isNotEmpty;
+      return snapshot.exists;
     });
   }
 
