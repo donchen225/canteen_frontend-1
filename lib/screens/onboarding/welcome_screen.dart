@@ -11,65 +11,69 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Palette.scaffoldBackgroundLightColor,
         body: Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.instance.safeBlockHorizontal *
-              kLandingHorizontalPaddingBlocks),
-      color: Palette.backgroundColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Container(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical * 9),
-                  child: Text(
-                    'Welcome to Canteen.',
-                    style: TextStyle(fontSize: 33, fontWeight: FontWeight.w800),
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    'The app where you can connect, learn, and earn money.',
-                    style: TextStyle(fontSize: 33, fontWeight: FontWeight.w800),
-                  ),
-                )
-              ],
-            )),
-          ),
-          Flexible(
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.instance.safeBlockHorizontal *
+                  kLandingHorizontalPaddingBlocks),
+          color: Palette.backgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.instance.safeBlockVertical * 9),
+                      child: Text(
+                        'Welcome to Canteen.',
+                        style: TextStyle(
+                            fontSize: 33, fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        'The app where you can connect, learn, and earn money.',
+                        style: TextStyle(
+                            fontSize: 33, fontWeight: FontWeight.w800),
+                      ),
+                    )
+                  ],
+                )),
+              ),
+              Flexible(
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Expanded(
-                        child: MainButton(
-                          height: SizeConfig.instance.safeBlockHorizontal *
-                              (100 - (2 * kLandingHorizontalPaddingBlocks)) /
-                              kButtonAspectRatio,
-                          onPressed: () {
-                            BlocProvider.of<OnboardingBloc>(context)
-                                .add(LoadOnboarding());
-                          },
-                          color: Palette.primaryColor,
-                          text: 'Continue',
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: MainButton(
+                              height: SizeConfig.instance.safeBlockHorizontal *
+                                  (100 -
+                                      (2 * kLandingHorizontalPaddingBlocks)) /
+                                  kButtonAspectRatio,
+                              onPressed: () {
+                                BlocProvider.of<OnboardingBloc>(context)
+                                    .add(LoadOnboarding());
+                              },
+                              color: Palette.primaryColor,
+                              text: 'Continue',
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    ));
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }

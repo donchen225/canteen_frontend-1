@@ -111,7 +111,7 @@ class UpdateTitle extends UserProfileEvent {
   List<Object> get props => [title];
 
   @override
-  String toString() => 'UpdateName { title: $title }';
+  String toString() => 'UpdateTitle { title: $title }';
 }
 
 class EditAvailability extends UserProfileEvent {

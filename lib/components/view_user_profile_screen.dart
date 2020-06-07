@@ -9,6 +9,7 @@ import 'package:canteen_frontend/screens/profile/skill_item.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -256,7 +257,9 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
                                   builder: (context) => UserProfileScreen(
-                                    userRepository: FirebaseUserRepository(),
+                                    userRepository:
+                                        BlocProvider.of<UserBloc>(context)
+                                            .userRepository,
                                   ),
                                 );
                               },
