@@ -15,6 +15,7 @@ class LandingScreen extends StatelessWidget {
     final buttonHeight = SizeConfig.instance.safeBlockHorizontal *
         (100 - (2 * kLandingHorizontalPaddingBlocks)) /
         kButtonAspectRatio;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
 
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundLightColor,
@@ -48,7 +49,7 @@ class LandingScreen extends StatelessWidget {
                         ),
                         Text(
                           'Canteen',
-                          style: Theme.of(context).textTheme.headline3.apply(
+                          style: Theme.of(context).textTheme.headline2.apply(
                               color: Palette.textColor, fontWeightDelta: 1),
                         ),
                       ],
@@ -59,8 +60,8 @@ class LandingScreen extends StatelessWidget {
                       vertical: SizeConfig.instance.safeBlockVertical,
                     ),
                     child: Text(
-                      'The most engaging communication platform for online communities.',
-                      style: Theme.of(context).textTheme.headline4.apply(
+                      'Find what you need & offer your services in our communities.',
+                      style: Theme.of(context).textTheme.headline3.apply(
                             fontWeightDelta: 2,
                             color: Palette.textColor,
                           ),
@@ -125,14 +126,14 @@ class LandingScreen extends StatelessWidget {
                             text: TextSpan(
                               style: Theme.of(context).textTheme.button,
                               children: <TextSpan>[
-                                TextSpan(text: 'Already have an account? '),
                                 TextSpan(
-                                  text: 'Log In',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Palette.textClickableColor,
-                                  ),
-                                ),
+                                    text: 'Already have an account? ',
+                                    style: bodyTextStyle.apply(
+                                        color: Palette.textSecondaryBaseColor)),
+                                TextSpan(
+                                    text: 'Log In',
+                                    style: bodyTextStyle.apply(
+                                        color: Palette.textClickableColor)),
                               ],
                             ),
                           ),
