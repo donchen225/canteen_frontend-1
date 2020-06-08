@@ -21,8 +21,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : assert(userRepository != null),
         assert(authenticationBloc != null),
         _authenticationBloc = authenticationBloc {
-    _authSubscription = _authenticationBloc.listen((state) {
-      if (!(state is Authenticated)) {
+    _authSubscription = _authenticationBloc.listen((authState) {
+      if (!(authState is Authenticated) && !(state is UserEmpty)) {
         print('AUTH BLOC IS NOT AUTHENTICATED, CANCELLING USER SUBSCRIPTION');
         add(LogOutUser());
       }
@@ -30,7 +30,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   @override
-  UserState get initialState => UserLoading();
+  UserState get initialState => UserEmpty();
 
   @override
   Stream<UserState> mapEventToState(

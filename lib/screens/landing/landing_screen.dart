@@ -1,12 +1,13 @@
-import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
-import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_event.dart';
+import 'package:canteen_frontend/screens/login/login_screen.dart';
+import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LandingScreen extends StatelessWidget {
+  static const routeName = '/';
+
   LandingScreen();
 
   @override
@@ -99,9 +100,8 @@ class LandingScreen extends StatelessWidget {
                                 fontWeightDelta: 1,
                                 color: Palette.buttonDarkTextColor),
                           ),
-                          onPressed: () =>
-                              BlocProvider.of<LoginNavigationBloc>(context)
-                                  .add(ViewSignupScreen()),
+                          onPressed: () => Navigator.pushNamed(
+                              context, SignUpScreen.routeName),
                         ),
                       ),
                     ),
@@ -137,9 +137,8 @@ class LandingScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          onPressed: () =>
-                              BlocProvider.of<LoginNavigationBloc>(context)
-                                  .add(ViewLoginScreen()),
+                          onPressed: () => Navigator.pushNamed(
+                              context, LoginScreen.routeName),
                         ),
                       ),
                     ],

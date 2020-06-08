@@ -6,13 +6,13 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/login/login_screen.dart';
+import 'package:canteen_frontend/screens/landing/landing_screen.dart';
+import 'package:canteen_frontend/screens/landing/routes.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/login_navigation/login_navigation_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/profile_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -197,9 +197,11 @@ class App extends StatelessWidget {
                   return SplashScreen();
                 }
                 if (state is Unauthenticated) {
-                  return BlocProvider<LoginNavigationBloc>(
-                    create: (context) => LoginNavigationBloc(),
-                    child: LoginScreen(userRepository: _userRepository),
+                  // return LandingScreen();
+                  return Navigator(
+                    onGenerateRoute: (RouteSettings settings) {
+                      return buildLandingScreenRoutes(settings);
+                    },
                   );
                 }
                 if (state is Authenticated) {
