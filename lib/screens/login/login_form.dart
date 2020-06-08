@@ -166,29 +166,6 @@ class _LoginFormState extends State<LoginForm> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.instance.safeBlockVertical * 4,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Don't have an account? ",
-                      ),
-                      GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, SignUpScreen.routeName),
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: Palette.textClickableColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
               ],
             ),
           );

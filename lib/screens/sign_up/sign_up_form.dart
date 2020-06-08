@@ -36,6 +36,8 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+
     return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if (state.isSuccess) {
@@ -145,15 +147,16 @@ class _SignUpFormState extends State<SignUpForm> {
                     children: <Widget>[
                       Text(
                         'Already have an account? ',
+                        style: bodyTextStyle.apply(
+                            color: Palette.textSecondaryBaseColor),
                       ),
                       GestureDetector(
                           onTap: () => Navigator.pushNamed(
                               context, LoginScreen.routeName),
                           child: Text(
-                            'Sign In',
-                            style: TextStyle(
+                            'Log In',
+                            style: bodyTextStyle.apply(
                               color: Palette.textClickableColor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ))
                     ],
