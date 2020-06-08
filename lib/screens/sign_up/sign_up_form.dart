@@ -48,7 +48,6 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 20,
                 bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
                     kLandingHorizontalPaddingBlocks,
@@ -63,7 +62,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Sign Up',
+                      'Sign Up With Email',
                       style: Theme.of(context).textTheme.headline4.apply(
                             color: Palette.titleColor,
                             fontWeightDelta: 3,

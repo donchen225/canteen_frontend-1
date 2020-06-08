@@ -19,7 +19,6 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       backgroundColor: Palette.scaffoldBackgroundLightColor,
       appBar: AppBar(
         leading: BackButton(

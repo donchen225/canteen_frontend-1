@@ -63,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final headerTextStyle = Theme.of(context).textTheme.headline3.apply(
+    final headerTextStyle = Theme.of(context).textTheme.headline4.apply(
           color: Palette.titleColor,
           fontWeightDelta: 3,
         );
@@ -79,7 +79,7 @@ class _LoginFormState extends State<LoginForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                top: SizeConfig.instance.safeBlockVertical * 20,
+                // top: SizeConfig.instance.safeBlockVertical * 20,
                 bottom: SizeConfig.instance.safeBlockVertical * 20,
                 left: SizeConfig.instance.safeBlockHorizontal *
                     kLandingHorizontalPaddingBlocks,
@@ -94,7 +94,7 @@ class _LoginFormState extends State<LoginForm> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Canteen',
+                      'Log in to Canteen',
                       style: headerTextStyle,
                     ),
                   ),
