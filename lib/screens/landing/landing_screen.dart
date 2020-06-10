@@ -4,6 +4,7 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LandingScreen extends StatelessWidget {
   static const routeName = '/';
@@ -55,8 +56,13 @@ class LandingScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           'Canteen',
-                          style: Theme.of(context).textTheme.headline2.apply(
-                              color: Palette.textColor, fontWeightDelta: 1),
+                          style: GoogleFonts.arvo(
+                            textStyle:
+                                Theme.of(context).textTheme.headline2.apply(
+                                      color: Palette.textColor,
+                                      fontWeightDelta: 1,
+                                    ),
+                          ),
                         ),
                       ],
                     ),
