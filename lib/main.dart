@@ -47,6 +47,7 @@ void main() async {
   final RequestRepository requestRepository = RequestRepository();
   final PostRepository postRepository = PostRepository();
   final VideoChatRepository videoChatRepository = VideoChatRepository();
+  final GroupRepository groupRepository = GroupRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
@@ -113,7 +114,7 @@ void main() async {
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
             userRepository: userRepository,
-            settingBloc: BlocProvider.of<SettingBloc>(context),
+            groupRepository: groupRepository,
           ),
         ),
         BlocProvider<MatchDetailBloc>(
@@ -131,6 +132,7 @@ void main() async {
         requestRepository: requestRepository,
         settingsRepository: settingsRepository,
         postRepository: postRepository,
+        groupRepository: groupRepository,
       ),
     ),
   );
@@ -141,22 +143,25 @@ class App extends StatelessWidget {
   final RequestRepository _requestRepository;
   final SettingsRepository _settingsRepository;
   final PostRepository _postRepository;
-  final GroupRepository _groupRepository = GroupRepository();
+  final GroupRepository _groupRepository;
 
-  App(
-      {Key key,
-      @required UserRepository userRepository,
-      @required RequestRepository requestRepository,
-      @required SettingsRepository settingsRepository,
-      @required PostRepository postRepository})
-      : assert(userRepository != null),
+  App({
+    Key key,
+    @required UserRepository userRepository,
+    @required RequestRepository requestRepository,
+    @required SettingsRepository settingsRepository,
+    @required PostRepository postRepository,
+    @required GroupRepository groupRepository,
+  })  : assert(userRepository != null),
         assert(requestRepository != null),
         assert(settingsRepository != null),
         assert(postRepository != null),
+        assert(groupRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
         _settingsRepository = settingsRepository,
         _postRepository = postRepository,
+        _groupRepository = groupRepository,
         super(key: key);
 
   @override

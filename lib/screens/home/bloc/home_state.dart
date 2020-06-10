@@ -11,9 +11,14 @@ abstract class HomeState extends Equatable {
 
 class HomeUninitialized extends HomeState {}
 
-class HomeInitializing extends HomeState {}
+class HomeLoading extends HomeState {}
 
-class HomeLoaded extends HomeState {}
+class HomeLoaded extends HomeState {
+  HomeLoaded();
+
+  @override
+  String toString() => 'HomeLoaded';
+}
 
 class OnboardScreenLoaded extends HomeState {
   OnboardScreenLoaded();

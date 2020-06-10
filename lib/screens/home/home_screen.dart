@@ -28,6 +28,7 @@ import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -203,19 +204,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BlocListener<HomeBloc, HomeState>(
           listener: (BuildContext context, HomeState state) {
-            print('HOME SCREEN BLOC LISTENER INITIALIZED');
             if (state is HomeLoaded) {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
               BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
+
+              BlocProvider.of<SettingBloc>(context)
+                  .add(InitializeSettings(hasOnboarded: true));
             }
           },
           child: BlocBuilder<HomeBloc, HomeState>(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              if (state is HomeUninitialized || state is OnboardScreenLoaded) {
+              if (state is HomeUninitialized ||
+                  state is OnboardScreenLoaded ||
+                  state is HomeLoading) {
                 return Visibility(visible: false, child: Container());
               }
 
@@ -268,9 +273,23 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<HomeBloc, HomeState>(
         bloc: _homeBloc,
         builder: (BuildContext context, HomeState state) {
-          if (state is HomeUninitialized || state is HomeInitializing) {
+          if (state is HomeUninitialized) {
             return Container(
               color: Palette.containerColor,
+            );
+          }
+
+          if (state is HomeLoading) {
+            return Center(
+              child: Container(
+                height: SizeConfig.instance.blockSizeHorizontal * 30,
+                width: SizeConfig.instance.blockSizeHorizontal * 30,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/loading-icon.png'),
+                  ),
+                ),
+              ),
             );
           }
 

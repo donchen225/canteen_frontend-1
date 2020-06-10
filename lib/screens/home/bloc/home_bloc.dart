@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
@@ -7,17 +8,15 @@ import 'package:meta/meta.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UserRepository _userRepository;
-  final SettingBloc _settingBloc;
-  int _previousIndex = 0;
-  int currentIndex = 0;
+  final GroupRepository _groupRepository;
 
   HomeBloc(
       {@required UserRepository userRepository,
-      @required SettingBloc settingBloc})
+      @required GroupRepository groupRepository})
       : assert(userRepository != null),
-        assert(settingBloc != null),
+        assert(groupRepository != null),
         _userRepository = userRepository,
-        _settingBloc = settingBloc;
+        _groupRepository = groupRepository;
 
   @override
   HomeState get initialState => HomeUninitialized();
@@ -37,20 +36,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final user = await _userRepository.currentUser();
 
     if (user.onBoarded != null && user.onBoarded == 1) {
-      yield HomeInitializing();
-
-      // Load user settings
-      _settingBloc.add(InitializeSettings(hasOnboarded: true));
-
       yield HomeLoaded();
-      // yield RecommendedScreenLoaded();
     } else {
       yield OnboardScreenLoaded();
     }
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {
-    // Upload user settings here
+    yield HomeLoading();
+
+    try {
+      await _groupRepository.joinGroup("HxuOLXcLsIBmTxp0ToiQ");
+    } catch (e) {
+      print('Error joining Canteen group: $e');
+    }
+
     yield HomeLoaded();
   }
 

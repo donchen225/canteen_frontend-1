@@ -62,8 +62,6 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
     final buttonTextStyle = Theme.of(context).textTheme.button;
     final nextFunction = () {
       BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding());
-      BlocProvider.of<SettingBloc>(context)
-          .add(InitializeSettings(hasOnboarded: true));
       BlocProvider.of<HomeBloc>(context).add(InitializeHome());
     };
 
