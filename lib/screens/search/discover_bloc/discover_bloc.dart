@@ -49,7 +49,7 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
         : Future.value(_latestUsers);
 
     final groupsFuture = _latestGroups.length == 0
-        ? _groupRepository.getAllGroups()
+        ? _groupRepository.getAllGroups(ignoreMainGroup: false)
         : Future.value(_latestGroups);
 
     await Future.wait<void>([

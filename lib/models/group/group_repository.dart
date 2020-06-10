@@ -68,10 +68,12 @@ class GroupRepository {
   }
 
   // TODO: remove this function
-  Future<List<Group>> getAllGroups() async {
+  Future<List<Group>> getAllGroups({bool ignoreMainGroup = true}) async {
     return groupCollection.limit(10).getDocuments().then((querySnapshot) {
-      final docs = querySnapshot.documents
-        ..removeWhere((doc) => doc.documentID == 'HxuOLXcLsIBmTxp0ToiQ');
+      final docs = ignoreMainGroup
+          ? (querySnapshot.documents
+            ..removeWhere((doc) => doc.documentID == 'HxuOLXcLsIBmTxp0ToiQ'))
+          : querySnapshot.documents;
 
       return docs
           .map((documentSnapshot) =>
