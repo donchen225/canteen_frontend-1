@@ -83,7 +83,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
             Text('Canteen',
                 style: Theme.of(context)
                     .textTheme
-                    .headline5
+                    .headline6
                     .apply(color: Palette.textColor)),
             Container(
               width: kProfileIconSize,

@@ -25,7 +25,6 @@ class NotificationScreen extends StatelessWidget {
             Text(
               'Notifications',
               style: Theme.of(context).textTheme.headline6.apply(
-                    fontFamily: '.SF UI Text',
                     color: Palette.appBarTextColor,
                   ),
             ),
