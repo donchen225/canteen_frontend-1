@@ -15,6 +15,7 @@ import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
@@ -268,24 +269,21 @@ class _HomeScreenState extends State<HomeScreen> {
         bloc: _homeBloc,
         builder: (BuildContext context, HomeState state) {
           if (state is HomeUninitialized || state is HomeInitializing) {
-            return Center(
-              child: Container(
-                height: SizeConfig.instance.blockSizeHorizontal * 30,
-                width: SizeConfig.instance.blockSizeHorizontal * 30,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/loading-icon.png'),
-                  ),
-                ),
-              ),
+            return Container(
+              color: Palette.containerColor,
             );
           }
 
           if (state is OnboardScreenLoaded) {
             return BlocProvider<OnboardingBloc>(
-              create: (context) =>
-                  OnboardingBloc(userRepository: widget._userRepository),
-              child: OnboardingScreen(),
+              create: (context) => OnboardingBloc(
+                  userRepository: widget._userRepository,
+                  groupRepository: _groupRepository),
+              child: Navigator(
+                onGenerateRoute: (RouteSettings settings) {
+                  return buildOnboardingScreenRoutes(settings);
+                },
+              ),
             );
           }
 

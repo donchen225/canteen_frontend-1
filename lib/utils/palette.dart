@@ -16,7 +16,7 @@ class Palette {
   static Color buttonDarkTextColor = const Color(0xFFFFFFFF);
   static Color buttonInvalidBackgroundColor = const Color(0xFFEDEDED);
   static Color buttonInvalidTextColor = const Color(0xFFCDCDCD);
-  static Color disabledButtonColor = const Color(0xFF9E9E9E);
+  static Color disabledButtonPrimaryColor = const Color(0x661877F2);
 
   // Settings colors
   static Color tabSelectedColor = const Color(0xFFE0E0E0);
@@ -26,7 +26,6 @@ class Palette {
   static Color appBarTextColor = const Color(0xFF303030);
 
   // Body colors
-  static Color backgroundColor = const Color(0xFFF8F8F8);
   static Color scaffoldBackgroundDarkColor = const Color(0xFFEDEFF1);
   static Color scaffoldBackgroundLightColor = const Color(0xFFFFFFFF);
   static Color containerColor = const Color(0xFFFFFFFF);
@@ -40,6 +39,7 @@ class Palette {
   static Color textColor = const Color(0xFF000000);
   static Color textClickableColor = const Color(0xFF2196F3);
   static Color textSecondaryBaseColor = const Color(0xFF9E9E9E);
+  static Color textErrorColor = const Color(0xFFF44336);
 
   // Border colors
   static Color borderSeparatorColor = const Color(0xFFE0E0E0);

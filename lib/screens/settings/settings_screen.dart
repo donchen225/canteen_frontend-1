@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
@@ -88,6 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onTap: () {
                   BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
                       .add(ClearBadgeCounts());
+                  BlocProvider.of<HomeBloc>(context).add(ClearHome());
                   BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                   BlocProvider.of<RequestBloc>(context).add(ClearRequests());
                   BlocProvider.of<SettingBloc>(context).add(ClearSettings());

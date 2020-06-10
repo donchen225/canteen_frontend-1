@@ -69,10 +69,14 @@ class GroupRepository {
 
   // TODO: remove this function
   Future<List<Group>> getAllGroups() async {
-    return groupCollection.limit(10).getDocuments().then((querySnapshot) =>
-        querySnapshot.documents
-            .map((documentSnapshot) =>
-                Group.fromEntity(GroupEntity.fromSnapshot(documentSnapshot)))
-            .toList());
+    return groupCollection.limit(10).getDocuments().then((querySnapshot) {
+      final docs = querySnapshot.documents
+        ..removeWhere((doc) => doc.documentID == 'HxuOLXcLsIBmTxp0ToiQ');
+
+      return docs
+          .map((documentSnapshot) =>
+              Group.fromEntity(GroupEntity.fromSnapshot(documentSnapshot)))
+          .toList();
+    });
   }
 }

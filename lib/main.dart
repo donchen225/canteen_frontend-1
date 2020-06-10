@@ -197,7 +197,6 @@ class App extends StatelessWidget {
                   return SplashScreen();
                 }
                 if (state is Unauthenticated) {
-                  // return LandingScreen();
                   return Navigator(
                     onGenerateRoute: (RouteSettings settings) {
                       return buildLandingScreenRoutes(settings);

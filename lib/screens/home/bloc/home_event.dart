@@ -30,3 +30,5 @@ class InitializeHome extends HomeEvent {
   @override
   String toString() => 'InitializeHome';
 }
+
+class ClearHome extends HomeEvent {}

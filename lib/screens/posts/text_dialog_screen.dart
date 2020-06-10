@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/components/dialog_screen.dart';
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 

@@ -21,12 +21,22 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundLightColor,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         leading: BackButton(
           onPressed: () => Navigator.maybePop(context),
           color: Palette.primaryColor,
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        title: Container(
+          height: kToolbarHeight - 10,
+          width: kToolbarHeight - 10,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/loading-icon.png'),
+            ),
+          ),
+        ),
       ),
       body: BlocProvider<SignUpBloc>(
         create: (context) => SignUpBloc(userRepository: _userRepository),

@@ -28,6 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapCheckOnboardStatusToState();
     } else if (event is InitializeHome) {
       yield* _mapInitializeHomeToState();
+    } else if (event is ClearHome) {
+      yield* _mapClearHomeToState();
     }
   }
 
@@ -50,5 +52,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapInitializeHomeToState() async* {
     // Upload user settings here
     yield HomeLoaded();
+  }
+
+  Stream<HomeState> _mapClearHomeToState() async* {
+    yield HomeUninitialized();
   }
 }

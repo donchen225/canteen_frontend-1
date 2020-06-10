@@ -75,19 +75,10 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  Future<void> updateUserOnboarding(
-    String name,
-    Skill skill,
-  ) {
-    final skillTypeField = '${skill.type.toString().split('.').last}_skill';
+  Future<void> completeOnboarding() {
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.update(userCollection.document(_firebaseUser.uid), {
-        "display_name": name,
         "onboarded": 1,
-        "$skillTypeField.0.name": skill.name,
-        "$skillTypeField.0.price": skill.price,
-        "$skillTypeField.0.duration": skill.duration,
-        "$skillTypeField.0.description": skill.description,
       });
     });
   }

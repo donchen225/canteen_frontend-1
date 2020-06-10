@@ -16,18 +16,22 @@ class AddIcon extends StatelessWidget {
         height: size / 4,
         width: size / 4,
         decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Palette.backgroundColor,
-          ),
-          color: Palette.primaryColor,
+          color: Colors.white,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: size / 6,
+        child: Container(
+          height: (size / 4) - 4,
+          width: (size / 4) - 4,
+          decoration: BoxDecoration(
+            color: Palette.primaryColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: size / 6,
+          ),
         ),
       ),
     );

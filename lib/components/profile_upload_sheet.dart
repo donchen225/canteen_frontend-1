@@ -22,7 +22,7 @@ class ProfileUploadSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
       title: Text(
-        'Change Profile Photo',
+        'Upload Profile Picture',
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,

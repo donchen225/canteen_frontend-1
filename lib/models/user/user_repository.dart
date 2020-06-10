@@ -46,5 +46,5 @@ abstract class UserRepository {
 
   Future<void> updateTimeZone(int timeZoneOffset) {}
 
-  Future<void> updateUserOnboarding(String name, Skill skill) async {}
+  Future<void> completeOnboarding() async {}
 }

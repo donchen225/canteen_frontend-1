@@ -48,7 +48,12 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController = TextEditingController();
     _skillDescriptionController = TextEditingController();
 
-    skill = Skill('', '', 0, 30, widget.skillType);
+    skill = Skill(
+        name: '',
+        description: '',
+        price: 0,
+        duration: 30,
+        type: widget.skillType);
   }
 
   @override
@@ -139,11 +144,11 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             _userProfileBloc.add(UpdateSkill(
                 widget.user,
                 Skill(
-                    _skillNameController.text,
-                    _skillDescriptionController.text,
-                    price,
-                    duration,
-                    widget.skillType),
+                    name: _skillNameController.text,
+                    description: _skillDescriptionController.text,
+                    price: price,
+                    duration: duration,
+                    type: widget.skillType),
                 widget.skillType,
                 widget.skillIndex ?? 0));
           } else {

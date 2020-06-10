@@ -176,7 +176,7 @@ class _MatchDetailEventSelectionScreenState
                       right: SizeConfig.instance.blockSizeHorizontal * 6,
                     ),
                     color: Palette.primaryColor,
-                    disabledColor: Palette.disabledButtonColor,
+                    disabledColor: Palette.disabledButtonPrimaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
