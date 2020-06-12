@@ -37,14 +37,11 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
   double markerSize = 35.0;
   int eventDuration;
   int eventDiff = 30;
-  final Color mainColor = Colors.orange;
   Map<Day, List<Tuple2<int, int>>> localTimeRanges;
 
   @override
   void initState() {
     super.initState();
-
-    print('INIT CALENDAR STATE');
 
     startDate = DateTime(now.year, now.month, now.day);
     endDate = startDate.add(Duration(days: availableDateRange));
@@ -105,7 +102,9 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
         height: markerSize,
         child: Text(
           day.day.toString(),
-          style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Palette.textSecondaryBaseColor,
+              fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -119,7 +118,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
         width: markerSize,
         height: markerSize,
         decoration: BoxDecoration(
-          color: mainColor,
+          color: Palette.primaryColor,
           shape: BoxShape.circle,
           borderRadius: null,
         ),
@@ -141,7 +140,8 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
           height: markerSize,
           child: Text(
             day.day.toString(),
-            style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Palette.primaryColor, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -176,7 +176,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
       width: markerSize,
       height: markerSize,
       decoration: BoxDecoration(
-        color: mainColor.withOpacity(0.1),
+        color: Palette.primaryColor.withOpacity(0.1),
         shape: BoxShape.circle,
         borderRadius: null,
       ),

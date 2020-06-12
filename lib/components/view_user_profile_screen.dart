@@ -2,7 +2,6 @@ import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
-import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
@@ -230,7 +229,10 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                         user.title ?? '',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1,
+                                            .bodyText2
+                                            .apply(
+                                                color: Palette
+                                                    .textSecondaryBaseColor),
                                       ),
                                     ],
                                   ),
@@ -277,8 +279,6 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(
-                              top: SizeConfig.instance.safeBlockVertical * 0.5),
                           alignment: Alignment.centerLeft,
                           child: Wrap(
                               children: user.interests

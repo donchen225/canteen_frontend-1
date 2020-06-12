@@ -80,7 +80,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
             decoration: InputDecoration(border: InputBorder.none),
             keyboardType: TextInputType.multiline,
             maxLength:
-                300, // TODO: move character counter to bottom right corner of container
+                400, // TODO: move character counter to bottom right corner of container
             maxLines: null,
           ),
         ),
