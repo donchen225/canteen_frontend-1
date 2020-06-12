@@ -75,7 +75,10 @@ class ProfileCard extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             user.title ?? '',
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .apply(color: Palette.textSecondaryBaseColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -137,7 +140,7 @@ class ProfileCard extends StatelessWidget {
                                         duration,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle2
+                                            .subtitle1
                                             .apply(
                                               color: Palette.primaryColor,
                                               fontWeightDelta: 2,
@@ -159,7 +162,7 @@ class ProfileCard extends StatelessWidget {
                                         '\$${skill.price}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle2
+                                            .subtitle1
                                             .apply(
                                               color: Palette.titleColor,
                                               fontWeightDelta: 2,

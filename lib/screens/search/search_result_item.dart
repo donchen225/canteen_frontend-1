@@ -68,7 +68,8 @@ class SearchResultItem extends StatelessWidget {
                       visible: user.title?.isNotEmpty ?? false,
                       child: Text(
                         user.title ?? '',
-                        style: nameStyle.apply(color: Colors.grey[500]),
+                        style: nameStyle.apply(
+                            color: Palette.textSecondaryBaseColor),
                         maxLines: 1,
                       ),
                     ),

@@ -32,7 +32,7 @@ class PostNameTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline6;
-    final secondaryTextStyle = Theme.of(context).textTheme.bodyText2;
+    final secondaryTextStyle = Theme.of(context).textTheme.subtitle1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

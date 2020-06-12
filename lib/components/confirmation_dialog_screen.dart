@@ -177,7 +177,8 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                           '${widget.user.title ?? ''}',
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          style: subTitleStyle,
+                          style: subTitleStyle.apply(
+                              color: Palette.textSecondaryBaseColor),
                         ),
                       ],
                     ),
@@ -199,22 +200,24 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                   ),
                   child: Text(
                     '${widget.skill.name ?? ''}',
-                    style: subTitleStyle.apply(
-                      fontWeightDelta: 2,
-                    ),
+                    style: titleStyle,
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
                     bottom: SizeConfig.instance.safeBlockVertical,
                   ),
-                  child: Text(widget.skill.description),
+                  child: Text(
+                    widget.skill.description,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
                 ),
                 Text(
                   '\$${(widget.skill.price).toString()}' +
                       (widget.skill.duration != null
                           ? ' / ${widget.skill.duration} minutes'
                           : ''),
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ],
             ),

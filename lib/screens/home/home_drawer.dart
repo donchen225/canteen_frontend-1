@@ -37,7 +37,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final userName =
         CachedSharedPreferences.getString(PreferenceConstants.userName);
     final titleStyle = Theme.of(context).textTheme.headline6;
-    final subtitleStyle = Theme.of(context).textTheme.subtitle2.apply(
+    final subtitleStyle = Theme.of(context).textTheme.subtitle1.apply(
           color: Palette.textSecondaryBaseColor,
         );
 

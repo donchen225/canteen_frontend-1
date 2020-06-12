@@ -85,7 +85,7 @@ class _MemberItemState extends State<MemberItem> {
                     ),
                     child: Text(
                       widget.member.title,
-                      style: Theme.of(context).textTheme.bodyText2.apply(
+                      style: Theme.of(context).textTheme.subtitle1.apply(
                             color: Palette.textSecondaryBaseColor,
                           ),
                     ),

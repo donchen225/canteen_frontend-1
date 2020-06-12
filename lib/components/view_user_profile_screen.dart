@@ -229,7 +229,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen>
                                         user.title ?? '',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText2
+                                            .subtitle1
                                             .apply(
                                                 color: Palette
                                                     .textSecondaryBaseColor),

@@ -199,7 +199,7 @@ class DiscoverScreen extends StatelessWidget {
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
                       right: SizeConfig.instance.safeBlockHorizontal * 6,
                     ),
-                    child: Text('Most Requested',
+                    child: Text('Most Popular',
                         style: Theme.of(context).textTheme.headline5.apply(
                               fontFamily: '.SF UI Text',
                               fontWeightDelta: 2,

@@ -97,7 +97,7 @@ class _ProfileListState extends State<ProfileList>
                           ),
                           Text(
                             widget.user.title ?? '',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
                         ],
                       ),
