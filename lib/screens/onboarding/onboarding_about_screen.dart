@@ -21,7 +21,7 @@ class OnboardingAboutScreen extends StatefulWidget {
 class _OnboardingAboutScreenState extends State<OnboardingAboutScreen> {
   TextEditingController _aboutController;
   bool _nextEnabled;
-  final int _textFieldMaxChars = 200;
+  final int _textFieldMaxChars = 300;
   FocusNode _focusNode;
 
   void initState() {
