@@ -48,12 +48,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController = TextEditingController();
     _skillDescriptionController = TextEditingController();
 
-    skill = Skill(
-        name: '',
-        description: '',
-        price: 0,
-        duration: 30,
-        type: widget.skillType);
+    _setSkill();
   }
 
   @override
@@ -62,6 +57,30 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController.dispose();
     _skillDescriptionController.dispose();
     super.dispose();
+  }
+
+  void _setSkill() {
+    final skillList = widget.skillType == SkillType.teach
+        ? widget.user.teachSkill
+        : widget.user.learnSkill;
+
+    if (widget.skillIndex < skillList.length) {
+      skill = skillList[widget.skillIndex];
+    } else {
+      skill = Skill(
+          name: '',
+          description: '',
+          price: 0,
+          duration: 30,
+          type: widget.skillType);
+    }
+
+    _skillNameController.text = skill.name;
+    _skillPriceController.text = skill.price.toString();
+    _skillDescriptionController.text = skill.description;
+    _initialDurationIndex = durationOptions.indexOf(skill.duration);
+    _initialDurationIndex =
+        _initialDurationIndex != -1 ? _initialDurationIndex : 0;
   }
 
   Widget _buildDurationPicker(BuildContext context) {
@@ -112,21 +131,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
 
   @override
   Widget build(BuildContext context) {
-    final skillList = widget.skillType == SkillType.teach
-        ? widget.user.teachSkill
-        : widget.user.learnSkill;
-
-    if (widget.skillIndex < skillList.length) {
-      skill = skillList[widget.skillIndex];
-    }
-
-    _skillNameController.text = skill.name;
-    _skillPriceController.text = skill.price.toString();
-    _skillDescriptionController.text = skill.description;
-    _initialDurationIndex = durationOptions.indexOf(skill.duration);
-    _initialDurationIndex =
-        _initialDurationIndex != -1 ? _initialDurationIndex : 0;
-
     return DialogScreen(
       title: 'Edit ${widget.skillType == SkillType.teach ? "Offering" : "Ask"}',
       onCancel: () => _userProfileBloc.add(LoadUserProfile(widget.user)),
