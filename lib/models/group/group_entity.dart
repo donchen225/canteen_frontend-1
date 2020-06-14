@@ -6,6 +6,7 @@ class GroupEntity extends Equatable {
   final String id;
   final String name;
   final String description;
+  final String photoUrl;
   final List<String> tags;
   final String type;
   final int posts;
@@ -17,6 +18,7 @@ class GroupEntity extends Equatable {
       {@required this.id,
       @required this.name,
       @required this.description,
+      @required this.photoUrl,
       @required this.tags,
       @required this.type,
       @required this.posts,
@@ -28,6 +30,7 @@ class GroupEntity extends Equatable {
     return {
       'id': id,
       'name': name,
+      'photo_url': photoUrl,
       'description': description,
       'tags': tags,
       'type': type,
@@ -42,6 +45,7 @@ class GroupEntity extends Equatable {
   List<Object> get props => [
         id,
         name,
+        photoUrl,
         description,
         tags,
         type,
@@ -53,13 +57,14 @@ class GroupEntity extends Equatable {
 
   @override
   String toString() {
-    return 'GroupEntity { id: $id, name: $name, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'GroupEntity { id: $id, name: $name, photoUrl: $photoUrl, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static GroupEntity fromJson(Map<String, Object> json) {
     return GroupEntity(
       id: json['id'] as String,
       name: json['name'] as String,
+      photoUrl: json['photo_url'] as String,
       description: json['description'] as String,
       tags: json['tags'] as List<String>,
       type: json['type'] as String,
@@ -74,6 +79,7 @@ class GroupEntity extends Equatable {
     return GroupEntity(
       id: snapshot.documentID,
       name: snapshot.data['name'],
+      photoUrl: snapshot.data['photo_url'],
       description: snapshot.data['description'],
       tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
           [],
@@ -89,6 +95,7 @@ class GroupEntity extends Equatable {
     return {
       'id': id,
       'name': name,
+      'photo_url': photoUrl,
       'description': description,
       'tags': tags,
       'type': type,

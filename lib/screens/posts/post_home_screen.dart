@@ -1,9 +1,12 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -80,11 +83,20 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               userPhotoUrl: userPhotoUrl,
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            Text('Canteen',
+            SearchBar(
+              height: kToolbarHeight * 0.7,
+              width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                  kProfileIconSize * 2 -
+                  NavigationToolbar.kMiddleSpacing * 4,
+              color: Colors.grey[200],
+              child: Text(
+                "Search Group",
                 style: Theme.of(context)
                     .textTheme
-                    .headline6
-                    .apply(color: Palette.textColor)),
+                    .bodyText1
+                    .apply(color: Palette.textSecondaryBaseColor),
+              ),
+            ),
             Container(
               width: kProfileIconSize,
             )
@@ -102,6 +114,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
             visible: _showFAB && visible,
             child: FloatingActionButton(
               child: Icon(Icons.add),
+              backgroundColor: Palette.primaryColor,
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -189,13 +202,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                 Container(
                                   child: Row(
                                     children: <Widget>[
-                                      // ProfilePicture(
-                                      //   photoUrl: userPhotoUrl,
-                                      //   shape: BoxShape.circle,
-                                      //   editable: false,
-                                      //   size: kProfileSize,
-                                      // ),
-                                      AppLogo(
+                                      GroupPicture(
+                                        photoUrl: group.photoUrl,
+                                        shape: BoxShape.circle,
                                         size: kProfileSize,
                                       ),
                                       Expanded(

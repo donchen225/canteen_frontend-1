@@ -40,40 +40,42 @@ class CommentContainer extends StatelessWidget {
                 size: SizeConfig.instance.safeBlockHorizontal * 12,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.safeBlockHorizontal * 2,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      ViewUserProfileScreen.routeName,
-                      arguments: UserArguments(
-                        user: comment.user,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.safeBlockHorizontal * 2,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        ViewUserProfileScreen.routeName,
+                        arguments: UserArguments(
+                          user: comment.user,
+                        ),
+                      ),
+                      child: PostNameTemplate(
+                        name: comment.user.displayName,
+                        title: comment.user.title,
+                        photoUrl: comment.user.photoUrl,
+                        time: comment.createdOn,
+                        color: Palette.textSecondaryBaseColor,
+                        showDate: true,
                       ),
                     ),
-                    child: PostNameTemplate(
-                      name: comment.user.displayName,
-                      title: comment.user.title,
-                      photoUrl: comment.user.photoUrl,
-                      time: comment.createdOn,
-                      color: Palette.textSecondaryBaseColor,
-                      showDate: true,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.instance.safeBlockVertical),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        comment.message,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.safeBlockVertical),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      comment.message,
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

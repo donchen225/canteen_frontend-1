@@ -7,6 +7,7 @@ class Group extends Equatable {
   final String id;
   final String name;
   final String description;
+  final String photoUrl;
   final List<String> tags;
   final String type;
   final int posts;
@@ -17,6 +18,7 @@ class Group extends Equatable {
   const Group(
       {@required this.id,
       @required this.name,
+      @required this.photoUrl,
       @required this.description,
       @required this.tags,
       @required this.type,
@@ -29,6 +31,7 @@ class Group extends Equatable {
   List<Object> get props => [
         id,
         name,
+        photoUrl,
         description,
         tags,
         type,
@@ -40,13 +43,14 @@ class Group extends Equatable {
 
   @override
   String toString() {
-    return 'Group { id: $id, name: $name, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'Group { id: $id, name: $name, photoUrl: $photoUrl, description: $description, tags: $tags, type: $type, posts: $posts, members: $members, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Group fromEntity(GroupEntity entity) {
     return Group(
       id: entity.id,
       name: entity.name,
+      photoUrl: entity.photoUrl,
       description: entity.description,
       tags: entity.tags,
       type: entity.type,
@@ -61,6 +65,7 @@ class Group extends Equatable {
     return GroupEntity(
       id: id,
       name: name,
+      photoUrl: photoUrl,
       description: description,
       tags: tags,
       type: type,
@@ -79,6 +84,7 @@ class DetailedGroup extends Group {
       {@required id,
       @required name,
       @required description,
+      @required photoUrl,
       @required tags,
       @required type,
       @required posts,
@@ -90,6 +96,7 @@ class DetailedGroup extends Group {
             id: id,
             name: name,
             description: description,
+            photoUrl: photoUrl,
             tags: tags,
             type: type,
             posts: posts,
@@ -102,6 +109,7 @@ class DetailedGroup extends Group {
         id: group.id,
         name: group.name,
         description: group.description,
+        photoUrl: group.photoUrl,
         tags: group.tags,
         type: group.type,
         posts: group.posts,

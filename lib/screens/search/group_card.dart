@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/custom_card.dart';
+import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
@@ -32,11 +33,14 @@ class GroupCard extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: <Widget>[
-          Expanded(
-              flex: 3,
-              child: AppLogo(
-                size: height * 0.25,
-              )),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: height * 0.08),
+            child: GroupPicture(
+              photoUrl: group.photoUrl,
+              shape: BoxShape.circle,
+              size: height * 0.25,
+            ),
+          ),
           Expanded(
             flex: 4,
             child: Padding(
@@ -60,7 +64,7 @@ class GroupCard extends StatelessWidget {
                   ),
                   Text(
                     group.description,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     style: bodyTextStyle,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
@@ -69,7 +73,8 @@ class GroupCard extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
+          Padding(
+            padding: EdgeInsets.only(bottom: height * 0.06),
             child: Text(
               '${group.members.toString()} members',
               style: subtitleStyle.apply(color: Palette.textSecondaryBaseColor),
