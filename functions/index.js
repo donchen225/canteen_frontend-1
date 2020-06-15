@@ -381,17 +381,43 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
     fcm.sendToDevice(tokens, payload);
 });
 
-exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate((change, context) => {
+exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(async (change, context) => {
 
-    const docBeforeChange = change.before.data()
-    const docAfterChange = change.after.data()
+    const userId = context.params.userId;
+    const docBeforeChange = change.before.data();
+    const docAfterChange = change.after.data();
 
     if (docBeforeChange && docAfterChange) {
+
+        const titleBefore = docBeforeChange.title;
+        const titleAfter = docAfterChange.title;
+
+        const nameBefore = docBeforeChange.display_name;
+        const nameAfter = docAfterChange.display_name;
+
+        const photoBefore = docBeforeChange.photo_url;
+        const photoAfter = docAfterChange.photo_url;
 
         const learnSkillBefore = Object.values(docBeforeChange.learn_skill);
         const teachSkillBefore = Object.values(docBeforeChange.teach_skill);
         const learnSkillAfter = Object.values(docAfterChange.learn_skill);
         const teachSkillAfter = Object.values(docAfterChange.teach_skill);
+
+        if (titleBefore !== titleAfter || nameBefore !== nameAfter || photoBefore !== photoAfter) {
+            const groupIds = await firestore.collection(USER_COLLECTION).doc(userId).collection('groups').get().then((querySnapshot) => {
+                return querySnapshot.docs.map((doc) => doc.id);
+            }).catch((error) => {
+                console.log(error);
+            });
+
+            groupIds.forEach((id) => {
+                firestore.collection(GROUPS_COLLECTION).doc(id).collection('members').doc(userId).set({
+                    "title": titleAfter,
+                    "display_name": nameAfter,
+                    "photo_url": photoAfter,
+                }, { merge: true });
+            });
+        }
 
         var updated = false;
 
@@ -409,8 +435,6 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                     updated = true;
                 }
             });
-        } else {
-            updated = true;
         }
 
         if (updated) {
@@ -446,7 +470,6 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
             if (docAfterChange.time_zone) {
                 record.time_zone = docAfterChange.time_zone;
             }
-
 
             // Write to the algolia index
             return collectionIndex.saveObject(record);
