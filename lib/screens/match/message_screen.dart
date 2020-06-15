@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/screens/match/match_list.dart';
+import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -82,7 +82,7 @@ class _MessageScreenState extends State<MessageScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[MatchList(), RequestScreen()],
+        children: <Widget>[MatchListScreen(), RequestScreen()],
       ),
     );
   }

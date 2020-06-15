@@ -1,19 +1,26 @@
-import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen_frontend/models/match/match.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MatchItem extends StatelessWidget {
+  final String displayName;
+  final String photoUrl;
+  final String message;
+  final DateTime time;
   final GestureTapCallback onTap;
-  final DetailedMatch match;
 
-  MatchItem({Key key, @required this.onTap, @required this.match})
-      : super(key: key);
+  MatchItem({
+    Key key,
+    this.displayName = '',
+    this.photoUrl = '',
+    this.message = '',
+    @required this.time,
+    @required this.onTap,
+  }) : super(key: key);
 
   String formatTime(DateTime time) {
     String t = timeago
@@ -27,11 +34,6 @@ class MatchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (BlocProvider.of<AuthenticationBloc>(context).state as Authenticated)
-            .user;
-    final opponentList = match.userList.where((u) => u.id != user.uid).toList();
-
     return GestureDetector(
       onTap: onTap,
       child: AspectRatio(
@@ -54,7 +56,7 @@ class MatchItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     ProfilePicture(
-                      photoUrl: opponentList[0].photoUrl,
+                      photoUrl: photoUrl,
                       editable: false,
                       size: constraints.maxHeight * 0.75,
                     ),
@@ -75,7 +77,7 @@ class MatchItem extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  opponentList[0].displayName ?? '',
+                                  displayName,
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
@@ -84,9 +86,7 @@ class MatchItem extends StatelessWidget {
                             Expanded(
                               flex: 3,
                               child: Text(
-                                match.lastMessage != null
-                                    ? (match.lastMessage as TextMessage).text
-                                    : '',
+                                message,
                                 textAlign: TextAlign.start,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -106,7 +106,7 @@ class MatchItem extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Text(
-                      formatTime(match.lastUpdated),
+                      formatTime(time),
                     ),
                   ),
                 )
