@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
+import 'package:canteen_frontend/models/notification/notification_repository.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
@@ -12,9 +13,10 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/notification_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
@@ -42,6 +44,7 @@ class HomeScreen extends StatefulWidget {
   final RequestRepository _requestRepository;
   final SettingsRepository _settingsRepository;
   final PostRepository _postRepository;
+  final NotificationRepository _notificationRepository;
 
   HomeScreen({
     Key key,
@@ -49,14 +52,17 @@ class HomeScreen extends StatefulWidget {
     @required RequestRepository requestRepository,
     @required SettingsRepository settingsRepository,
     @required PostRepository postRepository,
+    @required NotificationRepository notificationRepository,
   })  : assert(userRepository != null),
         assert(requestRepository != null),
         assert(settingsRepository != null),
         assert(postRepository != null),
+        assert(notificationRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
         _settingsRepository = settingsRepository,
         _postRepository = postRepository,
+        _notificationRepository = notificationRepository,
         super(key: key);
 
   @override
@@ -401,11 +407,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  Navigator(
-                    key: _notificationScreen,
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildNotificationScreenRoutes(settings);
-                    },
+                  BlocProvider<NotificationBloc>(
+                    create: (context) => NotificationBloc(
+                      userRepository: widget._userRepository,
+                      notificationRepository: widget._notificationRepository,
+                    )..add(LoadNotifications()),
+                    child: Navigator(
+                      key: _notificationScreen,
+                      onGenerateRoute: (RouteSettings settings) {
+                        return buildNotificationScreenRoutes(settings);
+                      },
+                    ),
                   ),
                 ],
               ),

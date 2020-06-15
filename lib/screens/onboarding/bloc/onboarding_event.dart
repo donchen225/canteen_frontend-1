@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 

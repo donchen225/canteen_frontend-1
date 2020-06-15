@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/group/group_repository.dart';
+import 'package:canteen_frontend/models/notification/notification_repository.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
@@ -6,7 +7,6 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/landing/landing_screen.dart';
 import 'package:canteen_frontend/screens/landing/routes.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
@@ -48,6 +48,8 @@ void main() async {
   final PostRepository postRepository = PostRepository();
   final VideoChatRepository videoChatRepository = VideoChatRepository();
   final GroupRepository groupRepository = GroupRepository();
+  final NotificationRepository notificationRepository =
+      NotificationRepository();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
@@ -133,6 +135,7 @@ void main() async {
         settingsRepository: settingsRepository,
         postRepository: postRepository,
         groupRepository: groupRepository,
+        notificationRepository: notificationRepository,
       ),
     ),
   );
@@ -144,6 +147,7 @@ class App extends StatelessWidget {
   final SettingsRepository _settingsRepository;
   final PostRepository _postRepository;
   final GroupRepository _groupRepository;
+  final NotificationRepository _notificationRepository;
 
   App({
     Key key,
@@ -152,16 +156,19 @@ class App extends StatelessWidget {
     @required SettingsRepository settingsRepository,
     @required PostRepository postRepository,
     @required GroupRepository groupRepository,
+    @required NotificationRepository notificationRepository,
   })  : assert(userRepository != null),
         assert(requestRepository != null),
         assert(settingsRepository != null),
         assert(postRepository != null),
         assert(groupRepository != null),
+        assert(notificationRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
         _settingsRepository = settingsRepository,
         _postRepository = postRepository,
         _groupRepository = groupRepository,
+        _notificationRepository = notificationRepository,
         super(key: key);
 
   @override
@@ -237,6 +244,7 @@ class App extends StatelessWidget {
                       requestRepository: _requestRepository,
                       settingsRepository: _settingsRepository,
                       postRepository: _postRepository,
+                      notificationRepository: _notificationRepository,
                     ),
                   );
                 }

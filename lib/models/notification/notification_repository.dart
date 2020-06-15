@@ -14,7 +14,7 @@ class NotificationRepository {
 
   NotificationRepository();
 
-  Future<Tuple2<List<Notification>, DocumentSnapshot>> getPosts(
+  Future<Tuple2<List<Notification>, DocumentSnapshot>> getNotifications(
       {DocumentSnapshot startAfterDocument}) {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
