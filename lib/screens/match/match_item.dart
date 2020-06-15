@@ -3,7 +3,6 @@ import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MatchItem extends StatelessWidget {
@@ -42,8 +41,8 @@ class MatchItem extends StatelessWidget {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.05,
-              bottom: constraints.maxHeight * 0.05,
+              top: constraints.maxHeight * 0.15,
+              bottom: constraints.maxHeight * 0.15,
               left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
@@ -58,13 +57,11 @@ class MatchItem extends StatelessWidget {
                     ProfilePicture(
                       photoUrl: photoUrl,
                       editable: false,
-                      size: constraints.maxHeight * 0.75,
+                      size: constraints.maxHeight * 0.7,
                     ),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(
-                            top: constraints.maxHeight * 0.15,
-                            bottom: constraints.maxHeight * 0.15,
                             left: constraints.maxWidth * 0.04,
                             right: constraints.maxWidth * 0.02),
                         child: Column(
@@ -73,23 +70,37 @@ class MatchItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Expanded(
-                              flex: 3,
-                              child: Align(
+                              child: Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  displayName,
-                                  textAlign: TextAlign.start,
-                                  style: Theme.of(context).textTheme.headline6,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      displayName,
+                                      textAlign: TextAlign.start,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                    Text(
+                                      formatTime(time),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
                             Expanded(
                               flex: 3,
-                              child: Text(
-                                message,
-                                textAlign: TextAlign.start,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: constraints.maxHeight * 0.07,
+                                ),
+                                child: Text(
+                                  message,
+                                  textAlign: TextAlign.start,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ],
@@ -98,18 +109,6 @@ class MatchItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: constraints.maxHeight * 0.1,
-                    horizontal: constraints.maxWidth * 0.05,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      formatTime(time),
-                    ),
-                  ),
-                )
               ],
             ),
           );
