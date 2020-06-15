@@ -6,11 +6,11 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
-class DetailedRequestGrid extends StatelessWidget {
+class RequestList extends StatelessWidget {
   final List<DetailedRequest> items;
   final key;
 
-  DetailedRequestGrid({@required this.items, this.key}) : super(key: key);
+  RequestList({@required this.items, this.key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
