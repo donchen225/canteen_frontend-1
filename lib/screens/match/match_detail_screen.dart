@@ -39,11 +39,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
           fontSize: 12,
           fontWeight: FontWeight.bold,
         )),
-    Text('PROFILE',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        )),
   ];
 
   @override
@@ -156,9 +151,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                       match: widget.match,
                       userDates: null,
                       partnerDates: null,
-                    ),
-                    ViewUserProfileScreen(
-                      user: prospect,
                     ),
                   ],
                 );
