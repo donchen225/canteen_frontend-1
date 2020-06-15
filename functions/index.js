@@ -458,6 +458,68 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
     // fcm.sendToDevice(tokens, payload);
 });
 
+exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{postId}/likes/{likeId}').onCreate(async (snap, context) => {
+
+    const data = snap.data();
+    const groupId = context.params.groupId;
+    const postId = context.params.postId;
+    const likeId = context.params.likeId;
+
+    const fromUserId = data.from;
+    const createdOn = data.created_on;
+
+    const notification = {
+        "from": fromUserId,
+        "object_id": likeId,
+        "read": false,
+    };
+
+    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    const postUserId = post.from;
+
+    const userNotificationRef = firestore.collection(NOTIFICATION_COLLECTION).doc(postUserId);
+
+    userNotificationRef.set({
+        "read": false,
+        "last_updated": createdOn
+    }, { merge: true });
+
+    const notificationId = `${postId}-like`;
+
+    const notificationRef = userNotificationRef.collection('notifications').doc(notificationId);
+
+    notificationRef.collection('child_notifications').doc(likeId).set({
+        "from": fromUserId,
+        "created_on": createdOn,
+    }, { merge: true });
+
+    return notificationRef.get().then((docSnapshot) => {
+        if (!docSnapshot.exists) {
+            notification["verb"] = "like";
+            notification["object"] = "like";
+            notification["target"] = "post";
+            notification["target_id"] = postId;
+            notification["count"] = 1;
+            notification["created_on"] = createdOn;
+            notification["last_updated"] = createdOn;
+
+            return notificationRef.set(notification);
+        } else {
+            const data = docSnapshot.data();
+            notification["count"] = data.count + 1;
+
+            return notificationRef.set(notification, { merge: true });
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+});
+
 exports.countPostComments = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onWrite(async (change, context) => {
 
     const groupId = context.params.groupId;
@@ -980,6 +1042,7 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    // Change this to separate trigger
     firestore.collection(GROUPS_COLLECTION).doc(groupId).update({ members: admin.firestore.FieldValue.increment(1) });
 
     // Create user group document
