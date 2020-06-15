@@ -11,6 +11,7 @@ const REQUEST_COLLECTION = 'requests';
 const GROUPS_COLLECTION = 'groups';
 const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
+const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
 const VIDEO_CHAT_COLLECTION = 'video_chat';
 
@@ -379,6 +380,75 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
     };
 
     fcm.sendToDevice(tokens, payload);
+});
+
+exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onCreate(async (snap, context) => {
+
+    const data = snap.data();
+    const groupId = context.params.groupId;
+    const postId = context.params.postId;
+    const commentId = context.params.commentId;
+
+    const fromUserId = data.from;
+    const message = data.message;
+    const createdOn = data.created_on;
+
+    const notification = {
+        "from": fromUserId,
+        "verb": "comment",
+        "target": "post",
+        "target_id": postId,
+        "object": "comment",
+        "object": commentId,
+        "data": message,
+        "count": 1,
+        "read": false,
+        "created_on": createdOn,
+        "last_updated": createdOn,
+    };
+
+    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get();
+
+    const postUserId = post.from;
+
+    const notificationRef = firestore.collection(NOTIFICATION_COLLECTION).doc(postUserId).collection('notifications');
+
+    notificationRef.get().then((docSnapshot) => {
+        if (!docSnapshot.exists) {
+            notificationRef.set(notification);
+        }
+
+        notificationRef.collection('child_notifications').doc(commentId).set();
+    });
+
+    // const querySnapshot = await firestore
+    //     .collection(USER_COLLECTION)
+    //     .doc(userId)
+    //     .collection('tokens')
+    //     .get();
+
+    // const tokens = querySnapshot.docs.map(snap => snap.id);
+
+    // if (!Array.isArray(tokens) || !tokens.length) {
+    //     console.log("Token doesn't exist")
+    //     return;
+    // }
+
+    // const sender = await firestore
+    //     .collection(USER_COLLECTION)
+    //     .doc(senderId).get();
+    // const senderData = sender.data();
+
+    // const payload = {
+    //     notification: {
+    //         title: senderData.display_name,
+    //         body: message,
+    //         // icon: 'your-icon-url',
+    //         click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+    //     }
+    // };
+
+    // fcm.sendToDevice(tokens, payload);
 });
 
 exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(async (change, context) => {
