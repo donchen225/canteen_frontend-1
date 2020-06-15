@@ -131,10 +131,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
             ),
             child: Text(
               widget.post.message,
-              style: TextStyle(
-                fontSize: SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
           Padding(
