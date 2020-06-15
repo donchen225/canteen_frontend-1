@@ -120,10 +120,30 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
     _postRepository.addLike(event.groupId, event.postId, event.like);
+
+    var posts = _postList[event.groupId]
+        .map((post) => (post as DetailedPost).copy())
+        .toList();
+
+    final postIdx = posts.indexWhere((post) => post.id == event.postId);
+    posts[postIdx] = posts[postIdx].incrementLikeCount();
+    _postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
     _postRepository.deleteLike(event.groupId, event.postId);
+
+    var posts = _postList[event.groupId]
+        .map((post) => (post as DetailedPost).copy())
+        .toList();
+
+    final postIdx = posts.indexWhere((post) => post.id == event.postId);
+    posts[postIdx] = posts[postIdx].decrementLikeCount();
+    _postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {

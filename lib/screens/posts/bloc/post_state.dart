@@ -14,13 +14,16 @@ class PostsLoaded extends PostState {
   final String groupId;
   final List<DetailedPost> posts;
 
-  const PostsLoaded({this.groupId, this.posts = const []});
+  const PostsLoaded({this.groupId, this.posts});
 
   @override
-  List<Object> get props => [posts];
+  List<Object> get props => [
+        groupId,
+        posts,
+      ];
 
   @override
-  String toString() => 'PostsLoaded { posts: $posts }';
+  String toString() => 'PostsLoaded';
 }
 
 class PostsPrivate extends PostState {}

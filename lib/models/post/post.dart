@@ -65,6 +65,32 @@ class Post extends Equatable {
       createdOn: createdOn,
     );
   }
+
+  Post incrementLikeCount() {
+    return Post(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount + 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+    );
+  }
+
+  Post decrementLikeCount() {
+    return Post(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount - 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+    );
+  }
 }
 
 class DetailedPost extends Post {
@@ -92,6 +118,20 @@ class DetailedPost extends Post {
             lastUpdated: lastUpdated,
             createdOn: createdOn);
 
+  @override
+  List<Object> get props => [
+        id,
+        from,
+        message,
+        tags,
+        commentCount,
+        likeCount,
+        lastUpdated,
+        createdOn,
+        user,
+        liked,
+      ];
+
   static DetailedPost fromPost(
     Post post,
     User user,
@@ -106,6 +146,51 @@ class DetailedPost extends Post {
       likeCount: post.likeCount,
       createdOn: post.createdOn,
       lastUpdated: post.lastUpdated,
+      user: user,
+      liked: liked,
+    );
+  }
+
+  DetailedPost incrementLikeCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount + 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: true,
+    );
+  }
+
+  DetailedPost decrementLikeCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount - 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: false,
+    );
+  }
+
+  DetailedPost copy() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
       user: user,
       liked: liked,
     );
