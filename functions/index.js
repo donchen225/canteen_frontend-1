@@ -399,7 +399,7 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
         "target": "post",
         "target_id": postId,
         "object": "comment",
-        "object": commentId,
+        "object_id": commentId,
         "data": message,
         "count": 1,
         "read": false,
@@ -415,11 +415,18 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
 
     notificationRef.get().then((docSnapshot) => {
         if (!docSnapshot.exists) {
-            notificationRef.set(notification);
+            return notificationRef.set(notification);
         }
-
-        notificationRef.collection('child_notifications').doc(commentId).set();
+        return;
+    }).catch((error) => {
+        console.log(error);
     });
+
+    notificationRef.collection('child_notifications').doc(commentId).set({
+        "data": message,
+        "from": fromUserId,
+        "created_on": createdOn,
+    }, { merge: true });
 
     // const querySnapshot = await firestore
     //     .collection(USER_COLLECTION)
@@ -449,6 +456,34 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
     // };
 
     // fcm.sendToDevice(tokens, payload);
+});
+
+exports.countPostComments = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onWrite(async (change, context) => {
+
+    const groupId = context.params.groupId;
+    const postId = context.params.postId;
+
+    if (!change.before.exists) {
+        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).update({ "comment_count": admin.firestore.FieldValue.increment(1) });
+    } else if (!change.after.exists) {
+        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).update({ "comment_count": admin.firestore.FieldValue.increment(-1) });
+    }
+
+    return;
+});
+
+exports.countPostLikes = functions.firestore.document('groups/{groupId}/posts/{postId}/likes/{likeId}').onWrite(async (change, context) => {
+
+    const groupId = context.params.groupId;
+    const postId = context.params.postId;
+
+    if (!change.before.exists) {
+        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).update({ "like_count": admin.firestore.FieldValue.increment(1) });
+    } else if (!change.after.exists) {
+        return firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).update({ "like_count": admin.firestore.FieldValue.increment(-1) });
+    }
+
+    return;
 });
 
 exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(async (change, context) => {

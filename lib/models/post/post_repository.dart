@@ -101,7 +101,6 @@ class PostRepository {
 
   Future<void> addComment(
       String groupId, String postId, Comment comment) async {
-    print('ADD COMMENT');
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
         groupCollection
@@ -112,13 +111,6 @@ class PostRepository {
             .document(),
         comment.toEntity().toDocument(),
       );
-
-      await tx.update(
-          groupCollection
-              .document(groupId)
-              .collection(postsCollection)
-              .document(postId),
-          {"comment_count": FieldValue.increment(1)});
     });
   }
 
@@ -140,8 +132,6 @@ class PostRepository {
           post.collection(likesCollection).document(userId),
           like.toEntity().toDocument(),
         );
-
-        await tx.update(post, {"like_count": FieldValue.increment(1)});
       }
     });
   }
@@ -150,23 +140,13 @@ class PostRepository {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    final post = groupCollection
+    return groupCollection
         .document(groupId)
         .collection(postsCollection)
-        .document(postId);
-
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      final userLike =
-          await tx.get(post.collection(likesCollection).document(userId));
-
-      if (!(userLike.exists)) {
-        await tx.delete(
-          post.collection(likesCollection).document(userId),
-        );
-
-        await tx.update(post, {"like_count": FieldValue.increment(-1)});
-      }
-    });
+        .document(postId)
+        .collection(likesCollection)
+        .document(userId)
+        .delete();
   }
 
   Future<bool> checkLike(String groupId, String postId) async {
