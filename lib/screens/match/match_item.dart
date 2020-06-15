@@ -1,19 +1,25 @@
-import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen_frontend/models/match/match.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MatchItem extends StatelessWidget {
+  final String displayName;
+  final String photoUrl;
+  final String message;
+  final DateTime time;
   final GestureTapCallback onTap;
-  final DetailedMatch match;
 
-  MatchItem({Key key, @required this.onTap, @required this.match})
-      : super(key: key);
+  MatchItem({
+    Key key,
+    this.displayName = '',
+    this.photoUrl = '',
+    this.message = '',
+    @required this.time,
+    @required this.onTap,
+  }) : super(key: key);
 
   String formatTime(DateTime time) {
     String t = timeago
@@ -27,11 +33,6 @@ class MatchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        (BlocProvider.of<AuthenticationBloc>(context).state as Authenticated)
-            .user;
-    final opponentList = match.userList.where((u) => u.id != user.uid).toList();
-
     return GestureDetector(
       onTap: onTap,
       child: AspectRatio(
@@ -40,8 +41,8 @@ class MatchItem extends StatelessWidget {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.05,
-              bottom: constraints.maxHeight * 0.05,
+              top: constraints.maxHeight * 0.15,
+              bottom: constraints.maxHeight * 0.15,
               left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
@@ -54,15 +55,13 @@ class MatchItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     ProfilePicture(
-                      photoUrl: opponentList[0].photoUrl,
+                      photoUrl: photoUrl,
                       editable: false,
-                      size: constraints.maxHeight * 0.75,
+                      size: constraints.maxHeight * 0.7,
                     ),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(
-                            top: constraints.maxHeight * 0.15,
-                            bottom: constraints.maxHeight * 0.15,
                             left: constraints.maxWidth * 0.04,
                             right: constraints.maxWidth * 0.02),
                         child: Column(
@@ -71,25 +70,37 @@ class MatchItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Expanded(
-                              flex: 3,
-                              child: Align(
+                              child: Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  opponentList[0].displayName ?? '',
-                                  textAlign: TextAlign.start,
-                                  style: Theme.of(context).textTheme.headline6,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      displayName,
+                                      textAlign: TextAlign.start,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                    Text(
+                                      formatTime(time),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
                             Expanded(
                               flex: 3,
-                              child: Text(
-                                match.lastMessage != null
-                                    ? (match.lastMessage as TextMessage).text
-                                    : '',
-                                textAlign: TextAlign.start,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: constraints.maxHeight * 0.07,
+                                ),
+                                child: Text(
+                                  message,
+                                  textAlign: TextAlign.start,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ],
@@ -98,18 +109,6 @@ class MatchItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: constraints.maxHeight * 0.1,
-                    horizontal: constraints.maxWidth * 0.05,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      formatTime(match.lastUpdated),
-                    ),
-                  ),
-                )
               ],
             ),
           );

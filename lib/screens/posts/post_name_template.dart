@@ -67,6 +67,8 @@ class PostNameTemplate extends StatelessWidget {
             child: Text(
               title ?? '',
               style: secondaryTextStyle.apply(color: color),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

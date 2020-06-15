@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -148,7 +149,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               Visibility(
                                 visible: currentGroup != null,
                                 child: DrawerItem(
-                                  leading: AppLogo(
+                                  leading: GroupPicture(
+                                    photoUrl: currentGroup.photoUrl,
+                                    shape: BoxShape.circle,
                                     size: 30,
                                   ),
                                   padding: EdgeInsets.symmetric(
@@ -204,7 +207,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           itemBuilder: (BuildContext context, int index) {
                             final group = userGroups[index];
                             return DrawerItem(
-                              leading: AppLogo(
+                              leading: GroupPicture(
+                                photoUrl: group.photoUrl,
+                                shape: BoxShape.circle,
                                 size: 30,
                               ),
                               padding: EdgeInsets.symmetric(

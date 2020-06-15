@@ -26,6 +26,7 @@ class NotificationScreen extends StatelessWidget {
               'Notifications',
               style: Theme.of(context).textTheme.headline6.apply(
                     color: Palette.appBarTextColor,
+                    fontWeightDelta: 2,
                   ),
             ),
             Container(

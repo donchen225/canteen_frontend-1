@@ -4,7 +4,7 @@ import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
-import 'package:canteen_frontend/screens/posts/post_button.dart';
+import 'package:canteen_frontend/screens/posts/action_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
@@ -103,7 +103,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
     return TextDialogScreen(
       title: 'Request Time',
       height: widget.height,
-      sendWidget: PostButton(
+      sendWidget: ActionButton(
           text: 'Send',
           enabled: _selectedTime != null,
           onTap: (BuildContext context) {

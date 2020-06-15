@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/screens/profile/availability_picker.dart';
@@ -86,10 +87,8 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
     return DialogScreen(
       title: 'Edit ${widget.fieldName}',
       onCancel: () => widget.onCancelNavigation(),
-      sendWidget: GestureDetector(
-        onTap: () {
-          print('ON TAP DONE');
-
+      sendWidget: ConfirmButton(
+        onTap: (BuildContext context) {
           if (startTime != widget.startTime || endTime != widget.endTime) {
             final startTimeSeconds =
                 (startTime.hour * 60 + startTime.minute) * 60;
@@ -108,14 +107,6 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
             widget.onCompleteNavigation();
           }
         },
-        child: Text(
-          'Done',
-          style: TextStyle(
-            fontSize: 14,
-            color: Palette.primaryColor,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ),
       child: Container(
           padding: EdgeInsets.only(

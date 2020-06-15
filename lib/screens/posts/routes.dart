@@ -4,9 +4,7 @@ import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/post_home_screen.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
-import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 MaterialPageRoute buildPostScreenRoutes(RouteSettings settings, {Key homeKey}) {
   return MaterialPageRoute(

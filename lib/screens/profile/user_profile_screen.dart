@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
@@ -104,18 +105,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
       return DialogScreen(
         title: 'Edit Profile',
-        sendWidget: GestureDetector(
-          onTap: () {
+        sendWidget: ConfirmButton(
+          onTap: (_) {
             Navigator.of(context).maybePop();
           },
-          child: Container(
-            alignment: Alignment.center,
-            child: Text('Done',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .apply(color: Palette.primaryColor)),
-          ),
         ),
         child: ListView(
           padding: EdgeInsets.only(

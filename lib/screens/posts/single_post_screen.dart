@@ -78,17 +78,19 @@ class SinglePostScreen extends StatelessWidget {
                                       SizeConfig.instance.safeBlockHorizontal *
                                           12,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig
-                                            .instance.safeBlockHorizontal *
-                                        2,
-                                  ),
-                                  child: PostNameTemplate(
-                                    name: post.user.displayName,
-                                    title: post.user.title,
-                                    photoUrl: post.user.photoUrl,
-                                    showDate: false,
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig
+                                              .instance.safeBlockHorizontal *
+                                          2,
+                                    ),
+                                    child: PostNameTemplate(
+                                      name: post.user.displayName,
+                                      title: post.user.title,
+                                      photoUrl: post.user.photoUrl,
+                                      showDate: false,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -221,6 +223,7 @@ class SinglePostScreen extends StatelessWidget {
 
                       return ListView.builder(
                           shrinkWrap: true,
+                          reverse: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: state.comments.length,
                           itemBuilder: (BuildContext context, int index) {

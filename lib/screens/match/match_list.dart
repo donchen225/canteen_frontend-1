@@ -1,41 +1,46 @@
+import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/match/arguments.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:canteen_frontend/screens/match/match_item.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/match_item.dart';
-
 class MatchList extends StatelessWidget {
-  MatchList({Key key}) : super(key: key);
+  const MatchList({
+    Key key,
+    @required this.matches,
+  }) : super(key: key);
+
+  final List<DetailedMatch> matches;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MatchListBloc, MatchListState>(
-      builder: (matchContext, matchState) {
-        if (matchState is MatchListLoading) {
-          return Center(child: CupertinoActivityIndicator());
-        } else if (matchState is MatchListLoaded) {
-          final matches = matchState.matchList;
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-          return ListView.builder(
-            itemCount: matches.length,
-            itemBuilder: (context, index) {
-              final match = matches[index];
+    return ListView.builder(
+      itemCount: matches.length,
+      itemBuilder: (context, index) {
+        final match = matches[index];
+        final partner =
+            match.userList.where((u) => u.id != userId).toList().first;
 
-              return MatchItem(
-                  match: match,
-                  onTap: () async {
-                    BlocProvider.of<MatchDetailBloc>(context)
-                        .add(LoadMatchDetails(match: match));
-                    Navigator.of(context).pushNamed(MatchDetailScreen.routeName,
-                        arguments: MatchArguments(match: match));
-                  });
-            },
-          );
-        }
+        return MatchItem(
+            displayName: partner.displayName,
+            photoUrl: partner.photoUrl,
+            message: match.lastMessage != null
+                ? (match.lastMessage as TextMessage).text
+                : '',
+            time: match.lastUpdated,
+            onTap: () async {
+              BlocProvider.of<MatchDetailBloc>(context)
+                  .add(LoadMatchDetails(match: match));
+              Navigator.of(context).pushNamed(MatchDetailScreen.routeName,
+                  arguments: MatchArguments(match: match));
+            });
       },
     );
   }
