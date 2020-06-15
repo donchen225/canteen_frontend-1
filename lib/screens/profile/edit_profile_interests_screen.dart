@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
@@ -53,24 +54,14 @@ class _EditProfileInterestsScreenState
     return DialogScreen(
       title: 'Edit ${widget.fieldName}',
       onCancel: () => widget.onCancelNavigation(),
-      sendWidget: GestureDetector(
-        onTap: () {
+      sendWidget: ConfirmButton(
+        onTap: (_) {
           if (widget.initialItems != interests) {
-            print('UPDATING INTERESTS');
             widget.onComplete(interests);
           } else {
-            print('NOT UPDATING INTERESTS');
             widget.onCompleteNavigation();
           }
         },
-        child: Text(
-          'Done',
-          style: TextStyle(
-            fontSize: 14,
-            color: Palette.primaryColor,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 40),

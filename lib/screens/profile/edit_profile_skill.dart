@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
@@ -134,8 +135,8 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     return DialogScreen(
       title: 'Edit ${widget.skillType == SkillType.teach ? "Offering" : "Ask"}',
       onCancel: () => _userProfileBloc.add(LoadUserProfile(widget.user)),
-      sendWidget: GestureDetector(
-        onTap: () {
+      sendWidget: ConfirmButton(
+        onTap: (_) {
           final price = int.parse(_skillPriceController.text);
           final duration =
               durationOptions[_selectedDurationIndex ?? _initialDurationIndex];
@@ -144,7 +145,6 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
               skill.price != price ||
               skill.description != _skillDescriptionController.text ||
               skill.duration != duration) {
-            print('UPDATING SKILL');
             _userProfileBloc.add(UpdateSkill(
                 widget.user,
                 Skill(
@@ -156,18 +156,9 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                 widget.skillType,
                 widget.skillIndex ?? 0));
           } else {
-            print('NOT UPDATING SKILL');
             _userProfileBloc.add(LoadUserProfile(widget.user));
           }
         },
-        child: Text(
-          'Done',
-          style: TextStyle(
-            fontSize: 14,
-            color: Palette.primaryColor,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ),
       child: ListView(
         padding: EdgeInsets.only(

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/cancel_button.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -39,19 +40,14 @@ class DialogScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
+                  CancelButton(
+                    onTap: (BuildContext context) {
                       if (onCancel != null) {
                         onCancel();
                       } else {
                         Navigator.of(context).maybePop();
                       }
                     },
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text('Cancel',
-                          style: Theme.of(context).textTheme.button),
-                    ),
                   ),
                   Text(title, style: Theme.of(context).textTheme.headline6),
                   sendWidget != null

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -45,22 +46,14 @@ class _EditProfileShortInfoScreenState
     return DialogScreen(
       title: 'Edit ${widget.fieldName}',
       onCancel: () => widget.onCancelNavigation(),
-      sendWidget: GestureDetector(
-        onTap: () {
+      sendWidget: ConfirmButton(
+        onTap: (_) {
           if (widget.initialText != _textController.text) {
             widget.onComplete(_textController.text);
           } else {
             widget.onCompleteNavigation();
           }
         },
-        child: Text(
-          'Done',
-          style: TextStyle(
-            fontSize: 14,
-            color: Palette.primaryColor,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.25,

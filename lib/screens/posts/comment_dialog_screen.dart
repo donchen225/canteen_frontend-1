@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/screens/posts/action_button.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -54,7 +54,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
     return TextDialogScreen(
       title: 'Add Comment',
       height: widget.height,
-      sendWidget: PostButton(
+      sendWidget: ActionButton(
           text: 'Send',
           enabled: _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
