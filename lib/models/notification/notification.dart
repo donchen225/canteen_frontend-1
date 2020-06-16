@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/notification/notification_entity.dart';
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -83,6 +84,77 @@ class Notification extends Equatable {
       read: read,
       createdOn: createdOn,
       lastUpdated: lastUpdated,
+    );
+  }
+}
+
+class DetailedNotification extends Notification {
+  final User user;
+
+  DetailedNotification({
+    @required id,
+    @required from,
+    @required verb,
+    @required target,
+    @required targetId,
+    @required object,
+    @required objectId,
+    @required data,
+    @required count,
+    @required read,
+    @required createdOn,
+    @required lastUpdated,
+    @required this.user,
+  }) : super(
+          id: id,
+          from: from,
+          verb: verb,
+          target: target,
+          targetId: targetId,
+          object: object,
+          objectId: objectId,
+          data: data,
+          count: count,
+          read: read,
+          createdOn: createdOn,
+          lastUpdated: lastUpdated,
+        );
+
+  @override
+  List<Object> get props => [
+        id,
+        from,
+        verb,
+        target,
+        targetId,
+        object,
+        objectId,
+        data,
+        count,
+        read,
+        createdOn,
+        lastUpdated,
+        user
+      ];
+
+  static DetailedNotification fromNotification(
+    Notification notification,
+    User user,
+  ) {
+    return DetailedNotification(
+      id: notification.id,
+      from: notification.from,
+      verb: notification.verb,
+      target: notification.target,
+      targetId: notification.targetId,
+      object: notification.object,
+      objectId: notification.objectId,
+      data: notification.data,
+      count: notification.count,
+      read: notification.read,
+      createdOn: notification.createdOn,
+      lastUpdated: notification.lastUpdated,
+      user: user,
     );
   }
 }

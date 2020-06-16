@@ -1,8 +1,11 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/notifications/notification_list.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NotificationScreen extends StatelessWidget {
   static const routeName = '/';
@@ -11,6 +14,8 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+
+    print('NOTIFICATION SCREEN');
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +41,18 @@ class NotificationScreen extends StatelessWidget {
         ),
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
+      ),
+      body: BlocBuilder<NotificationBloc, NotificationState>(
+        builder: (BuildContext context, NotificationState state) {
+          print('STATE: $state');
+          if (state is NotificationsLoaded) {
+            final notifications = state.notifications;
+
+            return NotificationList(notifications: notifications);
+          }
+
+          return Container();
+        },
       ),
     );
   }

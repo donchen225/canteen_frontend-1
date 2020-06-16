@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/notifications/bloc/notification_state.d
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:quiver/iterables.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final UserRepository _userRepository;
@@ -37,7 +38,16 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       LoadNotifications event) async* {
     final notifications = await _notificationRepository.getNotifications();
 
-    _notifications = notifications.item1;
+    final userList =
+        await Future.wait(notifications.item1.map((notification) async {
+      return _userRepository.getUser(notification.from);
+    }));
+
+    final detailedNotifications = zip([notifications.item1, userList])
+        .map((item) => DetailedNotification.fromNotification(item[0], item[1]))
+        .toList();
+
+    _notifications = detailedNotifications;
     _lastNotification = notifications.item2;
 
     yield NotificationsLoaded(notifications: _notifications);

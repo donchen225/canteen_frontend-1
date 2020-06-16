@@ -74,7 +74,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
     try {
       final posts = await _postRepository.getPosts(event.groupId);
-      print('POSTS: $posts');
       add(PostsUpdated(groupId: event.groupId, updates: posts));
     } on PlatformException catch (error) {
       if (error.code == 'Error 7') {

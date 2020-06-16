@@ -4,18 +4,20 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class MatchItem extends StatelessWidget {
-  final String displayName;
+class NotificationItem extends StatelessWidget {
+  final String name;
   final String photoUrl;
-  final String message;
+  final String type;
+  final String data;
   final DateTime time;
   final GestureTapCallback onTap;
 
-  MatchItem({
+  NotificationItem({
     Key key,
-    this.displayName = '',
+    this.name = '',
     this.photoUrl = '',
-    this.message = '',
+    this.type = '',
+    this.data = '',
     @required this.time,
     @required this.onTap,
   }) : super(key: key);
@@ -27,7 +29,13 @@ class MatchItem extends StatelessWidget {
         .replaceFirst('~', '')
         .replaceFirst('min', 'm');
 
-    return t == 'now' ? t : '$t ago';
+    return t == 'now' ? t : '$t';
+  }
+
+  String _generateMessage(String type) {
+    if (type == 'like') {
+      return 'liked your post.';
+    }
   }
 
   @override
@@ -66,42 +74,45 @@ class MatchItem extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: constraints.maxHeight * 0.03,
+                              ),
+                              child: RichText(
+                                textAlign: TextAlign.start,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  style: Theme.of(context).textTheme.bodyText1,
                                   children: [
-                                    Text(
-                                      displayName,
-                                      textAlign: TextAlign.start,
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+                                    TextSpan(
+                                      text: '$name',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .apply(
+                                            fontWeightDelta: 2,
+                                          ),
                                     ),
-                                    Text(
-                                      formatTime(time),
-                                    )
+                                    TextSpan(
+                                        text:
+                                            ' ${_generateMessage(type)} $data'),
                                   ],
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: constraints.maxHeight * 0.07,
-                                ),
-                                child: Text(
-                                  message,
-                                  textAlign: TextAlign.start,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                formatTime(time),
+                                style:
+                                    Theme.of(context).textTheme.bodyText2.apply(
+                                          color: Palette.textSecondaryBaseColor,
+                                        ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),

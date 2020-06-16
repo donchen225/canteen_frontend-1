@@ -23,6 +23,10 @@ service cloud.firestore {
       allow read, write: if isAuthenticated();
     }
 
+    match /notifications/{userId}/notifications/{document=**} {
+      allow read: if isOwner(userId);
+    }
+
     match /posts/{postId} {
       allow read, write: if isAuthenticated();
     }
