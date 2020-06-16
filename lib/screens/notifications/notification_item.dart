@@ -1,26 +1,50 @@
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
+import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class NotificationItem extends StatelessWidget {
+class NotificationItem extends StatefulWidget {
   final String name;
   final String photoUrl;
   final String type;
+  final int count;
   final String data;
+  final String targetId;
+  final String parentId;
+  final bool read;
   final DateTime time;
-  final GestureTapCallback onTap;
 
   NotificationItem({
     Key key,
     this.name = '',
     this.photoUrl = '',
     this.type = '',
+    this.count = 0,
     this.data = '',
+    this.read = false,
+    this.targetId = '',
+    this.parentId = '',
     @required this.time,
-    @required this.onTap,
   }) : super(key: key);
+
+  @override
+  _NotificationItemState createState() => _NotificationItemState();
+}
+
+class _NotificationItemState extends State<NotificationItem> {
+  bool _read;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _read = widget.read;
+  }
 
   String formatTime(DateTime time) {
     String t = timeago
@@ -32,16 +56,34 @@ class NotificationItem extends StatelessWidget {
     return t == 'now' ? t : '$t';
   }
 
-  String _generateMessage(String type) {
-    if (type == 'like') {
+  String _generateMessage(String type, int count) {
+    if (type == 'like' && count == 1) {
       return 'liked your post.';
+    } else if (type == 'like' && count == 2) {
+      return 'and 1 other liked your post.';
+    } else if (type == 'like' && count > 2) {
+      return 'and $count others liked your post.';
+    }
+  }
+
+  void _onTap(BuildContext context, String type) {
+    if (type == 'like') {
+      BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
+          postId: widget.targetId, groupId: widget.parentId));
+      Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        _onTap(context, widget.type);
+
+        setState(() {
+          _read = true;
+        });
+      },
       child: AspectRatio(
         aspectRatio: kMatchItemAspectRatio,
         child: LayoutBuilder(
@@ -54,7 +96,9 @@ class NotificationItem extends StatelessWidget {
               right: constraints.maxWidth * 0.03,
             ),
             decoration: BoxDecoration(
-              color: Palette.containerColor,
+              color: _read
+                  ? Palette.containerColor
+                  : Palette.unreadNotificationColor,
               border: Border.all(width: 0.2, color: Colors.grey[400]),
             ),
             child: Stack(
@@ -62,7 +106,7 @@ class NotificationItem extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     ProfilePicture(
-                      photoUrl: photoUrl,
+                      photoUrl: widget.photoUrl,
                       editable: false,
                       size: constraints.maxHeight * 0.7,
                     ),
@@ -88,7 +132,7 @@ class NotificationItem extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyText1,
                                   children: [
                                     TextSpan(
-                                      text: '$name',
+                                      text: '${widget.name}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText1
@@ -98,7 +142,7 @@ class NotificationItem extends StatelessWidget {
                                     ),
                                     TextSpan(
                                         text:
-                                            ' ${_generateMessage(type)} $data'),
+                                            ' ${_generateMessage(widget.type, widget.count)} ${widget.data}'),
                                   ],
                                 ),
                               ),
@@ -106,7 +150,7 @@ class NotificationItem extends StatelessWidget {
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                formatTime(time),
+                                formatTime(widget.time),
                                 style:
                                     Theme.of(context).textTheme.bodyText2.apply(
                                           color: Palette.textSecondaryBaseColor,

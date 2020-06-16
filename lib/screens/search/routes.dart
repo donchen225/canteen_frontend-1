@@ -1,6 +1,8 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/arguments.dart';
+import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
@@ -39,8 +41,8 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
           case SinglePostScreen.routeName:
             final SinglePostArguments args = settings.arguments;
             return SinglePostScreen(
-              post: args.post,
-              groupId: args.groupId,
+              body: SinglePostBody(
+                  post: args.post as DetailedPost, groupId: args.groupId),
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

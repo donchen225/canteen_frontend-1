@@ -15,8 +15,6 @@ class NotificationScreen extends StatelessWidget {
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
-    print('NOTIFICATION SCREEN');
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -42,8 +40,8 @@ class NotificationScreen extends StatelessWidget {
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
       ),
-      body: BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (BuildContext context, NotificationState state) {
+      body: BlocBuilder<NotificationListBloc, NotificationListState>(
+        builder: (BuildContext context, NotificationListState state) {
           print('STATE: $state');
           if (state is NotificationsLoaded) {
             final notifications = state.notifications;

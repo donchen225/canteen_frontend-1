@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
-abstract class NotificationEvent extends Equatable {
-  const NotificationEvent();
+abstract class NotificationListEvent extends Equatable {
+  const NotificationListEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadNotifications extends NotificationEvent {
+class LoadNotifications extends NotificationListEvent {
   const LoadNotifications();
 
   @override

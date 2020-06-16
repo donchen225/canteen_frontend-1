@@ -43,4 +43,7 @@ class Palette {
 
   // Border colors
   static Color borderSeparatorColor = const Color(0xFFE0E0E0);
+
+  // Notification colors
+  static Color unreadNotificationColor = const Color(0xFFE7F3FF);
 }

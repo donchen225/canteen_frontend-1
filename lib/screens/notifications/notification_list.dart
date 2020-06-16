@@ -26,8 +26,11 @@ class _NotificationListState extends State<NotificationList> {
             name: notification.user.displayName,
             photoUrl: notification.user.photoUrl,
             type: notification.object,
+            count: notification.count,
             time: notification.lastUpdated,
-            onTap: () {},
+            targetId: notification.targetId,
+            parentId: notification.parentId,
+            read: notification.read,
           );
         });
   }

@@ -1,16 +1,17 @@
 import 'package:canteen_frontend/models/notification/notification.dart';
+import 'package:canteen_frontend/models/post/post.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class NotificationState extends Equatable {
+abstract class NotificationListState extends Equatable {
   @override
   List<Object> get props => null;
 }
 
-class NotificationsUninitialized extends NotificationState {}
+class NotificationsUninitialized extends NotificationListState {}
 
-class NotificationsLoading extends NotificationState {}
+class NotificationsLoading extends NotificationListState {}
 
-class NotificationsLoaded extends NotificationState {
+class NotificationsLoaded extends NotificationListState {
   final List<Notification> notifications;
 
   NotificationsLoaded({this.notifications});

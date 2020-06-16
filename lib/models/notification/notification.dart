@@ -11,6 +11,8 @@ class Notification extends Equatable {
   final String targetId;
   final String object;
   final String objectId;
+  final String parent;
+  final String parentId;
   final String data;
   final int count;
   final bool read;
@@ -25,6 +27,8 @@ class Notification extends Equatable {
     @required this.targetId,
     @required this.object,
     @required this.objectId,
+    @required this.parent,
+    @required this.parentId,
     @required this.data,
     @required this.count,
     @required this.read,
@@ -41,6 +45,8 @@ class Notification extends Equatable {
         targetId,
         object,
         objectId,
+        parent,
+        parentId,
         data,
         count,
         read,
@@ -50,7 +56,7 @@ class Notification extends Equatable {
 
   @override
   String toString() {
-    return 'Notification { id: $id, from: $from, verb: $verb, target: $target, targetId: $targetId, object: $object, objectId: $objectId, data: $data, count: $count, read: $read, createdOn: $createdOn, lastUpdated: $lastUpdated }';
+    return 'Notification { id: $id, from: $from, verb: $verb, target: $target, targetId: $targetId, object: $object, objectId: $objectId, parent: $parent, parentId: $parentId, data: $data, count: $count, read: $read, createdOn: $createdOn, lastUpdated: $lastUpdated }';
   }
 
   static Notification fromEntity(NotificationEntity entity) {
@@ -62,6 +68,8 @@ class Notification extends Equatable {
       targetId: entity.targetId,
       object: entity.object,
       objectId: entity.objectId,
+      parent: entity.parent,
+      parentId: entity.parentId,
       data: entity.data,
       read: entity.read,
       count: entity.count,
@@ -79,6 +87,8 @@ class Notification extends Equatable {
       targetId: targetId,
       object: object,
       objectId: objectId,
+      parent: parent,
+      parentId: parentId,
       data: data,
       count: count,
       read: read,
@@ -99,6 +109,8 @@ class DetailedNotification extends Notification {
     @required targetId,
     @required object,
     @required objectId,
+    @required parent,
+    @required parentId,
     @required data,
     @required count,
     @required read,
@@ -113,6 +125,8 @@ class DetailedNotification extends Notification {
           targetId: targetId,
           object: object,
           objectId: objectId,
+          parent: parent,
+          parentId: parentId,
           data: data,
           count: count,
           read: read,
@@ -129,6 +143,8 @@ class DetailedNotification extends Notification {
         targetId,
         object,
         objectId,
+        parent,
+        parentId,
         data,
         count,
         read,
@@ -149,6 +165,8 @@ class DetailedNotification extends Notification {
       targetId: notification.targetId,
       object: notification.object,
       objectId: notification.objectId,
+      parent: notification.parent,
+      parentId: notification.parentId,
       data: notification.data,
       count: notification.count,
       read: notification.read,

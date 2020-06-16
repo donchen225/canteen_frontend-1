@@ -219,4 +219,18 @@ class PostRepository {
       throw error;
     });
   }
+
+  Future<Post> getPost(String postId, String groupId) {
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId)
+        .get()
+        .then((docSnapshot) {
+      return Post.fromEntity(PostEntity.fromSnapshot(docSnapshot));
+    }).catchError((error) {
+      print('Error fetching posts: $error');
+      throw error;
+    });
+  }
 }

@@ -14,7 +14,7 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/notifications/bloc/notification_bloc.dart';
+import 'package:canteen_frontend/screens/notifications/notification_view_bloc/notification_view_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
@@ -407,11 +407,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  BlocProvider<NotificationBloc>(
-                    create: (context) => NotificationBloc(
-                      userRepository: widget._userRepository,
-                      notificationRepository: widget._notificationRepository,
-                    )..add(LoadNotifications()),
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider<NotificationListBloc>(
+                        create: (context) => NotificationListBloc(
+                          userRepository: widget._userRepository,
+                          notificationRepository:
+                              widget._notificationRepository,
+                          postRepository: widget._postRepository,
+                        )..add(LoadNotifications()),
+                      ),
+                      BlocProvider<NotificationViewBloc>(
+                        create: (context) => NotificationViewBloc(
+                          userRepository: widget._userRepository,
+                          notificationRepository:
+                              widget._notificationRepository,
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                    ],
                     child: Navigator(
                       key: _notificationScreen,
                       onGenerateRoute: (RouteSettings settings) {
