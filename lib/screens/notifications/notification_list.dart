@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/screens/notifications/notification_item.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_frontend/models/notification/notification.dart'
     as CanteenNotification;
@@ -30,6 +29,7 @@ class _NotificationListState extends State<NotificationList> {
             time: notification.lastUpdated,
             targetId: notification.targetId,
             parentId: notification.parentId,
+            data: notification.data,
             read: notification.read,
           );
         });

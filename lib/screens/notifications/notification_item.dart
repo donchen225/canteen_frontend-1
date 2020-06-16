@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -56,18 +55,24 @@ class _NotificationItemState extends State<NotificationItem> {
     return t == 'now' ? t : '$t';
   }
 
-  String _generateMessage(String type, int count) {
+  String _generateMessage(String type, int count, String data) {
     if (type == 'like' && count == 1) {
       return 'liked your post.';
     } else if (type == 'like' && count == 2) {
       return 'and 1 other liked your post.';
     } else if (type == 'like' && count > 2) {
       return 'and $count others liked your post.';
+    } else if (type == 'comment' && count == 1) {
+      return 'commented on your post: $data';
+    } else if (type == 'comment' && count == 1) {
+      return 'and 1 other commented on your post: $data';
+    } else if (type == 'comment' && count > 2) {
+      return 'and $count others commented on your post: $data';
     }
   }
 
   void _onTap(BuildContext context, String type) {
-    if (type == 'like') {
+    if (type == 'like' || type == 'comment') {
       BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
           postId: widget.targetId, groupId: widget.parentId));
       Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
@@ -90,8 +95,8 @@ class _NotificationItemState extends State<NotificationItem> {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.15,
-              bottom: constraints.maxHeight * 0.15,
+              top: constraints.maxHeight * 0.1,
+              bottom: constraints.maxHeight * 0.1,
               left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
@@ -126,7 +131,7 @@ class _NotificationItemState extends State<NotificationItem> {
                               ),
                               child: RichText(
                                 textAlign: TextAlign.start,
-                                maxLines: 2,
+                                maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
                                   style: Theme.of(context).textTheme.bodyText1,
@@ -142,7 +147,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                     ),
                                     TextSpan(
                                         text:
-                                            ' ${_generateMessage(widget.type, widget.count)} ${widget.data}'),
+                                            ' ${_generateMessage(widget.type, widget.count, widget.data)}'),
                                   ],
                                 ),
                               ),
