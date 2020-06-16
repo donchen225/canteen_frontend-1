@@ -390,37 +390,38 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
     const commentId = context.params.commentId;
 
     const fromUserId = data.from;
-    const message = data.message;
+    const message = data.message && typeof data.message === 'string' ? data.message.slice(0, 100) : '';
     const createdOn = data.created_on;
 
     const notification = {
         "from": fromUserId,
-        "verb": "comment",
-        "target": "post",
-        "target_id": postId,
-        "object": "comment",
         "object_id": commentId,
         "data": message,
-        "count": 1,
         "read": false,
-        "created_on": createdOn,
-        "last_updated": createdOn,
     };
 
-    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get();
-
-    const postUserId = post.from;
-
-    const notificationRef = firestore.collection(NOTIFICATION_COLLECTION).doc(postUserId).collection('notifications');
-
-    notificationRef.get().then((docSnapshot) => {
-        if (!docSnapshot.exists) {
-            return notificationRef.set(notification);
-        }
-        return;
+    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
     }).catch((error) => {
         console.log(error);
     });
+
+    const postUserId = post.from;
+
+    if (postUserId === fromUserId) {
+        return;
+    }
+
+    const userNotificationRef = firestore.collection(NOTIFICATION_COLLECTION).doc(postUserId);
+
+    userNotificationRef.set({
+        "read": false,
+        "last_updated": createdOn
+    }, { merge: true });
+
+    const notificationId = `${postId}-comment`;
+
+    const notificationRef = userNotificationRef.collection('notifications').doc(notificationId);
 
     notificationRef.collection('child_notifications').doc(commentId).set({
         "data": message,
@@ -428,34 +429,28 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
         "created_on": createdOn,
     }, { merge: true });
 
-    // const querySnapshot = await firestore
-    //     .collection(USER_COLLECTION)
-    //     .doc(userId)
-    //     .collection('tokens')
-    //     .get();
+    return notificationRef.get().then((docSnapshot) => {
+        if (!docSnapshot.exists) {
+            notification["verb"] = "add";
+            notification["object"] = "comment";
+            notification["target"] = "post";
+            notification["target_id"] = postId;
+            notification["parent"] = "group";
+            notification["parent_id"] = groupId;
+            notification["count"] = 1;
+            notification["created_on"] = createdOn;
+            notification["last_updated"] = createdOn;
 
-    // const tokens = querySnapshot.docs.map(snap => snap.id);
+            return notificationRef.set(notification);
+        } else {
+            const data = docSnapshot.data();
+            notification["count"] = data.count + 1;
 
-    // if (!Array.isArray(tokens) || !tokens.length) {
-    //     console.log("Token doesn't exist")
-    //     return;
-    // }
-
-    // const sender = await firestore
-    //     .collection(USER_COLLECTION)
-    //     .doc(senderId).get();
-    // const senderData = sender.data();
-
-    // const payload = {
-    //     notification: {
-    //         title: senderData.display_name,
-    //         body: message,
-    //         // icon: 'your-icon-url',
-    //         click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
-    //     }
-    // };
-
-    // fcm.sendToDevice(tokens, payload);
+            return notificationRef.set(notification, { merge: true });
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
 });
 
 exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{postId}/likes/{likeId}').onCreate(async (snap, context) => {
@@ -481,6 +476,10 @@ exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{post
     });
 
     const postUserId = post.from;
+
+    if (postUserId === fromUserId) {
+        return;
+    }
 
     const userNotificationRef = firestore.collection(NOTIFICATION_COLLECTION).doc(postUserId);
 
