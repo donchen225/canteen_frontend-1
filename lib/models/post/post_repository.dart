@@ -118,20 +118,16 @@ class PostRepository {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    final post = groupCollection
+    final likeRef = groupCollection
         .document(groupId)
         .collection(postsCollection)
-        .document(postId);
+        .document(postId)
+        .collection(likesCollection)
+        .document(userId);
 
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      final userLike =
-          await tx.get(post.collection(likesCollection).document(userId));
-
-      if (!(userLike.exists)) {
-        await tx.set(
-          post.collection(likesCollection).document(userId),
-          like.toEntity().toDocument(),
-        );
+    return likeRef.get().then((docSnapshot) {
+      if (!docSnapshot.exists) {
+        likeRef.setData(like.toEntity().toDocument());
       }
     });
   }

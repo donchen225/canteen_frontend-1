@@ -16,6 +16,7 @@ class NotificationItem extends StatefulWidget {
   final String targetId;
   final String parentId;
   final bool read;
+  final String notificationId;
   final DateTime time;
 
   NotificationItem({
@@ -28,6 +29,7 @@ class NotificationItem extends StatefulWidget {
     this.read = false,
     this.targetId = '',
     this.parentId = '',
+    this.notificationId = '',
     @required this.time,
   }) : super(key: key);
 
@@ -74,7 +76,10 @@ class _NotificationItemState extends State<NotificationItem> {
   void _onTap(BuildContext context, String type) {
     if (type == 'like' || type == 'comment') {
       BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
-          postId: widget.targetId, groupId: widget.parentId));
+          postId: widget.targetId,
+          groupId: widget.parentId,
+          notificationId: widget.notificationId,
+          read: widget.read));
       Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
     }
   }

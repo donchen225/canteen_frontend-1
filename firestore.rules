@@ -24,7 +24,7 @@ service cloud.firestore {
     }
 
     match /notifications/{userId}/notifications/{document=**} {
-      allow read: if isOwner(userId);
+      allow read, write: if isOwner(userId);
     }
 
     match /posts/{postId} {

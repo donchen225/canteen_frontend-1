@@ -43,4 +43,18 @@ class NotificationRepository {
       throw error;
     });
   }
+
+  Future<void> readNotification(String notificationId) async {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    final notification = notificationCollection
+        .document(userId)
+        .collection(userNotificationCollection)
+        .document(notificationId);
+
+    return notification.updateData({'read': true}).catchError((error) {
+      print('Error updating notification: $error');
+    });
+  }
 }

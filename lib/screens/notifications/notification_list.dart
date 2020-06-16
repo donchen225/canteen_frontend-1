@@ -31,6 +31,7 @@ class _NotificationListState extends State<NotificationList> {
             parentId: notification.parentId,
             data: notification.data,
             read: notification.read,
+            notificationId: notification.id,
           );
         });
   }

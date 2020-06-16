@@ -49,6 +49,10 @@ class NotificationViewBloc
 
     final detailedPost = DetailedPost.fromPost(post, user, liked);
 
+    if (!event.read) {
+      _notificationRepository.readNotification(event.notificationId);
+    }
+
     yield NotificationPostLoaded(post: detailedPost, groupId: event.groupId);
   }
 }
