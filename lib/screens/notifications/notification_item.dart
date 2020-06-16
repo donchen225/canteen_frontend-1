@@ -66,11 +66,13 @@ class _NotificationItemState extends State<NotificationItem> {
       return 'and $count others liked your post.';
     } else if (type == 'comment' && count == 1) {
       return 'commented on your post: $data';
-    } else if (type == 'comment' && count == 1) {
+    } else if (type == 'comment' && count == 2) {
       return 'and 1 other commented on your post: $data';
     } else if (type == 'comment' && count > 2) {
       return 'and $count others commented on your post: $data';
     }
+
+    return '';
   }
 
   void _onTap(BuildContext context, String type) {
