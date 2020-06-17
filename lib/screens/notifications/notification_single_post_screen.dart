@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,23 +23,31 @@ class _NotificationSinglePostScreenState
         BlocProvider.of<NotificationViewBloc>(context)
             .add(ClearNotificationView());
       },
-      body: BlocBuilder<NotificationViewBloc, NotificationViewState>(
-        builder: (BuildContext context, NotificationViewState state) {
-          if (state is NotificationViewLoading) {
-            return Center(
-              child: CupertinoActivityIndicator(),
-            );
-          }
-
+      body: BlocListener<NotificationViewBloc, NotificationViewState>(
+        listener: (BuildContext context, NotificationViewState state) {
           if (state is NotificationPostLoaded) {
-            return SinglePostBody(
-              post: state.post,
-              groupId: state.groupId,
-            );
+            BlocProvider.of<CommentBloc>(context).add(
+                LoadComments(groupId: state.groupId, postId: state.post.id));
           }
-
-          return Container();
         },
+        child: BlocBuilder<NotificationViewBloc, NotificationViewState>(
+          builder: (BuildContext context, NotificationViewState state) {
+            if (state is NotificationViewLoading) {
+              return Center(
+                child: CupertinoActivityIndicator(),
+              );
+            }
+
+            if (state is NotificationPostLoaded) {
+              return SinglePostBody(
+                post: state.post,
+                groupId: state.groupId,
+              );
+            }
+
+            return Container();
+          },
+        ),
       ),
     );
   }
