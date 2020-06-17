@@ -75,7 +75,21 @@ class NotificationListBloc
     if (_notifications == null) {
       _notifications = detailedNotifications;
     } else {
-      _notifications = detailedNotifications..addAll(_notifications);
+      List<DetailedNotification> newNotificationList = [];
+      newNotificationList.addAll(_notifications);
+
+      detailedNotifications.forEach((newNotification) {
+        final idx = newNotificationList.indexWhere(
+            (notification) => notification.id == newNotification.id);
+
+        if (idx != -1) {
+          newNotificationList[idx] = newNotification;
+        } else {
+          newNotificationList.insert(0, newNotification);
+        }
+      });
+
+      _notifications = newNotificationList;
     }
 
     if (_lastNotification == null) {

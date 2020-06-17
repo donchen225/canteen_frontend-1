@@ -15,13 +15,23 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList> {
   @override
   Widget build(BuildContext context) {
+    print('NOTIFICATION LIST');
+    print(widget.notifications.map((n) => n.lastUpdated));
+
     return ListView.builder(
         itemCount: widget.notifications.length,
         itemBuilder: (BuildContext context, int index) {
           final notification = widget.notifications[index]
               as CanteenNotification.DetailedNotification;
 
+          if (index == 0) {
+            print('${notification.id}');
+            print('NOTIFICATION ITEM 0: ${notification.read}');
+            print('${notification.lastUpdated}');
+          }
+
           return NotificationItem(
+            key: Key(notification.id),
             name: notification.user.displayName,
             photoUrl: notification.user.photoUrl,
             type: notification.object,

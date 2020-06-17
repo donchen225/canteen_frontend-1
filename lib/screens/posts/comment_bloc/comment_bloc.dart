@@ -32,7 +32,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         _userRepository = userRepository,
         _userBloc = userBloc {
     _userSubscription = _userBloc.listen((state) {
-      print('POST BLOC USER SUBSCRIPTION RECEIVED EVENT');
       if (state is UserLoaded) {
         _self = state.user;
       }

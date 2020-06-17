@@ -22,7 +22,7 @@ class NotificationRepository {
     Query query = notificationCollection
         .document(userId)
         .collection(userNotificationCollection)
-        .orderBy("last_updated", descending: true)
+        .orderBy("last_updated", descending: false)
         .limit(20);
 
     return query.snapshots().map((querySnapshot) {

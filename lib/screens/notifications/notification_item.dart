@@ -44,6 +44,9 @@ class _NotificationItemState extends State<NotificationItem> {
   void initState() {
     super.initState();
 
+    // print('INIT STATE NOTIFICATION ITEM');
+    // print('LOCAL READ: $_read');
+    // print('INPUT READ: ${widget.read}');
     _read = widget.read;
   }
 
@@ -88,97 +91,103 @@ class _NotificationItemState extends State<NotificationItem> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _onTap(context, widget.type);
+    return Material(
+      key: widget.key,
+      child: GestureDetector(
+        onTap: () {
+          _onTap(context, widget.type);
 
-        setState(() {
-          _read = true;
-        });
-      },
-      child: AspectRatio(
-        aspectRatio: kMatchItemAspectRatio,
-        child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-          return Container(
-            padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.1,
-              bottom: constraints.maxHeight * 0.1,
-              left: constraints.maxWidth * 0.05,
-              right: constraints.maxWidth * 0.03,
-            ),
-            decoration: BoxDecoration(
-              color: _read
-                  ? Palette.containerColor
-                  : Palette.unreadNotificationColor,
-              border: Border.all(width: 0.2, color: Colors.grey[400]),
-            ),
-            child: Stack(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    ProfilePicture(
-                      photoUrl: widget.photoUrl,
-                      editable: false,
-                      size: constraints.maxHeight * 0.7,
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            left: constraints.maxWidth * 0.04,
-                            right: constraints.maxWidth * 0.02),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: constraints.maxHeight * 0.03,
-                              ),
-                              child: RichText(
-                                textAlign: TextAlign.start,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  children: [
-                                    TextSpan(
-                                      text: '${widget.name}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .apply(
-                                            fontWeightDelta: 2,
-                                          ),
-                                    ),
-                                    TextSpan(
-                                        text:
-                                            ' ${_generateMessage(widget.type, widget.count, widget.data)}'),
-                                  ],
+          setState(() {
+            _read = true;
+          });
+        },
+        child: AspectRatio(
+          aspectRatio: kMatchItemAspectRatio,
+          child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            return Container(
+              padding: EdgeInsets.only(
+                top: constraints.maxHeight * 0.1,
+                bottom: constraints.maxHeight * 0.1,
+                left: constraints.maxWidth * 0.05,
+                right: constraints.maxWidth * 0.03,
+              ),
+              decoration: BoxDecoration(
+                color: _read
+                    ? Palette.containerColor
+                    : Palette.unreadNotificationColor,
+                border: Border.all(width: 0.2, color: Colors.grey[400]),
+              ),
+              child: Stack(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      ProfilePicture(
+                        photoUrl: widget.photoUrl,
+                        editable: false,
+                        size: constraints.maxHeight * 0.7,
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: constraints.maxWidth * 0.04,
+                              right: constraints.maxWidth * 0.02),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: constraints.maxHeight * 0.03,
+                                ),
+                                child: RichText(
+                                  textAlign: TextAlign.start,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    children: [
+                                      TextSpan(
+                                        text: '${widget.name}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .apply(
+                                              fontWeightDelta: 2,
+                                            ),
+                                      ),
+                                      TextSpan(
+                                          text:
+                                              ' ${_generateMessage(widget.type, widget.count, widget.data)}'),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                formatTime(widget.time),
-                                style:
-                                    Theme.of(context).textTheme.bodyText2.apply(
-                                          color: Palette.textSecondaryBaseColor,
-                                        ),
-                              ),
-                            )
-                          ],
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  formatTime(widget.time),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      .apply(
+                                        color: Palette.textSecondaryBaseColor,
+                                      ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

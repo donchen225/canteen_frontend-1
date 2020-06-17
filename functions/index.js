@@ -398,6 +398,7 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
         "object_id": commentId,
         "data": message,
         "read": false,
+        "last_updated": createdOn,
     };
 
     const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
@@ -439,7 +440,6 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
             notification["parent_id"] = groupId;
             notification["count"] = 1;
             notification["created_on"] = createdOn;
-            notification["last_updated"] = createdOn;
 
             return notificationRef.set(notification);
         } else {
@@ -467,6 +467,7 @@ exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{post
         "from": fromUserId,
         "object_id": likeId,
         "read": false,
+        "last_updated": createdOn,
     };
 
     const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
@@ -507,7 +508,6 @@ exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{post
             notification["parent_id"] = groupId;
             notification["count"] = 1;
             notification["created_on"] = createdOn;
-            notification["last_updated"] = createdOn;
 
             return notificationRef.set(notification);
         } else {

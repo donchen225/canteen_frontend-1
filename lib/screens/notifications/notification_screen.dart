@@ -42,7 +42,6 @@ class NotificationScreen extends StatelessWidget {
       ),
       body: BlocBuilder<NotificationListBloc, NotificationListState>(
         builder: (BuildContext context, NotificationListState state) {
-          print('STATE: $state');
           if (state is NotificationsLoaded) {
             final notifications = state.notifications;
 
