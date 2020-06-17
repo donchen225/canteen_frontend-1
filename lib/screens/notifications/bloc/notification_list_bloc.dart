@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/models/notification/notification_repository.dart';
-import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/notification_list_event.dart';
@@ -17,8 +16,9 @@ class NotificationListBloc
   final UserRepository _userRepository;
   final NotificationRepository _notificationRepository;
   final PostRepository _postRepository;
-  List<Notification> _notifications = [];
+  List<DetailedNotification> _notifications = [];
   DocumentSnapshot _lastNotification;
+  StreamSubscription _latestNotificationSubscription;
 
   NotificationListBloc({
     @required UserRepository userRepository,
@@ -39,12 +39,56 @@ class NotificationListBloc
       NotificationListEvent event) async* {
     if (event is LoadNotifications) {
       yield* _mapLoadNotificationsToState(event);
+    } else if (event is NotificationsUpdated) {
+      yield* _mapNotificationsUpdatedToState(event);
+    } else if (event is LoadOldNotifications) {
+      yield* _mapLoadOldNotificationsToState(event);
     }
   }
 
   Stream<NotificationListState> _mapLoadNotificationsToState(
       LoadNotifications event) async* {
-    final notifications = await _notificationRepository.getNotifications();
+    try {
+      _latestNotificationSubscription?.cancel();
+      _latestNotificationSubscription = _notificationRepository
+          .getLatestNotifications()
+          .listen((notifications) {
+        add(NotificationsUpdated(notifications));
+      });
+    } catch (exception) {
+      print('ERROR: $exception');
+    }
+  }
+
+  Stream<NotificationListState> _mapNotificationsUpdatedToState(
+      NotificationsUpdated event) async* {
+    final notifications = event.updates.item1;
+
+    final userList = await Future.wait(notifications.map((notification) async {
+      return _userRepository.getUser(notification.from);
+    }));
+
+    final detailedNotifications = zip([notifications, userList])
+        .map((item) => DetailedNotification.fromNotification(item[0], item[1]))
+        .toList();
+
+    if (_notifications == null) {
+      _notifications = detailedNotifications;
+    } else {
+      _notifications = detailedNotifications..addAll(_notifications);
+    }
+
+    if (_lastNotification == null) {
+      _lastNotification = event.updates.item2;
+    }
+
+    yield NotificationsLoaded(notifications: _notifications);
+  }
+
+  Stream<NotificationListState> _mapLoadOldNotificationsToState(
+      LoadOldNotifications event) async* {
+    final notifications = await _notificationRepository.getNotifications(
+        startAfterDocument: _lastNotification);
 
     final userList =
         await Future.wait(notifications.item1.map((notification) async {
@@ -55,7 +99,7 @@ class NotificationListBloc
         .map((item) => DetailedNotification.fromNotification(item[0], item[1]))
         .toList();
 
-    _notifications = detailedNotifications;
+    _notifications.addAll(detailedNotifications);
     _lastNotification = notifications.item2;
 
     yield NotificationsLoaded(notifications: _notifications);

@@ -14,6 +14,29 @@ class NotificationRepository {
 
   NotificationRepository();
 
+  Stream<Tuple2<List<Notification>, DocumentSnapshot>>
+      getLatestNotifications() {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    Query query = notificationCollection
+        .document(userId)
+        .collection(userNotificationCollection)
+        .orderBy("last_updated", descending: true)
+        .limit(20);
+
+    return query.snapshots().map((querySnapshot) {
+      return Tuple2<List<Notification>, DocumentSnapshot>(
+          querySnapshot.documentChanges
+              .map((doc) => Notification.fromEntity(
+                  NotificationEntity.fromSnapshot(doc.document)))
+              .toList(),
+          querySnapshot.documents.isNotEmpty
+              ? querySnapshot.documents.last
+              : null);
+    });
+  }
+
   Future<Tuple2<List<Notification>, DocumentSnapshot>> getNotifications(
       {DocumentSnapshot startAfterDocument}) {
     final userId =

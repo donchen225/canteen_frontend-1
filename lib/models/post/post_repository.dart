@@ -164,8 +164,6 @@ class PostRepository {
   Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(
       String groupId, String postId) {
     final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
-    print('LAST FETCH: $lastFetch');
-    print('GET COMMENTS: $postId');
     final collection = groupCollection
         .document(groupId)
         .collection(postsCollection)
