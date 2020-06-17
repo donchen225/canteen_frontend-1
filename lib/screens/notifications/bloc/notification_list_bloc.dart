@@ -72,8 +72,13 @@ class NotificationListBloc
         .map((item) => DetailedNotification.fromNotification(item[0], item[1]))
         .toList();
 
+    if (_lastNotification == null) {
+      _lastNotification = event.updates.item2;
+    }
+
     if (_notifications == null) {
       _notifications = detailedNotifications;
+      yield NotificationsLoaded(notifications: detailedNotifications);
     } else {
       List<DetailedNotification> newNotificationList = [];
       newNotificationList.addAll(_notifications);
@@ -82,21 +87,29 @@ class NotificationListBloc
         final idx = newNotificationList.indexWhere(
             (notification) => notification.id == newNotification.id);
 
-        if (idx != -1) {
+        if (idx == -1) {
+          newNotificationList.insert(0, newNotification);
+        } else if (newNotification.read) {
           newNotificationList[idx] = newNotification;
         } else {
-          newNotificationList.insert(0, newNotification);
+          newNotificationList.removeAt(idx);
+
+          var insertIdx = 0;
+          while (insertIdx < newNotificationList.length) {
+            if (newNotification.lastUpdated
+                .isAfter(newNotificationList[insertIdx].lastUpdated)) {
+              break;
+            }
+            insertIdx++;
+          }
+
+          newNotificationList.insert(insertIdx, newNotification);
         }
       });
 
       _notifications = newNotificationList;
+      yield NotificationsLoaded(notifications: newNotificationList);
     }
-
-    if (_lastNotification == null) {
-      _lastNotification = event.updates.item2;
-    }
-
-    yield NotificationsLoaded(notifications: _notifications);
   }
 
   Stream<NotificationListState> _mapLoadOldNotificationsToState(
