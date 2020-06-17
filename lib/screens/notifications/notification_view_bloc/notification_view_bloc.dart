@@ -38,6 +38,8 @@ class NotificationViewBloc
       NotificationViewEvent event) async* {
     if (event is LoadNotificationPost) {
       yield* _mapLoadNotificationPostToState(event);
+    } else if (event is ClearNotificationView) {
+      yield* _mapClearNotificationViewToState();
     }
   }
 
@@ -54,5 +56,9 @@ class NotificationViewBloc
     }
 
     yield NotificationPostLoaded(post: detailedPost, groupId: event.groupId);
+  }
+
+  Stream<NotificationViewState> _mapClearNotificationViewToState() async* {
+    yield NotificationViewUninitialized();
   }
 }

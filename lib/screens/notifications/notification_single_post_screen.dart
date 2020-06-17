@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
@@ -19,6 +18,10 @@ class _NotificationSinglePostScreenState
   @override
   Widget build(BuildContext context) {
     return SinglePostScreen(
+      onTapBack: () {
+        BlocProvider.of<NotificationViewBloc>(context)
+            .add(ClearNotificationView());
+      },
       body: BlocBuilder<NotificationViewBloc, NotificationViewState>(
         builder: (BuildContext context, NotificationViewState state) {
           if (state is NotificationViewLoading) {

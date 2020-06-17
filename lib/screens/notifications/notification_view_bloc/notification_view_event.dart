@@ -23,3 +23,5 @@ class LoadNotificationPost extends NotificationViewEvent {
   String toString() =>
       'LoadNotificationPost { postId: $postId, groupId: $groupId, notificationId: $notificationId, read: $read }';
 }
+
+class ClearNotificationView extends NotificationViewEvent {}

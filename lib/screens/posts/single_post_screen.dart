@@ -5,17 +5,27 @@ import 'package:flutter/material.dart';
 class SinglePostScreen extends StatelessWidget {
   static const routeName = '/post';
   final Widget body;
+  final Function onTapBack;
 
-  SinglePostScreen({@required this.body});
+  SinglePostScreen({Key key, @required this.body, this.onTapBack})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       appBar: AppBar(
         backgroundColor: Palette.containerColor,
         elevation: 1,
         leading: BackButton(
           color: Palette.primaryColor,
+          onPressed: () {
+            Navigator.of(context).maybePop();
+
+            if (onTapBack != null) {
+              onTapBack();
+            }
+          },
         ),
         title: Text('Post', style: Theme.of(context).textTheme.headline6),
       ),
