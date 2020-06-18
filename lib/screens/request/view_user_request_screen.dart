@@ -42,6 +42,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   right: SizeConfig.instance.safeBlockHorizontal * 6,
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Sent you a request for ${widget.request.skill}",
