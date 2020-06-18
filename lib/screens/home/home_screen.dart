@@ -89,30 +89,18 @@ class _HomeScreenState extends State<HomeScreen> {
     _homeBloc.add(CheckOnboardStatus());
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(BuildContext context, int index) {
     setState(() {
       _previousIndex = _currentIndex;
       _currentIndex = index;
     });
 
+    // Double tap on tab logic
     if (_previousIndex != null && _previousIndex == _currentIndex) {
       switch (_currentIndex) {
         case 0:
           // TODO: clean up this animation so only one screen is shown
           _postScreen.currentState.popUntil((route) => route.isFirst);
-          // _postScreen.currentState.pushAndRemoveUntil(
-          //     PageRouteBuilder(
-          //       pageBuilder: (c, a1, a2) => PostHomeScreen(),
-          //       transitionsBuilder: (c, anim, a2, child) => SlideTransition(
-          //         position: Tween<Offset>(
-          //           begin: const Offset(-1, 0),
-          //           end: Offset.zero,
-          //         ).animate(anim),
-          //         child: child,
-          //       ),
-          //       transitionDuration: Duration(milliseconds: 200),
-          //     ),
-          //     (Route<dynamic> route) => false);
           break;
         case 1:
           _searchScreen.currentState.popUntil((route) => route.isFirst);
@@ -125,20 +113,38 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
       }
     }
+
+    switch (_currentIndex) {
+      case 3:
+        BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+            .add(ReadNotificationCount());
+        break;
+    }
   }
 
   Widget _buildBadge(int count, Widget child) {
+    if (count == 0) {
+      return child;
+    }
+
     return Badge(
-      badgeColor: Palette.primaryColor,
+      badgeColor: Palette.badgeColor,
       toAnimate: false,
       badgeContent: Text(
         count.toString(),
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 10,
-        ),
+        style: count < 10
+            ? TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              )
+            : TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 9,
+              ),
       ),
+      position: BadgePosition.topRight(top: -7, right: -8),
       showBadge: count != 0,
       child: child,
     );
@@ -194,7 +200,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('HOME SCREEN BUILD');
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
@@ -263,13 +268,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf39b,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                      icon: _buildBadge(
+                        navBarState.numNotifications,
+                        const Icon(IconData(0xf39b,
+                            fontFamily: CupertinoIcons.iconFont,
+                            fontPackage: CupertinoIcons.iconFontPackage)),
+                      ),
                       title: Text(''),
                     ),
                   ],
-                  onTap: _onItemTapped,
+                  onTap: (int index) => _onItemTapped(context, index),
                 );
               });
             },
@@ -409,13 +417,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<NotificationListBloc>(
-                        create: (context) => NotificationListBloc(
-                          userRepository: widget._userRepository,
-                          notificationRepository:
-                              widget._notificationRepository,
-                        )..add(LoadNotifications()),
-                      ),
                       BlocProvider<NotificationViewBloc>(
                         create: (context) => NotificationViewBloc(
                           userRepository: widget._userRepository,

@@ -10,6 +10,7 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/landing/routes.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -124,10 +125,6 @@ void main() async {
               matchRepository: matchRepository,
               videoChatRepository: videoChatRepository),
         ),
-        BlocProvider<HomeNavigationBarBadgeBloc>(
-          create: (BuildContext context) => HomeNavigationBarBadgeBloc(
-              requestBloc: BlocProvider.of<RequestBloc>(context)),
-        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -236,6 +233,20 @@ class App extends StatelessWidget {
                       BlocProvider<ProfileBloc>(
                         create: (context) => ProfileBloc(
                           userRepository: _userRepository,
+                        ),
+                      ),
+                      BlocProvider<NotificationListBloc>(
+                        create: (context) => NotificationListBloc(
+                          userRepository: _userRepository,
+                          notificationRepository: _notificationRepository,
+                        )..add(LoadNotifications()),
+                      ),
+                      BlocProvider<HomeNavigationBarBadgeBloc>(
+                        create: (BuildContext context) =>
+                            HomeNavigationBarBadgeBloc(
+                          requestBloc: BlocProvider.of<RequestBloc>(context),
+                          notificationListBloc:
+                              BlocProvider.of<NotificationListBloc>(context),
                         ),
                       ),
                     ],

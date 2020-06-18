@@ -46,4 +46,5 @@ class Palette {
 
   // Notification colors
   static Color unreadNotificationColor = const Color(0xFFE7F3FF);
+  static Color badgeColor = const Color(0xFFF02648);
 }
