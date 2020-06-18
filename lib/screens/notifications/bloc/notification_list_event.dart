@@ -33,11 +33,13 @@ class NotificationsUpdated extends NotificationListEvent {
 }
 
 class LoadOldNotifications extends NotificationListEvent {
-  const LoadOldNotifications();
+  final int page;
+
+  const LoadOldNotifications({this.page});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [page];
 
   @override
-  String toString() => 'LoadOldNotifications';
+  String toString() => 'LoadOldNotifications { page: $page }';
 }

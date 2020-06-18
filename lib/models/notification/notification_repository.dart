@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/models/notification/notification_entity.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -22,8 +23,8 @@ class NotificationRepository {
     Query query = notificationCollection
         .document(userId)
         .collection(userNotificationCollection)
-        .orderBy("last_updated", descending: false)
-        .limit(20);
+        .orderBy("last_updated", descending: true)
+        .limit(postsPerPage);
 
     return query.snapshots().map((querySnapshot) {
       return Tuple2<List<Notification>, DocumentSnapshot>(
@@ -38,7 +39,7 @@ class NotificationRepository {
   }
 
   Future<Tuple2<List<Notification>, DocumentSnapshot>> getNotifications(
-      {DocumentSnapshot startAfterDocument}) {
+      {DocumentSnapshot startAfterDocument, int limit = 20}) {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
@@ -46,8 +47,9 @@ class NotificationRepository {
         .document(userId)
         .collection(userNotificationCollection)
         .orderBy("last_updated", descending: true)
-        .limit(25);
+        .limit(limit);
 
+    print('START AFTER: ${startAfterDocument.data}');
     if (startAfterDocument != null && startAfterDocument.exists) {
       query = query.startAfterDocument(startAfterDocument);
     }

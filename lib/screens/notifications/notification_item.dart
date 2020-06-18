@@ -18,6 +18,7 @@ class NotificationItem extends StatefulWidget {
   final bool read;
   final String notificationId;
   final DateTime time;
+  final Function onCreated;
 
   NotificationItem({
     Key key,
@@ -30,7 +31,8 @@ class NotificationItem extends StatefulWidget {
     this.targetId = '',
     this.parentId = '',
     this.notificationId = '',
-    @required this.time,
+    this.time,
+    this.onCreated,
   }) : super(key: key);
 
   @override
@@ -44,10 +46,11 @@ class _NotificationItemState extends State<NotificationItem> {
   void initState() {
     super.initState();
 
-    // print('INIT STATE NOTIFICATION ITEM');
-    // print('LOCAL READ: $_read');
-    // print('INPUT READ: ${widget.read}');
     _read = widget.read;
+
+    if (widget.onCreated != null) {
+      widget.onCreated();
+    }
   }
 
   String formatTime(DateTime time) {

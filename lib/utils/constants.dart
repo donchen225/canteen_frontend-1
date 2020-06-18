@@ -57,3 +57,6 @@ const String algoliaIndexName = 'users_dev';
 const int animationDuration = 150;
 const double offsetdXForward = 1;
 const double offsetdXReverse = -1;
+
+// Notification constants
+const int postsPerPage = 20;

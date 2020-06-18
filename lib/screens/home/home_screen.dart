@@ -414,7 +414,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           userRepository: widget._userRepository,
                           notificationRepository:
                               widget._notificationRepository,
-                          postRepository: widget._postRepository,
                         )..add(LoadNotifications()),
                       ),
                       BlocProvider<NotificationViewBloc>(
