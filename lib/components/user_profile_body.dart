@@ -18,8 +18,13 @@ class UserProfileBody extends StatefulWidget {
   final User user;
   final bool canConnect;
   final bool editable;
+  final Widget headerWidget;
 
-  UserProfileBody({this.user, this.canConnect = true, this.editable = false});
+  UserProfileBody(
+      {this.user,
+      this.canConnect = true,
+      this.editable = false,
+      this.headerWidget});
 
   @override
   _UserProfileBodyState createState() => _UserProfileBodyState();
@@ -153,122 +158,113 @@ class _UserProfileBodyState extends State<UserProfileBody>
           SliverToBoxAdapter(
             child: Container(
               color: Palette.containerColor,
+              padding: EdgeInsets.only(
+                left: SizeConfig.instance.safeBlockHorizontal *
+                    kHorizontalPaddingBlocks,
+                right: SizeConfig.instance.safeBlockHorizontal *
+                    kHorizontalPaddingBlocks,
+              ),
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.instance.safeBlockHorizontal *
-                          kHorizontalPaddingBlocks,
-                      right: SizeConfig.instance.safeBlockHorizontal *
-                          kHorizontalPaddingBlocks,
-                    ),
-                    child: Column(
+                  widget.headerWidget ?? Container(),
+                  Container(
+                    height: kProfileSize,
+                    child: Row(
                       children: <Widget>[
-                        Container(
-                          height: kProfileSize,
-                          child: Row(
-                            children: <Widget>[
-                              ProfilePicture(
-                                photoUrl: widget.user.photoUrl,
-                                shape: BoxShape.circle,
-                                editable: false,
-                                size: kProfileSize,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig
-                                              .instance.safeBlockHorizontal *
-                                          kHorizontalPaddingBlocks),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          bottom: SizeConfig
-                                                  .instance.safeBlockVertical *
-                                              0.5,
-                                        ),
-                                        child: Text(
-                                          widget.user.displayName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5
-                                              .apply(fontWeightDelta: 2),
-                                        ),
-                                      ),
-                                      Text(
-                                        widget.user.title ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1
-                                            .apply(
-                                                color: Palette
-                                                    .textSecondaryBaseColor),
-                                      ),
-                                    ],
+                        ProfilePicture(
+                          photoUrl: widget.user.photoUrl,
+                          shape: BoxShape.circle,
+                          editable: false,
+                          size: kProfileSize,
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    SizeConfig.instance.safeBlockHorizontal *
+                                        kHorizontalPaddingBlocks),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        SizeConfig.instance.safeBlockVertical *
+                                            0.5,
+                                  ),
+                                  child: Text(
+                                    widget.user.displayName,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .apply(fontWeightDelta: 2),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.instance.safeBlockVertical,
-                          ),
-                          child: Text(widget.user.about ?? '',
-                              style: bodyTextStyle),
-                        ),
-                        Visibility(
-                          visible: widget.editable,
-                          child: Container(
-                            width: double.infinity,
-                            child: FlatButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) => UserProfileScreen(
-                                    userRepository:
-                                        BlocProvider.of<UserBloc>(context)
-                                            .userRepository,
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Edit Profile',
-                                style: Theme.of(context).textTheme.button.apply(
-                                    fontWeightDelta: 1,
-                                    color: Palette.primaryColor),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: 1, color: Palette.primaryColor),
-                                  borderRadius: BorderRadius.circular(10.0)),
+                                Text(
+                                  widget.user.title ?? '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .apply(
+                                          color:
+                                              Palette.textSecondaryBaseColor),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Wrap(
-                              children: widget.user.interests
-                                      ?.map((x) => Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig.instance
-                                                        .blockSizeHorizontal *
-                                                    3),
-                                            child: InterestItem(text: x),
-                                          ))
-                                      ?.toList() ??
-                                  []),
-                        ),
                       ],
                     ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.safeBlockVertical,
+                    ),
+                    child: Text(widget.user.about ?? '', style: bodyTextStyle),
+                  ),
+                  Visibility(
+                    visible: widget.editable,
+                    child: Container(
+                      width: double.infinity,
+                      child: FlatButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => UserProfileScreen(
+                              userRepository: BlocProvider.of<UserBloc>(context)
+                                  .userRepository,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Edit Profile',
+                          style: Theme.of(context).textTheme.button.apply(
+                              fontWeightDelta: 1, color: Palette.primaryColor),
+                        ),
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                width: 1, color: Palette.primaryColor),
+                            borderRadius: BorderRadius.circular(10.0)),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(
+                        children: widget.user.interests
+                                ?.map((x) => Padding(
+                                      padding: EdgeInsets.only(
+                                          right: SizeConfig.instance
+                                                  .blockSizeHorizontal *
+                                              3),
+                                      child: InterestItem(text: x),
+                                    ))
+                                ?.toList() ??
+                            []),
                   ),
                 ],
               ),

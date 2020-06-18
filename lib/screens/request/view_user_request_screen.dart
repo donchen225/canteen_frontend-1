@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,46 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
         ? UserProfileBody(
             user: user,
             canConnect: false,
+            headerWidget: Container(
+              margin: EdgeInsets.only(
+                bottom: 20,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.purple[100],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                  left: SizeConfig.instance.safeBlockHorizontal * 6,
+                  right: SizeConfig.instance.safeBlockHorizontal * 6,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "Sent you a request for ${widget.request.skill}",
+                      style: Theme.of(context).textTheme.bodyText1.apply(
+                            fontWeightDelta: 1,
+                          ),
+                    ),
+                    Visibility(
+                      visible: widget.request.comment != null &&
+                          widget.request.comment.isNotEmpty,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Text(
+                          "\"${widget.request.comment}\"",
+                          style: Theme.of(context).textTheme.bodyText1.apply(
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           )
         : _buildBlocProfile(context);
   }
