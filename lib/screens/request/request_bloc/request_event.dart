@@ -52,15 +52,15 @@ class UpdateRequest extends RequestEvent {
 }
 
 class AcceptRequest extends RequestEvent {
-  final Request request;
+  final String requestId;
 
-  const AcceptRequest(this.request);
-
-  @override
-  List<Object> get props => [request];
+  const AcceptRequest({this.requestId});
 
   @override
-  String toString() => 'AcceptRequest { request: $request }';
+  List<Object> get props => [requestId];
+
+  @override
+  String toString() => 'AcceptRequest { requestId: $requestId }';
 }
 
 class DeclineRequest extends RequestEvent {

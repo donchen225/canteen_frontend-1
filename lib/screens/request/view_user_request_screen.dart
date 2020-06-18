@@ -130,7 +130,9 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
               heroTag: null,
               backgroundColor: Palette.primaryColor,
               onPressed: () {
-                print('ACCEPTED');
+                BlocProvider.of<RequestBloc>(context)
+                    .add(AcceptRequest(requestId: widget.request.id));
+                Navigator.maybePop(context);
               },
               child: Icon(
                 Icons.check,

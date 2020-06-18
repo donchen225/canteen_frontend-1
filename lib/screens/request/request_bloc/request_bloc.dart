@@ -53,7 +53,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Stream<RequestState> _mapAcceptRequestToState(AcceptRequest event) async* {
-    await _requestRepository.acceptRequest(event.request);
+    await _requestRepository.acceptRequest(event.requestId);
     yield RequestsLoaded(_requestRepository.currentRequests());
   }
 
