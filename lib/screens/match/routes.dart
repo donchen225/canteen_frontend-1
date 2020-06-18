@@ -3,6 +3,8 @@ import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/screens/match/arguments.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/message_screen.dart';
+import 'package:canteen_frontend/screens/request/arguments.dart';
+import 'package:canteen_frontend/screens/request/view_user_request_screen.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,12 @@ MaterialPageRoute buildMessageScreenRoutes(RouteSettings settings) {
             return ViewUserProfileScreen(
               user: args.user,
               editable: args.editable ?? false,
+            );
+          case ViewUserRequestScreen.routeName:
+            final RequestArguments args = settings.arguments;
+            return ViewUserRequestScreen(
+              request: args.request,
+              user: args.user,
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

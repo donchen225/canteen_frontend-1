@@ -3,6 +3,8 @@ import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/match/match_item.dart';
+import 'package:canteen_frontend/screens/request/arguments.dart';
+import 'package:canteen_frontend/screens/request/view_user_request_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -33,8 +35,9 @@ class RequestList extends StatelessWidget {
           time: request.createdOn,
           onTap: () => Navigator.pushNamed(
             context,
-            ViewUserProfileScreen.routeName,
-            arguments: UserArguments(
+            ViewUserRequestScreen.routeName,
+            arguments: RequestArguments(
+              request: request,
               user: user,
             ),
           ),

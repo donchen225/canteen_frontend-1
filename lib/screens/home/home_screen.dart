@@ -262,9 +262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf2eb,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                      icon: _buildBadge(
+                        navBarState.numRequests,
+                        const Icon(IconData(0xf2eb,
+                            fontFamily: CupertinoIcons.iconFont,
+                            fontPackage: CupertinoIcons.iconFontPackage)),
+                      ),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(

@@ -64,15 +64,15 @@ class AcceptRequest extends RequestEvent {
 }
 
 class DeclineRequest extends RequestEvent {
-  final Request request;
+  final String requestId;
 
-  const DeclineRequest(this.request);
-
-  @override
-  List<Object> get props => [request];
+  const DeclineRequest({this.requestId});
 
   @override
-  String toString() => 'DeclineRequest { request: $request }';
+  List<Object> get props => [requestId];
+
+  @override
+  String toString() => 'DeclineRequest { requestId: $requestId }';
 }
 
 class ClearRequests extends RequestEvent {

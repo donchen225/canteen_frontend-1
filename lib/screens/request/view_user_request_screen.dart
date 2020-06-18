@@ -1,23 +1,25 @@
 import 'package:canteen_frontend/components/user_profile_body.dart';
+import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ViewUserProfileScreen extends StatefulWidget {
+class ViewUserRequestScreen extends StatefulWidget {
+  final Request request;
   final User user;
-  final bool editable;
-  static const routeName = '/user';
+  static const routeName = '/request';
 
-  ViewUserProfileScreen({this.user, this.editable = false});
+  ViewUserRequestScreen({this.request, this.user});
 
   @override
-  _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
+  _ViewUserRequestScreenState createState() => _ViewUserRequestScreenState();
 }
 
-class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
+class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget _buildProfileWidget(BuildContext context, User user) {
     return user != null
         ? UserProfileBody(user: user)
@@ -55,6 +57,40 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
         leading: BackButton(
           color: Palette.primaryColor,
           onPressed: () => Navigator.of(context).maybePop(),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FloatingActionButton(
+              heroTag: null,
+              backgroundColor: Colors.white,
+              onPressed: () {
+                BlocProvider.of<RequestBloc>(context)
+                    .add(DeclineRequest(requestId: widget.request.id));
+                Navigator.maybePop(context);
+              },
+              child: Icon(
+                Icons.close,
+                size: 30,
+                color: Palette.textColor,
+              ),
+            ),
+            FloatingActionButton(
+              heroTag: null,
+              backgroundColor: Palette.primaryColor,
+              onPressed: () {
+                print('ACCEPTED');
+              },
+              child: Icon(
+                Icons.check,
+                size: 30,
+              ),
+            )
+          ],
         ),
       ),
       body: _buildProfileWidget(context, widget.user),

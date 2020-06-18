@@ -34,13 +34,13 @@ class RequestRepository {
     _detailedRequests.removeWhere((r) => r.id == request.id);
   }
 
-  Future<void> declineRequest(Request request) {
-    Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(requestCollection.document(request.id), {"status": 2});
-    });
+  Future<void> declineRequest(String requestId) {
+    _requests.removeWhere((r) => r.id == requestId);
+    _detailedRequests.removeWhere((r) => r.id == requestId);
 
-    _requests.removeWhere((r) => r.id == request.id);
-    _detailedRequests.removeWhere((r) => r.id == request.id);
+    Firestore.instance.runTransaction((Transaction tx) async {
+      await tx.update(requestCollection.document(requestId), {"status": 2});
+    });
   }
 
   List<Request> currentRequests() {

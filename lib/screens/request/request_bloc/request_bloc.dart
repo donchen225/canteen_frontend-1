@@ -58,7 +58,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Stream<RequestState> _mapDeclineRequestToState(DeclineRequest event) async* {
-    await _requestRepository.declineRequest(event.request);
+    await _requestRepository.declineRequest(event.requestId);
     yield RequestsLoaded(_requestRepository.currentRequests());
   }
 
