@@ -22,7 +22,10 @@ class ViewUserRequestScreen extends StatefulWidget {
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget _buildProfileWidget(BuildContext context, User user) {
     return user != null
-        ? UserProfileBody(user: user)
+        ? UserProfileBody(
+            user: user,
+            canConnect: false,
+          )
         : _buildBlocProfile(context);
   }
 
@@ -39,7 +42,10 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
 
         if (state is ProfileLoaded) {
           final user = state.user;
-          return UserProfileBody(user: user);
+          return UserProfileBody(
+            user: user,
+            canConnect: false,
+          );
         }
 
         return Container();

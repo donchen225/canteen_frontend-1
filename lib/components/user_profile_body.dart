@@ -16,9 +16,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserProfileBody extends StatefulWidget {
   final User user;
+  final bool canConnect;
   final bool editable;
 
-  UserProfileBody({this.user, this.editable = false});
+  UserProfileBody({this.user, this.canConnect = true, this.editable = false});
 
   @override
   _UserProfileBodyState createState() => _UserProfileBodyState();
@@ -94,6 +95,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                           SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
                       skill: skill,
+                      showButton: widget.canConnect,
                       tapEnabled: tapEnabled && !widget.editable,
                       onTap: () => _onTapSkillFunction(context, user, skill),
                     );

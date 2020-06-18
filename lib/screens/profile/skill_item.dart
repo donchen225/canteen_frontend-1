@@ -8,6 +8,7 @@ class SkillItem extends StatelessWidget {
   final double horizontalPadding;
   final Skill skill;
   final bool tapEnabled;
+  final bool showButton;
   final Function onTap;
 
   SkillItem(
@@ -15,6 +16,7 @@ class SkillItem extends StatelessWidget {
       this.horizontalPadding = 0,
       this.skill,
       this.tapEnabled = false,
+      this.showButton = true,
       this.onTap});
 
   @override
@@ -70,27 +72,30 @@ class SkillItem extends StatelessWidget {
                             : ''),
                     style: titleStyle,
                   ),
-                  FlatButton(
-                    color: tapEnabled
-                        ? Palette.primaryColor
-                        : Palette.primaryColor.withOpacity(0.4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'Connect',
-                      style: Theme.of(context).textTheme.button.apply(
-                            fontWeightDelta: 1,
-                            color: Palette.buttonDarkTextColor,
-                          ),
-                    ),
-                    onPressed: onTap != null
-                        ? () {
-                            if (tapEnabled) {
-                              onTap();
+                  Visibility(
+                    visible: showButton,
+                    child: FlatButton(
+                      color: tapEnabled
+                          ? Palette.primaryColor
+                          : Palette.primaryColor.withOpacity(0.4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text(
+                        'Connect',
+                        style: Theme.of(context).textTheme.button.apply(
+                              fontWeightDelta: 1,
+                              color: Palette.buttonDarkTextColor,
+                            ),
+                      ),
+                      onPressed: onTap != null
+                          ? () {
+                              if (tapEnabled) {
+                                onTap();
+                              }
                             }
-                          }
-                        : null,
+                          : null,
+                    ),
                   ),
                 ],
               ),
