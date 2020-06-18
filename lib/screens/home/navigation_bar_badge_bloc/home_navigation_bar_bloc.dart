@@ -70,23 +70,11 @@ class HomeNavigationBarBadgeBloc
 
   Stream<HomeNavigationBarBadgeState> _mapUpdateNotificationCountToState(
       UpdateNotificationCount event) async* {
-    List<Notification> newNotifications;
-
-    if (_lastOpenedNotification != null) {
-      newNotifications = event.notifications
-          .where((notification) =>
-              !notification.read &&
-              notification.lastUpdated.isAfter(_lastOpenedNotification))
-          .toList();
-
-      if (newNotifications.isNotEmpty) {
-        _lastOpenedNotification = newNotifications.first.lastUpdated;
-      }
-    } else {
-      newNotifications = event.notifications
-          .where((notification) => !notification.read)
-          .toList();
-    }
+    final newNotifications = _lastOpenedNotification != null
+        ? event.notifications.where((notification) =>
+            !notification.read &&
+            notification.lastUpdated.isAfter(_lastOpenedNotification))
+        : event.notifications.where((notification) => !notification.read);
 
     final count = newNotifications.length;
     _notificationCount = count;
