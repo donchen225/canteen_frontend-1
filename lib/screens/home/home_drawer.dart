@@ -146,41 +146,41 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   style: subtitleStyle,
                                 ),
                               ),
-                              Visibility(
-                                visible: currentGroup != null,
-                                child: DrawerItem(
-                                  leading: GroupPicture(
-                                    photoUrl: currentGroup.photoUrl,
-                                    shape: BoxShape.circle,
-                                    size: 30,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: constraints.maxWidth * 0.05,
-                                  ),
-                                  height: itemHeight,
-                                  onTap: () {
-                                    Navigator.of(context).maybePop();
-                                  },
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        currentGroup?.name ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1
-                                            .apply(
-                                              fontWeightDelta: 2,
-                                            ),
+                              currentGroup != null
+                                  ? DrawerItem(
+                                      leading: GroupPicture(
+                                        photoUrl: currentGroup.photoUrl,
+                                        shape: BoxShape.circle,
+                                        size: 30,
                                       ),
-                                      Text(
-                                          '${currentGroup?.members?.toString() ?? 0} members'),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: constraints.maxWidth * 0.05,
+                                      ),
+                                      height: itemHeight,
+                                      onTap: () {
+                                        Navigator.of(context).maybePop();
+                                      },
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            currentGroup?.name ?? '',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1
+                                                .apply(
+                                                  fontWeightDelta: 2,
+                                                ),
+                                          ),
+                                          Text(
+                                              '${currentGroup?.members?.toString() ?? 0} members'),
+                                        ],
+                                      ),
+                                    )
+                                  : Container(),
                             ],
                           ),
                         )
