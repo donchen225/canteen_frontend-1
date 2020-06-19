@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/components/user_profile_body.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/request/confirm_request_dialog.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -130,10 +131,18 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
             FloatingActionButton(
               heroTag: null,
               backgroundColor: Palette.primaryColor,
-              onPressed: () {
-                BlocProvider.of<RequestBloc>(context)
-                    .add(AcceptRequest(requestId: widget.request.id));
-                Navigator.maybePop(context);
+              onPressed: () async {
+                final val = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ConfirmRequestDialog(
+                        skill: widget.request.skill,
+                        onTap: () {
+                          BlocProvider.of<RequestBloc>(context).add(
+                              DeclineRequest(requestId: widget.request.id));
+                        }));
+                if (val != null && val) {
+                  Navigator.maybePop(context);
+                }
               },
               child: Icon(
                 Icons.check,
