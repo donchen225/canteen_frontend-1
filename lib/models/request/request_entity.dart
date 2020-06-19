@@ -7,6 +7,8 @@ class RequestEntity extends Equatable {
   final String senderId;
   final String receiverId;
   final String skill;
+  final double price;
+  final int duration;
   final String comment;
   final DateTime time;
   final int status;
@@ -17,6 +19,8 @@ class RequestEntity extends Equatable {
       @required this.senderId,
       @required this.receiverId,
       @required this.skill,
+      @required this.price,
+      @required this.duration,
       @required this.comment,
       @required this.time,
       @required this.status,
@@ -28,6 +32,8 @@ class RequestEntity extends Equatable {
       'sender_id': senderId,
       'receiver_id': receiverId,
       'skill': skill,
+      'price': price,
+      'duration': duration,
       'comment': comment,
       'time': time,
       'status': status,
@@ -37,11 +43,11 @@ class RequestEntity extends Equatable {
 
   @override
   List<Object> get props =>
-      [id, senderId, receiverId, skill, comment, time, status];
+      [id, senderId, receiverId, skill, price, duration, comment, time, status];
 
   @override
   String toString() {
-    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, comment: $comment, time: $time, status: $status, createdOn: $createdOn }';
+    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, price: $price, duration: $duration, comment: $comment, time: $time, status: $status, createdOn: $createdOn }';
   }
 
   static RequestEntity fromJson(Map<String, Object> json) {
@@ -50,6 +56,8 @@ class RequestEntity extends Equatable {
       senderId: json['sender_id'] as String,
       receiverId: json['receiver_id'] as String,
       skill: json['skill'] as String,
+      price: json['price'] as double,
+      duration: json['duration'] as int,
       comment: json['comment'] as String,
       time: DateTime.parse(json['time']),
       status: json['status'] as int,
@@ -64,6 +72,8 @@ class RequestEntity extends Equatable {
       receiverId: snapshot.data['receiver_id'],
       skill: snapshot.data['skill'],
       comment: snapshot.data['comment'],
+      price: snapshot.data['price'].toDouble(),
+      duration: snapshot.data['duration'],
       time: snapshot.data['time']?.toDate() ?? null,
       status: snapshot.data['status'],
       createdOn: snapshot.data['created_on'].toDate(),
@@ -74,6 +84,8 @@ class RequestEntity extends Equatable {
     return {
       'receiver_id': receiverId,
       'skill': skill,
+      'price': price,
+      'duration': duration,
       'comment': comment,
       'time': time.millisecondsSinceEpoch,
     };

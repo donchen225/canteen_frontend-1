@@ -34,7 +34,7 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
   }
 
   @override
-  RequestListState get initialState => RequestListLoading();
+  RequestListState get initialState => RequestListEmpty();
 
   @override
   Stream<RequestListState> mapEventToState(RequestListEvent event) async* {

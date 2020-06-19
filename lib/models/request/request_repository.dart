@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/request/create_request_payload.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/request/request_entity.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
@@ -11,9 +12,10 @@ class RequestRepository {
 
   RequestRepository();
 
-  Future<void> addRequest(Request request) {
+  Future<void> addRequest(CreateRequestPayload payload) {
+    print(payload.toJson());
     return CloudFunctionManager.addRequest
-        .call(request.toEntity().toDocument())
+        .call(payload.toJson())
         .then((result) {}, onError: (error) {
       print('ERROR ADDING REQUEST: $error');
     });

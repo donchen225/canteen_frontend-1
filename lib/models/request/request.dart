@@ -10,6 +10,8 @@ class Request {
   final String senderId;
   final String receiverId;
   final String skill;
+  final double price;
+  final int duration;
   final String comment;
   final DateTime time;
   final RequestStatus status;
@@ -22,22 +24,11 @@ class Request {
     this.createdOn,
     this.id,
     this.skill,
+    this.price,
+    this.duration,
     this.comment,
     this.time,
   });
-
-  static Request create(
-      {Skill skill, String receiverId, String comment, DateTime time}) {
-    return Request(
-      skill: skill != null
-          ? (skill.name + ' - ' + '\$${(skill.price).toString()}')
-          : '',
-      comment: comment,
-      receiverId: receiverId,
-      time: time,
-      status: RequestStatus.initialized,
-    );
-  }
 
   static Request fromEntity(RequestEntity entity) {
     return Request(
@@ -45,6 +36,8 @@ class Request {
         senderId: entity.senderId,
         receiverId: entity.receiverId,
         skill: entity.skill,
+        price: entity.price,
+        duration: entity.duration,
         comment: entity.comment,
         time: entity.time,
         status: RequestStatus.values[entity.status],
@@ -57,6 +50,8 @@ class Request {
       senderId: senderId,
       receiverId: receiverId,
       skill: skill,
+      price: price,
+      duration: duration,
       comment: comment,
       time: time,
       status: status.index,
@@ -74,6 +69,8 @@ class DetailedRequest extends Request {
       @required receiverId,
       @required skill,
       @required comment,
+      @required price,
+      @required duration,
       @required time,
       @required status,
       @required createdOn,
@@ -83,6 +80,8 @@ class DetailedRequest extends Request {
             senderId: senderId,
             receiverId: receiverId,
             skill: skill,
+            price: price,
+            duration: duration,
             comment: comment,
             time: time,
             status: status,
@@ -94,6 +93,8 @@ class DetailedRequest extends Request {
         senderId: request.senderId,
         receiverId: request.receiverId,
         skill: request.skill,
+        price: request.price,
+        duration: request.duration,
         comment: request.comment,
         time: request.time,
         status: request.status,

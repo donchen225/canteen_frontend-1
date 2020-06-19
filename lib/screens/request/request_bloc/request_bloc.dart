@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:canteen_frontend/models/request/create_request_payload.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -43,7 +44,14 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Stream<RequestState> _mapAddRequestToState(AddRequest event) async* {
-    _requestRepository.addRequest(event.request);
+    final payload = CreateRequestPayload(
+      receiverId: event.receiverId,
+      comment: event.comment,
+      index: event.index,
+      type: event.type,
+      time: event.time,
+    );
+    _requestRepository.addRequest(payload);
   }
 
   Stream<RequestState> _mapRequestsUpdatedToState(

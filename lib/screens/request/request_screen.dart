@@ -11,6 +11,7 @@ class RequestScreen extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<RequestListBloc, RequestListState>(
           builder: (context, state) {
+        print(state);
         if (state is RequestListLoading || state is RequestListLoaded) {
           return Center(child: CupertinoActivityIndicator());
         } else if (state is DetailedRequestListLoaded) {

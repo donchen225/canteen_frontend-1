@@ -51,7 +51,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
     super.dispose();
   }
 
-  void _onTapSkillFunction(BuildContext context, User user, Skill skill) {
+  void _onTapSkillFunction(BuildContext context, User user, Skill skill,
+      String skillType, int index) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -61,14 +62,14 @@ class _UserProfileBodyState extends State<UserProfileBody>
         skill: skill,
         height:
             SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
-        onConfirm: (comment) {
+        onConfirm: (String comment, DateTime time) {
           BlocProvider.of<RequestBloc>(context).add(
             AddRequest(
-              Request.create(
-                skill: skill,
-                comment: comment,
-                receiverId: user.id,
-              ),
+              receiverId: user.id,
+              comment: comment,
+              index: index,
+              type: skillType,
+              time: time,
             ),
           );
         },
@@ -77,7 +78,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
   }
 
   Widget _buildItemList(BuildContext context, String name, User user) {
-    final skills = name == 'Offerings' ? user.teachSkill : user.learnSkill;
+    final skillType = name == 'Offerings' ? 'offer' : 'request';
+    final skills = skillType == 'offer' ? user.teachSkill : user.learnSkill;
 
     return CustomScrollView(
       key: PageStorageKey<String>(name),
@@ -102,7 +104,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
                       skill: skill,
                       showButton: widget.canConnect,
                       tapEnabled: tapEnabled && !widget.editable,
-                      onTap: () => _onTapSkillFunction(context, user, skill),
+                      onTap: () => _onTapSkillFunction(
+                          context, user, skill, skillType, index),
                     );
                   },
                   childCount: skills.length,

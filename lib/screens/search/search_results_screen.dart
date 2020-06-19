@@ -140,9 +140,12 @@ class _SearchResultScreenState extends State<SearchResultScreen>
               itemCount: results.length,
               itemBuilder: (BuildContext context, int index) {
                 final user = results[index];
-                return SearchResultItem(
-                  user: user,
-                  height: SizeConfig.instance.safeBlockVertical * 14,
+                return Visibility(
+                  visible: user.displayName != null,
+                  child: SearchResultItem(
+                    user: user,
+                    height: SizeConfig.instance.safeBlockVertical * 14,
+                  ),
                 );
               },
             );

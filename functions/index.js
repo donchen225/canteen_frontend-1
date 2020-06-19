@@ -31,8 +31,9 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     }
 
     const receiverId = data.receiver_id;
-    const skill = data.skill;
     const comment = data.comment;
+    const skillType = data.type;
+    const skillIndex = data.index;
     const requestTime = new Date(data.time);
 
     var output = {};
@@ -42,51 +43,47 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     if (!(typeof receiverId === 'string') || receiverId.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
+            'valid receiver_id.');
     }
 
-    if (skill && !(typeof skill === 'string')) {
+    if (!skillType || !(typeof skillType === 'string') || !(skillType === 'offer' || skillType === 'request')) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
+            'valid type.');
     }
 
     if (comment && !(typeof comment === 'string')) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "text" containing the message text to add.');
+            'valid comment.');
     }
 
-    // [START authIntegration]
-    // Authentication / user information is automatically added to the request.
-    const uid = context.auth.uid;
-    const name = context.auth.token.name || null;
-    const picture = context.auth.token.picture || null;
-    const email = context.auth.token.email || null;
-    // [END authIntegration]
+    if (skillIndex === null || !(typeof skillIndex === 'number') || !(skillIndex >= 0 && skillIndex <= 2)) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'valid index.');
+    }
 
-    // [START returnMessageAsync]
+    const uid = context.auth.uid;
+
     if (receiverId === uid) {
         throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
     }
 
-    await firestore.collection('users').doc(receiverId).get().then((doc) => {
+    const user = await firestore.collection('users').doc(receiverId).get().then((doc) => {
         if (!doc.exists) {
-            throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
+            throw new functions.https.HttpsError('not-found', 'The user ID does not exist.');
         }
-        return;
+        return doc.data();
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 0).get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.exists) {
-                terminate = true;
-                output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
-                return;
-            }
-        });
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+        }
         return;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -97,13 +94,10 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     }
 
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 0).get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            if (doc.exists) {
-                terminate = true;
-                output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
-                return;
-            }
-        });
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+        }
         return;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -130,22 +124,31 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         return output;
     }
 
-    // Create document
-    const doc = {
-        "sender_id": uid,
-        "receiver_id": receiverId,
-        "skill": skill,
-        "status": 0,
-        "comment": comment,
-        "time": requestTime,
-        "created_on": admin.firestore.Timestamp.now(),
-    };
+    try {
+        const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
+        const payer = skillType === "offer" ? uid : receiverId;
 
-    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
-        return doc;
-    }).catch((error) => {
+        // Create document
+        const doc = {
+            "sender_id": uid,
+            "receiver_id": receiverId,
+            "payer": payer,
+            "skill": skill['name'],
+            "price": skill["price"],
+            "duration": skill["duration"],
+            "status": 0,
+            "comment": comment,
+            "time": requestTime,
+            "created_on": admin.firestore.Timestamp.now(),
+        };
+
+        return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
+            return doc;
+        })
+    }
+    catch (error) {
         throw new functions.https.HttpsError('unknown', error.message, error);
-    });
+    }
 });
 
 // Create match in Firestore

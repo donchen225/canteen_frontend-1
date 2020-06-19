@@ -37,3 +37,5 @@ class DetailedRequestListLoaded extends RequestListState {
     return 'DetailedRequestListLoaded { requestList: $requestList }';
   }
 }
+
+class RequestListEmpty extends RequestListState {}

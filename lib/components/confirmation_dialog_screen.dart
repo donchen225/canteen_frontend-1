@@ -108,17 +108,9 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           enabled: _selectedTime != null,
           onTap: (BuildContext context) {
             if (_selectedTime != null) {
-              BlocProvider.of<RequestBloc>(context).add(
-                AddRequest(
-                  Request.create(
-                    skill: widget.skill,
-                    comment: _message,
-                    time: _selectedTime,
-                    receiverId: widget.user.id,
-                  ),
-                ),
-              );
-
+              if (widget.onConfirm != null) {
+                widget.onConfirm(_message, _selectedTime);
+              }
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

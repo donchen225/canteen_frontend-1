@@ -136,6 +136,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                     context: context,
                     builder: (BuildContext context) => ConfirmRequestDialog(
                         skill: widget.request.skill,
+                        time: widget.request.time,
                         onTap: () {
                           BlocProvider.of<RequestBloc>(context).add(
                               DeclineRequest(requestId: widget.request.id));

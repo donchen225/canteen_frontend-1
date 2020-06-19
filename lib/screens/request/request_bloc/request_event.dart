@@ -28,15 +28,21 @@ class RequestsUpdated extends RequestEvent {
 }
 
 class AddRequest extends RequestEvent {
-  final Request request;
+  final String receiverId;
+  final String comment;
+  final int index;
+  final String type;
+  final DateTime time;
 
-  const AddRequest(this.request);
+  const AddRequest(
+      {this.receiverId, this.comment, this.index, this.type, this.time});
 
   @override
-  List<Object> get props => [request];
+  List<Object> get props => [receiverId, comment, index, type, time];
 
   @override
-  String toString() => 'AddRequest { request: $request }';
+  String toString() =>
+      'AddRequest { receiverId: $receiverId, comment: $comment, index: $index, type: $type, time: $time }';
 }
 
 class UpdateRequest extends RequestEvent {
