@@ -13,7 +13,6 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
-import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/notification_view_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';

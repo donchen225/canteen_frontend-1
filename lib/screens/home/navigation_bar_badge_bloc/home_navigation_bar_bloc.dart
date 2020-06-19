@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_event.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/home_navigation_bar_state.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
@@ -14,8 +13,8 @@ class HomeNavigationBarBadgeBloc
   final NotificationListBloc _notificationListBloc;
   StreamSubscription _requestSubscription;
   StreamSubscription _notificationSubscription;
-  int _requestCount = 0;
-  int _notificationCount = 0;
+  int requestCount = 0;
+  int notificationCount = 0;
   DateTime _lastOpenedNotification;
 
   HomeNavigationBarBadgeBloc({
@@ -61,10 +60,10 @@ class HomeNavigationBarBadgeBloc
 
   Stream<HomeNavigationBarBadgeState> _mapUpdateRequestCountToState(
       UpdateRequestCount event) async* {
-    _requestCount = event.numRequests;
+    requestCount = event.numRequests;
     yield HomeNavigationBarLoaded(
       numRequests: event.numRequests,
-      numNotifications: _notificationCount,
+      numNotifications: notificationCount,
     );
   }
 
@@ -77,23 +76,23 @@ class HomeNavigationBarBadgeBloc
         : event.notifications.where((notification) => !notification.read);
 
     final count = newNotifications.length;
-    _notificationCount = count;
+    notificationCount = count;
 
     yield HomeNavigationBarLoaded(
-      numRequests: _requestCount,
+      numRequests: requestCount,
       numNotifications: count,
     );
   }
 
   Stream<HomeNavigationBarBadgeState>
       _mapReadNotificationCountToState() async* {
-    if (_notificationCount > 0) {
-      _notificationCount = 0;
+    if (notificationCount > 0) {
+      notificationCount = 0;
       _lastOpenedNotification = DateTime.now();
     }
 
     yield HomeNavigationBarLoaded(
-      numRequests: _requestCount,
+      numRequests: requestCount,
       numNotifications: 0,
     );
   }
