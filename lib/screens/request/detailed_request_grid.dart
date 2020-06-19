@@ -28,7 +28,7 @@ class RequestList extends StatelessWidget {
         final user = request.sender;
 
         return MatchItem(
-          displayName: user.displayName,
+          displayName: user.displayName ?? '',
           photoUrl: user.photoUrl,
           message:
               "${user.displayName} sent you a request for ${request.skill}",
