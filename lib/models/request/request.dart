@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/request/request_entity.dart';
 import 'package:canteen_frontend/models/request/status.dart';
-import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:meta/meta.dart';
 
@@ -12,6 +11,7 @@ class Request {
   final String skill;
   final double price;
   final int duration;
+  final String type;
   final String comment;
   final DateTime time;
   final RequestStatus status;
@@ -26,6 +26,7 @@ class Request {
     this.skill,
     this.price,
     this.duration,
+    this.type,
     this.comment,
     this.time,
   });
@@ -39,24 +40,10 @@ class Request {
         price: entity.price,
         duration: entity.duration,
         comment: entity.comment,
+        type: entity.type,
         time: entity.time,
         status: RequestStatus.values[entity.status],
         createdOn: entity.createdOn);
-  }
-
-  RequestEntity toEntity() {
-    return RequestEntity(
-      id: id,
-      senderId: senderId,
-      receiverId: receiverId,
-      skill: skill,
-      price: price,
-      duration: duration,
-      comment: comment,
-      time: time,
-      status: status.index,
-      createdOn: createdOn,
-    );
   }
 }
 
@@ -72,6 +59,7 @@ class DetailedRequest extends Request {
       @required price,
       @required duration,
       @required time,
+      @required type,
       @required status,
       @required createdOn,
       @required this.sender})
@@ -84,6 +72,7 @@ class DetailedRequest extends Request {
             duration: duration,
             comment: comment,
             time: time,
+            type: type,
             status: status,
             createdOn: createdOn);
 
@@ -97,6 +86,7 @@ class DetailedRequest extends Request {
         duration: request.duration,
         comment: request.comment,
         time: request.time,
+        type: request.type,
         status: request.status,
         createdOn: request.createdOn,
         sender: sender);

@@ -135,8 +135,8 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                 final val = await showDialog(
                     context: context,
                     builder: (BuildContext context) => ConfirmRequestDialog(
-                        skill: widget.request.skill,
-                        time: widget.request.time,
+                        user: widget.user,
+                        request: widget.request,
                         onTap: () {
                           BlocProvider.of<RequestBloc>(context).add(
                               DeclineRequest(requestId: widget.request.id));

@@ -137,6 +137,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             "price": skill["price"],
             "duration": skill["duration"],
             "status": 0,
+            "type": skillType,
             "comment": comment,
             "time": requestTime,
             "created_on": admin.firestore.Timestamp.now(),

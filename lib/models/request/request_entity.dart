@@ -10,6 +10,7 @@ class RequestEntity extends Equatable {
   final double price;
   final int duration;
   final String comment;
+  final String type;
   final DateTime time;
   final int status;
   final DateTime createdOn;
@@ -23,6 +24,7 @@ class RequestEntity extends Equatable {
       @required this.duration,
       @required this.comment,
       @required this.time,
+      @required this.type,
       @required this.status,
       @required this.createdOn});
 
@@ -36,18 +38,29 @@ class RequestEntity extends Equatable {
       'duration': duration,
       'comment': comment,
       'time': time,
+      'type': type,
       'status': status,
       'created_on': createdOn,
     };
   }
 
   @override
-  List<Object> get props =>
-      [id, senderId, receiverId, skill, price, duration, comment, time, status];
+  List<Object> get props => [
+        id,
+        senderId,
+        receiverId,
+        skill,
+        price,
+        duration,
+        comment,
+        time,
+        type,
+        status
+      ];
 
   @override
   String toString() {
-    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, price: $price, duration: $duration, comment: $comment, time: $time, status: $status, createdOn: $createdOn }';
+    return 'RequestEntity { id: $id, senderId: $senderId, receiverId: $receiverId, skill: $skill, price: $price, duration: $duration, comment: $comment, time: $time, type: $type, status: $status, createdOn: $createdOn }';
   }
 
   static RequestEntity fromJson(Map<String, Object> json) {
@@ -59,6 +72,7 @@ class RequestEntity extends Equatable {
       price: json['price'] as double,
       duration: json['duration'] as int,
       comment: json['comment'] as String,
+      type: json['type'] as String,
       time: DateTime.parse(json['time']),
       status: json['status'] as int,
       createdOn: DateTime.parse(json['created_on']),
@@ -74,20 +88,10 @@ class RequestEntity extends Equatable {
       comment: snapshot.data['comment'],
       price: snapshot.data['price'].toDouble(),
       duration: snapshot.data['duration'],
+      type: snapshot.data['type'],
       time: snapshot.data['time']?.toDate() ?? null,
       status: snapshot.data['status'],
       createdOn: snapshot.data['created_on'].toDate(),
     );
-  }
-
-  Map<String, Object> toDocument() {
-    return {
-      'receiver_id': receiverId,
-      'skill': skill,
-      'price': price,
-      'duration': duration,
-      'comment': comment,
-      'time': time.millisecondsSinceEpoch,
-    };
   }
 }
