@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
@@ -134,10 +135,7 @@ class _MatchScreenState extends State<MatchScreen>
                       user: prospect,
                       match: widget.match,
                     ),
-                    ChatScreen(
-                      user: prospect,
-                      match: widget.match,
-                    ),
+                    MatchDetailScreen(),
                   ],
                 );
               },

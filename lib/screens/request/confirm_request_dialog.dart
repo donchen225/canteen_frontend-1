@@ -141,16 +141,6 @@ class ConfirmRequestDialog extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15),
-            child: Text(
-              'Payment will be requested before the offer/request is completed. Payment will be sent after the offer/request is complete.',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText2
-                  .apply(color: Palette.textSecondaryBaseColor),
-            ),
-          ),
-          Padding(
             padding: EdgeInsets.only(top: 10),
             child: RaisedButton(
               elevation: 0,

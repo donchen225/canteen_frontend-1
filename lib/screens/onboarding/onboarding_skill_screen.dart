@@ -2,7 +2,6 @@ import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/next_button.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_profile_picture_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -31,7 +30,7 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
   FocusNode _descriptionFocusNode;
   final int _nameTextFieldMaxChars = 40;
   final int _priceTextFieldMaxChars = 6;
-  final int _descriptionTextFieldMaxChars = 200;
+  final int _descriptionTextFieldMaxChars = 300;
   bool _offeringSelected;
   bool _requestSelected;
   int _selectedDurationIndex;

@@ -38,39 +38,37 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: GestureDetector(
-        onTapDown: (_) {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+    return GestureDetector(
+      onTapDown: (_) {
+        FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: Stack(
-              children: <Widget>[
-                Container(
-                  color: Colors.white,
-                  child: MessageList(match),
-                ),
-              ],
-            )),
-            ChatInput(),
-            // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
-            //   if (state is UnConfigState)
-            //     configMessagePeek =
-            //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
-            //   if (state is ConfigChangeState) if (state.key ==
-            //       Constants.configMessagePeek) configMessagePeek = state.value;
-            //   return GestureDetector(
-            //     child: ChatInput(),
-            //   );
-            // })
-          ],
-        ),
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Column(
+        children: <Widget>[
+          Expanded(
+              child: Stack(
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: MessageList(match),
+              ),
+            ],
+          )),
+          ChatInput(),
+          // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
+          //   if (state is UnConfigState)
+          //     configMessagePeek =
+          //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
+          //   if (state is ConfigChangeState) if (state.key ==
+          //       Constants.configMessagePeek) configMessagePeek = state.value;
+          //   return GestureDetector(
+          //     child: ChatInput(),
+          //   );
+          // })
+        ],
       ),
     );
   }
