@@ -140,11 +140,9 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                       user: prospect,
                       match: widget.match,
                     ),
-                    VideoChatDetailScreen(
-                      user: user,
+                    ChatScreen(
+                      user: prospect,
                       match: widget.match,
-                      userDates: null,
-                      partnerDates: null,
                     ),
                   ],
                 );
