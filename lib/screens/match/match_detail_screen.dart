@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
