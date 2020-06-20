@@ -1,4 +1,4 @@
-import 'package:canteen_frontend/screens/request/detailed_request_grid.dart';
+import 'package:canteen_frontend/screens/request/request_list.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

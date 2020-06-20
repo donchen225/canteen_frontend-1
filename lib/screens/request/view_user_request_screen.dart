@@ -46,7 +46,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sent you a request for ${widget.request.skill}",
+                      "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}",
                       style: Theme.of(context).textTheme.bodyText1.apply(
                             fontWeightDelta: 1,
                           ),
