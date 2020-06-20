@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/video_chat_detail_screen.dart';
@@ -29,16 +28,12 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
   TabController _tabController;
 
   final List<Text> tabChoices = [
-    Text('CHAT',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        )),
-    Text('DETAILS',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        )),
+    Text(
+      'Chat',
+    ),
+    Text(
+      'Details',
+    ),
   ];
 
   @override
@@ -70,7 +65,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               ),
               title: Text(
                 prospect.displayName ?? prospect.email,
-                style: TextStyle(fontSize: 22, color: Colors.black),
+                style: Theme.of(context).textTheme.headline6.apply(
+                      color: Palette.appBarTextColor,
+                      fontWeightDelta: 2,
+                    ),
               ),
               backgroundColor: Palette.appBarBackgroundColor,
               elevation: 1,
@@ -80,12 +78,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                       state is MatchPaymentConfirming)
                   ? TabBar(
                       indicatorSize: TabBarIndicatorSize.label,
-                      indicator: UnderlineTabIndicator(
-                        borderSide: BorderSide(width: 2.0),
-                        // insets: EdgeInsets.symmetric(horizontal: -10),
-                      ),
-                      indicatorColor: Colors.black,
                       controller: _tabController,
+                      labelColor: Palette.primaryColor,
+                      unselectedLabelColor: Palette.appBarTextColor,
+                      labelStyle: Theme.of(context).textTheme.headline6,
                       tabs: tabChoices.map((text) {
                         return Padding(
                           padding: EdgeInsets.symmetric(
@@ -96,8 +92,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                           ),
                         );
                       }).toList(),
-                      labelColor: Colors.black,
-                      unselectedLabelColor: Colors.grey.shade400,
                     )
                   : null,
             ),
