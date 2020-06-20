@@ -138,8 +138,8 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                         user: widget.user,
                         request: widget.request,
                         onTap: () {
-                          BlocProvider.of<RequestBloc>(context).add(
-                              DeclineRequest(requestId: widget.request.id));
+                          BlocProvider.of<RequestBloc>(context)
+                              .add(AcceptRequest(requestId: widget.request.id));
                         }));
                 if (val != null && val) {
                   Navigator.maybePop(context);

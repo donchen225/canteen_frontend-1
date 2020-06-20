@@ -167,15 +167,15 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
     const time = admin.firestore.Timestamp.now();
 
     const matchId = (utils.hashCode(previousValue.sender_id) < utils.hashCode(previousValue.receiver_id)) ? previousValue.sender_id + previousValue.receiver_id : previousValue.receiver_id + previousValue.sender_id;
-    const videoChatId = context.eventId;
 
     const match = {
         "user_id": [previousValue.sender_id, previousValue.receiver_id],
         "sender_id": previousValue.sender_id,
+        "payer": previousValue.payer,
         "status": 0,
+        "time": previousValue.time,
         "created_on": time,
         "last_updated": time,
-        "active_video_chat": videoChatId,
     };
 
     const matchRef = firestore.collection(MATCH_COLLECTION).doc(matchId);
@@ -189,13 +189,6 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
     await matchRef.set(match, { merge: true }).then(() => {
         return match;
     }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
-    });
-
-    // Add video chat session
-    matchRef.collection(VIDEO_CHAT_COLLECTION).doc(videoChatId).set({
-        "last_updated": time,
-    }, { merge: true }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
