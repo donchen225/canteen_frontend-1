@@ -6,8 +6,6 @@ import 'package:canteen_frontend/utils/date_utils.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import 'video_chat_details_selection_screen.dart';
 

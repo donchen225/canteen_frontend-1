@@ -71,28 +71,23 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
               ),
               backgroundColor: Palette.appBarBackgroundColor,
               elevation: 1,
-              bottom: !(state is MatchEventSelecting ||
-                      state is MatchTimeSelecting ||
-                      state is MatchPaying ||
-                      state is MatchPaymentConfirming)
-                  ? TabBar(
-                      indicatorSize: TabBarIndicatorSize.label,
-                      controller: _tabController,
-                      labelColor: Palette.primaryColor,
-                      unselectedLabelColor: Palette.appBarTextColor,
-                      labelStyle: Theme.of(context).textTheme.headline6,
-                      tabs: tabChoices.map((text) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: kTabBarTextPadding,
-                          ),
-                          child: Tab(
-                            child: text,
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  : null,
+              bottom: TabBar(
+                indicatorSize: TabBarIndicatorSize.label,
+                controller: _tabController,
+                labelColor: Palette.primaryColor,
+                unselectedLabelColor: Palette.appBarTextColor,
+                labelStyle: Theme.of(context).textTheme.headline6,
+                tabs: tabChoices.map((text) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: kTabBarTextPadding,
+                    ),
+                    child: Tab(
+                      child: text,
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
             body: Builder(
               builder: (BuildContext context) {
@@ -102,35 +97,35 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                   );
                 }
 
-                if (state is MatchEventSelecting) {
-                  return MatchDetailEventSelectionScreen(
-                    user: user,
-                    match: widget.match,
-                  );
-                }
+                // if (state is MatchEventSelecting) {
+                //   return MatchDetailEventSelectionScreen(
+                //     user: user,
+                //     match: widget.match,
+                //   );
+                // }
 
-                if (state is MatchPaying) {
-                  return MatchPaymentScreen(
-                    user: user,
-                    match: widget.match,
-                    skill: state.skill,
-                    date: state.date,
-                  );
-                }
+                // if (state is MatchPaying) {
+                //   return MatchPaymentScreen(
+                //     user: user,
+                //     match: widget.match,
+                //     skill: state.skill,
+                //     date: state.date,
+                //   );
+                // }
 
-                if (state is MatchPaymentConfirming) {
-                  return MatchPaymentConfirmationScreen(
-                    user: user,
-                    match: widget.match,
-                    skill: state.skill,
-                  );
-                }
+                // if (state is MatchPaymentConfirming) {
+                //   return MatchPaymentConfirmationScreen(
+                //     user: user,
+                //     match: widget.match,
+                //     skill: state.skill,
+                //   );
+                // }
 
-                if (state is MatchError) {
-                  return Center(
-                    child: Text('Match Error.'),
-                  );
-                }
+                // if (state is MatchError) {
+                //   return Center(
+                //     child: Text('Match Error.'),
+                //   );
+                // }
 
                 return TabBarView(
                   controller: _tabController,
