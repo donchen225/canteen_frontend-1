@@ -374,7 +374,7 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                     borderSide: BorderSide(color: Colors.black),
                   ),
                 ),
-                maxLength: _nameTextFieldMaxChars,
+                maxLength: _descriptionTextFieldMaxChars,
                 maxLines: null,
                 minLines: 1,
               ),
