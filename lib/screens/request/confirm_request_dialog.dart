@@ -6,32 +6,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ConfirmRequestDialog extends StatefulWidget {
+class ConfirmRequestDialog extends StatelessWidget {
   final User user;
   final Request request;
   final Function onTap;
+  final DateFormat timeFormat = DateFormat.jm();
 
   ConfirmRequestDialog({this.user, this.request, this.onTap});
-
-  @override
-  _ConfirmRequestDialogState createState() => _ConfirmRequestDialogState();
-}
-
-class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
-  final DateFormat timeFormat = DateFormat.jm();
-  bool _pressed = false;
 
   Widget _buildDescription(BuildContext context) {
     var description;
 
-    switch (widget.request.type) {
+    switch (request.type) {
       case "offer":
         description =
-            " would like to take you up on your offer for \"${widget.request.skill}\".";
+            " would like to take you up on your offer for \"${request.skill}\".";
         break;
       case "request":
         description =
-            " would like to fulfill your request for \"${widget.request.skill}\".";
+            " would like to fulfill your request for \"${request.skill}\".";
         break;
       default:
         return Container();
@@ -45,7 +38,7 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
         overflow: TextOverflow.ellipsis,
         text: TextSpan(style: textStyle, children: [
           TextSpan(
-            text: '${widget.user.displayName}',
+            text: '${user.displayName}',
             style: textStyle.apply(
               fontWeightDelta: 2,
             ),
@@ -82,7 +75,7 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
-              widget.request.skill,
+              request.skill,
               style: bodyTextStyle.apply(
                 fontWeightDelta: 2,
               ),
@@ -98,7 +91,7 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
                   horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                 ),
                 child: Text(
-                  '${widget.request.duration.toString()} min',
+                  '${request.duration.toString()} min',
                   style: bodyTextStyle,
                 ),
               ),
@@ -120,11 +113,11 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        DateFormat('yMMMMEEEEd').format(widget.request.time),
+                        DateFormat('yMMMMEEEEd').format(request.time),
                         style: timeTextStyle,
                       ),
                       Text(
-                        '${timeFormat.format(widget.request.time)} - ${timeFormat.format(widget.request.time.add(Duration(minutes: widget.request.duration)))} ${widget.request.time.timeZoneName}',
+                        '${timeFormat.format(request.time)} - ${timeFormat.format(request.time.add(Duration(minutes: request.duration)))} ${request.time.timeZoneName}',
                         style: timeTextStyle,
                       ),
                     ],
@@ -141,7 +134,7 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
                   horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                 ),
                 child: Text(
-                  '${widget.request.price.toStringAsFixed(2)}',
+                  '${request.price.toStringAsFixed(2)}',
                   style: bodyTextStyle,
                 ),
               ),
@@ -173,8 +166,8 @@ class _ConfirmRequestDialogState extends State<ConfirmRequestDialog> {
                 borderRadius: BorderRadius.circular(20),
               ),
               onPressed: () {
-                if (widget.onTap != null) {
-                  widget.onTap();
+                if (onTap != null) {
+                  onTap();
                 }
                 Navigator.maybePop(context, true);
               },
