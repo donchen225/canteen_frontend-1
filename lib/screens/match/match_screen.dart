@@ -11,17 +11,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MatchDetailScreen extends StatefulWidget {
+class MatchScreen extends StatefulWidget {
   static const routeName = '/match';
   final DetailedMatch match;
 
-  MatchDetailScreen({Key key, @required this.match}) : super(key: key);
+  MatchScreen({Key key, @required this.match}) : super(key: key);
 
   @override
-  _MatchDetailScreenState createState() => _MatchDetailScreenState();
+  _MatchScreenState createState() => _MatchScreenState();
 }
 
-class _MatchDetailScreenState extends State<MatchDetailScreen>
+class _MatchScreenState extends State<MatchScreen>
     with SingleTickerProviderStateMixin {
   MatchDetailBloc _matchDetailBloc;
   TabController _tabController;

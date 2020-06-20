@@ -2,8 +2,8 @@ import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/match/arguments.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:canteen_frontend/screens/match/match_item.dart';
+import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +38,7 @@ class MatchList extends StatelessWidget {
             onTap: () async {
               BlocProvider.of<MatchDetailBloc>(context)
                   .add(LoadMatchDetails(match: match));
-              Navigator.of(context).pushNamed(MatchDetailScreen.routeName,
+              Navigator.of(context).pushNamed(MatchScreen.routeName,
                   arguments: MatchArguments(match: match));
             });
       },
