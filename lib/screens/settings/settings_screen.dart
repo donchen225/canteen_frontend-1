@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       value: _settings['push_notification_app'],
                                       onChanged: (bool value) {
                                         // If false, and notifications are true, turn on
-                                        // If false, and notifications are false, open ios settings page
+                                        // TODO: If false, and notifications are false, open ios settings page
                                         setState(() {
                                           _settings['push_notification_app'] =
                                               value;
@@ -105,7 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     right: 80,
                                   ),
                                   child: Text(
-                                    'By having this set to off, you may miss a connection.',
+                                    'By having this set to off, you may miss a connection. You must turn on notifications from your device system settings first.',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText2
