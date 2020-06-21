@@ -81,14 +81,14 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _mapLoadUserProfileToState(
       LoadUserProfile event) async* {
     // Load settings from cache here
-    final pushNotifications =
-        CachedSharedPreferences.getBool(PreferenceConstants.pushNotifications);
+    // final pushNotifications = CachedSharedPreferences.getBool(
+    //     PreferenceConstants.pushNotificationsSystem);
     final timeZone =
         CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
     final timeZoneName =
         CachedSharedPreferences.getString(PreferenceConstants.timeZoneName);
     final settings = UserSettings(
-        pushNotifications: pushNotifications,
+        // pushNotifications: pushNotifications,
         timeZone: timeZone,
         timeZoneName: timeZoneName);
 

@@ -376,7 +376,75 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
         }
     };
 
-    fcm.sendToDevice(tokens, payload);
+    return fcm.sendToDevice(tokens, payload);
+});
+
+exports.onNotificationUpdated = functions.firestore.document('notifications/{userId}/notifications/{notificationId}').onWrite(async (change, context) => {
+
+    const docBeforeChange = change.before.data();
+    const docAfterChange = change.after.data();
+
+    if (!docAfterChange) {
+        return;
+    }
+
+    const count = docAfterChange.count;
+
+    if (docBeforeChange && docAfterChange) {
+        const oldCount = docBeforeChange.count;
+
+        if (count <= oldCount) {
+            return;
+        }
+    }
+
+    const userId = context.params.userId;
+    const senderId = docAfterChange.from;
+    const data = docAfterChange.data;
+
+    const querySnapshot = await firestore
+        .collection(USER_COLLECTION)
+        .doc(userId)
+        .collection('tokens')
+        .get();
+
+    const tokens = querySnapshot.docs.map(snap => snap.id);
+
+    if (!Array.isArray(tokens) || !tokens.length) {
+        console.log("Token doesn't exist")
+        return;
+    }
+
+    const sender = await firestore
+        .collection(USER_COLLECTION)
+        .doc(senderId).get();
+    const senderData = sender.data();
+
+    const notificationType = docAfterChange.object;
+
+    var message = "";
+    if (notificationType === 'like' && count === 1) {
+        message = `${senderData.display_name} liked your post.`;
+    } else if (notificationType === 'like' && count === 2) {
+        message = `${senderData.display_name} and 1 other liked your post.`;
+    } else if (notificationType === 'like' && count > 2) {
+        message = `${senderData.display_name} and ${count - 1} others liked your post.`;
+    } else if (notificationType === 'comment' && count === 1) {
+        message = `${senderData.display_name} commented on your post:\n${data}`;
+    } else if (notificationType === 'comment' && count === 2) {
+        message = `${senderData.display_name} and 1 other commented on your post:\n${data}`;
+    } else if (notificationType === 'comment' && count > 2) {
+        message = `${senderData.display_name} and ${count - 1} others commented on your post:\n${data}`;
+    }
+
+    const payload = {
+        notification: {
+            body: message,
+            click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+        }
+    };
+
+    return fcm.sendToDevice(tokens, payload);
 });
 
 exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onCreate(async (snap, context) => {

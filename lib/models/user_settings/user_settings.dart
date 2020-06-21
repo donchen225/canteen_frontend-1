@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/user_settings/user_settings_entity.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:equatable/equatable.dart';
 
 class UserSettings extends Equatable {

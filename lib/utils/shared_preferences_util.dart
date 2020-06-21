@@ -4,7 +4,9 @@ class PreferenceConstants {
   static const userId = "user_id";
   static const userPhotoUrl = "user_photo_url";
   static const userName = "user_name";
-  static const pushNotifications = "push_notifications";
+  static const deviceId = "device_id";
+  static const pushNotificationsSystem = "push_notifications_system";
+  static const pushNotificationsApp = "push_notifications_app";
   static const timeZone = "time_zone";
   static const timeZoneName = "time_zone_name";
   static const settingsInitialized = "settings_initialized";

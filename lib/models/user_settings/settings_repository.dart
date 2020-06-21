@@ -11,8 +11,8 @@ class SettingsRepository {
   SettingsRepository();
 
   UserSettings getCurrentSettings() {
-    final pushNotifications =
-        CachedSharedPreferences.getBool(PreferenceConstants.pushNotifications);
+    // final pushNotifications = CachedSharedPreferences.getBool(
+    //     PreferenceConstants.pushNotificationsSystem);
     final timeZone =
         CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
     final timeZoneName =
@@ -22,7 +22,7 @@ class SettingsRepository {
 
     return settingsInitialized
         ? UserSettings(
-            pushNotifications: pushNotifications,
+            // pushNotifications: pushNotifications,
             timeZone: timeZone,
             timeZoneName: timeZoneName,
             settingsInitialized: settingsInitialized)
@@ -58,9 +58,41 @@ class SettingsRepository {
     });
   }
 
-  Future<void> saveToken(String token) {
+  Future<void> toggleDevicePushNotification(String deviceId, bool value) {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    final ref =
+        userCollection.document(userId).collection('tokens').document(deviceId);
+
+    return ref.get().then((documentSnapshot) {
+      if (documentSnapshot.exists) {
+        ref.setData({
+          "active": value,
+        }, merge: true);
+      }
+    });
+  }
+
+  Future<void> toggleSettingPushNotification(bool value) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    CachedSharedPreferences.setBool(
+        PreferenceConstants.pushNotificationsApp, value);
+
+    return userCollection
+        .document(userId)
+        .collection('settings')
+        .document('$userId-settings')
+        .setData({"push_notification": value}, merge: true);
+  }
+
+  Future<void> saveToken(String token, String deviceId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final pushNotificationApp = CachedSharedPreferences.getBool(
+        PreferenceConstants.pushNotificationsApp);
 
     print('TOKEN: $token');
     if (token == null || token.isEmpty) {
@@ -68,18 +100,15 @@ class SettingsRepository {
     }
 
     final ref =
-        userCollection.document(userId).collection('tokens').document(token);
+        userCollection.document(userId).collection('tokens').document(deviceId);
 
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      final doc = await tx.get(ref);
-
-      if (!(doc.exists)) {
-        await tx.set(ref, {
-          "token": token,
-          "created_on": FieldValue.serverTimestamp(),
-          "platform": Platform.operatingSystem,
-        });
-      }
+    return ref.get().then((documentSnapshot) {
+      return ref.setData({
+        "token": token,
+        "created_on": FieldValue.serverTimestamp(),
+        "platform": Platform.operatingSystem,
+        "active": pushNotificationApp,
+      }, merge: true);
     });
   }
 }

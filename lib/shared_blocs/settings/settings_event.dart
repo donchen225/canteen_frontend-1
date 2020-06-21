@@ -45,6 +45,19 @@ class UpdateSettings extends SettingEvent {
   String toString() => 'UpdateSettings { settings: $settings }';
 }
 
+class ToggleAppPushNotifications extends SettingEvent {
+  final bool notifications;
+
+  const ToggleAppPushNotifications({this.notifications});
+
+  @override
+  List<Object> get props => [notifications];
+
+  @override
+  String toString() =>
+      'ToggleAppPushNotifications { notifications: $notifications }';
+}
+
 class ClearSettings extends SettingEvent {
   const ClearSettings();
 

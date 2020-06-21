@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 // PushNotificationsManager - Manages all push notifications
@@ -78,9 +81,32 @@ class PushNotificationsManager {
         .requestNotificationPermissions(const IosNotificationSettings());
   }
 
-  Future<void> saveSettings(IosNotificationSettings settings) {}
+  Future<void> saveSettings(IosNotificationSettings settings) async {
+    final String settingsJson = jsonEncode(<String, bool>{
+      'sound': settings.sound,
+      'alert': settings.alert,
+      'badge': settings.badge,
+      'provisional': settings.provisional,
+    });
 
-  Future<void> saveToken(String token) {
-    return _settingsRepository.saveToken(token);
+    CachedSharedPreferences.setString(
+        PreferenceConstants.pushNotificationsSystem, settingsJson);
+  }
+
+  Future<void> saveToken(String token) async {
+    String identifier = "";
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      var build = await deviceInfoPlugin.androidInfo;
+      identifier = build.androidId; //UUID for Android
+    } else if (Platform.isIOS) {
+      var data = await deviceInfoPlugin.iosInfo;
+      identifier = data.identifierForVendor; //UUID for iOS
+    }
+
+    CachedSharedPreferences.setString(PreferenceConstants.deviceId, identifier);
+
+    return _settingsRepository.saveToken(token, identifier);
   }
 }
