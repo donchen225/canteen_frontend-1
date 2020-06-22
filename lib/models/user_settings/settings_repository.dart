@@ -85,7 +85,7 @@ class SettingsRepository {
         .document(userId)
         .collection('settings')
         .document('$userId-settings')
-        .setData({"push_notification": value}, merge: true);
+        .setData({"push_notifications": value}, merge: true);
   }
 
   Future<void> saveToken(String token, String deviceId) {

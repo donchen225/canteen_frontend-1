@@ -103,7 +103,12 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   }
 
   Stream<SettingState> _mapClearSettingsToState() async* {
+    final deviceId =
+        CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+    await _settingsRepository.toggleDevicePushNotification(deviceId, false);
+
     CachedSharedPreferences.clear();
+
     yield SettingsUninitialized();
   }
 

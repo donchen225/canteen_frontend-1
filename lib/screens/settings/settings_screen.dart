@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/custom_tile.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
@@ -5,7 +6,6 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,9 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     print('INIT SETTINGS SCREEN');
-    _settings['push_notification_app'] = CachedSharedPreferences.getBool(
+    _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
         PreferenceConstants.pushNotificationsApp);
-    _settings['push_notification_system'] = jsonDecode(
+    _settings['push_notifications_system'] = jsonDecode(
         CachedSharedPreferences.getString(
             PreferenceConstants.pushNotificationsSystem));
   }
@@ -80,12 +80,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             .textTheme
                                             .bodyText1),
                                     CupertinoSwitch(
-                                      value: _settings['push_notification_app'],
+                                      value:
+                                          _settings['push_notifications_app'],
                                       onChanged: (bool value) {
                                         // If false, and notifications are true, turn on
                                         // TODO: If false, and notifications are false, open ios settings page
                                         setState(() {
-                                          _settings['push_notification_app'] =
+                                          _settings['push_notifications_app'] =
                                               value;
                                           BlocProvider.of<SettingBloc>(context)
                                               .add(ToggleAppPushNotifications(
@@ -97,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ),
                               Visibility(
-                                visible: !_settings['push_notification_app'],
+                                visible: !_settings['push_notifications_app'],
                                 child: Container(
                                   width: double.infinity,
                                   padding: EdgeInsets.only(
@@ -130,8 +131,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   top: 15,
                   bottom: 15,
                 ),
-                child: ListTile(
-                  title: Text('Log out'),
+                child: CustomTile(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Log out',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ),
                   onTap: () {
                     BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
                         .add(ClearBadgeCounts());
