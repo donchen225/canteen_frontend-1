@@ -1,5 +1,5 @@
 // Layout constants
-const double kMatchItemAspectRatio = 4 / 1;
+const double kMatchItemAspectRatio = 3.9 / 1;
 const double kTabBarTextPadding = 10;
 const double kTabBarTextScaleFactor = 0.75;
 const double kCardCircularRadius = 8.0;

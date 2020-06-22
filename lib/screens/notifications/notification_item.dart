@@ -110,8 +110,8 @@ class _NotificationItemState extends State<NotificationItem> {
               builder: (BuildContext context, BoxConstraints constraints) {
             return Container(
               padding: EdgeInsets.only(
-                top: constraints.maxHeight * 0.08,
-                bottom: constraints.maxHeight * 0.08,
+                top: constraints.maxHeight * 0.1,
+                bottom: constraints.maxHeight * 0.1,
                 left: constraints.maxWidth * 0.05,
                 right: constraints.maxWidth * 0.03,
               ),
@@ -141,8 +141,8 @@ class _NotificationItemState extends State<NotificationItem> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: constraints.maxHeight * 0.03,
+                                padding: EdgeInsets.only(
+                                  bottom: constraints.maxHeight * 0.02,
                                 ),
                                 child: RichText(
                                   textAlign: TextAlign.start,
