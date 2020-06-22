@@ -11,8 +11,8 @@ class SettingsRepository {
   SettingsRepository();
 
   UserSettings getCurrentSettings() {
-    // final pushNotifications = CachedSharedPreferences.getBool(
-    //     PreferenceConstants.pushNotificationsSystem);
+    final pushNotifications = CachedSharedPreferences.getBool(
+        PreferenceConstants.pushNotificationsApp);
     final timeZone =
         CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
     final timeZoneName =
@@ -22,7 +22,7 @@ class SettingsRepository {
 
     return settingsInitialized
         ? UserSettings(
-            // pushNotifications: pushNotifications,
+            pushNotifications: pushNotifications,
             timeZone: timeZone,
             timeZoneName: timeZoneName,
             settingsInitialized: settingsInitialized)
@@ -103,12 +103,18 @@ class SettingsRepository {
         userCollection.document(userId).collection('tokens').document(deviceId);
 
     return ref.get().then((documentSnapshot) {
-      return ref.setData({
+      var data = {
         "token": token,
-        "created_on": FieldValue.serverTimestamp(),
+        "last_updated": FieldValue.serverTimestamp(),
         "platform": Platform.operatingSystem,
         "active": pushNotificationApp,
-      }, merge: true);
+      };
+
+      if (!documentSnapshot.exists) {
+        data["created_on"] = FieldValue.serverTimestamp();
+      }
+
+      return ref.setData(data, merge: true);
     });
   }
 }

@@ -108,11 +108,8 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         CachedSharedPreferences.getString(PreferenceConstants.deviceId);
     await _settingsRepository.toggleDevicePushNotification(deviceId, false);
 
-    print('FINISHED TOGGLE');
-
     CachedSharedPreferences.clear();
 
-    print('YIELDING SETTINGS UNINITIALIZED');
     yield SettingsUninitialized();
   }
 
