@@ -110,8 +110,8 @@ class _NotificationItemState extends State<NotificationItem> {
               builder: (BuildContext context, BoxConstraints constraints) {
             return Container(
               padding: EdgeInsets.only(
-                top: constraints.maxHeight * 0.1,
-                bottom: constraints.maxHeight * 0.1,
+                top: constraints.maxHeight * 0.08,
+                bottom: constraints.maxHeight * 0.08,
                 left: constraints.maxWidth * 0.05,
                 right: constraints.maxWidth * 0.03,
               ),
@@ -128,7 +128,7 @@ class _NotificationItemState extends State<NotificationItem> {
                       ProfilePicture(
                         photoUrl: widget.photoUrl,
                         editable: false,
-                        size: constraints.maxHeight * 0.7,
+                        size: constraints.maxHeight * 0.75,
                       ),
                       Expanded(
                         child: Container(
