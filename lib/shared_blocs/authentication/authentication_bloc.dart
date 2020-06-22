@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
@@ -60,6 +62,8 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
+    // final settingBloc = BlocProvider.of<SettingBloc>(context);
+    // StreamSubscription settingsSubscription;
     _userRepository.signOut();
     yield Unauthenticated();
   }

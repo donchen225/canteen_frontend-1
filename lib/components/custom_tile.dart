@@ -41,6 +41,7 @@ class _CustomTileState extends State<CustomTile> {
       },
       onTap: () {
         setState(() {
+          color = widget.color;
           if (widget.onTap != null) {
             widget.onTap();
           }

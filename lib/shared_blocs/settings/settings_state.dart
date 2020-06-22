@@ -10,8 +10,6 @@ abstract class SettingState extends Equatable {
 
 class SettingsUninitialized extends SettingState {}
 
-class SettingsLoading extends SettingState {}
-
 class SettingsLoaded extends SettingState {
   final UserSettings settings;
 
@@ -23,3 +21,5 @@ class SettingsLoaded extends SettingState {
   @override
   String toString() => 'SettingsLoaded { $settings  }';
 }
+
+class SettingsClearing extends SettingState {}

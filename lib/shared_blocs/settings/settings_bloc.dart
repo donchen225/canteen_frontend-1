@@ -53,7 +53,6 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
 
   Stream<SettingState> _mapInitializeSettingsToState(
       InitializeSettings event) async* {
-    yield SettingsLoading();
     UserSettings settings;
 
     try {
@@ -103,12 +102,17 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   }
 
   Stream<SettingState> _mapClearSettingsToState() async* {
+    yield SettingsClearing();
+
     final deviceId =
         CachedSharedPreferences.getString(PreferenceConstants.deviceId);
     await _settingsRepository.toggleDevicePushNotification(deviceId, false);
 
+    print('FINISHED TOGGLE');
+
     CachedSharedPreferences.clear();
 
+    print('YIELDING SETTINGS UNINITIALIZED');
     yield SettingsUninitialized();
   }
 
