@@ -353,9 +353,10 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
         .collection(USER_COLLECTION)
         .doc(receiverId)
         .collection('tokens')
+        .where('active', '==', true)
         .get();
 
-    const tokens = querySnapshot.docs.map(snap => snap.id);
+    const tokens = querySnapshot.docs.map(snap => snap.data().token);
 
     if (!Array.isArray(tokens) || !tokens.length) {
         console.log("Token doesn't exist")
@@ -406,9 +407,10 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
         .collection(USER_COLLECTION)
         .doc(userId)
         .collection('tokens')
+        .where('active', '==', true)
         .get();
 
-    const tokens = querySnapshot.docs.map(snap => snap.id);
+    const tokens = querySnapshot.docs.map(snap => snap.data().token);
 
     if (!Array.isArray(tokens) || !tokens.length) {
         console.log("Token doesn't exist")
