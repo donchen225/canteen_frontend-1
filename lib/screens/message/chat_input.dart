@@ -45,9 +45,9 @@ class _ChatInputState extends State<ChatInput> {
     return Material(
         elevation: 60.0,
         child: Container(
-          // padding: EdgeInsets.only(bottom: additionalBottomPadding),
           width: double.infinity,
           decoration: BoxDecoration(
+            color: Palette.containerColor,
             border: Border(
                 top:
                     BorderSide(color: Theme.of(context).hintColor, width: 0.5)),
