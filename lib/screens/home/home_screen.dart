@@ -27,6 +27,8 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
@@ -72,10 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
   int _previousIndex;
   int _currentIndex = 0;
-  final _postScreen = GlobalKey<NavigatorState>();
-  final _searchScreen = GlobalKey<NavigatorState>();
-  final _messageScreen = GlobalKey<NavigatorState>();
-  final _notificationScreen = GlobalKey<NavigatorState>();
   final RecommendationRepository _recommendationRepository =
       RecommendationRepository();
   final GroupRepository _groupRepository = GroupRepository();
@@ -99,16 +97,28 @@ class _HomeScreenState extends State<HomeScreen> {
       switch (_currentIndex) {
         case 0:
           // TODO: clean up this animation so only one screen is shown
-          _postScreen.currentState.popUntil((route) => route.isFirst);
+          getIt<NavigationService>()
+              .homeNavigatorKey
+              .currentState
+              .popUntil((route) => route.isFirst);
           break;
         case 1:
-          _searchScreen.currentState.popUntil((route) => route.isFirst);
+          getIt<NavigationService>()
+              .searchNavigatorKey
+              .currentState
+              .popUntil((route) => route.isFirst);
           break;
         case 2:
-          _messageScreen.currentState.popUntil((route) => route.isFirst);
+          getIt<NavigationService>()
+              .messageNavigatorKey
+              .currentState
+              .popUntil((route) => route.isFirst);
           break;
         case 3:
-          _notificationScreen.currentState.popUntil((route) => route.isFirst);
+          getIt<NavigationService>()
+              .notificationNavigatorKey
+              .currentState
+              .popUntil((route) => route.isFirst);
           break;
       }
     }
@@ -153,16 +163,16 @@ class _HomeScreenState extends State<HomeScreen> {
     GlobalKey<NavigatorState> key;
     switch (_currentIndex) {
       case 0:
-        key = _postScreen;
+        key = getIt<NavigationService>().homeNavigatorKey;
         break;
       case 1:
-        key = _searchScreen;
+        key = getIt<NavigationService>().searchNavigatorKey;
         break;
       case 2:
-        key = _messageScreen;
+        key = getIt<NavigationService>().messageNavigatorKey;
         break;
       case 3:
-        key = _notificationScreen;
+        key = getIt<NavigationService>().notificationNavigatorKey;
         break;
     }
 
@@ -179,16 +189,16 @@ class _HomeScreenState extends State<HomeScreen> {
     GlobalKey<NavigatorState> key;
     switch (_currentIndex) {
       case 0:
-        key = _postScreen;
+        key = getIt<NavigationService>().homeNavigatorKey;
         break;
       case 1:
-        key = _searchScreen;
+        key = getIt<NavigationService>().searchNavigatorKey;
         break;
       case 2:
-        key = _messageScreen;
+        key = getIt<NavigationService>().messageNavigatorKey;
         break;
       case 3:
-        key = _notificationScreen;
+        key = getIt<NavigationService>().notificationNavigatorKey;
         break;
     }
 
@@ -350,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                     child: Navigator(
-                      key: _postScreen,
+                      key: getIt<NavigationService>().homeNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
                         return buildPostScreenRoutes(settings);
                       },
@@ -389,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                     child: Navigator(
-                      key: _searchScreen,
+                      key: getIt<NavigationService>().searchNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
                         return buildSearchScreenRoutes(settings);
                       },
@@ -411,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                     child: Navigator(
-                      key: _messageScreen,
+                      key: getIt<NavigationService>().messageNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
                         return buildMessageScreenRoutes(settings);
                       },
@@ -429,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                     child: Navigator(
-                      key: _notificationScreen,
+                      key: getIt<NavigationService>().notificationNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
                         return buildNotificationScreenRoutes(settings);
                       },

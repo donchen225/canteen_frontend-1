@@ -13,6 +13,8 @@ import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/profile_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
@@ -51,6 +53,7 @@ void main() async {
   final GroupRepository groupRepository = GroupRepository();
   final NotificationRepository notificationRepository =
       NotificationRepository();
+  setupServiceLocator();
   await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
@@ -199,6 +202,7 @@ class App extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
       ),
+      navigatorKey: getIt<NavigationService>().rootNavigatorKey,
       routes: {
         '/': (context) {
           SizeConfig.instance.init(context);

@@ -6,6 +6,7 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 
 // PushNotificationsManager - Manages all push notifications
 // Types of push notifications:
@@ -32,13 +33,24 @@ class PushNotificationsManager {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
+        print("ONMESSAGE: $message");
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        print("ONLAUNCH: $message");
+
+        final screen = message['screen'];
+
+        if (screen != null) {
+          // Clear away dialogs
+          // Navigator.popUntil(
+          //     context, (Route<dynamic> route) => route is PageRoute);
+          // if (!item.route.isCurrent) {
+          //   Navigator.push(context, item.route);
+          // }
+        }
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        print("ONRESUME: $message");
       },
     );
 

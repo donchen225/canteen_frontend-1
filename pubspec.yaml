@@ -32,8 +32,9 @@ dependencies:
   google_fonts: ^1.0.0
   timeago: ^2.0.26
   
-  # Storage
+  # Services
   shared_preferences: ^0.5.6+3
+  get_it: ^4.0.2
 
   # Image dependencies
   mime: ^0.9.6+3
