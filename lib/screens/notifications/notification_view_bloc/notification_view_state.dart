@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:equatable/equatable.dart';
 

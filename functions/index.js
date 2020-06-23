@@ -432,17 +432,37 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     } else if (notificationType === 'like' && count > 2) {
         message = `${senderData.display_name} and ${count - 1} others liked your post.`;
     } else if (notificationType === 'comment' && count === 1) {
-        message = `${senderData.display_name} commented on your post:\n${data}`;
+        message = `${senderData.display_name} commented on your post: ${data}`;
     } else if (notificationType === 'comment' && count === 2) {
-        message = `${senderData.display_name} and 1 other commented on your post:\n${data}`;
+        message = `${senderData.display_name} and 1 other commented on your post: ${data}`;
     } else if (notificationType === 'comment' && count > 2) {
-        message = `${senderData.display_name} and ${count - 1} others commented on your post:\n${data}`;
+        message = `${senderData.display_name} and ${count - 1} others commented on your post: ${data}`;
     }
+
+    const unreadNotifications = await firestore
+        .collection(NOTIFICATION_COLLECTION)
+        .doc(userId)
+        .collection('notifications')
+        .where('read', '==', false)
+        .get().then((querySnapshot) => {
+            return querySnapshot.size;
+        });
 
     const payload = {
         notification: {
             body: message,
-            click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+            click_action: 'FLUTTER_NOTIFICATION_CLICK', // required only for onResume or onLaunch callbacks
+            badge: unreadNotifications.toString(),
+        },
+        data: {
+            screen: "post",
+            notification_id: change.after.id,
+            parent: docAfterChange.parent,
+            parent_id: docAfterChange.parent_id,
+            target: docAfterChange.target,
+            target_id: docAfterChange.target_id,
+            object: docAfterChange.object,
+            object_id: docAfterChange.object_id
         }
     };
 
