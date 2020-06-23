@@ -3,10 +3,17 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
+import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
+import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // PushNotificationsManager - Manages all push notifications
 // Types of push notifications:
@@ -38,19 +45,12 @@ class PushNotificationsManager {
       onLaunch: (Map<String, dynamic> message) async {
         print("ONLAUNCH: $message");
 
-        final screen = message['screen'];
-
-        if (screen != null) {
-          // Clear away dialogs
-          // Navigator.popUntil(
-          //     context, (Route<dynamic> route) => route is PageRoute);
-          // if (!item.route.isCurrent) {
-          //   Navigator.push(context, item.route);
-          // }
-        }
+        onResumeMessage(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("ONRESUME: $message");
+
+        onResumeMessage(message);
       },
     );
 
@@ -74,6 +74,44 @@ class PushNotificationsManager {
 
       saveToken(token);
     });
+  }
+
+  void onResumeMessage(Map<String, dynamic> message) {
+    final screen = message['screen'];
+    final targetId = message['target_id'];
+    final parentId = message['parent_id'];
+    final notificationId = message['notification_id'];
+
+    if (screen != null &&
+        targetId != null &&
+        parentId != null &&
+        notificationId != null) {
+      final routeName = '/$screen/$targetId';
+
+      final notificationNavigatorKey =
+          getIt<NavigationService>().notificationNavigatorKey;
+      final BottomNavigationBar navigationBar =
+          getIt<HomeNavigationBarService>().homeNavigationBarKey.currentWidget;
+
+      final context = notificationNavigatorKey.currentContext;
+      BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
+          postId: targetId,
+          groupId: parentId,
+          notificationId: notificationId,
+          read: false));
+
+      BlocProvider.of<CommentBloc>(context)
+          .add(LoadComments(groupId: parentId, postId: targetId));
+
+      navigationBar.onTap(3);
+
+      notificationNavigatorKey.currentState
+          .popUntil((Route<dynamic> route) => route is PageRoute);
+      notificationNavigatorKey.currentState.push(MaterialPageRoute<void>(
+        settings: RouteSettings(name: routeName),
+        builder: (BuildContext context) => NotificationSinglePostScreen(),
+      ));
+    }
   }
 
   void getSettings() {

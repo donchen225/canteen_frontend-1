@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/notification/notification.dart';
-import 'package:canteen_frontend/models/post/post.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class NotificationListState extends Equatable {
@@ -20,5 +19,5 @@ class NotificationsLoaded extends NotificationListState {
   List<Object> get props => [notifications];
 
   @override
-  String toString() => 'NotificationsLoaded { notifications: $notifications }';
+  String toString() => 'NotificationsLoaded';
 }

@@ -33,8 +33,7 @@ class UpdateNotificationCount extends HomeNavigationBarBadgeEvent {
   List<Object> get props => [notifications];
 
   @override
-  String toString() =>
-      'UpdateNotificationCount { notifications: $notifications }';
+  String toString() => 'UpdateNotificationCount';
 }
 
 class ReadNotificationCount extends HomeNavigationBarBadgeEvent {}

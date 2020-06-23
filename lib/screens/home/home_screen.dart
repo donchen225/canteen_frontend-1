@@ -27,6 +27,7 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
+import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
@@ -249,6 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
                 return BottomNavigationBar(
+                  key: getIt<HomeNavigationBarService>().homeNavigationBarKey,
                   currentIndex: _currentIndex,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
