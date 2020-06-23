@@ -35,9 +35,9 @@ class MatchList extends StatelessWidget {
                 ? (match.lastMessage as TextMessage).text
                 : '',
             time: match.lastUpdated,
-            onTap: () async {
+            onTap: () {
               BlocProvider.of<MatchDetailBloc>(context)
-                  .add(LoadMatchDetails(match: match));
+                  .add(LoadMatch(match: match));
               Navigator.of(context).pushNamed(MatchScreen.routeName,
                   arguments: MatchArguments(match: match));
             });

@@ -91,6 +91,12 @@ class MatchRepository {
     });
   }
 
+  Future<Match> getMatch(String matchId) {
+    return matchCollection.document(matchId).get().then((documentSnapshot) {
+      return Match.fromEntity(MatchEntity.fromSnapshot(documentSnapshot));
+    });
+  }
+
   Stream<List<Message>> getMessages(String matchId) {
     return matchCollection
         .document(matchId)

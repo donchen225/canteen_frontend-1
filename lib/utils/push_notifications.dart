@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
+import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
@@ -78,39 +80,66 @@ class PushNotificationsManager {
 
   void onResumeMessage(Map<String, dynamic> message) {
     final screen = message['screen'];
-    final targetId = message['target_id'];
-    final parentId = message['parent_id'];
-    final notificationId = message['notification_id'];
 
-    if (screen != null &&
-        targetId != null &&
-        parentId != null &&
-        notificationId != null) {
-      final routeName = '/$screen/$targetId';
+    if (screen != null) {
+      if (screen == 'post') {
+        final targetId = message['target_id'];
+        final parentId = message['parent_id'];
+        final notificationId = message['notification_id'];
 
-      final notificationNavigatorKey =
-          getIt<NavigationService>().notificationNavigatorKey;
-      final BottomNavigationBar navigationBar =
-          getIt<HomeNavigationBarService>().homeNavigationBarKey.currentWidget;
+        if (targetId != null && parentId != null && notificationId != null) {
+          final routeName = '/$screen/$targetId';
 
-      final context = notificationNavigatorKey.currentContext;
-      BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
-          postId: targetId,
-          groupId: parentId,
-          notificationId: notificationId,
-          read: false));
+          final notificationNavigatorKey =
+              getIt<NavigationService>().notificationNavigatorKey;
+          final BottomNavigationBar navigationBar =
+              getIt<HomeNavigationBarService>()
+                  .homeNavigationBarKey
+                  .currentWidget;
 
-      BlocProvider.of<CommentBloc>(context)
-          .add(LoadComments(groupId: parentId, postId: targetId));
+          final context = notificationNavigatorKey.currentContext;
+          BlocProvider.of<NotificationViewBloc>(context).add(
+              LoadNotificationPost(
+                  postId: targetId,
+                  groupId: parentId,
+                  notificationId: notificationId,
+                  read: false));
 
-      navigationBar.onTap(3);
+          BlocProvider.of<CommentBloc>(context)
+              .add(LoadComments(groupId: parentId, postId: targetId));
 
-      notificationNavigatorKey.currentState
-          .popUntil((Route<dynamic> route) => route is PageRoute);
-      notificationNavigatorKey.currentState.push(MaterialPageRoute<void>(
-        settings: RouteSettings(name: routeName),
-        builder: (BuildContext context) => NotificationSinglePostScreen(),
-      ));
+          navigationBar.onTap(3);
+
+          notificationNavigatorKey.currentState
+              .popUntil((Route<dynamic> route) => route is PageRoute);
+          notificationNavigatorKey.currentState.push(MaterialPageRoute<void>(
+            settings: RouteSettings(name: routeName),
+            builder: (BuildContext context) => NotificationSinglePostScreen(),
+          ));
+        }
+      } else if (screen == 'message') {
+        final matchId = message['match_id'];
+
+        if (matchId != null) {
+          final messageNavigatorKey =
+              getIt<NavigationService>().messageNavigatorKey;
+          final BottomNavigationBar navigationBar =
+              getIt<HomeNavigationBarService>()
+                  .homeNavigationBarKey
+                  .currentWidget;
+
+          final context = messageNavigatorKey.currentContext;
+
+          BlocProvider.of<MatchDetailBloc>(context)
+              .add(LoadMatchFromId(matchId: matchId));
+
+          navigationBar.onTap(2);
+
+          messageNavigatorKey.currentState
+              .popUntil((Route<dynamic> route) => route is PageRoute);
+          messageNavigatorKey.currentState.pushNamed(MatchScreen.routeName);
+        }
+      }
     }
   }
 

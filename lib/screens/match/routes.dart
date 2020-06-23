@@ -17,7 +17,7 @@ MaterialPageRoute buildMessageScreenRoutes(RouteSettings settings) {
             return MessageScreen();
           case MatchScreen.routeName:
             final MatchArguments args = settings.arguments;
-            return MatchScreen(match: args.match);
+            return MatchScreen(match: args?.match);
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(

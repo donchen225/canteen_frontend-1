@@ -1,8 +1,6 @@
 import 'package:canteen_frontend/models/match/match.dart';
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/match_details_event_selection.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_confirmation_screen.dart';
-import 'package:canteen_frontend/screens/match/match_details_selection/match_payment_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -50,10 +48,25 @@ class _MatchScreenState extends State<MatchScreen>
     super.dispose();
   }
 
+  TabBarView _buildTabBarView(User prospect, DetailedMatch match) {
+    return TabBarView(
+      controller: _tabController,
+      children: <Widget>[
+        ChatScreen(
+          user: prospect,
+          match: match,
+        ),
+        MatchDetailScreen(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = (BlocProvider.of<UserBloc>(context).state as UserLoaded).user;
-    final prospect = widget.match.userList.firstWhere((u) => u.id != user.id);
+    final prospect = widget.match != null
+        ? widget.match.userList.firstWhere((u) => u.id != user.id)
+        : null;
 
     return BlocBuilder<MatchDetailBloc, MatchDetailState>(
         bloc: _matchDetailBloc,
@@ -64,7 +77,14 @@ class _MatchScreenState extends State<MatchScreen>
                 color: Palette.primaryColor,
               ),
               title: Text(
-                prospect.displayName ?? prospect.email,
+                prospect != null
+                    ? (prospect.displayName ?? prospect.email)
+                    : (state is MatchLoaded
+                        ? (state.match as DetailedMatch)
+                            .userList
+                            .firstWhere((u) => u.id != user.id)
+                            .displayName
+                        : ""),
                 style: Theme.of(context).textTheme.headline6.apply(
                       color: Palette.appBarTextColor,
                       fontWeightDelta: 2,
@@ -128,16 +148,16 @@ class _MatchScreenState extends State<MatchScreen>
                 //   );
                 // }
 
-                return TabBarView(
-                  controller: _tabController,
-                  children: <Widget>[
-                    ChatScreen(
-                      user: prospect,
-                      match: widget.match,
-                    ),
-                    MatchDetailScreen(),
-                  ],
-                );
+                if (state is MatchLoaded) {
+                  final match = state.match;
+                  return _buildTabBarView(prospect, match);
+                }
+
+                if (widget.match != null) {
+                  return _buildTabBarView(prospect, widget.match);
+                }
+
+                return Container();
               },
             ),
           );

@@ -374,6 +374,10 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
             body: message,
             // icon: 'your-icon-url',
             click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+        },
+        data: {
+            screen: "message",
+            match_id: matchId
         }
     };
 
