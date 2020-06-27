@@ -202,7 +202,7 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 // Set up Algolia.
 const algoliaClient = algoliasearch(functions.config().algolia.appid, functions.config().algolia.apikey);
 // const collectionIndexName = functions.config().projectId === 'PRODUCTION-PROJECT-NAME' ? 'COLLECTION_prod' : 'COLLECTION_dev';
-const collectionIndex = algoliaClient.initIndex('users_dev');
+const collectionIndex = algoliaClient.initIndex('users');
 
 // Create a HTTP request cloud function.
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {

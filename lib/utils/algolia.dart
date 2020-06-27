@@ -40,7 +40,7 @@ class AlgoliaSearch {
 
   static Future<AlgoliaQuerySnapshot> queryLearnSkill(String searchTerm) async {
     AlgoliaQuery query = _algolia.instance
-        .index('users_dev')
+        .index('users')
         .search(searchTerm)
         .setRestrictSearchableAttributes(
             ['learn_skill.name', 'learn_skill.description']);
