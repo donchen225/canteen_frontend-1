@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "get-canteen"
+    "default": "get-canteen",
+    "development": "get-canteen",
+    "production": "get-canteen-prod",
+    "staging": "get-canteen-staging"
   }
 }
