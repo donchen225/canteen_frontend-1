@@ -4,7 +4,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const algoliasearch = require('algoliasearch');
 const dates = require('./date');
-const zoom = require('./zoom');
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
@@ -13,7 +12,6 @@ const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
-const VIDEO_CHAT_COLLECTION = 'video_chat';
 
 admin.initializeApp();
 
@@ -133,7 +131,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             "sender_id": uid,
             "receiver_id": receiverId,
             "payer": payer,
-            "skill": skill['name'],
+            "skill": skill["name"],
             "price": skill["price"],
             "duration": skill["duration"],
             "status": 0,
@@ -1006,6 +1004,7 @@ exports.acceptRecommendation = functions.https.onCall(async (data, context) => {
 exports.createGroup = functions.https.onCall(async (data, context) => {
 
     const name = data.name;
+    const id = data.id;
     const description = data.description;
     const tags = (data.tags !== undefined) ? data.tags : [];
     const type = data.type;
@@ -1043,7 +1042,13 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         "last_updated": time,
     };
 
-    return firestore.collection(GROUPS_COLLECTION).add(doc).then(() => {
+    const existingGroup = await firestore.collection(GROUPS_COLLECTION).doc(id).get();
+
+    if (existingGroup.exists) {
+        return { "message": "Group already exists." };
+    }
+
+    return firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).then(() => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);

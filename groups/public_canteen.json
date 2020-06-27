@@ -1,0 +1,9 @@
+{
+    "id": "fd0a865c-42ce-4077-a050-30aeede69f3a",
+    "name": "Public Canteen",
+    "description": "The public community for all Canteen members.",
+    "tags": [
+        "public"
+    ],
+    "type": "public"
+}
