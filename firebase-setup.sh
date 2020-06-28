@@ -1,30 +1,25 @@
 
 # Declare environent to setup
-ENVIRONMENT="staging"
+ENVIRONMENT="development"
 
 echo "Setting up Firebase $ENVIRONMENT environment..."
 
 # Switch to firebase project to set up
-# firebase use $ENVIRONMENT
+firebase use $ENVIRONMENT
 
-# Set up algolia
+# Set up Cloud Functions secrets
 ## Load algolia config
-if [ "$ENVIRONMENT" == "production" ]
-then
-    BUCKET_ENVIRONMENT="prod"
-elif [ "$ENVIRONMENT" == "staging" ]
-then
-    BUCKET_ENVIRONMENT="staging"
-else
-    BUCKET_ENVIRONMENT="dev"
-fi
+gsutil cp gs://canteen-secrets-${ENVIRONMENT}/algolia-keys.json .
 
-gsutil cp gs://canteen-secrets-${BUCKET_ENVIRONMENT}/algolia-keys.json .
+ALGOLIA_APP_ID=$(cat algolia-keys.json | jq -r ".ALGOLIA_APP_ID")
+ALGOLIA_ADMIN_API_KEY=$(cat algolia-keys.json | jq -r ".ALGOLIA_ADMIN_API_KEY")
+SEARCH_ONLY_API_KEY=$(cat algolia-keys.json | jq -r ".SEARCH_ONLY_API_KEY")
 
-ALGOLIA_APP_ID=$(cat algolia-keys.json| jq -r ".ALGOLIA_APP_ID")
-ALGOLIA_ADMIN_API_KEY=$(cat algolia-keys.json| jq -r ".ALGOLIA_ADMIN_API_KEY")
+firebase functions:config:set algolia.appid="$ALGOLIA_APP_ID" algolia.apikey="$ALGOLIA_ADMIN_API_KEY" algolia.searchonlyapikey="$SEARCH_ONLY_API_KEY"
 
-# firebase functions:config:set algolia.appid="$ALGOLIA_APP_ID" algolia.apikey="$ALGOLIA_ADMIN_API_KEY"
+
+
+# curl https://us-central1-get-canteen.cloudfunctions.net/setAlgoliaSearchAttributes
 
 # # Set up firestore entries
 # ## Create groups in firestore

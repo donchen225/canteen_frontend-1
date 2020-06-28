@@ -12,6 +12,7 @@ const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
+const ALGOLIA_API_KEY_COLLECTION = 'algolia_api_keys';
 
 admin.initializeApp();
 
@@ -201,10 +202,48 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 
 // Set up Algolia.
 const algoliaClient = algoliasearch(functions.config().algolia.appid, functions.config().algolia.apikey);
-// const collectionIndexName = functions.config().projectId === 'PRODUCTION-PROJECT-NAME' ? 'COLLECTION_prod' : 'COLLECTION_dev';
 const collectionIndex = algoliaClient.initIndex('users');
 
-// Create a HTTP request cloud function.
+// Generate secured API keys for Algolia
+exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res) => {
+
+    const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
+    const numKeys = 10;
+
+    const time = admin.firestore.Timestamp.now();
+    const duration = 31104000; // in seconds (1 year)
+
+    var batch = firestore.batch();
+
+    var i;
+    for (i = 0; i < numKeys; i++) {
+        const validUntil = Math.floor(time / 1000) + duration + i;
+        const validUntilDate = new Date((time.seconds + duration + i) * 1000);
+
+        const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
+            validUntil: validUntil
+        });
+
+        const document = {
+            "key": key,
+            "valid_until": validUntilDate,
+            "created_on": time
+        };
+
+        batch.set(firestore.collection(ALGOLIA_API_KEY_COLLECTION).doc(), document);
+    }
+
+    return batch.commit().then(() => {
+        res.status(200).send("Successfully updated API keys.");
+        return;
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+        return;
+    });
+});
+
+
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 
     // This array will contain all records to be indexed in Algolia.
