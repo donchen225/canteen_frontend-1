@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/interest_item.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_list.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -138,11 +139,11 @@ class _ProfileListState extends State<ProfileList>
                   border: Border(
                     top: BorderSide(
                       width: 0.5,
-                      color: Colors.grey[400],
+                      color: Palette.borderSeparatorColor,
                     ),
                     bottom: BorderSide(
                       width: 0.5,
-                      color: Colors.grey[400],
+                      color: Palette.borderSeparatorColor,
                     ),
                   ),
                 ),

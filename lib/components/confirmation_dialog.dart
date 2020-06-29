@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                     bottom: SizeConfig.instance.blockSizeVertical,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey[400]),
+                    border: Border.all(
+                        width: 1, color: Palette.borderSeparatorColor),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: TextField(

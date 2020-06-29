@@ -71,7 +71,8 @@ class _EditProfileInterestsScreenState
               padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
               decoration: BoxDecoration(
                 color: Palette.containerColor,
-                border: Border.all(width: 1, color: Colors.grey[400]),
+                border:
+                    Border.all(width: 1, color: Palette.borderSeparatorColor),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(

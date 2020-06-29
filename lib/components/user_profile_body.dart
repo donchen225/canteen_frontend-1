@@ -335,7 +335,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         border: Border(
           bottom: BorderSide(
             width: 0.5,
-            color: Colors.grey[400],
+            color: Palette.borderSeparatorColor,
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileLongInfoScreen extends StatefulWidget {
@@ -58,7 +59,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
           height: MediaQuery.of(context).size.height * 0.25,
           padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey[400]),
+            border: Border.all(width: 1, color: Palette.borderSeparatorColor),
             borderRadius: BorderRadius.circular(10),
           ),
           child: TextField(

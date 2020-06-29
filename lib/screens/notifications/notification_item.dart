@@ -119,7 +119,10 @@ class _NotificationItemState extends State<NotificationItem> {
                 color: _read
                     ? Palette.containerColor
                     : Palette.unreadNotificationColor,
-                border: Border.all(width: 0.2, color: Colors.grey[400]),
+                border: Border(
+                  top: BorderSide(
+                      width: 0.5, color: Palette.borderSeparatorColor),
+                ),
               ),
               child: Stack(
                 children: <Widget>[

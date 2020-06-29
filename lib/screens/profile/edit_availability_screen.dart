@@ -49,7 +49,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.grey[400]),
+        border: Border.all(width: 1, color: Palette.borderSeparatorColor),
       ),
       height: SizeConfig.instance.blockSizeVertical * 6,
       width: SizeConfig.instance.blockSizeHorizontal * 30,

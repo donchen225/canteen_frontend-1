@@ -47,7 +47,10 @@ class MatchItem extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: Palette.containerColor,
-              border: Border.all(width: 0.2, color: Colors.grey[400]),
+              border: Border(
+                top:
+                    BorderSide(width: 0.5, color: Palette.borderSeparatorColor),
+              ),
             ),
             child: Stack(
               children: <Widget>[

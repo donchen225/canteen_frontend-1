@@ -114,7 +114,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
       width: SizeConfig.instance.blockSizeHorizontal * 33,
       height: SizeConfig.instance.safeBlockVertical * 7,
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.grey[400]),
+        border: Border.all(width: 1, color: Palette.borderSeparatorColor),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -183,7 +183,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             margin: EdgeInsets.only(
                 bottom: SizeConfig.instance.blockSizeVertical * 3),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey[400]),
+              border: Border.all(width: 1, color: Palette.borderSeparatorColor),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
@@ -228,8 +228,9 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
                             height: SizeConfig.instance.safeBlockVertical * 7,
                             width: SizeConfig.instance.safeBlockHorizontal * 20,
                             decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 1, color: Colors.grey[400]),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Palette.borderSeparatorColor),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
@@ -302,7 +303,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             height: MediaQuery.of(context).size.height * 0.25,
             padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey[400]),
+              border: Border.all(width: 1, color: Palette.borderSeparatorColor),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
