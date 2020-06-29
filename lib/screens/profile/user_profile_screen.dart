@@ -97,9 +97,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildUserProfile(UserProfileState state) {
-    final double additionalTopPadding =
-        math.max(SizeConfig.instance.paddingTop, 0.0);
-
     if (state is UserProfileLoaded) {
       final user = state.user;
 

@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
