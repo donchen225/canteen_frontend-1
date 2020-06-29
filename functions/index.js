@@ -423,14 +423,16 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
 
 exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate((snapshot, context) => {
 
+    const userId = context.params.userId;
+
     if (snapshot.exists) {
         const user = snapshot.data();
 
         if (user) {
             if (Object.entries(user.teach_skill).length !== 0 || Object.entries(user.learn_skill).length !== 0) {
                 const record = {
-                    objectID: context.params.userId,
-                    user_id: context.params.userId,
+                    objectID: userId,
+                    user_id: userId,
                     display_name: user.display_name,
                     photo_url: user.photo_url,
                     about: user.about,
@@ -777,6 +779,7 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
     const docAfterChange = change.after.data();
 
     if (docBeforeChange && docAfterChange) {
+        var updated = false;
 
         const titleBefore = docBeforeChange.title;
         const titleAfter = docAfterChange.title;
@@ -806,21 +809,21 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                     "photo_url": photoAfter,
                 }, { merge: true });
             });
-        }
 
-        var updated = false;
+            updated = true;
+        }
 
         if (learnSkillBefore.length === learnSkillAfter.length && teachSkillBefore.length === teachSkillAfter.length) {
             learnSkillBefore.forEach((item, idx) => {
                 var newLearnSkill = learnSkillAfter[idx];
-                if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description) {
+                if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description || item.price !== newLearnSkill.price || item.duration !== newLearnSkill.duration) {
                     updated = true;
                 }
             });
 
             teachSkillBefore.forEach((item, idx) => {
                 var newTeachSkill = teachSkillAfter[idx];
-                if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description) {
+                if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description || item.price !== newTeachSkill.price || item.duration !== newTeachSkill.duration) {
                     updated = true;
                 }
             });
@@ -832,21 +835,10 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 display_name: docAfterChange.display_name,
                 photo_url: docAfterChange.photo_url,
                 about: docAfterChange.about,
+                title: docAfterChange.title,
                 teach_skill: teachSkillAfter,
                 learn_skill: learnSkillAfter,
             };
-
-            if (document.teach_skill) {
-                record.teach_skill = Object.values(document.teach_skill);
-            }
-
-            if (document.learn_skill) {
-                record.learn_skill = Object.values(document.learn_skill);
-            }
-
-            if (docAfterChange.title) {
-                record.title = docAfterChange.title;
-            }
 
             if (docAfterChange.interests) {
                 record.interests = docAfterChange.interests;
