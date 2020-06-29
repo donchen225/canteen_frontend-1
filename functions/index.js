@@ -277,7 +277,10 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
         });
 
         if (validKey) {
-            return apiKey;
+            return {
+                "application_id": functions.config().algolia.appid,
+                "api_key": apiKey
+            };
         }
     }
 
@@ -304,10 +307,16 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
                 return;
             });
 
-            return key;
+            return {
+                "application_id": functions.config().algolia.appid,
+                "api_key": key
+            };
         }
 
-        return querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key;
+        return {
+            "application_id": functions.config().algolia.appid,
+            "api_key": querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key
+        };
     }).catch((error) => {
         console.log(error);
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -322,7 +331,10 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
         console.log(error);
     });
 
-    return apiKey;
+    return {
+        "application_id": functions.config().algolia.appid,
+        "api_key": apiKey
+    };
 });
 
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {

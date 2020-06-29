@@ -1,7 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/constants.dart';
-import 'package:canteen_frontend/utils/environment_variables.dart';
 
 class AlgoliaSearch {
   static Algolia _algolia;
@@ -20,18 +19,18 @@ class AlgoliaSearch {
   }
 
   void _init() async {
-    final apiKey =
+    final credentials =
         await CloudFunctionManager.getQueryApiKey.call().then((result) {
-      return result.data.toString();
+      return result.data;
     }, onError: (error) {
       print('ERROR GETTING API KEY: $error');
     });
 
-    print('API KEY: $apiKey');
+    print('API KEY: $credentials');
 
     _algolia = Algolia.init(
-      applicationId: algoliaAppId,
-      apiKey: apiKey,
+      applicationId: credentials['application_id'],
+      apiKey: credentials['api_key'],
     );
   }
 
