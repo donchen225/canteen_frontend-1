@@ -307,16 +307,11 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
                 return;
             });
 
-            return {
-                "application_id": functions.config().algolia.appid,
-                "api_key": key
-            };
+            return key;
         }
 
-        return {
-            "application_id": functions.config().algolia.appid,
-            "api_key": querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key
-        };
+        return querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key;
+
     }).catch((error) => {
         console.log(error);
         throw new functions.https.HttpsError('unknown', error.message, error);

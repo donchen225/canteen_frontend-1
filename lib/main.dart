@@ -54,7 +54,6 @@ void main() async {
       NotificationRepository();
   setupServiceLocator();
   await CachedSharedPreferences.getInstance();
-  AlgoliaSearch.getInstance();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -209,6 +208,8 @@ class App extends StatelessWidget {
               if (state is Authenticated) {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
+
+                AlgoliaSearch.getInstance();
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
