@@ -1,12 +1,25 @@
 
 # Declare environent to setup
-ENVIRONMENT="development"
+ENVIRONMENT="staging"
+
+if [ $ENVIRONMENT == "production" ]
+then
+    GCLOUD_PROJECT="get-canteen-prod"
+elif [ $ENVIRONMENT == "staging" ]
+then
+    GCLOUD_PROJECT="get-canteen-staging"
+else
+    GCLOUD_PROJECT="get-canteen"
+fi
 
 echo "Setting up Firebase $ENVIRONMENT environment..."
 
 # Switch to firebase project to set up
 echo "Switching to Firebase $ENVIRONMENT project"
 firebase use $ENVIRONMENT
+
+echo "Switching to $GCLOUD_PROJECT Google Cloud project"
+gcloud config set project $GCLOUD_PROJECT
 
 # Set up Cloud Functions secrets
 ## Load algolia config
@@ -34,9 +47,9 @@ gcloud functions call setAlgoliaSearchAttributes
 # Set up firestore entries
 ## Create groups in firestore
 echo "Creating initial groups..."
-# for file in groups/*
-# do
-#     if [[ -f $file ]]; then
-#         gcloud functions call createGroup --data '{"data":'"$(cat $file)"'}'
-#     fi
-# done
+for file in groups/*
+do
+    if [[ -f $file ]]; then
+        gcloud functions call createGroup --data '{"data":'"$(cat $file)"'}'
+    fi
+done
