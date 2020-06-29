@@ -1,6 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/environment_variables.dart';
 
 class AlgoliaSearch {
   static Algolia _algolia;
@@ -29,7 +30,7 @@ class AlgoliaSearch {
     print('API KEY: $apiKey');
 
     _algolia = Algolia.init(
-      applicationId: 'J79ENQAH4O',
+      applicationId: algoliaAppId,
       apiKey: apiKey,
     );
   }
