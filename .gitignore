@@ -1,6 +1,6 @@
 .env
 get-canteen-*
-ios/Runner/GoogleService-Info.plist
+algolia-keys.json
 
 # Miscellaneous
 *.class

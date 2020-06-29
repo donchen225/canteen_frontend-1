@@ -20,4 +20,8 @@ class CloudFunctionManager {
   static final HttpsCallable joinGroup = CloudFunctions.instance
       .getHttpsCallable(functionName: 'joinGroup')
         ..timeout = Duration(seconds: 30);
+
+  static final HttpsCallable getQueryApiKey = CloudFunctions.instance
+      .getHttpsCallable(functionName: 'getQueryApiKey')
+        ..timeout = Duration(seconds: 30);
 }

@@ -20,7 +20,7 @@ class ViewUserProfileScreen extends StatefulWidget {
 class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
   Widget _buildProfileWidget(BuildContext context, User user) {
     return user != null
-        ? UserProfileBody(user: user)
+        ? UserProfileBody(user: user, editable: widget.editable)
         : _buildBlocProfile(context);
   }
 

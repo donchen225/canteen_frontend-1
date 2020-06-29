@@ -4,7 +4,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const algoliasearch = require('algoliasearch');
 const dates = require('./date');
-const zoom = require('./zoom');
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
@@ -13,7 +12,8 @@ const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
-const VIDEO_CHAT_COLLECTION = 'video_chat';
+const QUERY_COLLECTION = 'queries';
+const ALGOLIA_API_KEY_COLLECTION = 'algolia_api_keys';
 
 admin.initializeApp();
 
@@ -133,7 +133,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             "sender_id": uid,
             "receiver_id": receiverId,
             "payer": payer,
-            "skill": skill['name'],
+            "skill": skill["name"],
             "price": skill["price"],
             "duration": skill["duration"],
             "status": 0,
@@ -203,10 +203,140 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 
 // Set up Algolia.
 const algoliaClient = algoliasearch(functions.config().algolia.appid, functions.config().algolia.apikey);
-// const collectionIndexName = functions.config().projectId === 'PRODUCTION-PROJECT-NAME' ? 'COLLECTION_prod' : 'COLLECTION_dev';
-const collectionIndex = algoliaClient.initIndex('users_dev');
+const collectionIndex = algoliaClient.initIndex('users');
 
-// Create a HTTP request cloud function.
+// Generate secured API keys for Algolia
+exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res) => {
+
+    const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
+    const numKeys = 10;
+
+    const time = admin.firestore.Timestamp.now();
+    const duration = 31104000; // in seconds (1 year)
+
+    var batch = firestore.batch();
+
+    var i;
+    for (i = 0; i < numKeys; i++) {
+        const validUntil = time.seconds + duration + i;
+        const validUntilDate = new Date(validUntil * 1000);
+
+        const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
+            validUntil: validUntil
+        });
+
+        const document = {
+            "key": key,
+            "valid_until": validUntilDate,
+            "created_on": time
+        };
+
+        batch.set(firestore.collection(ALGOLIA_API_KEY_COLLECTION).doc(), document);
+    }
+
+    return batch.commit().then(() => {
+        res.status(200).send("Successfully updated API keys.");
+        return;
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+        return;
+    });
+});
+
+exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
+
+    // Checking that the user is authenticated.
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+
+    const uid = context.auth.uid;
+
+    const queryDoc = firestore.collection(QUERY_COLLECTION).doc(uid);
+    const docSnapshot = await queryDoc.get();
+
+    const timestamp = admin.firestore.Timestamp.now();
+    const time = timestamp.toDate();
+
+    if (docSnapshot.exists) {
+        const apiKey = docSnapshot.data().key;
+        const validKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where("key", "==", apiKey).get().then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                return false;
+            }
+
+            const keyData = querySnapshot.docs[0].data();
+
+            return keyData.valid_until.toDate() > time;
+        }).catch((error) => {
+            console.log(error);
+            return false;
+        });
+
+        if (validKey) {
+            return {
+                "application_id": functions.config().algolia.appid,
+                "api_key": apiKey
+            };
+        }
+    }
+
+    const apiKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where('valid_until', '>=', time).get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+            const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
+            const duration = 31104000; // in seconds (1 year)
+
+            const validUntil = timestamp.seconds + duration;
+            const validUntilDate = new Date(validUntil * 1000);
+
+            const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
+                validUntil: validUntil
+            });
+
+            const document = {
+                "key": key,
+                "valid_until": validUntilDate,
+                "created_on": timestamp
+            };
+
+            firestore.collection(ALGOLIA_API_KEY_COLLECTION).add(document).catch((error) => {
+                console.log(error);
+                return;
+            });
+
+            return {
+                "application_id": functions.config().algolia.appid,
+                "api_key": key
+            };
+        }
+
+        return {
+            "application_id": functions.config().algolia.appid,
+            "api_key": querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key
+        };
+    }).catch((error) => {
+        console.log(error);
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    const queryDocument = {
+        "key": apiKey,
+        "last_updated": timestamp
+    };
+
+    firestore.collection(QUERY_COLLECTION).doc(uid).set(queryDocument, { merge: true }).catch((error) => {
+        console.log(error);
+    });
+
+    return {
+        "application_id": functions.config().algolia.appid,
+        "api_key": apiKey
+    };
+});
+
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 
     // This array will contain all records to be indexed in Algolia.
@@ -293,14 +423,16 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
 
 exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate((snapshot, context) => {
 
+    const userId = context.params.userId;
+
     if (snapshot.exists) {
         const user = snapshot.data();
 
         if (user) {
             if (Object.entries(user.teach_skill).length !== 0 || Object.entries(user.learn_skill).length !== 0) {
                 const record = {
-                    objectID: context.params.userId,
-                    user_id: context.params.userId,
+                    objectID: userId,
+                    user_id: userId,
                     display_name: user.display_name,
                     photo_url: user.photo_url,
                     about: user.about,
@@ -647,6 +779,7 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
     const docAfterChange = change.after.data();
 
     if (docBeforeChange && docAfterChange) {
+        var updated = false;
 
         const titleBefore = docBeforeChange.title;
         const titleAfter = docAfterChange.title;
@@ -676,21 +809,21 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                     "photo_url": photoAfter,
                 }, { merge: true });
             });
-        }
 
-        var updated = false;
+            updated = true;
+        }
 
         if (learnSkillBefore.length === learnSkillAfter.length && teachSkillBefore.length === teachSkillAfter.length) {
             learnSkillBefore.forEach((item, idx) => {
                 var newLearnSkill = learnSkillAfter[idx];
-                if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description) {
+                if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description || item.price !== newLearnSkill.price || item.duration !== newLearnSkill.duration) {
                     updated = true;
                 }
             });
 
             teachSkillBefore.forEach((item, idx) => {
                 var newTeachSkill = teachSkillAfter[idx];
-                if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description) {
+                if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description || item.price !== newTeachSkill.price || item.duration !== newTeachSkill.duration) {
                     updated = true;
                 }
             });
@@ -702,21 +835,10 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 display_name: docAfterChange.display_name,
                 photo_url: docAfterChange.photo_url,
                 about: docAfterChange.about,
+                title: docAfterChange.title,
                 teach_skill: teachSkillAfter,
                 learn_skill: learnSkillAfter,
             };
-
-            if (document.teach_skill) {
-                record.teach_skill = Object.values(document.teach_skill);
-            }
-
-            if (document.learn_skill) {
-                record.learn_skill = Object.values(document.learn_skill);
-            }
-
-            if (docAfterChange.title) {
-                record.title = docAfterChange.title;
-            }
 
             if (docAfterChange.interests) {
                 record.interests = docAfterChange.interests;
@@ -1006,6 +1128,7 @@ exports.acceptRecommendation = functions.https.onCall(async (data, context) => {
 exports.createGroup = functions.https.onCall(async (data, context) => {
 
     const name = data.name;
+    const id = data.id;
     const description = data.description;
     const tags = (data.tags !== undefined) ? data.tags : [];
     const type = data.type;
@@ -1043,7 +1166,13 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         "last_updated": time,
     };
 
-    return firestore.collection(GROUPS_COLLECTION).add(doc).then(() => {
+    const existingGroup = await firestore.collection(GROUPS_COLLECTION).doc(id).get();
+
+    if (existingGroup.exists) {
+        return { "message": "Group already exists." };
+    }
+
+    return firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).then(() => {
         return doc;
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);

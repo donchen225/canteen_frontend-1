@@ -61,6 +61,8 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A329384E24A40ED2007E5146 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A329385124A65CEA007E5146 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A329385324A6BF6C007E5146 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F6C1122457B33800EE4620 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		E488014EBCBFE00A0414ED62 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		EF16B53C4070540644683673 /* Pods-Runner.debug-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-staging.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		A329384C24A40ED2007E5146 /* staging */ = {
 			isa = PBXGroup;
 			children = (
+				A329385324A6BF6C007E5146 /* GoogleService-Info.plist */,
 			);
 			path = staging;
 			sourceTree = "<group>";
@@ -161,7 +164,7 @@
 		A329384D24A40ED2007E5146 /* development */ = {
 			isa = PBXGroup;
 			children = (
-				A329384E24A40ED2007E5146 /* GoogleService-Info.plist */,
+				A329385124A65CEA007E5146 /* GoogleService-Info.plist */,
 			);
 			path = development;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 		A329384F24A40ED2007E5146 /* production */ = {
 			isa = PBXGroup;
 			children = (
+				A329384E24A40ED2007E5146 /* GoogleService-Info.plist */,
 			);
 			path = production;
 			sourceTree = "<group>";

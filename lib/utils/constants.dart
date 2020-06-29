@@ -51,7 +51,7 @@ const double maxPhotoHeight = 200;
 const int photoQuality = 70;
 
 // Algolia constants
-const String algoliaIndexName = 'users_dev';
+const String algoliaIndexName = 'users';
 
 // Animation constants
 const int animationDuration = 150;
