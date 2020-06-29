@@ -49,7 +49,6 @@ void main() async {
   final MatchRepository matchRepository = MatchRepository();
   final RequestRepository requestRepository = RequestRepository();
   final PostRepository postRepository = PostRepository();
-  final VideoChatRepository videoChatRepository = VideoChatRepository();
   final GroupRepository groupRepository = GroupRepository();
   final NotificationRepository notificationRepository =
       NotificationRepository();

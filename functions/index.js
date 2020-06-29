@@ -12,6 +12,7 @@ const MATCH_COLLECTION = 'matches';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
+const QUERY_COLLECTION = 'queries';
 const ALGOLIA_API_KEY_COLLECTION = 'algolia_api_keys';
 
 admin.initializeApp();
@@ -217,8 +218,8 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
 
     var i;
     for (i = 0; i < numKeys; i++) {
-        const validUntil = Math.floor(time / 1000) + duration + i;
-        const validUntilDate = new Date((time.seconds + duration + i) * 1000);
+        const validUntil = time.seconds + duration + i;
+        const validUntilDate = new Date(validUntil * 1000);
 
         const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
             validUntil: validUntil
@@ -243,6 +244,86 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
     });
 });
 
+exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
+
+    // Checking that the user is authenticated.
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+
+    const uid = context.auth.uid;
+
+    const queryDoc = firestore.collection(QUERY_COLLECTION).doc(uid);
+    const docSnapshot = await queryDoc.get();
+
+    const timestamp = admin.firestore.Timestamp.now();
+    const time = timestamp.toDate();
+
+    if (docSnapshot.exists) {
+        const apiKey = docSnapshot.data().key;
+        const validKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where("key", "==", apiKey).get().then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                return false;
+            }
+
+            const keyData = querySnapshot.docs[0].data();
+
+            return keyData.valid_until.toDate() > time;
+        }).catch((error) => {
+            console.log(error);
+            return false;
+        });
+
+        if (validKey) {
+            return apiKey;
+        }
+    }
+
+    const apiKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where('valid_until', '>=', time).get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+            const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
+            const duration = 31104000; // in seconds (1 year)
+
+            const validUntil = timestamp.seconds + duration;
+            const validUntilDate = new Date(validUntil * 1000);
+
+            const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
+                validUntil: validUntil
+            });
+
+            const document = {
+                "key": key,
+                "valid_until": validUntilDate,
+                "created_on": timestamp
+            };
+
+            firestore.collection(ALGOLIA_API_KEY_COLLECTION).add(document).catch((error) => {
+                console.log(error);
+                return;
+            });
+
+            return key;
+        }
+
+        return querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key;
+    }).catch((error) => {
+        console.log(error);
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    const queryDocument = {
+        "key": apiKey,
+        "last_updated": timestamp
+    };
+
+    firestore.collection(QUERY_COLLECTION).doc(uid).set(queryDocument, { merge: true }).catch((error) => {
+        console.log(error);
+    });
+
+    return apiKey;
+});
 
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 

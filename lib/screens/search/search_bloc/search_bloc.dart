@@ -43,6 +43,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       searchHistory.add(query);
 
       final snapshot = await AlgoliaSearch.query(event.query);
+
       final results = snapshot.hits
           .map((result) => User.fromAlgoliaSnapshot(result))
           .toList();
