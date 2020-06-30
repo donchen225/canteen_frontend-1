@@ -1,6 +1,7 @@
 .env
 get-canteen-*
 algolia-keys.json
+assets/app_config.json
 
 # Miscellaneous
 *.class
