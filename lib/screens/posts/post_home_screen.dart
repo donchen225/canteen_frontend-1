@@ -133,7 +133,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
       ),
       body: BlocBuilder<GroupHomeBloc, GroupHomeState>(
         builder: (BuildContext context, GroupHomeState state) {
-          if (state is GroupHomeUninitialized) {
+          if (state is GroupHomeUnauthenticated) {
             return Container();
           }
 

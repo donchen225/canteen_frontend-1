@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -43,6 +44,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
     final currentGroup = _groupHomeBloc.currentGroup;
     final userGroups = _groupHomeBloc.currentGroups;
+
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
 
     return Drawer(
       child: SafeArea(
@@ -89,9 +93,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                       widget.onUserTap();
                                     }
                                   },
-                                  child: Text(userName,
-                                      style:
-                                          titleStyle.apply(fontWeightDelta: 1)),
+                                  child: Text(
+                                      authenticated
+                                          ? userName
+                                          : "Sign up to connect with others, customize your feed, share your interests, and more!",
+                                      textAlign: TextAlign.center,
+                                      style: authenticated
+                                          ? titleStyle.apply(fontWeightDelta: 1)
+                                          : subtitleStyle.apply(
+                                              color: Palette.textColor)),
                                 ),
                               ],
                             ),

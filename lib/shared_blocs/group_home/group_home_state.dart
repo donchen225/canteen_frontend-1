@@ -8,7 +8,7 @@ abstract class GroupHomeState extends Equatable {
   List<Object> get props => [];
 }
 
-class GroupHomeUninitialized extends GroupHomeState {}
+class GroupHomeUnauthenticated extends GroupHomeState {}
 
 class GroupHomeLoaded extends GroupHomeState {
   final Group group;

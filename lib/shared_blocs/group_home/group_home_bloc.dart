@@ -26,7 +26,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
 
   // Load local settings if exists
   @override
-  GroupHomeState get initialState => GroupHomeUninitialized();
+  GroupHomeState get initialState => GroupHomeUnauthenticated();
 
   @override
   Stream<GroupHomeState> mapEventToState(
@@ -35,9 +35,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     if (event is LoadUserGroups) {
       yield* _mapLoadUserGroupsToState();
     } else if (event is LoadHomeGroup) {
-      yield* _mapLoadGroupToState(event);
-    } else if (event is LoadCurrentGroup) {
-      yield* _mapLoadCurrentGroupToState();
+      yield* _mapLoadHomeGroupToState(event);
     } else if (event is LoadHomeGroupMembers) {
       yield* _mapLoadHomeGroupMembersToState();
     }
@@ -62,18 +60,9 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     }
   }
 
-  Stream<GroupHomeState> _mapLoadGroupToState(LoadHomeGroup event) async* {
+  Stream<GroupHomeState> _mapLoadHomeGroupToState(LoadHomeGroup event) async* {
     currentGroup = event.group;
     yield GroupHomeLoaded(group: event.group);
-  }
-
-  Stream<GroupHomeState> _mapLoadCurrentGroupToState() async* {
-    if (currentGroup != null) {
-      yield GroupHomeLoaded(group: currentGroup);
-    } else {
-      //_userRepository
-      yield GroupHomeLoaded(group: currentGroup);
-    }
   }
 
   Stream<GroupHomeState> _mapLoadHomeGroupMembersToState() async* {

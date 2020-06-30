@@ -10,8 +10,6 @@ abstract class GroupHomeEvent extends Equatable {
 
 class LoadUserGroups extends GroupHomeEvent {}
 
-class LoadCurrentGroup extends GroupHomeEvent {}
-
 class LoadHomeGroup extends GroupHomeEvent {
   final Group group;
 
