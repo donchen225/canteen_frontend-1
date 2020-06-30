@@ -6,7 +6,7 @@ abstract class NotificationListState extends Equatable {
   List<Object> get props => null;
 }
 
-class NotificationsUninitialized extends NotificationListState {}
+class NotificationsUnauthenticated extends NotificationListState {}
 
 class NotificationsLoading extends NotificationListState {}
 

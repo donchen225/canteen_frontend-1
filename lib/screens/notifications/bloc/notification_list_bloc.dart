@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/models/notification/notification_repository.dart';
-import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/notification_list_event.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/notification_list_state.dart';
@@ -30,7 +29,7 @@ class NotificationListBloc
         _notificationRepository = notificationRepository;
 
   @override
-  NotificationListState get initialState => NotificationsUninitialized();
+  NotificationListState get initialState => NotificationsUnauthenticated();
 
   @override
   Stream<NotificationListState> mapEventToState(
