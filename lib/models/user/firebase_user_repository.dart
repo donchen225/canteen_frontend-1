@@ -190,7 +190,12 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(user);
     }
     try {
-      return getUser((await getFirebaseUser()).uid, cache: false);
+      final firebaseUser = await getFirebaseUser();
+      if (firebaseUser == null) {
+        return null;
+      }
+
+      return getUser(firebaseUser.uid, cache: false);
     } catch (e) {
       print(e);
     }

@@ -27,7 +27,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   // TODO: load local matches
   @override
-  MatchState get initialState => MatchesLoaded([]);
+  MatchState get initialState => MatchesUnauthenticated();
 
   @override
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
@@ -106,7 +106,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   Stream<MatchState> _mapClearMatchesToState() async* {
     _matchRepository.clearMatches();
     _matchSubscription?.cancel();
-    yield MatchesNotLoaded();
+    yield MatchesUnauthenticated();
   }
 
   @override

@@ -35,11 +35,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapCheckOnboardStatusToState() async* {
     final user = await _userRepository.currentUser();
 
-    if (user.onBoarded != null && user.onBoarded == 1) {
-      yield HomeLoaded();
-    } else {
-      yield OnboardScreenLoaded();
-    }
+    yield HomeLoaded();
+    // if (user.onBoarded != null && user.onBoarded == 1) {
+    //   yield HomeLoaded();
+    // } else {
+    //   yield OnboardScreenLoaded();
+    // }
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {

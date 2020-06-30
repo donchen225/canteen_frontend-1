@@ -224,18 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
           highlightColor: Colors.transparent,
         ),
         child: BlocListener<HomeBloc, HomeState>(
-          listener: (BuildContext context, HomeState state) {
-            if (state is HomeLoaded) {
-              BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-
-              BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-
-              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
-
-              BlocProvider.of<SettingBloc>(context)
-                  .add(InitializeSettings(hasOnboarded: true));
-            }
-          },
+          listener: (BuildContext context, HomeState state) {},
           child: BlocBuilder<HomeBloc, HomeState>(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {

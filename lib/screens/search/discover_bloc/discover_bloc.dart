@@ -71,6 +71,10 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   Future<void> _loadRecommended() async {
     final user = await _userRepository.currentUser();
 
+    if (user == null) {
+      return;
+    }
+
     if (user.teachSkill.isEmpty && user.learnSkill.isEmpty) {
       return;
     }

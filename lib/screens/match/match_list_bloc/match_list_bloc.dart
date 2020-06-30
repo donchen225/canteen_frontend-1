@@ -21,12 +21,7 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   }
 
   @override
-  MatchListState get initialState {
-    final currentState = _matchBloc.state;
-    return currentState is MatchesLoaded
-        ? MatchListLoaded(currentState.matches)
-        : MatchListLoading();
-  }
+  MatchListState get initialState => MatchListUnauthenticated();
 
   @override
   Stream<MatchListState> mapEventToState(MatchListEvent event) async* {

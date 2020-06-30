@@ -22,4 +22,4 @@ class MatchesLoaded extends MatchState {
   String toString() => 'MatchesLoaded { matches: $matches }';
 }
 
-class MatchesNotLoaded extends MatchState {}
+class MatchesUnauthenticated extends MatchState {}

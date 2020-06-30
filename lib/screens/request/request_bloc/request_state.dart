@@ -8,7 +8,7 @@ abstract class RequestState extends Equatable {
   List<Object> get props => [];
 }
 
-class ReqeustsCleared extends RequestState {}
+class RequestsUnauthenticated extends RequestState {}
 
 class RequestsLoading extends RequestState {}
 

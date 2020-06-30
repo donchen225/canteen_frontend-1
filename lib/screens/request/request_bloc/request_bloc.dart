@@ -15,7 +15,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
         _requestRepository = requestRepository;
 
   @override
-  RequestState get initialState => RequestsLoading();
+  RequestState get initialState => RequestsUnauthenticated();
 
   @override
   Stream<RequestState> mapEventToState(RequestEvent event) async* {
@@ -73,7 +73,7 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   Stream<RequestState> _mapClearRequestsToState() async* {
     _requestRepository.clearRequests();
     _requestSubscription?.cancel();
-    yield ReqeustsCleared();
+    yield RequestsUnauthenticated();
   }
 
   @override

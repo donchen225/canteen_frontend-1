@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow create: if isAuthenticated();
       allow update: if isOwner(userId);
-      allow read: if isAuthenticated();
+      allow read: if true; // TODO: add public parameter
     }
 
     match /users/{userId}/settings/{document=**} {
@@ -32,7 +32,8 @@ service cloud.firestore {
     }
 
     match /groups/{groupId} {
-      allow read, write: if isAuthenticated();
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
     match /groups/{groupId}/posts/{postId} {

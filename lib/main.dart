@@ -211,6 +211,15 @@ class App extends StatelessWidget {
                     .add(InitializeUser(state.user));
 
                 AlgoliaSearch.getInstance();
+
+                BlocProvider.of<MatchBloc>(context).add(LoadMatches());
+
+                BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+
+                BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
+
+                BlocProvider.of<SettingBloc>(context)
+                    .add(InitializeSettings(hasOnboarded: true));
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -218,52 +227,50 @@ class App extends StatelessWidget {
                 if (state is Uninitialized) {
                   return SplashScreen();
                 }
-                if (state is Unauthenticated) {
-                  return Navigator(
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildLandingScreenRoutes(settings);
-                    },
-                  );
-                }
-                if (state is Authenticated) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<GroupHomeBloc>(
-                        create: (context) => GroupHomeBloc(
-                          userRepository: _userRepository,
-                          groupRepository: _groupRepository,
-                        ),
+                // if (state is Unauthenticated) {
+                //   return Navigator(
+                //     onGenerateRoute: (RouteSettings settings) {
+                //       return buildLandingScreenRoutes(settings);
+                //     },
+                //   );
+                // }
+
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<GroupHomeBloc>(
+                      create: (context) => GroupHomeBloc(
+                        userRepository: _userRepository,
+                        groupRepository: _groupRepository,
                       ),
-                      BlocProvider<ProfileBloc>(
-                        create: (context) => ProfileBloc(
-                          userRepository: _userRepository,
-                        ),
-                      ),
-                      BlocProvider<NotificationListBloc>(
-                        create: (context) => NotificationListBloc(
-                          userRepository: _userRepository,
-                          notificationRepository: _notificationRepository,
-                        )..add(LoadNotifications()),
-                      ),
-                      BlocProvider<HomeNavigationBarBadgeBloc>(
-                        create: (BuildContext context) =>
-                            HomeNavigationBarBadgeBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          notificationListBloc:
-                              BlocProvider.of<NotificationListBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: HomeScreen(
-                      userRepository: _userRepository,
-                      requestRepository: _requestRepository,
-                      settingsRepository: _settingsRepository,
-                      postRepository: _postRepository,
-                      notificationRepository: _notificationRepository,
                     ),
-                  );
-                }
-                return Container();
+                    BlocProvider<ProfileBloc>(
+                      create: (context) => ProfileBloc(
+                        userRepository: _userRepository,
+                      ),
+                    ),
+                    BlocProvider<NotificationListBloc>(
+                      create: (context) => NotificationListBloc(
+                        userRepository: _userRepository,
+                        notificationRepository: _notificationRepository,
+                      )..add(LoadNotifications()),
+                    ),
+                    BlocProvider<HomeNavigationBarBadgeBloc>(
+                      create: (BuildContext context) =>
+                          HomeNavigationBarBadgeBloc(
+                        requestBloc: BlocProvider.of<RequestBloc>(context),
+                        notificationListBloc:
+                            BlocProvider.of<NotificationListBloc>(context),
+                      ),
+                    ),
+                  ],
+                  child: HomeScreen(
+                    userRepository: _userRepository,
+                    requestRepository: _requestRepository,
+                    settingsRepository: _settingsRepository,
+                    postRepository: _postRepository,
+                    notificationRepository: _notificationRepository,
+                  ),
+                );
               },
             ),
           );

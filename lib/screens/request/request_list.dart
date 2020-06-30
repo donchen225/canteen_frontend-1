@@ -1,12 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:canteen_frontend/components/view_user_profile_screen.dart';
-import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/screens/match/match_item.dart';
 import 'package:canteen_frontend/screens/request/arguments.dart';
 import 'package:canteen_frontend/screens/request/view_user_request_screen.dart';
-import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 class RequestList extends StatelessWidget {
@@ -17,9 +12,6 @@ class RequestList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double itemHeight = SizeConfig.instance.safeBlockVertical / 2.5;
-    final double itemWidth = SizeConfig.instance.safeBlockHorizontal / 2;
-
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {

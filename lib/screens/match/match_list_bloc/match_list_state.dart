@@ -8,6 +8,8 @@ abstract class MatchListState extends Equatable {
   List<Object> get props => [];
 }
 
+class MatchListUnauthenticated extends MatchListState {}
+
 class MatchListLoading extends MatchListState {}
 
 class MatchListLoaded extends MatchListState {
