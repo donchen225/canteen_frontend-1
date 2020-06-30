@@ -242,7 +242,7 @@ class App extends StatelessWidget {
                       create: (context) => GroupHomeBloc(
                         userRepository: _userRepository,
                         groupRepository: _groupRepository,
-                      ),
+                      )..add(LoadDefaultGroup()),
                     ),
                     BlocProvider<ProfileBloc>(
                       create: (context) => ProfileBloc(

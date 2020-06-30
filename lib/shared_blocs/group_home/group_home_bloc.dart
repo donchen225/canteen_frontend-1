@@ -38,6 +38,8 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
       yield* _mapLoadHomeGroupToState(event);
     } else if (event is LoadHomeGroupMembers) {
       yield* _mapLoadHomeGroupMembersToState();
+    } else if (event is LoadDefaultGroup) {
+      yield* _mapLoadDefaultGroupToState();
     }
   }
 
@@ -81,5 +83,17 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
         yield GroupHomeLoaded(group: detailedGroup);
       }
     }
+  }
+
+  Stream<GroupHomeState> _mapLoadDefaultGroupToState() async* {
+    final group = await _groupRepository.getGroup('HxuOLXcLsIBmTxp0ToiQ');
+
+    final members = await _groupRepository.getGroupMembers(group.id);
+    final detailedGroup = DetailedGroup.fromGroup(group, members);
+
+    currentGroup = detailedGroup;
+    currentGroups = [detailedGroup];
+
+    yield GroupHomeLoaded(group: detailedGroup);
   }
 }

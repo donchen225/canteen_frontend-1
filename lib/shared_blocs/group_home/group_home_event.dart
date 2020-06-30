@@ -33,3 +33,8 @@ class LoadHomeGroupMembers extends GroupHomeEvent {
   @override
   String toString() => 'LoadHomeGroupMembers { groupId: $groupId }';
 }
+
+class LoadDefaultGroup extends GroupHomeEvent {
+  @override
+  String toString() => 'LoadDefaultGroup';
+}
