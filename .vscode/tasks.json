@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Copy dev config",
+            "type": "shell",
+            "command": "cp config/app_config_dev.json assets/app_config.json"
+        },
+        {
+            "label": "Copy staging config",
+            "type": "shell",
+            "command": "cp config/app_config_staging.json assets/app_config.json"
+        },
+        {
+            "label": "Copy prod config",
+            "type": "shell",
+            "command": "cp config/app_config_prod.json assets/app_config.json"
+        }
+    ]
+}
