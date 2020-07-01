@@ -1,5 +1,7 @@
 import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -71,7 +73,8 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
-          Navigator.popUntil(context, (route) => route.isFirst);
+
+          getIt<NavigationService>().resetAllNavigators();
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(

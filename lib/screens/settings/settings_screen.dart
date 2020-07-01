@@ -41,9 +41,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
           PreferenceConstants.pushNotificationsApp);
       PushNotificationsManager().getSettings();
-      _settings['push_notifications_system'] = jsonDecode(
-          CachedSharedPreferences.getString(
-              PreferenceConstants.pushNotificationsSystem));
+      final pushNotificationSystem = CachedSharedPreferences.getString(
+          PreferenceConstants.pushNotificationsSystem,
+          defValue: '');
+      if (pushNotificationSystem.isNotEmpty) {
+        _settings['push_notifications_system'] =
+            jsonDecode(pushNotificationSystem);
+      }
     } else {
       _settings['push_notifications_app'] = false;
     }
@@ -57,10 +61,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
           PreferenceConstants.pushNotificationsApp);
       PushNotificationsManager().getSettings();
-      _settings['push_notifications_system'] = jsonDecode(
-          CachedSharedPreferences.getString(
-              PreferenceConstants.pushNotificationsSystem,
-              defValue: ''));
+      final pushNotificationSystem = CachedSharedPreferences.getString(
+          PreferenceConstants.pushNotificationsSystem,
+          defValue: '');
+      if (pushNotificationSystem.isNotEmpty) {
+        _settings['push_notifications_system'] =
+            jsonDecode(pushNotificationSystem);
+      }
     }
 
     return BlocListener<SettingBloc, SettingState>(
@@ -203,10 +210,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             );
                           },
-                        ).then((value) => Timer(
-                            const Duration(seconds: 1),
-                            () => Navigator.of(context)
-                                .pop())); // TODO: change this to wait for BLoCs);
+                        ).then((value) => Navigator.of(context)
+                            .maybePop()); // TODO: change this to wait for BLoCs);
                       } else {
                         UnauthenticatedFunctions.showSignUp(context);
                       }
