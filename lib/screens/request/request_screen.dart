@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/sign_up_button.dart';
 import 'package:canteen_frontend/screens/request/request_list.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -32,16 +33,7 @@ class RequestScreen extends StatelessWidget {
                   ),
                   child: Text('Requests will appear here'),
                 ),
-                FlatButton(
-                  color: Palette.primaryColor,
-                  child: Text(
-                    'Sign Up',
-                    style: Theme.of(context).textTheme.button.apply(
-                          color: Palette.whiteColor,
-                        ),
-                  ),
-                  onPressed: () {},
-                ),
+                SignUpButton(),
               ],
             ),
           );

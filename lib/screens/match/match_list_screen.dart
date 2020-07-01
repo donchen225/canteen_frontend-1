@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/sign_up_button.dart';
 import 'package:canteen_frontend/screens/match/match_list.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -31,16 +32,7 @@ class MatchListScreen extends StatelessWidget {
                 ),
                 child: Text('Messages will appear here'),
               ),
-              FlatButton(
-                color: Palette.primaryColor,
-                child: Text(
-                  'Sign Up',
-                  style: Theme.of(context).textTheme.button.apply(
-                        color: Palette.whiteColor,
-                      ),
-                ),
-                onPressed: () {},
-              ),
+              SignUpButton(),
             ],
           );
         } else if (matchState is MatchListLoaded) {

@@ -1,6 +1,13 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/components/sign_up_button.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_list.dart';
+import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
+import 'package:canteen_frontend/screens/sign_up/bloc/sign_up_bloc.dart';
+import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -60,16 +67,7 @@ class NotificationScreen extends StatelessWidget {
                     ),
                     child: Text('Notifications will appear here'),
                   ),
-                  FlatButton(
-                    color: Palette.primaryColor,
-                    child: Text(
-                      'Sign Up',
-                      style: Theme.of(context).textTheme.button.apply(
-                            color: Palette.whiteColor,
-                          ),
-                    ),
-                    onPressed: () {},
-                  ),
+                  SignUpButton(),
                 ],
               ),
             );
