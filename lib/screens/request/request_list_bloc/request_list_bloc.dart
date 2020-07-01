@@ -30,6 +30,10 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         add(UpdateRequestList(
             (_requestBloc.state as RequestsLoaded).requestList));
       }
+
+      if (state is RequestsUnauthenticated) {
+        add(ClearRequestList());
+      }
     });
   }
 
@@ -42,6 +46,8 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
       yield* _mapUpdateRequestListToState(event);
     } else if (event is LoadRequestList) {
       yield* _mapLoadRequestListToState(event);
+    } else if (event is ClearRequestList) {
+      yield* _mapClearRequestListToState();
     }
   }
 
@@ -55,6 +61,10 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
       LoadRequestList event) async* {
     yield DetailedRequestListLoaded(
         _requestRepository.currentDetailedRequests());
+  }
+
+  Stream<RequestListState> _mapClearRequestListToState() async* {
+    yield RequestListUnauthenticated();
   }
 
   Future<List<DetailedRequest>> _getDetailedRequestList(
