@@ -51,6 +51,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+    if (_authenticated) {
+      _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
+          PreferenceConstants.pushNotificationsApp);
+      PushNotificationsManager().getSettings();
+      _settings['push_notifications_system'] = jsonDecode(
+          CachedSharedPreferences.getString(
+              PreferenceConstants.pushNotificationsSystem,
+              defValue: ''));
+    }
+
     return BlocListener<SettingBloc, SettingState>(
       listener: (BuildContext context, SettingState state) {
         if (state is SettingsUninitialized) {
