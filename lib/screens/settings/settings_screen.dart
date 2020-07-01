@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/custom_tile.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'dart:io';
 import 'dart:convert';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,19 +23,26 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool _authenticated;
   Map<String, dynamic> _settings = {};
 
   @override
   void initState() {
     super.initState();
     print('INIT SETTINGS SCREEN');
-    _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
-        PreferenceConstants.pushNotificationsApp);
 
-    PushNotificationsManager().getSettings();
-    _settings['push_notifications_system'] = jsonDecode(
-        CachedSharedPreferences.getString(
-            PreferenceConstants.pushNotificationsSystem));
+    _authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+    if (_authenticated) {
+      _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
+          PreferenceConstants.pushNotificationsApp);
+      PushNotificationsManager().getSettings();
+      _settings['push_notifications_system'] = jsonDecode(
+          CachedSharedPreferences.getString(
+              PreferenceConstants.pushNotificationsSystem));
+    } else {
+      _settings['push_notifications_app'] = false;
+    }
   }
 
   @override
@@ -101,10 +108,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             _settings[
                                                     'push_notifications_app'] =
                                                 value;
-                                            BlocProvider.of<SettingBloc>(
-                                                    context)
-                                                .add(ToggleAppPushNotifications(
-                                                    notifications: value));
+                                            if (_authenticated) {
+                                              BlocProvider.of<SettingBloc>(
+                                                      context)
+                                                  .add(
+                                                      ToggleAppPushNotifications(
+                                                          notifications:
+                                                              value));
+                                            }
                                           });
                                         },
                                       )
@@ -148,29 +159,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: CustomTile(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Log out',
+                      child: Text(
+                          _authenticated ? 'Log out' : 'Sign up / Log in',
                           style: Theme.of(context).textTheme.bodyText1),
                     ),
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            backgroundColor: Colors.transparent,
-                            child: Center(
-                              child: CupertinoActivityIndicator(),
-                            ),
-                          );
-                        },
-                      );
-                      BlocProvider.of<SettingBloc>(context)
-                          .add(ClearSettings());
-                      BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
-                          .add(ClearBadgeCounts());
-                      BlocProvider.of<MatchBloc>(context).add(ClearMatches());
-                      BlocProvider.of<RequestBloc>(context)
-                          .add(ClearRequests());
+                      if (_authenticated) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              backgroundColor: Colors.transparent,
+                              child: Center(
+                                child: CupertinoActivityIndicator(),
+                              ),
+                            );
+                          },
+                        );
+                        BlocProvider.of<SettingBloc>(context)
+                            .add(ClearSettings());
+                        BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                            .add(ClearBadgeCounts());
+                        BlocProvider.of<MatchBloc>(context).add(ClearMatches());
+                        BlocProvider.of<RequestBloc>(context)
+                            .add(ClearRequests());
+                      } else {
+                        UnauthenticatedFunctions.showSignUp(context);
+                      }
                     },
                   ),
                 )
