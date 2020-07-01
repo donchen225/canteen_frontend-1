@@ -1,9 +1,11 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/search/group_member_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -73,8 +75,8 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(BlocProvider.of<GroupHomeBloc>(context).currentUserGroups);
-    print(_joined);
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
 
     return Scaffold(
       appBar: AppBar(
@@ -238,15 +240,20 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                         fontWeightDelta: 1),
                                               ),
                                               onPressed: () {
-                                                if (widget.group.type ==
-                                                    'public') {
-                                                  if (!(_joined)) {
-                                                    _groupBloc.add(JoinGroup(
-                                                        widget.group.id));
-                                                    setState(() {
-                                                      _joined = !_joined;
-                                                    });
+                                                if (authenticated) {
+                                                  if (widget.group.type ==
+                                                      'public') {
+                                                    if (!(_joined)) {
+                                                      _groupBloc.add(JoinGroup(
+                                                          widget.group.id));
+                                                      setState(() {
+                                                        _joined = !_joined;
+                                                      });
+                                                    }
                                                   }
+                                                } else {
+                                                  UnauthenticatedFunctions
+                                                      .showSignUp(context);
                                                 }
 
                                                 // TODO: add option to leave group
