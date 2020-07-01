@@ -12,6 +12,7 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,6 +71,12 @@ class NotificationScreen extends StatelessWidget {
                   SignUpButton(),
                 ],
               ),
+            );
+          }
+
+          if (state is NotificationsLoading) {
+            return Center(
+              child: CupertinoActivityIndicator(),
             );
           }
 

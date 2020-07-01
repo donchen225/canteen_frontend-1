@@ -132,6 +132,12 @@ void main() async {
             groupRepository: groupRepository,
           ),
         ),
+        BlocProvider<NotificationListBloc>(
+          create: (context) => NotificationListBloc(
+            userRepository: userRepository,
+            notificationRepository: notificationRepository,
+          ),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -228,6 +234,9 @@ class App extends StatelessWidget {
 
                 BlocProvider.of<SettingBloc>(context)
                     .add(InitializeSettings(hasOnboarded: true));
+
+                BlocProvider.of<NotificationListBloc>(context)
+                    .add(LoadNotifications());
               }
 
               if (state is Unauthenticated) {
@@ -246,12 +255,6 @@ class App extends StatelessWidget {
                       create: (context) => ProfileBloc(
                         userRepository: _userRepository,
                       ),
-                    ),
-                    BlocProvider<NotificationListBloc>(
-                      create: (context) => NotificationListBloc(
-                        userRepository: _userRepository,
-                        notificationRepository: _notificationRepository,
-                      )..add(LoadNotifications()),
                     ),
                     BlocProvider<HomeNavigationBarBadgeBloc>(
                       create: (BuildContext context) =>

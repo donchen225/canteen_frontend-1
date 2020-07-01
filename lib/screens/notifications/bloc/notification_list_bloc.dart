@@ -47,6 +47,7 @@ class NotificationListBloc
 
   Stream<NotificationListState> _mapLoadNotificationsToState(
       LoadNotifications event) async* {
+    yield NotificationsLoading();
     try {
       _latestNotificationSubscription?.cancel();
       _latestNotificationSubscription = _notificationRepository
