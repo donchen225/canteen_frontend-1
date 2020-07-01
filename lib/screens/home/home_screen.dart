@@ -340,14 +340,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   MultiBlocProvider(
                     providers: [
                       BlocProvider<PostBloc>(
-                        create: (context) {
-                          return PostBloc(
-                            userRepository: widget._userRepository,
-                            postRepository: widget._postRepository,
-                            groupHomeBloc:
-                                BlocProvider.of<GroupHomeBloc>(context),
-                          );
-                        },
+                        create: (context) => PostBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          groupHomeBloc:
+                              BlocProvider.of<GroupHomeBloc>(context),
+                        ),
                       ),
                     ],
                     child: Navigator(
@@ -380,13 +378,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ..add(LoadDiscover()),
                       ),
                       BlocProvider<PostBloc>(
-                        create: (context) {
-                          return PostBloc(
-                            userRepository: widget._userRepository,
-                            postRepository: widget._postRepository,
-                            groupBloc: BlocProvider.of<GroupBloc>(context),
-                          );
-                        },
+                        create: (context) => PostBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          groupBloc: BlocProvider.of<GroupBloc>(context),
+                        ),
                       ),
                     ],
                     child: Navigator(

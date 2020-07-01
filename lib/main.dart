@@ -126,6 +126,12 @@ void main() async {
           create: (BuildContext context) => MatchDetailBloc(
               matchRepository: matchRepository, userRepository: userRepository),
         ),
+        BlocProvider<GroupHomeBloc>(
+          create: (context) => GroupHomeBloc(
+            userRepository: userRepository,
+            groupRepository: groupRepository,
+          ),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -212,6 +218,8 @@ class App extends StatelessWidget {
 
                 AlgoliaSearch.getInstance(reset: true);
 
+                BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
+
                 BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
                 BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -221,28 +229,19 @@ class App extends StatelessWidget {
                 BlocProvider.of<SettingBloc>(context)
                     .add(InitializeSettings(hasOnboarded: true));
               }
+
+              if (state is Unauthenticated) {
+                BlocProvider.of<GroupHomeBloc>(context).add(LoadDefaultGroup());
+              }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Uninitialized) {
                   return SplashScreen();
                 }
-                // if (state is Unauthenticated) {
-                //   return Navigator(
-                //     onGenerateRoute: (RouteSettings settings) {
-                //       return buildLandingScreenRoutes(settings);
-                //     },
-                //   );
-                // }
 
                 return MultiBlocProvider(
                   providers: [
-                    BlocProvider<GroupHomeBloc>(
-                      create: (context) => GroupHomeBloc(
-                        userRepository: _userRepository,
-                        groupRepository: _groupRepository,
-                      )..add(LoadDefaultGroup()),
-                    ),
                     BlocProvider<ProfileBloc>(
                       create: (context) => ProfileBloc(
                         userRepository: _userRepository,

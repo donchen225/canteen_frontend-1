@@ -1,6 +1,8 @@
 import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -72,6 +74,7 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
+          Navigator.popUntil(context, (route) => route.isFirst);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -160,7 +163,7 @@ class _LoginFormState extends State<LoginForm> {
                         color: Palette.primaryColor,
                         text: 'Log In',
                         onPressed: isLoginButtonEnabled(state)
-                            ? _onFormSubmitted
+                            ? () => _onFormSubmitted(context)
                             : null,
                       ),
                     ],
@@ -193,7 +196,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _onFormSubmitted() {
+  void _onFormSubmitted(BuildContext context) {
     _loginBloc.add(
       LoginWithCredentialsPressed(
         email: _emailController.text,

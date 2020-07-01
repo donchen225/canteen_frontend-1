@@ -14,10 +14,15 @@ class HomeUninitialized extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  HomeLoaded();
+  final bool authenticated;
+
+  HomeLoaded({this.authenticated = false});
 
   @override
-  String toString() => 'HomeLoaded';
+  List<Object> get props => [authenticated];
+
+  @override
+  String toString() => 'HomeLoaded { authenticated: $authenticated }';
 }
 
 class OnboardScreenLoaded extends HomeState {

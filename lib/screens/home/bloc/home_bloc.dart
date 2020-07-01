@@ -2,7 +2,6 @@ import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
-import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -35,7 +34,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapCheckOnboardStatusToState() async* {
     final user = await _userRepository.currentUser();
 
-    yield HomeLoaded();
+    final authenticated = user == null;
+
+    yield HomeLoaded(authenticated: authenticated);
     // if (user.onBoarded != null && user.onBoarded == 1) {
     //   yield HomeLoaded();
     // } else {
@@ -52,10 +53,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       print('Error joining Canteen group: $e');
     }
 
-    yield HomeLoaded();
+    yield HomeLoaded(authenticated: true);
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {
-    yield HomeUninitialized();
+    yield HomeLoaded(authenticated: false);
   }
 }

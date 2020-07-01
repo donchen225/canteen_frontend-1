@@ -184,6 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                         BlocProvider.of<RequestBloc>(context)
                             .add(ClearRequests());
+                        Navigator.maybePop(context);
                       } else {
                         UnauthenticatedFunctions.showSignUp(context);
                       }
