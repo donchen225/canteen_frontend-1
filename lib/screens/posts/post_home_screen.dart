@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
@@ -6,7 +5,6 @@ import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -75,6 +73,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -118,10 +119,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               child: Icon(Icons.add),
               backgroundColor: Palette.primaryColor,
               onPressed: () {
-                final authenticated =
-                    BlocProvider.of<AuthenticationBloc>(context).state
-                        is Authenticated;
-
                 if (authenticated) {
                   showModalBottomSheet(
                     context: context,
@@ -267,7 +264,8 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                     ),
                                               ),
                                               Visibility(
-                                                visible: isNotMember,
+                                                visible: authenticated &&
+                                                    isNotMember,
                                                 child: FlatButton(
                                                   color: Palette.primaryColor,
                                                   child: Text(

@@ -1,7 +1,10 @@
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SkillItem extends StatelessWidget {
   final double verticalPadding;
@@ -91,7 +94,15 @@ class SkillItem extends StatelessWidget {
                       onPressed: onTap != null
                           ? () {
                               if (tapEnabled) {
-                                onTap();
+                                final authenticated =
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .state is Authenticated;
+
+                                if (authenticated) {
+                                  onTap();
+                                } else {
+                                  UnauthenticatedFunctions.showSignUp(context);
+                                }
                               }
                             }
                           : null,
