@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/components/custom_tile.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
@@ -6,6 +8,7 @@ import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/push_notifications.dart';
@@ -166,6 +169,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     onTap: () {
                       if (_authenticated) {
+                        BlocProvider.of<SettingBloc>(context)
+                            .add(ClearSettings());
+                        BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                            .add(ClearBadgeCounts());
+                        BlocProvider.of<MatchBloc>(context).add(ClearMatches());
+                        BlocProvider.of<RequestBloc>(context)
+                            .add(ClearRequests());
+                        BlocProvider.of<GroupHomeBloc>(context)
+                            .add(ClearHomeGroup());
+                        BlocProvider.of<NotificationListBloc>(context)
+                            .add(ClearNotifications());
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -177,17 +191,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             );
                           },
-                        );
-                        BlocProvider.of<SettingBloc>(context)
-                            .add(ClearSettings());
-                        BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
-                            .add(ClearBadgeCounts());
-                        BlocProvider.of<MatchBloc>(context).add(ClearMatches());
-                        BlocProvider.of<RequestBloc>(context)
-                            .add(ClearRequests());
-                        BlocProvider.of<NotificationListBloc>(context)
-                            .add(ClearNotifications());
-                        Navigator.maybePop(context);
+                        ).then((value) => Timer(
+                            const Duration(seconds: 1),
+                            () => Navigator.of(context)
+                                .pop())); // TODO: change this to wait for BLoCs);
                       } else {
                         UnauthenticatedFunctions.showSignUp(context);
                       }

@@ -38,3 +38,8 @@ class LoadDefaultGroup extends GroupHomeEvent {
   @override
   String toString() => 'LoadDefaultGroup';
 }
+
+class ClearHomeGroup extends GroupHomeEvent {
+  @override
+  String toString() => 'ClearHomeGroup';
+}

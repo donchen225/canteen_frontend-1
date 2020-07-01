@@ -40,6 +40,8 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
       yield* _mapLoadHomeGroupMembersToState();
     } else if (event is LoadDefaultGroup) {
       yield* _mapLoadDefaultGroupToState();
+    } else if (event is ClearHomeGroup) {
+      yield* _mapClearHomeGroupToState();
     }
   }
 
@@ -95,5 +97,13 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     currentGroups = [detailedGroup];
 
     yield GroupHomeLoaded(group: detailedGroup);
+  }
+
+  Stream<GroupHomeState> _mapClearHomeGroupToState() async* {
+    currentGroup = null;
+    currentGroups = [];
+    currentUserGroups = [];
+
+    yield GroupHomeUnauthenticated();
   }
 }

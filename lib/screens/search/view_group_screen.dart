@@ -73,6 +73,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
+    print(BlocProvider.of<GroupHomeBloc>(context).currentUserGroups);
     print(_joined);
 
     return Scaffold(
