@@ -16,6 +16,8 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
     _matchSubscription = matchBloc.listen((state) {
       if (state is MatchesLoaded) {
         add(LoadMatchList((matchBloc.state as MatchesLoaded).matches));
+      } else if (state is MatchesUnauthenticated) {
+        add(ClearMatchList());
       }
     });
   }
@@ -27,12 +29,18 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   Stream<MatchListState> mapEventToState(MatchListEvent event) async* {
     if (event is LoadMatchList) {
       yield* _mapLoadMatchListToState(event);
+    } else if (event is ClearMatchList) {
+      yield* _mapClearMatchListToState();
     }
   }
 
   Stream<MatchListState> _mapLoadMatchListToState(LoadMatchList event) async* {
     yield MatchListLoading();
     yield MatchListLoaded(event.matchList);
+  }
+
+  Stream<MatchListState> _mapClearMatchListToState() async* {
+    yield MatchListUnauthenticated();
   }
 
   @override

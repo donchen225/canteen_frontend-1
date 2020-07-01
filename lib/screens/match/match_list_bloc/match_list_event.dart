@@ -3,6 +3,9 @@ import 'package:canteen_frontend/models/match/match.dart';
 
 abstract class MatchListEvent extends Equatable {
   const MatchListEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
 class LoadMatchList extends MatchListEvent {
@@ -16,3 +19,5 @@ class LoadMatchList extends MatchListEvent {
   @override
   String toString() => 'LoadMatchList { matchList: $matchList }';
 }
+
+class ClearMatchList extends MatchListEvent {}
