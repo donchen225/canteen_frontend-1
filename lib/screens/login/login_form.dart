@@ -1,8 +1,5 @@
 import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
-import 'package:canteen_frontend/services/navigation_service.dart';
-import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';

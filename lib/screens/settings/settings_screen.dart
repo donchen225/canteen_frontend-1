@@ -3,6 +3,7 @@ import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
@@ -184,6 +185,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                         BlocProvider.of<RequestBloc>(context)
                             .add(ClearRequests());
+                        BlocProvider.of<NotificationListBloc>(context)
+                            .add(ClearNotifications());
                         Navigator.maybePop(context);
                       } else {
                         UnauthenticatedFunctions.showSignUp(context);

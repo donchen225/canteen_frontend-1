@@ -40,6 +40,8 @@ class NotificationListBloc
       yield* _mapNotificationsUpdatedToState(event);
     } else if (event is LoadOldNotifications) {
       yield* _mapLoadOldNotificationsToState(event);
+    } else if (event is ClearNotifications) {
+      yield* _mapClearNotificationsToState();
     }
   }
 
@@ -137,5 +139,19 @@ class NotificationListBloc
 
       yield NotificationsLoaded(notifications: newNotificationList);
     }
+  }
+
+  Stream<NotificationListState> _mapClearNotificationsToState() async* {
+    _latestNotificationSubscription?.cancel();
+    _notifications = [];
+    _currentPage = 0;
+    _lastNotification = null;
+    yield NotificationsUnauthenticated();
+  }
+
+  @override
+  Future<void> close() {
+    _latestNotificationSubscription?.cancel();
+    return super.close();
   }
 }
