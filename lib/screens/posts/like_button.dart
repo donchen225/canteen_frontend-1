@@ -1,8 +1,10 @@
 import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LikeButton extends StatefulWidget {
   final DetailedPost post;
@@ -39,7 +41,13 @@ class _LikeButtonState extends State<LikeButton> {
     return GestureDetector(
       onTap: () {
         if (widget.onTap != null) {
-          widget.onTap();
+          final authenticated = BlocProvider.of<AuthenticationBloc>(context)
+              .state is Authenticated;
+
+          if (authenticated) {
+            widget.onTap();
+          }
+
           setState(() {
             _tapped = !_tapped;
 

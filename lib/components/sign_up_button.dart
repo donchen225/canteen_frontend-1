@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/sign_up_bloc.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_screen.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -25,22 +26,7 @@ class SignUpButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
       ),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          useRootNavigator: true,
-          isScrollControlled: true,
-          isDismissible: true,
-          enableDrag: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => BlocProvider<SignUpBloc>(
-            create: (context) => SignUpBloc(
-                userRepository:
-                    BlocProvider.of<UserBloc>(context).userRepository),
-            child: SignUpScreen(),
-          ),
-        );
-      },
+      onPressed: () => UnauthenticatedFunctions.showSignUp(context),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/components/sign_up_button.dart';
 import 'package:canteen_frontend/screens/request/request_list.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

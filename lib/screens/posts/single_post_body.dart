@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/dot_spacer.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
@@ -11,6 +12,7 @@ import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -255,17 +257,25 @@ class SinglePostBody extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => CommentDialogScreen(
-                        post: post,
-                        groupId: groupId,
-                        height: SizeConfig.instance.blockSizeVertical *
-                            kDialogScreenHeightBlocks,
-                      ),
-                    );
+                    final authenticated =
+                        BlocProvider.of<AuthenticationBloc>(context).state
+                            is Authenticated;
+
+                    if (authenticated) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => CommentDialogScreen(
+                          post: post,
+                          groupId: groupId,
+                          height: SizeConfig.instance.blockSizeVertical *
+                              kDialogScreenHeightBlocks,
+                        ),
+                      );
+                    } else {
+                      UnauthenticatedFunctions.showSignUp(context);
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
