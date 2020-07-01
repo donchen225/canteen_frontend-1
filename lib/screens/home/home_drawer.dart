@@ -75,9 +75,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.of(context).maybePop();
-                                      if (widget.onUserTap != null) {
-                                        widget.onUserTap();
+                                      final authenticated =
+                                          BlocProvider.of<AuthenticationBloc>(
+                                                  context)
+                                              .state is Authenticated;
+
+                                      if (authenticated) {
+                                        Navigator.of(context).maybePop();
+                                        if (widget.onUserTap != null) {
+                                          widget.onUserTap();
+                                        }
                                       }
                                     },
                                     child: ProfilePicture(
@@ -88,9 +95,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).maybePop();
-                                    if (widget.onUserTap != null) {
-                                      widget.onUserTap();
+                                    final authenticated =
+                                        BlocProvider.of<AuthenticationBloc>(
+                                                context)
+                                            .state is Authenticated;
+
+                                    if (authenticated) {
+                                      Navigator.of(context).maybePop();
+                                      if (widget.onUserTap != null) {
+                                        widget.onUserTap();
+                                      }
                                     }
                                   },
                                   child: Text(
