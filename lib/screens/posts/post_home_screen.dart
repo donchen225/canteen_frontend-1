@@ -89,7 +89,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
             SearchBar(
               height: kToolbarHeight * 0.7,
               width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 2 -
+                  kProfileIconSize * 1.5 -
                   NavigationToolbar.kMiddleSpacing * 4,
               color: Colors.grey[200],
               child: Text(
@@ -101,7 +101,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               ),
             ),
             Container(
-              width: kProfileIconSize,
+              width: kProfileIconSize * 0.5,
             )
           ],
         ),

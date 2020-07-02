@@ -90,7 +90,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             SearchBar(
               height: kToolbarHeight * 0.7,
               width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 2 -
+                  kProfileIconSize * 1.5 -
                   NavigationToolbar.kMiddleSpacing * 4,
               color: Colors.grey[200],
               child: Text(
@@ -102,7 +102,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               ),
             ),
             Container(
-              width: kProfileIconSize,
+              width: kProfileIconSize * 0.5,
             )
           ],
         ),
