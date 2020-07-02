@@ -348,8 +348,8 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is HomeLoading) {
               return Center(
                 child: Container(
-                  height: SizeConfig.instance.blockSizeHorizontal * 30,
-                  width: SizeConfig.instance.blockSizeHorizontal * 30,
+                  height: 140,
+                  width: 140,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/loading-icon.png'),
