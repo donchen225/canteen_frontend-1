@@ -31,9 +31,6 @@ class _PostListScreenState extends State<PostListScreen> {
 
     return BlocBuilder<PostBloc, PostState>(
       builder: (BuildContext context, PostState state) {
-        print('POST LIST SCREEN');
-        print(state);
-
         if (state is PostsLoading) {
           return Center(
             child: CupertinoActivityIndicator(),

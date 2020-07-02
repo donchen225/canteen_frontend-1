@@ -31,13 +31,21 @@ class FirebaseUserRepository extends UserRepository {
 
   /// Sign up a user to Firebase Authentication with email/password,
   /// and creates a user in the Firestore users collection
-  Future<void> signUp({String email, String password}) async {
+  Future<void> signUp({String email, String password, String name}) async {
     return await _firebaseAuth
         .createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        )
-        .then((result) => addFirebaseUser(result.user));
+      email: email,
+      password: password,
+    )
+        .then((result) async {
+      if (name != null && name.isNotEmpty) {
+        UserUpdateInfo info = UserUpdateInfo();
+        info.displayName = name;
+        result.user.updateProfile(info);
+      }
+
+      await addFirebaseUser(result.user, name: name);
+    });
   }
 
   Future<void> signOut() async {
@@ -48,15 +56,11 @@ class FirebaseUserRepository extends UserRepository {
     ]);
   }
 
-  // TODO: catch ALL transactions, transactions do NOT run offline
-  Future<void> addFirebaseUser(FirebaseUser user) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.set(
-          userCollection.document(user.uid),
-          UserEntity.fromFirebaseUserEntity(
-                  FirebaseUserEntity.fromFirebaseUser(user))
-              .toDocument());
-    });
+  Future<void> addFirebaseUser(FirebaseUser user, {String name}) {
+    return userCollection.document(user.uid).setData(
+        UserEntity.fromFirebaseUserEntity(
+                FirebaseUserEntity.fromFirebaseUser(user, name: name))
+            .toDocument());
   }
 
   Future<void> addLearnSkill(int position, SkillEntity skill) {
@@ -68,10 +72,10 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> updateUserSignInTime(FirebaseUser user) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(userCollection.document(user.uid), {
-        "last_sign_in_time": user.metadata.lastSignInTime,
-      });
+    return userCollection.document(user.uid).updateData({
+      "last_sign_in_time": user.metadata.lastSignInTime,
+    }).catchError((error) {
+      print('Error updating user sign in time.');
     });
   }
 

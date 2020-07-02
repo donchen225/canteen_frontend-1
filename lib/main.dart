@@ -9,7 +9,9 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -138,6 +140,13 @@ void main() async {
             notificationRepository: notificationRepository,
           ),
         ),
+        BlocProvider<UserProfileBloc>(
+          create: (context) => UserProfileBloc(
+            userRepository: userRepository,
+            settingsRepository: settingsRepository,
+            userBloc: BlocProvider.of<UserBloc>(context),
+          ),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -243,6 +252,13 @@ class App extends StatelessWidget {
                     BlocProvider<ProfileBloc>(
                       create: (context) => ProfileBloc(
                         userRepository: _userRepository,
+                      ),
+                    ),
+                    BlocProvider<PostBloc>(
+                      create: (context) => PostBloc(
+                        userRepository: _userRepository,
+                        postRepository: _postRepository,
+                        groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
                       ),
                     ),
                     BlocProvider<HomeNavigationBarBadgeBloc>(

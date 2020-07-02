@@ -7,7 +7,7 @@ abstract class UserRepository {
   Future<void> signInWithCredentials(String email, String password) async {}
 
   /// Sign up a new user
-  Future<void> signUp({String email, String password}) async {}
+  Future<void> signUp({String email, String password, String name}) async {}
 
   Future<void> signOut() async {}
 

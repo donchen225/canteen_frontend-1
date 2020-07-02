@@ -40,11 +40,11 @@ class FirebaseUserEntity extends Equatable {
         isEmailVerified,
       ];
 
-  static FirebaseUserEntity fromFirebaseUser(FirebaseUser user) {
+  static FirebaseUserEntity fromFirebaseUser(FirebaseUser user, {String name}) {
     return FirebaseUserEntity(
       user.providerId,
       user.uid,
-      user.displayName,
+      name ?? user.displayName,
       user.photoUrl,
       user.email,
       user.phoneNumber,
