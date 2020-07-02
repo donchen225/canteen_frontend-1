@@ -24,6 +24,7 @@ import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
@@ -319,6 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+              BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
 
               BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
 
@@ -413,22 +415,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<RequestListBloc>(
-                        create: (context) => RequestListBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          userRepository: widget._userRepository,
-                          requestRepository: widget._requestRepository,
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().messageNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildMessageScreenRoutes(settings);
-                      },
-                    ),
+                  Navigator(
+                    key: getIt<NavigationService>().messageNavigatorKey,
+                    onGenerateRoute: (RouteSettings settings) {
+                      return buildMessageScreenRoutes(settings);
+                    },
                   ),
                   MultiBlocProvider(
                     providers: [

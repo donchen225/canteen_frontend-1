@@ -26,7 +26,6 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         _requestRepository = requestRepository {
     _requestSubscription = _requestBloc.listen((state) {
       if (state is RequestsLoaded) {
-        print('RECEIVED REQUESTS LOADED');
         add(UpdateRequestList(
             (_requestBloc.state as RequestsLoaded).requestList));
       }
