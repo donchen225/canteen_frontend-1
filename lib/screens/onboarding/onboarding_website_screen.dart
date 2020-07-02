@@ -1,24 +1,25 @@
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/next_button.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_profile_picture_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_website_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class OnboardingNameScreen extends StatefulWidget {
-  static const routeName = '/name';
+class OnboardingWebsiteScreen extends StatefulWidget {
+  static const routeName = '/website';
 
   final Widget child;
 
-  OnboardingNameScreen({this.child});
+  OnboardingWebsiteScreen({this.child});
 
   @override
-  _OnboardingNameScreenState createState() => _OnboardingNameScreenState();
+  _OnboardingWebsiteScreenState createState() =>
+      _OnboardingWebsiteScreenState();
 }
 
-class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
+class _OnboardingWebsiteScreenState extends State<OnboardingWebsiteScreen> {
   TextEditingController _nameController;
   bool _nextEnabled;
   final int _textFieldMaxChars = 40;
@@ -46,27 +47,26 @@ class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
     super.dispose();
   }
 
-  void _nextFunction(BuildContext context) {
-    BlocProvider.of<OnboardingBloc>(context)
-        .add(UpdateName(name: _nameController.text));
-    Navigator.pushNamed(context, OnboardingWebsiteScreen.routeName);
-  }
-
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline4;
+    final nextFunction = () {
+      BlocProvider.of<OnboardingBloc>(context)
+          .add(UpdateName(name: _nameController.text));
+      Navigator.pushNamed(context, OnboardingProfilePictureScreen.routeName);
+    };
 
     return OnboardingScreen(
       next: NextButton(
           onTap: _nextEnabled
               ? () {
                   if (_nameController.text.length > 1) {
-                    _nextFunction(context);
+                    nextFunction();
                   }
                 }
               : null),
       nodes: [_focusNode],
-      onSkip: () => _nextFunction(context),
+      onSkip: nextFunction,
       child: Container(
         color: Colors.transparent,
         width: double.infinity,
@@ -79,7 +79,7 @@ class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Add your name',
+                'Add your website',
                 style: titleTextStyle.apply(
                   color: Palette.titleColor,
                   fontWeightDelta: 3,
@@ -103,7 +103,7 @@ class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
                         (_textFieldMaxChars - _nameController.text.length)
                                 ?.toString() ??
                             "",
-                    hintText: "Your name",
+                    hintText: "Your website URL",
                     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     isDense: true,
                     border: UnderlineInputBorder(

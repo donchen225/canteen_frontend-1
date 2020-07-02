@@ -225,18 +225,6 @@ class App extends StatelessWidget {
                 AlgoliaSearch.getInstance(reset: true);
 
                 BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
-
-                BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-
-                BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-
-                BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
-
-                BlocProvider.of<SettingBloc>(context)
-                    .add(InitializeSettings(hasOnboarded: true));
-
-                BlocProvider.of<NotificationListBloc>(context)
-                    .add(LoadNotifications());
               }
 
               if (state is Unauthenticated) {

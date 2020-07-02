@@ -3,6 +3,7 @@ import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart
 import 'package:canteen_frontend/screens/onboarding/onboarding_name_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_profile_picture_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_skill_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_website_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,10 @@ MaterialPageRoute buildOnboardingScreenRoutes(RouteSettings settings) {
         switch (settings.name) {
           case OnboardingNameScreen.routeName:
             return OnboardingNameScreen();
+        }
+        switch (settings.name) {
+          case OnboardingWebsiteScreen.routeName:
+            return OnboardingWebsiteScreen();
         }
         switch (settings.name) {
           case OnboardingProfilePictureScreen.routeName:

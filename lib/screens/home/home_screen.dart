@@ -13,9 +13,11 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/notification_view_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
@@ -287,156 +289,178 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        bloc: _homeBloc,
-        builder: (BuildContext context, HomeState state) {
-          if (state is HomeUninitialized) {
-            return Container(
-              color: Palette.containerColor,
-            );
-          }
-
-          if (state is HomeLoading) {
-            return Center(
-              child: Container(
-                height: SizeConfig.instance.blockSizeHorizontal * 30,
-                width: SizeConfig.instance.blockSizeHorizontal * 30,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/loading-icon.png'),
-                  ),
-                ),
-              ),
-            );
-          }
-
-          if (state is OnboardScreenLoaded) {
-            return BlocProvider<OnboardingBloc>(
-              create: (context) => OnboardingBloc(
-                  userRepository: widget._userRepository,
-                  groupRepository: _groupRepository),
-              child: Navigator(
-                onGenerateRoute: (RouteSettings settings) {
-                  return buildOnboardingScreenRoutes(settings);
-                },
-              ),
-            );
-          }
-
+      body: BlocListener<HomeBloc, HomeState>(
+        listener: (BuildContext context, HomeState state) {
           if (state is HomeLoaded) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider<UserProfileBloc>(
-                  create: (context) => UserProfileBloc(
-                    userRepository: widget._userRepository,
-                    settingsRepository: widget._settingsRepository,
-                    userBloc: BlocProvider.of<UserBloc>(context),
+            if (state.authenticated) {
+              BlocProvider.of<MatchBloc>(context).add(LoadMatches());
+
+              BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+
+              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
+
+              BlocProvider.of<SettingBloc>(context)
+                  .add(InitializeSettings(hasOnboarded: true));
+
+              BlocProvider.of<NotificationListBloc>(context)
+                  .add(LoadNotifications());
+            }
+          }
+        },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          bloc: _homeBloc,
+          builder: (BuildContext context, HomeState state) {
+            if (state is HomeUninitialized) {
+              return Container(
+                color: Palette.containerColor,
+              );
+            }
+
+            if (state is HomeLoading) {
+              return Center(
+                child: Container(
+                  height: SizeConfig.instance.blockSizeHorizontal * 30,
+                  width: SizeConfig.instance.blockSizeHorizontal * 30,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/loading-icon.png'),
+                    ),
                   ),
                 ),
-              ],
-              child: IndexedStack(
-                index: _currentIndex,
-                children: [
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<PostBloc>(
-                        create: (context) => PostBloc(
-                          userRepository: widget._userRepository,
-                          postRepository: widget._postRepository,
-                          groupHomeBloc:
-                              BlocProvider.of<GroupHomeBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().homeNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildPostScreenRoutes(settings);
-                      },
-                    ),
-                  ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<GroupBloc>(
-                        create: (context) => GroupBloc(
-                          userRepository: widget._userRepository,
-                          groupRepository: _groupRepository,
-                          groupHomeBloc:
-                              BlocProvider.of<GroupHomeBloc>(context),
-                        ),
-                      ),
-                      BlocProvider<SearchBloc>(
-                        create: (context) => SearchBloc(
-                          userRepository: widget._userRepository,
-                        )..add(SearchHome()),
-                      ),
-                      BlocProvider<DiscoverBloc>(
-                        create: (context) => DiscoverBloc(
-                            userRepository: widget._userRepository,
-                            recommendationRepository: _recommendationRepository,
-                            groupRepository: _groupRepository)
-                          ..add(LoadDiscover()),
-                      ),
-                      BlocProvider<PostBloc>(
-                        create: (context) => PostBloc(
-                          userRepository: widget._userRepository,
-                          postRepository: widget._postRepository,
-                          groupBloc: BlocProvider.of<GroupBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().searchNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildSearchScreenRoutes(settings);
-                      },
-                    ),
-                  ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<RequestListBloc>(
-                        create: (context) => RequestListBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          userRepository: widget._userRepository,
-                          requestRepository: widget._requestRepository,
-                        ),
-                      ),
-                      BlocProvider<MatchListBloc>(
-                        create: (context) => MatchListBloc(
-                          matchBloc: BlocProvider.of<MatchBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().messageNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildMessageScreenRoutes(settings);
-                      },
-                    ),
-                  ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<NotificationViewBloc>(
-                        create: (context) => NotificationViewBloc(
-                          userRepository: widget._userRepository,
-                          notificationRepository:
-                              widget._notificationRepository,
-                          postRepository: widget._postRepository,
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().notificationNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildNotificationScreenRoutes(settings);
-                      },
+              );
+            }
+
+            if (state is OnboardScreenLoaded) {
+              return BlocProvider<OnboardingBloc>(
+                create: (context) => OnboardingBloc(
+                    userRepository: widget._userRepository,
+                    groupRepository: _groupRepository),
+                child: Navigator(
+                  initialRoute: OnboardingGroupScreen.routeName,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildOnboardingScreenRoutes(settings);
+                  },
+                ),
+              );
+            }
+
+            if (state is HomeLoaded) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<UserProfileBloc>(
+                    create: (context) => UserProfileBloc(
+                      userRepository: widget._userRepository,
+                      settingsRepository: widget._settingsRepository,
+                      userBloc: BlocProvider.of<UserBloc>(context),
                     ),
                   ),
                 ],
-              ),
-            );
-          }
-        },
+                child: IndexedStack(
+                  index: _currentIndex,
+                  children: [
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider<PostBloc>(
+                          create: (context) => PostBloc(
+                            userRepository: widget._userRepository,
+                            postRepository: widget._postRepository,
+                            groupHomeBloc:
+                                BlocProvider.of<GroupHomeBloc>(context),
+                          ),
+                        ),
+                      ],
+                      child: Navigator(
+                        key: getIt<NavigationService>().homeNavigatorKey,
+                        onGenerateRoute: (RouteSettings settings) {
+                          return buildPostScreenRoutes(settings);
+                        },
+                      ),
+                    ),
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider<GroupBloc>(
+                          create: (context) => GroupBloc(
+                            userRepository: widget._userRepository,
+                            groupRepository: _groupRepository,
+                            groupHomeBloc:
+                                BlocProvider.of<GroupHomeBloc>(context),
+                          ),
+                        ),
+                        BlocProvider<SearchBloc>(
+                          create: (context) => SearchBloc(
+                            userRepository: widget._userRepository,
+                          )..add(SearchHome()),
+                        ),
+                        BlocProvider<DiscoverBloc>(
+                          create: (context) => DiscoverBloc(
+                              userRepository: widget._userRepository,
+                              recommendationRepository:
+                                  _recommendationRepository,
+                              groupRepository: _groupRepository)
+                            ..add(LoadDiscover()),
+                        ),
+                        BlocProvider<PostBloc>(
+                          create: (context) => PostBloc(
+                            userRepository: widget._userRepository,
+                            postRepository: widget._postRepository,
+                            groupBloc: BlocProvider.of<GroupBloc>(context),
+                          ),
+                        ),
+                      ],
+                      child: Navigator(
+                        key: getIt<NavigationService>().searchNavigatorKey,
+                        onGenerateRoute: (RouteSettings settings) {
+                          return buildSearchScreenRoutes(settings);
+                        },
+                      ),
+                    ),
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider<RequestListBloc>(
+                          create: (context) => RequestListBloc(
+                            requestBloc: BlocProvider.of<RequestBloc>(context),
+                            userRepository: widget._userRepository,
+                            requestRepository: widget._requestRepository,
+                          ),
+                        ),
+                        BlocProvider<MatchListBloc>(
+                          create: (context) => MatchListBloc(
+                            matchBloc: BlocProvider.of<MatchBloc>(context),
+                          ),
+                        ),
+                      ],
+                      child: Navigator(
+                        key: getIt<NavigationService>().messageNavigatorKey,
+                        onGenerateRoute: (RouteSettings settings) {
+                          return buildMessageScreenRoutes(settings);
+                        },
+                      ),
+                    ),
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider<NotificationViewBloc>(
+                          create: (context) => NotificationViewBloc(
+                            userRepository: widget._userRepository,
+                            notificationRepository:
+                                widget._notificationRepository,
+                            postRepository: widget._postRepository,
+                          ),
+                        ),
+                      ],
+                      child: Navigator(
+                        key:
+                            getIt<NavigationService>().notificationNavigatorKey,
+                        onGenerateRoute: (RouteSettings settings) {
+                          return buildNotificationScreenRoutes(settings);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

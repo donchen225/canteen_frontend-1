@@ -1,4 +1,3 @@
-import 'package:canteen_frontend/components/enter_exit_route.dart';
 import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
@@ -18,11 +17,14 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   SignUpBloc _registerBloc;
 
   bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _nameController.text.isNotEmpty;
 
   bool isRegisterButtonEnabled(SignUpState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -34,6 +36,7 @@ class _SignUpFormState extends State<SignUpForm> {
     _registerBloc = BlocProvider.of<SignUpBloc>(context);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
+    _nameController.addListener(_onNameChanged);
   }
 
   @override
@@ -121,6 +124,27 @@ class _SignUpFormState extends State<SignUpForm> {
                       autocorrect: false,
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical),
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Name',
+                      ),
+                      autocorrect: false,
+                    ),
+                  ),
                   Text(
                     state.isFailure
                         ? state.error.message
@@ -200,6 +224,10 @@ class _SignUpFormState extends State<SignUpForm> {
     _registerBloc.add(
       PasswordChanged(password: _passwordController.text),
     );
+  }
+
+  void _onNameChanged() {
+    setState(() {});
   }
 
   void _onFormSubmitted() {

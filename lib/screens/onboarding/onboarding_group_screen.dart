@@ -4,8 +4,6 @@ import 'package:canteen_frontend/screens/onboarding/access_code_dialog.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/next_button.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_skill_screen.dart';
-import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
