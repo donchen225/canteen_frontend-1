@@ -44,7 +44,7 @@ class ProfileCard extends StatelessWidget {
               image: DecorationImage(
                 image: (user.photoUrl != null && user.photoUrl.isNotEmpty)
                     ? CachedNetworkImageProvider(user.photoUrl)
-                    : AssetImage('assets/blank-profile-picture.jpeg'),
+                    : AssetImage('assets/blank-profile-picture.png'),
                 fit: BoxFit.cover,
               ),
             ),
