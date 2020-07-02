@@ -30,6 +30,7 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
+import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -339,24 +340,8 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (BuildContext context, HomeState state) {
             print('HOME STATE BLOC BUILDER: $state');
 
-            if (state is HomeUninitialized) {
-              return Container(
-                color: Palette.containerColor,
-              );
-            }
-
-            if (state is HomeLoading) {
-              return Center(
-                child: Container(
-                  height: 140,
-                  width: 140,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/loading-icon.png'),
-                    ),
-                  ),
-                ),
-              );
+            if (state is HomeUninitialized || state is HomeLoading) {
+              return SplashScreen();
             }
 
             if (state is OnboardScreenLoaded) {

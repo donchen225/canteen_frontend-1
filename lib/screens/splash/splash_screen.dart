@@ -1,40 +1,13 @@
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatefulWidget {
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 2000),
-    );
-    animationController.forward();
-    animationController.addListener(() {
-      setState(() {
-        if (animationController.status == AnimationStatus.completed) {
-          animationController.repeat();
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      alignment: Alignment.center,
+      color: Colors.white,
       child: Container(
         height: 140,
         width: 140,
