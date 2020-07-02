@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UserRepository _userRepository;
   final GroupRepository _groupRepository;
+  DateTime _lastRequested;
 
   HomeBloc(
       {@required UserRepository userRepository,
@@ -26,6 +27,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapCheckOnboardStatusToState();
     } else if (event is InitializeHome) {
       yield* _mapInitializeHomeToState();
+    } else if (event is UserHomeLoaded) {
+      yield* _mapUserHomeLoadedToState();
+    } else if (event is LoadHome) {
+      yield* _mapLoadHomeToState();
     } else if (event is ClearHome) {
       yield* _mapClearHomeToState();
     }
@@ -39,7 +44,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (user.onBoarded == null || user.onBoarded != 1) {
       yield OnboardScreenLoaded();
     } else {
-      yield HomeLoaded(authenticated: true);
+      final time = DateTime.now();
+      _lastRequested = time;
+      yield HomeLoaded(authenticated: true, lastRequested: time);
     }
   }
 
@@ -53,6 +60,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     yield HomeLoaded(authenticated: true);
+  }
+
+  Stream<HomeState> _mapUserHomeLoadedToState() async* {
+    yield HomeLoaded(
+        authenticated: true, dataLoaded: true, lastRequested: _lastRequested);
+  }
+
+  Stream<HomeState> _mapLoadHomeToState() async* {
+    final time = DateTime.now();
+    _lastRequested = time;
+
+    yield HomeLoaded(
+        authenticated: true, dataLoaded: false, lastRequested: time);
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {

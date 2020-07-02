@@ -52,22 +52,23 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
     });
   }
 
+  void _nextFunction(BuildContext context) {
+    BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding());
+    BlocProvider.of<HomeBloc>(context).add(InitializeHome());
+  }
+
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline4;
     final subtitleTextStyle = Theme.of(context).textTheme.headline5;
     final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
     final buttonTextStyle = Theme.of(context).textTheme.button;
-    final nextFunction = () {
-      BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding());
-      BlocProvider.of<HomeBloc>(context).add(InitializeHome());
-    };
 
     return OnboardingScreen(
       horizontalPadding: false,
-      next: NextButton(onTap: nextFunction),
+      next: NextButton(onTap: () => _nextFunction(context)),
       nodes: [_focusNode],
-      onSkip: nextFunction,
+      onSkip: () => _nextFunction(context),
       child: Container(
         width: double.infinity,
         color: Colors.transparent,

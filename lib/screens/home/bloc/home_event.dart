@@ -8,15 +8,6 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class PageTapped extends HomeEvent {
-  final int index;
-
-  PageTapped({@required this.index});
-
-  @override
-  String toString() => 'PageTapped: $index';
-}
-
 class CheckOnboardStatus extends HomeEvent {
   CheckOnboardStatus();
 
@@ -31,4 +22,17 @@ class InitializeHome extends HomeEvent {
   String toString() => 'InitializeHome';
 }
 
-class ClearHome extends HomeEvent {}
+class UserHomeLoaded extends HomeEvent {
+  @override
+  String toString() => 'UserHomeLoaded';
+}
+
+class LoadHome extends HomeEvent {
+  @override
+  String toString() => 'LoadHome';
+}
+
+class ClearHome extends HomeEvent {
+  @override
+  String toString() => 'ClearHome';
+}

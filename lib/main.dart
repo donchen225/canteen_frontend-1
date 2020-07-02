@@ -224,6 +224,7 @@ class App extends StatelessWidget {
 
                 AlgoliaSearch.getInstance(reset: true);
 
+                print('AUTHENTICATION BLOC LISTENER');
                 BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
               }
 

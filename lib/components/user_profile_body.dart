@@ -196,7 +196,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                             0.5,
                                   ),
                                   child: Text(
-                                    widget.user.displayName,
+                                    widget.user.displayName ?? '',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5

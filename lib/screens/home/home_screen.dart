@@ -85,8 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    print('HOME INIT STATE');
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(CheckOnboardStatus());
+    // _homeBloc.add(CheckOnboardStatus());
   }
 
   void _onItemTapped(BuildContext context, int index) {
@@ -291,8 +292,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocListener<HomeBloc, HomeState>(
         listener: (BuildContext context, HomeState state) {
+          print('HOME STATE BLOC LISTENER: $state');
+
           if (state is HomeLoaded) {
-            if (state.authenticated) {
+            if (state.authenticated && !state.dataLoaded) {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -304,12 +307,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
               BlocProvider.of<NotificationListBloc>(context)
                   .add(LoadNotifications());
+
+              _homeBloc.add(UserHomeLoaded());
             }
           }
         },
         child: BlocBuilder<HomeBloc, HomeState>(
           bloc: _homeBloc,
           builder: (BuildContext context, HomeState state) {
+            print('HOME STATE BLOC BUILDER: $state');
+
             if (state is HomeUninitialized) {
               return Container(
                 color: Palette.containerColor,
@@ -345,6 +352,10 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is HomeLoaded) {
+              if (state.authenticated && !state.dataLoaded) {
+                _homeBloc.add(LoadHome());
+              }
+
               return MultiBlocProvider(
                 providers: [
                   BlocProvider<UserProfileBloc>(
