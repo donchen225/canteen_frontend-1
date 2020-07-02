@@ -7,6 +7,8 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
@@ -58,9 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return BlocListener<SettingBloc, SettingState>(
       listener: (BuildContext context, SettingState state) {
         if (state is SettingsUninitialized) {
-          Navigator.of(context, rootNavigator: true).maybePop();
           BlocProvider.of<HomeBloc>(context).add(ClearHome());
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+          getIt<NavigationService>().resetAllNavigators();
         }
       },
       child: BlocBuilder<SettingBloc, SettingState>(
@@ -173,8 +175,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     onTap: () {
                       if (_authenticated) {
-                        BlocProvider.of<SettingBloc>(context)
-                            .add(ClearSettings());
                         BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
                             .add(ClearBadgeCounts());
                         BlocProvider.of<MatchBloc>(context).add(ClearMatches());
@@ -184,19 +184,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             .add(ClearHomeGroup());
                         BlocProvider.of<NotificationListBloc>(context)
                             .add(ClearNotifications());
-                        showDialog(
+                        BlocProvider.of<SettingBloc>(context)
+                            .add(ClearSettings());
+
+                        showCupertinoDialog(
                           context: context,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
-                            return Dialog(
-                              backgroundColor: Colors.transparent,
-                              child: Center(
-                                child: CupertinoActivityIndicator(),
-                              ),
-                            );
+                            return CupertinoAlertDialog();
                           },
-                        ).then((value) => Navigator.of(context)
-                            .maybePop()); // TODO: change this to wait for BLoCs);
+                        ); // TODO: change this to wait for BLoCs;
                       } else {
                         UnauthenticatedFunctions.showSignUp(context);
                       }
