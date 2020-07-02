@@ -133,7 +133,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: !_settings['push_notifications_app'],
+                                  visible: _authenticated &&
+                                      !_settings['push_notifications_app'],
                                   child: Container(
                                     width: double.infinity,
                                     padding: EdgeInsets.only(
