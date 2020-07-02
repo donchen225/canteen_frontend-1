@@ -46,6 +46,8 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
   }
 
   Stream<GroupHomeState> _mapLoadUserGroupsToState() async* {
+    yield GroupHomeLoading();
+
     final userGroups = await _groupRepository.getUserGroups();
 
     currentUserGroups = userGroups;

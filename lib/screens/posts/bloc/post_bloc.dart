@@ -72,6 +72,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
+    yield PostsLoading();
+
     try {
       final posts = await _postRepository.getPosts(event.groupId);
       add(PostsUpdated(groupId: event.groupId, updates: posts));
@@ -84,7 +86,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapPostsUpdateToState(PostsUpdated event) async* {
-    yield PostsLoading();
     final updatedPosts = event.updates.item1;
 
     final userListFuture = Future.wait(updatedPosts.map((update) async {
