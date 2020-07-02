@@ -1272,7 +1272,7 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     };
 
     // Add group to user groups
-    firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
+    await firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
