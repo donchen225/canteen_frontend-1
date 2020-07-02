@@ -7,6 +7,7 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
@@ -259,6 +260,11 @@ class App extends StatelessWidget {
                         userRepository: _userRepository,
                         postRepository: _postRepository,
                         groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatchListBloc>(
+                      create: (context) => MatchListBloc(
+                        matchBloc: BlocProvider.of<MatchBloc>(context),
                       ),
                     ),
                     BlocProvider<HomeNavigationBarBadgeBloc>(

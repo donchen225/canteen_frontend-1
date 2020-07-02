@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/components/sign_up_button.dart';
 import 'package:canteen_frontend/screens/match/match_list.dart';
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

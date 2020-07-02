@@ -11,6 +11,7 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
@@ -315,6 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is HomeLoaded) {
             if (state.authenticated && !state.dataLoaded) {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
+              BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
@@ -418,11 +420,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           requestBloc: BlocProvider.of<RequestBloc>(context),
                           userRepository: widget._userRepository,
                           requestRepository: widget._requestRepository,
-                        ),
-                      ),
-                      BlocProvider<MatchListBloc>(
-                        create: (context) => MatchListBloc(
-                          matchBloc: BlocProvider.of<MatchBloc>(context),
                         ),
                       ),
                     ],
