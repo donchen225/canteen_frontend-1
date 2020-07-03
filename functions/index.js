@@ -34,7 +34,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     const comment = data.comment;
     const skillType = data.type;
     const skillIndex = data.index;
-    const requestTime = new Date(data.time);
+    const requestTime = data.time ? new Date(data.time) : data.time;
 
     var output = {};
     var terminate = false;

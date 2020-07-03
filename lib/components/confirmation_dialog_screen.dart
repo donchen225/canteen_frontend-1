@@ -1,17 +1,14 @@
 import 'package:canteen_frontend/components/time_confirmation.dart';
 import 'package:canteen_frontend/components/time_list_selector.dart';
-import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
 import 'package:canteen_frontend/screens/posts/action_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConfirmationDialogScreen extends StatefulWidget {
   final User user;
@@ -35,16 +32,70 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
   DateTime _selectedDay;
   DateTime _selectedTime;
   String _message = '';
-
-  _ConfirmationDialogScreenState();
+  TextEditingController _messageController;
 
   @override
   void initState() {
     super.initState();
+
+    _messageController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
   }
 
   Widget _buildTimeSelectorWidget() {
-    if (_timeList == null || _timeList.length == 0) {
+    if (widget.user.availability == null ||
+        widget.user.availability.timeRangeRaw.isEmpty) {
+      return Column(
+        children: [
+          Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Text(
+              '${widget.user.displayName} has not set their availability.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: SizeConfig.instance.safeBlockVertical * 2,
+              bottom: SizeConfig.instance.safeBlockVertical,
+            ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+                'However, you can still send ${widget.user.displayName} a request. Requests sent with messages have higher response rates.'),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.instance.safeBlockVertical,
+            ),
+            child: TextField(
+              controller: _messageController,
+              textCapitalization: TextCapitalization.sentences,
+              autofocus: false,
+              maxLines: null,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
+                ),
+                hintText: 'Add a message',
+              ),
+            ),
+          ),
+        ],
+      );
+    } else if (_timeList == null || _timeList.length == 0) {
       return CalendarDateTimeSelector(
         user: widget.user,
         skill: widget.skill,
@@ -105,9 +156,13 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
       height: widget.height,
       sendWidget: ActionButton(
           text: 'Send',
-          enabled: _selectedTime != null,
+          enabled: _selectedTime != null ||
+              (widget.user.availability == null ||
+                  widget.user.availability.timeRangeRaw.isEmpty),
           onTap: (BuildContext context) {
-            if (_selectedTime != null) {
+            if (_selectedTime != null ||
+                (widget.user.availability == null ||
+                    widget.user.availability.timeRangeRaw.isEmpty)) {
               if (widget.onConfirm != null) {
                 widget.onConfirm(_message, _selectedTime);
               }

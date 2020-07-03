@@ -140,8 +140,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
       ),
       body: BlocBuilder<GroupHomeBloc, GroupHomeState>(
         builder: (BuildContext context, GroupHomeState state) {
-          print('GROUP HOME BLOC STATE: $state');
-
           if (state is GroupHomeUnauthenticated) {
             return Container();
           }
@@ -188,8 +186,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                 .currentUserGroups
                 .where((g) => g.id == group.id)
                 .isEmpty;
-
-            print('GROUP HOME LOADED: ${group.name}');
 
             return NestedScrollView(
               headerSliverBuilder:
