@@ -1136,8 +1136,9 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     const name = data.name;
     const id = data.id;
     const description = data.description;
-    const tags = (data.tags !== undefined) ? data.tags : [];
+    const tags = data.tags ? data.tags : [];
     const type = data.type;
+    const password = data.password;
 
     // Checking attribute.
     if (name && !(typeof name === 'string')) {
@@ -1178,11 +1179,19 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         return { "message": "Group already exists." };
     }
 
-    return firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).then(() => {
-        return doc;
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
+    await firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).catch((error) => {
+        throw new functions.https.HttpsError('internal', error.message, error);
     });
+
+    if (type === "private") {
+        await firestore.collection(GROUPS_COLLECTION).doc(id).collection('security').doc(id).set({
+            "password": password,
+        }).catch((error) => {
+            throw new functions.https.HttpsError('internal', error.message, error);
+        });
+    }
+
+    return doc;
 });
 
 exports.joinGroup = functions.https.onCall(async (data, context) => {

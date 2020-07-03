@@ -6,5 +6,6 @@
         "networking",
         "connectors"
     ],
-    "type": "private"
+    "type": "private",
+    "password": "connect"
 }
