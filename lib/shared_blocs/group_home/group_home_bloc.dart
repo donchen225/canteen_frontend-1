@@ -6,6 +6,7 @@ import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_event.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_state.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
@@ -90,7 +91,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
   }
 
   Stream<GroupHomeState> _mapLoadDefaultGroupToState() async* {
-    final group = await _groupRepository.getGroup('HxuOLXcLsIBmTxp0ToiQ');
+    final group = await _groupRepository.getGroup(AppConfig.defaultGroupId);
 
     final members = await _groupRepository.getGroupMembers(group.id);
     final detailedGroup = DetailedGroup.fromGroup(group, members);

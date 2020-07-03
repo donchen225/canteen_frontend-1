@@ -1,3 +1,4 @@
 {
-    "STORAGE_URL": "gs://get-canteen.appspot.com"
+    "STORAGE_URL": "gs://get-canteen.appspot.com",
+    "DEFAULT_GROUP_ID": "HxuOLXcLsIBmTxp0ToiQ"
 }

@@ -2,6 +2,7 @@ import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -54,7 +55,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     yield HomeLoading();
 
     try {
-      await _groupRepository.joinGroup("HxuOLXcLsIBmTxp0ToiQ");
+      await _groupRepository.joinGroup(AppConfig.defaultGroupId);
     } catch (e) {
       print('Error joining Canteen group: $e');
     }
