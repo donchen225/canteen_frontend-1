@@ -400,6 +400,7 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
 exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) => {
 
     return collectionIndex.setSettings({
+        typoTolerance: false,
         searchableAttributes: [
             'teach_skill.name',
             'learn_skill.name',
