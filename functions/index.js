@@ -812,20 +812,26 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
             updated = true;
         }
 
-        if (learnSkillBefore.length === learnSkillAfter.length && teachSkillBefore.length === teachSkillAfter.length) {
+        if (learnSkillBefore.length === learnSkillAfter.length) {
             learnSkillBefore.forEach((item, idx) => {
                 var newLearnSkill = learnSkillAfter[idx];
                 if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description || item.price !== newLearnSkill.price || item.duration !== newLearnSkill.duration) {
                     updated = true;
                 }
             });
+        } else {
+            updated = true;
+        }
 
+        if (teachSkillBefore.length === teachSkillAfter.length) {
             teachSkillBefore.forEach((item, idx) => {
                 var newTeachSkill = teachSkillAfter[idx];
                 if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description || item.price !== newTeachSkill.price || item.duration !== newTeachSkill.duration) {
                     updated = true;
                 }
             });
+        } else {
+            updated = true;
         }
 
         if (updated) {
