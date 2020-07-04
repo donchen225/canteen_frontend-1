@@ -29,10 +29,12 @@ class SinglePostBody extends StatelessWidget {
     Key key,
     @required this.post,
     @required this.groupId,
+    @required this.postBloc,
   }) : super(key: key);
 
   final DetailedPost post;
   final String groupId;
+  final PostBloc postBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -164,15 +166,13 @@ class SinglePostBody extends StatelessWidget {
                                     final like = Like(
                                         from: curentUserId,
                                         createdOn: DateTime.now());
-                                    BlocProvider.of<PostBloc>(context).add(
-                                        AddLike(
-                                            groupId: groupId,
-                                            postId: post.id,
-                                            like: like));
+                                    postBloc.add(AddLike(
+                                        groupId: groupId,
+                                        postId: post.id,
+                                        like: like));
                                   } else {
-                                    BlocProvider.of<PostBloc>(context).add(
-                                        DeleteLike(
-                                            groupId: groupId, postId: post.id));
+                                    postBloc.add(DeleteLike(
+                                        groupId: groupId, postId: post.id));
                                   }
                                 },
                               ),

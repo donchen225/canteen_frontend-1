@@ -39,8 +39,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   ) async* {
     if (event is LoadGroup) {
       yield* _mapLoadGroupToState(event);
-    } else if (event is JoinGroup) {
-      yield* _mapJoinGroupToState(event);
+    } else if (event is JoinPublicGroup) {
+      yield* _mapJoinPublicGroupToState(event);
+    } else if (event is JoinedPrivateGroup) {
+      yield* _mapJoinedPrivateGroupToState(event);
     } else if (event is LoadGroupMembers) {
       yield* _mapLoadGroupMembersToState();
     }
@@ -51,9 +53,16 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     yield GroupLoaded(group: event.group);
   }
 
-  Stream<GroupState> _mapJoinGroupToState(JoinGroup event) async* {
-    await _groupRepository.joinGroup(event.groupId);
-    final group = await _groupRepository.getGroup(event.groupId);
+  Stream<GroupState> _mapJoinPublicGroupToState(JoinPublicGroup event) async* {
+    await _groupRepository.joinGroup(event.group.id);
+    final group = await _groupRepository.getGroup(event.group.id);
+    _groupHomeBloc.add(LoadUserGroups());
+    yield GroupLoaded(group: group);
+  }
+
+  Stream<GroupState> _mapJoinedPrivateGroupToState(
+      JoinedPrivateGroup event) async* {
+    final group = await _groupRepository.getGroup(event.group.id);
     _groupHomeBloc.add(LoadUserGroups());
     yield GroupLoaded(group: group);
   }

@@ -20,9 +20,7 @@ import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
-import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
-import 'package:canteen_frontend/screens/private_group_dialog/bloc/private_group_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
@@ -36,12 +34,10 @@ import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,8 +74,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
-  GroupBloc _groupBloc;
-  PostBloc _discoverTabPostBloc;
   int _previousIndex;
   int _currentIndex = 0;
   final RecommendationRepository _recommendationRepository =
@@ -98,18 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!authenticated) {
       _homeBloc.add(CheckOnboardStatus());
     }
-
-    _groupBloc = GroupBloc(
-      userRepository: widget._userRepository,
-      groupRepository: _groupRepository,
-      groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
-    );
-
-    _discoverTabPostBloc = PostBloc(
-      userRepository: widget._userRepository,
-      postRepository: widget._postRepository,
-      groupBloc: _groupBloc,
-    );
   }
 
   void _onItemTapped(BuildContext context, int index) {
@@ -374,14 +356,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator(
                     key: getIt<NavigationService>().homeNavigatorKey,
                     onGenerateRoute: (RouteSettings settings) {
-                      return buildPostScreenRoutes(settings);
+                      return buildHomeScreenRoutes(context, settings);
                     },
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<GroupBloc>(
-                        create: (context) => _groupBloc,
-                      ),
                       BlocProvider<SearchBloc>(
                         create: (context) => SearchBloc(
                           userRepository: widget._userRepository,
@@ -394,14 +373,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             groupRepository: _groupRepository)
                           ..add(LoadDiscover()),
                       ),
-                      BlocProvider<PostBloc>(
-                        create: (context) => _discoverTabPostBloc,
-                      ),
                     ],
                     child: Navigator(
                       key: getIt<NavigationService>().searchNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
-                        return buildSearchScreenRoutes(settings);
+                        return buildSearchScreenRoutes(context, settings);
                       },
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/arguments.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
@@ -11,11 +12,13 @@ import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_group_screen.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
+MaterialPageRoute buildSearchScreenRoutes(
+    BuildContext context, RouteSettings settings) {
   return MaterialPageRoute(
       settings: settings,
-      builder: (BuildContext context) {
+      builder: (BuildContext builderContext) {
         switch (settings.name) {
           case DiscoverScreen.routeName:
             return DiscoverScreen();
@@ -42,7 +45,10 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
             final SinglePostArguments args = settings.arguments;
             return SinglePostScreen(
               body: SinglePostBody(
-                  post: args.post as DetailedPost, groupId: args.groupId),
+                post: args.post as DetailedPost,
+                groupId: args.groupId,
+                postBloc: BlocProvider.of<DiscoverPostBloc>(context),
+              ),
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

@@ -6,13 +6,14 @@ import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
   final String groupId;
   final double height;
+  final PostBloc postBloc;
 
-  PostDialogScreen({@required this.groupId, this.height = 500});
+  PostDialogScreen(
+      {@required this.groupId, @required this.postBloc, this.height = 500});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
@@ -56,8 +57,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<PostBloc>(context)
-                  .add(AddPost(groupId: widget.groupId, post: post));
+              widget.postBloc.add(AddPost(groupId: widget.groupId, post: post));
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

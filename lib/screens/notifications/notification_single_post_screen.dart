@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
@@ -42,6 +43,7 @@ class _NotificationSinglePostScreenState
               return SinglePostBody(
                 post: state.post,
                 groupId: state.groupId,
+                postBloc: BlocProvider.of<DiscoverPostBloc>(context),
               );
             }
 

@@ -1,8 +1,12 @@
 import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_member_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -122,6 +126,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                 groupId: widget.group.id,
                 height: SizeConfig.instance.blockSizeVertical *
                     kDialogScreenHeightBlocks,
+                postBloc: BlocProvider.of<DiscoverPostBloc>(context),
               ),
             );
           },
@@ -209,13 +214,9 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   ),
                                             ),
                                             FlatButton(
-                                              color:
-                                                  widget.group.type == 'public'
-                                                      ? _joined
-                                                          ? Palette.whiteColor
-                                                          : Palette.primaryColor
-                                                      : Palette.primaryColor
-                                                          .withOpacity(0.3),
+                                              color: _joined
+                                                  ? Palette.whiteColor
+                                                  : Palette.primaryColor,
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(
                                                   color: _joined
@@ -241,14 +242,44 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                               ),
                                               onPressed: () {
                                                 if (authenticated) {
-                                                  if (widget.group.type ==
-                                                      'public') {
-                                                    if (!(_joined)) {
-                                                      _groupBloc.add(JoinGroup(
-                                                          widget.group.id));
+                                                  if (!(_joined)) {
+                                                    if (widget.group.type ==
+                                                        'public') {
+                                                      _groupBloc.add(
+                                                          JoinPublicGroup(
+                                                              widget.group));
                                                       setState(() {
                                                         _joined = !_joined;
                                                       });
+                                                    } else {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                                dialogContext) =>
+                                                            BlocProvider<
+                                                                PrivateGroupBloc>(
+                                                          create: (dialogContext) =>
+                                                              PrivateGroupBloc(
+                                                                  groupRepository:
+                                                                      GroupRepository()),
+                                                          child:
+                                                              AccessCodeDialog(
+                                                            groupId:
+                                                                widget.group.id,
+                                                            onSuccess: (String
+                                                                groupId) {
+                                                              _groupBloc.add(
+                                                                  JoinedPrivateGroup(
+                                                                      widget
+                                                                          .group));
+                                                              setState(() {
+                                                                _joined =
+                                                                    !_joined;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ),
+                                                      );
                                                     }
                                                   }
                                                 } else {
@@ -312,7 +343,9 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                PostListScreen(),
+                PostListScreen(
+                  isHome: false,
+                ),
                 GroupMemberListScreen(),
               ],
             ),

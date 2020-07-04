@@ -17,6 +17,7 @@ import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/profile_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
@@ -256,11 +257,25 @@ class App extends StatelessWidget {
                         userRepository: _userRepository,
                       ),
                     ),
-                    BlocProvider<PostBloc>(
+                    BlocProvider<GroupBloc>(
+                      create: (context) => GroupBloc(
+                        userRepository: _userRepository,
+                        groupRepository: _groupRepository,
+                        groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<HomePostBloc>(
                       create: (context) => PostBloc(
                         userRepository: _userRepository,
                         postRepository: _postRepository,
                         groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<DiscoverPostBloc>(
+                      create: (context) => PostBloc(
+                        userRepository: _userRepository,
+                        postRepository: _postRepository,
+                        groupBloc: BlocProvider.of<GroupBloc>(context),
                       ),
                     ),
                     BlocProvider<MatchListBloc>(

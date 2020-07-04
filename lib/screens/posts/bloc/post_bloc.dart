@@ -14,7 +14,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
-class PostBloc extends Bloc<PostEvent, PostState> {
+mixin HomePostBloc on Bloc<PostEvent, PostState> {}
+
+mixin DiscoverPostBloc on Bloc<PostEvent, PostState> {}
+
+class PostBloc extends Bloc<PostEvent, PostState>
+    with HomePostBloc, DiscoverPostBloc {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
   GroupBloc _groupBloc;
