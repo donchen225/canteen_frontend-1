@@ -1214,44 +1214,57 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     }
 
     const group = await firestore.collection(GROUPS_COLLECTION).doc(groupId).get().then((docSnapshot) => {
-        if (!(docSnapshot.exists)) {
-            throw new Error("The group does not exist.");
+        if (!docSnapshot.exists) {
+            return null;
         }
         return docSnapshot.data();
     }, (error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    if (group === null) {
+        return { "status": "failure", "message": "The group does not exist." };
+    }
+
     var validated = true;
+    var error;
+    var temp = {};
 
     // Check if group is private and verify access code
     if (group.type === 'private') {
-        validated = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('access_code').limit(1).get().then((querySnapshot) => {
-            if (querySnapshot.empty) {
+        validated = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('security').doc(groupId).get().then((documentSnapshot) => {
+            if (documentSnapshot.empty) {
                 throw new Error("Access code not available.");
             }
 
-            const codeDoc = querySnapshot.docs[0].data();
-            return codeDoc.code === accessCode;
-        }, (error) => {
+            const data = documentSnapshot.data();
+            return data.password === accessCode;
+        }).catch((e) => {
             validated = false;
-            throw new functions.https.HttpsError('unknown', error.message, error);
+            error = e;
+            throw new functions.https.HttpsError('internal', e.message, e);
         });
     }
 
-    if (!(validated)) {
-        throw new functions.https.HttpsError('unknown', 'Access code is incorrect.');
+    if (!validated) {
+        var response = { "status": "failure", "message": "Access code is incorrect." };
+        if (error) {
+            response['data'] = error;
+        }
+
+        return response;
     }
 
     // Check if user is in group members
-    await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).get().then((docSnapshot) => {
-        if (docSnapshot.exists) {
-            throw new Error("You are already a member in this group.");
-        }
-        return;
+    const isMember = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).get().then((docSnapshot) => {
+        return docSnapshot.exists;
     }, (error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
+
+    if (isMember) {
+        return { "status": "failure", "message": "You are already a member." };
+    }
 
     // Get user
     const user = await firestore.collection(USER_COLLECTION).doc(userId).get().then((docSnapshot) => {
@@ -1292,5 +1305,5 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
-    return groupMemberDoc;
+    return { "status": "success", "data": groupMemberDoc };
 });

@@ -22,6 +22,7 @@ import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/bloc/private_group_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
@@ -345,10 +346,14 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is OnboardScreenLoaded) {
-              return BlocProvider<OnboardingBloc>(
-                create: (context) => OnboardingBloc(
-                    userRepository: widget._userRepository,
-                    groupRepository: _groupRepository),
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<OnboardingBloc>(
+                    create: (context) => OnboardingBloc(
+                        userRepository: widget._userRepository,
+                        groupRepository: _groupRepository),
+                  ),
+                ],
                 child: Navigator(
                   initialRoute: OnboardingGroupScreen.routeName,
                   onGenerateRoute: (RouteSettings settings) {

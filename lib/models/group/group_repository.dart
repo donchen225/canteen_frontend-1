@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/api_response/api_response.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_entity.dart';
 import 'package:canteen_frontend/models/group/group_member.dart';
@@ -20,12 +21,16 @@ class GroupRepository {
 
   GroupRepository();
 
-  Future<void> joinGroup(String groupId, {String accessCode}) async {
+  Future<ApiResponse> joinGroup(String groupId, {String accessCode}) async {
     return CloudFunctionManager.joinGroup.call({
       "group_id": groupId,
       "access_code": accessCode,
-    }).then((result) {}, onError: (error) {
-      print('ERROR JOINING GROUP: $error');
+    }).then((result) {
+      print(result.data);
+      if (result.data == null) {
+        throw Exception("No data received from server.");
+      }
+      return ApiResponse.fromHttpResult(result);
     });
   }
 

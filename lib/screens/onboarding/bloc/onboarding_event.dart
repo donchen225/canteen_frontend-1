@@ -70,16 +70,28 @@ class UpdateSkill extends OnboardingEvent {
 
 class LoadGroups extends OnboardingEvent {}
 
-class JoinGroup extends OnboardingEvent {
-  final String groupId;
+class JoinPublicGroup extends OnboardingEvent {
+  final String id;
 
-  const JoinGroup({@required this.groupId});
-
-  @override
-  List<Object> get props => [groupId];
+  const JoinPublicGroup({@required this.id});
 
   @override
-  String toString() => 'JoinGroups { groupId: $groupId }';
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'JoinPublicGroup { id: $id }';
+}
+
+class JoinedPrivateGroup extends OnboardingEvent {
+  final String id;
+
+  const JoinedPrivateGroup({@required this.id});
+
+  @override
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'JoinedPrivateGroup { id: $id }';
 }
 
 class CompleteOnboarding extends OnboardingEvent {}

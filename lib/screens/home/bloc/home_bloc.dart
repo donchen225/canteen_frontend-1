@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/api_response/api_response_status.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
@@ -55,7 +56,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     yield HomeLoading();
 
     try {
-      await _groupRepository.joinGroup(AppConfig.defaultGroupId);
+      final response =
+          await _groupRepository.joinGroup(AppConfig.defaultGroupId);
+
+      if (response.status != ApiResponseStatus.success) {
+        throw Exception(response.message);
+      }
     } catch (e) {
       print('Error joining Canteen group: $e');
     }
