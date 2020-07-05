@@ -1,11 +1,13 @@
 import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
+import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -56,23 +58,30 @@ class _UserProfileBodyState extends State<UserProfileBody>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ConfirmationDialogScreen(
-        user: user,
-        skill: skill,
-        height:
-            SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
-        onConfirm: (String comment, DateTime time) {
-          BlocProvider.of<RequestBloc>(context).add(
-            AddRequest(
-              receiverId: user.id,
-              comment: comment,
-              index: index,
-              type: skillType,
-              time: time,
-            ),
-          );
-        },
-      ),
+      builder: (context) {
+        final sendRequetBloc =
+            SendRequestBloc(requestRepository: RequestRepository());
+        return BlocProvider<SendRequestBloc>(
+          create: (dialogContext) => sendRequetBloc,
+          child: ConfirmationDialogScreen(
+            user: user,
+            skill: skill,
+            height: SizeConfig.instance.blockSizeVertical *
+                kDialogScreenHeightBlocks,
+            onConfirm: (String comment, DateTime time) {
+              sendRequetBloc.add(
+                SendRequest(
+                  receiverId: user.id,
+                  comment: comment,
+                  index: index,
+                  type: skillType,
+                  time: time,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 

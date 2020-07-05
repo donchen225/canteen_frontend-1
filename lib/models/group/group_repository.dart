@@ -26,7 +26,6 @@ class GroupRepository {
       "group_id": groupId,
       "access_code": accessCode,
     }).then((result) {
-      print(result.data);
       if (result.data == null) {
         throw Exception("No data received from server.");
       }

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/api_response/api_response.dart';
 import 'package:canteen_frontend/models/request/create_request_payload.dart';
 import 'package:canteen_frontend/models/request/request.dart';
 import 'package:canteen_frontend/models/request/request_entity.dart';
@@ -12,12 +13,14 @@ class RequestRepository {
 
   RequestRepository();
 
-  Future<void> addRequest(CreateRequestPayload payload) {
-    print(payload.toJson());
+  Future<ApiResponse> addRequest(CreateRequestPayload payload) {
     return CloudFunctionManager.addRequest
         .call(payload.toJson())
-        .then((result) {}, onError: (error) {
-      print('ERROR ADDING REQUEST: $error');
+        .then((result) {
+      if (result.data == null) {
+        throw Exception("No data received from server.");
+      }
+      return ApiResponse.fromHttpResult(result);
     });
   }
 

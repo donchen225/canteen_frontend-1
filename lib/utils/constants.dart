@@ -57,3 +57,6 @@ const double offsetdXReverse = -1;
 
 // Notification constants
 const int postsPerPage = 20;
+
+// Dialog constants
+const double dialogIconSize = 80;

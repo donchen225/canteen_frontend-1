@@ -1,14 +1,18 @@
 import 'package:canteen_frontend/components/time_confirmation.dart';
 import 'package:canteen_frontend/components/time_list_selector.dart';
+import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
 import 'package:canteen_frontend/screens/posts/action_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/send_request_dialog/send_request_dialog.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConfirmationDialogScreen extends StatefulWidget {
   final User user;
@@ -159,12 +163,19 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           enabled: _selectedTime != null ||
               (widget.user.availability == null ||
                   widget.user.availability.timeRangeRaw.isEmpty),
-          onTap: (BuildContext context) {
+          onTap: (BuildContext context) async {
             if (_selectedTime != null ||
                 (widget.user.availability == null ||
                     widget.user.availability.timeRangeRaw.isEmpty)) {
               if (widget.onConfirm != null) {
                 widget.onConfirm(_message, _selectedTime);
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) => BlocProvider.value(
+                    value: BlocProvider.of<SendRequestBloc>(context),
+                    child: SendRequestDialog(),
+                  ),
+                );
               }
               Navigator.maybePop(context);
             } else {

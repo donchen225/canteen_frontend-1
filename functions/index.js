@@ -82,7 +82,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 0).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+            output = { 'status': 'failure', 'message': 'Request has already been sent.' };
         }
         return;
     }).catch((error) => {
@@ -96,7 +96,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 0).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+            output = { 'status': 'failure', 'message': 'Request has already been received. Check your requests.' };
         }
         return;
     }).catch((error) => {
@@ -112,7 +112,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(MATCH_COLLECTION).doc(matchId).get().then((doc) => {
         if (doc.exists) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Match already exists.' };
+            output = { 'status': 'failure', 'message': 'You are already connected!' };
             return;
         }
         return;
@@ -124,32 +124,31 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         return output;
     }
 
-    try {
-        const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
-        const payer = skillType === "offer" ? uid : receiverId;
 
-        // Create document
-        const doc = {
-            "sender_id": uid,
-            "receiver_id": receiverId,
-            "payer": payer,
-            "skill": skill["name"],
-            "price": skill["price"],
-            "duration": skill["duration"],
-            "status": 0,
-            "type": skillType,
-            "comment": comment,
-            "time": requestTime,
-            "created_on": admin.firestore.Timestamp.now(),
-        };
+    const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
+    const payer = skillType === "offer" ? uid : receiverId;
 
-        return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
-            return doc;
-        })
-    }
-    catch (error) {
+    // Create document
+    const doc = {
+        "sender_id": uid,
+        "receiver_id": receiverId,
+        "payer": payer,
+        "skill": skill["name"],
+        "price": skill["price"],
+        "duration": skill["duration"],
+        "status": 0,
+        "type": skillType,
+        "comment": comment,
+        "time": requestTime,
+        "created_on": admin.firestore.Timestamp.now(),
+    };
+
+    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
+        return { "status": "success", "data": doc, "message": "Successfully sent request." };
+    }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
-    }
+    });
+
 });
 
 // Create match in Firestore
