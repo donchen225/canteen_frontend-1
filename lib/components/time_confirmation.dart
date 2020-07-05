@@ -123,7 +123,7 @@ class _TimeConfirmationState extends State<TimeConfirmation> {
                                   style: timeTextStyle,
                                 ),
                                 Text(
-                                  '${timeFormat.format(widget.time)} - ${timeFormat.format(widget.time)} ${widget.time.timeZoneName}',
+                                  '${timeFormat.format(widget.time)} - ${timeFormat.format(widget.time.add(Duration(minutes: widget.duration)))} ${widget.time.timeZoneName}',
                                   style: timeTextStyle,
                                 ),
                               ],
