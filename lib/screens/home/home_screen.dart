@@ -23,6 +23,7 @@ import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
+import 'package:canteen_frontend/screens/posts/single_post_bloc/single_post_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
@@ -356,13 +357,24 @@ class _HomeScreenState extends State<HomeScreen> {
               return IndexedStack(
                 index: _currentIndex,
                 children: [
-                  BlocProvider<PostListBloc>(
-                    create: (context) => PostListBloc(
-                      userRepository: widget._userRepository,
-                      postRepository: widget._postRepository,
-                      groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
-                      postBloc: BlocProvider.of<PostBloc>(context),
-                    ),
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          groupHomeBloc:
+                              BlocProvider.of<GroupHomeBloc>(context),
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                        ),
+                      ),
+                      BlocProvider<SinglePostBloc>(
+                        create: (context) => SinglePostBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                    ],
                     child: Navigator(
                       key: getIt<NavigationService>().homeNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
@@ -390,6 +402,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           postRepository: widget._postRepository,
                           postBloc: BlocProvider.of<PostBloc>(context),
                           groupBloc: BlocProvider.of<GroupBloc>(context),
+                        ),
+                      ),
+                      BlocProvider<SinglePostBloc>(
+                        create: (context) => SinglePostBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          postRepository: widget._postRepository,
                         ),
                       ),
                     ],

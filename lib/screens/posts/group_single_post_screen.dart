@@ -1,44 +1,39 @@
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/single_post_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotificationSinglePostScreen extends StatefulWidget {
+class GroupSinglePostScreen extends StatefulWidget {
   static const routeName = '/post';
 
   @override
-  _NotificationSinglePostScreenState createState() =>
-      _NotificationSinglePostScreenState();
+  _GroupSinglePostScreenState createState() => _GroupSinglePostScreenState();
 }
 
-class _NotificationSinglePostScreenState
-    extends State<NotificationSinglePostScreen> {
+class _GroupSinglePostScreenState extends State<GroupSinglePostScreen> {
   @override
   Widget build(BuildContext context) {
     return SinglePostScreen(
-      onTapBack: () {
-        BlocProvider.of<NotificationViewBloc>(context)
-            .add(ClearNotificationView());
-      },
-      body: BlocListener<NotificationViewBloc, NotificationViewState>(
-        listener: (BuildContext context, NotificationViewState state) {
-          if (state is NotificationPostLoaded) {
+      body: BlocListener<SinglePostBloc, SinglePostState>(
+        listener: (BuildContext context, SinglePostState state) {
+          if (state is SinglePostLoaded) {
             BlocProvider.of<CommentBloc>(context).add(
                 LoadComments(groupId: state.groupId, postId: state.post.id));
           }
         },
-        child: BlocBuilder<NotificationViewBloc, NotificationViewState>(
-          builder: (BuildContext context, NotificationViewState state) {
-            if (state is NotificationViewLoading) {
+        child: BlocBuilder<SinglePostBloc, SinglePostState>(
+          builder: (BuildContext context, SinglePostState state) {
+            if (state is SinglePostLoading) {
               return Center(
                 child: CupertinoActivityIndicator(),
               );
             }
 
-            if (state is NotificationPostLoaded) {
+            if (state is SinglePostLoaded) {
               return SinglePostBody(
                 post: state.post,
                 groupId: state.groupId,

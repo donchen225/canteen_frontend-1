@@ -1,15 +1,15 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
-import 'package:canteen_frontend/screens/posts/arguments.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
+import 'package:canteen_frontend/screens/posts/group_single_post_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
-import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
+import 'package:canteen_frontend/screens/posts/single_post_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -80,15 +80,13 @@ class _PostListScreenState extends State<PostListScreen> {
 
                   return GestureDetector(
                     onTap: () {
+                      BlocProvider.of<SinglePostBloc>(context).add(
+                          LoadSinglePost(post: post, groupId: state.groupId));
                       BlocProvider.of<CommentBloc>(context).add(LoadComments(
                           groupId: state.groupId, postId: post.id));
                       Navigator.pushNamed(
                         context,
-                        SinglePostScreen.routeName,
-                        arguments: SinglePostArguments(
-                          post: post,
-                          groupId: state.groupId,
-                        ),
+                        GroupSinglePostScreen.routeName,
                       );
                     },
                     child: PostContainer(

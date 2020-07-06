@@ -129,8 +129,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     posts[postIdx] = posts[postIdx].incrementLikeCount();
     postList[event.groupId] = posts;
 
-    yield PostsLoaded(
-        groupId: event.groupId, posts: posts, hash: DateTime.now().toString());
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {

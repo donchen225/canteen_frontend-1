@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SinglePostScreen extends StatelessWidget {
-  static const routeName = '/post';
   final Widget body;
   final Function onTapBack;
 
