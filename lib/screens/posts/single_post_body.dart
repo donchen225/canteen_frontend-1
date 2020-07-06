@@ -212,7 +212,9 @@ class SinglePostBody extends StatelessWidget {
                 child: BlocBuilder<CommentBloc, CommentState>(
                     builder: (BuildContext context, CommentState state) {
                   if (state is CommentsLoading) {
-                    return CupertinoActivityIndicator();
+                    return Container(
+                        height: SizeConfig.instance.safeBlockVertical * 40,
+                        child: CupertinoActivityIndicator());
                   }
 
                   if (state is CommentsLoaded) {

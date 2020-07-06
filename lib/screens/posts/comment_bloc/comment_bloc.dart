@@ -16,9 +16,7 @@ import 'package:tuple/tuple.dart';
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
-  UserBloc _userBloc;
-  User _self;
-  StreamSubscription _userSubscription;
+  Map<String, List<Comment>> commentList = {};
   Map<String, StreamSubscription> commentsSubscriptionMap = Map();
 
   CommentBloc(
@@ -29,14 +27,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         assert(userRepository != null),
         assert(userBloc != null),
         _postRepository = postRepository,
-        _userRepository = userRepository,
-        _userBloc = userBloc {
-    _userSubscription = _userBloc.listen((state) {
-      if (state is UserLoaded) {
-        _self = state.user;
-      }
-    });
-  }
+        _userRepository = userRepository;
 
   @override
   CommentState get initialState => CommentsEmpty();
@@ -66,12 +57,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
           .listen((comments) => add(CommentsUpdated(event.postId, comments)));
 
       commentsSubscriptionMap[event.postId] = commentsSubscription;
-
-      if (_self == null) {
-        print('USER IS NULL!!!!');
-        _self = await _userRepository.currentUser();
-        print('USER IS STILL NULL!!!!');
-      }
     } catch (exception) {
       print(exception);
     }
@@ -120,7 +105,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   }
 
   Stream<CommentState> _mapClearCommentsToState() async* {
-    _self = null;
     _postRepository.clearComments();
     yield CommentsEmpty();
   }
@@ -129,7 +113,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   Future<void> close() {
     _postRepository.clearComments();
     commentsSubscriptionMap.forEach((_, subscription) => subscription.cancel());
-    _userSubscription?.cancel();
     return super.close();
   }
 }
