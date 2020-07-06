@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -29,17 +30,10 @@ class PostListScreen extends StatefulWidget {
 class _PostListScreenState extends State<PostListScreen> {
   String userId;
   TextStyle buttonTextStyle;
-  PostBloc _postBloc;
 
   @override
   void initState() {
     super.initState();
-
-    if (widget.isHome) {
-      _postBloc = BlocProvider.of<HomePostBloc>(context);
-    } else {
-      _postBloc = BlocProvider.of<DiscoverPostBloc>(context);
-    }
   }
 
   @override
@@ -47,180 +41,180 @@ class _PostListScreenState extends State<PostListScreen> {
     userId = CachedSharedPreferences.getString(PreferenceConstants.userId);
     buttonTextStyle = Theme.of(context).textTheme.bodyText2;
 
-    if (widget.isHome) {
-      return BlocBuilder<HomePostBloc, PostState>(
-        builder: (BuildContext context, PostState state) {
-          return _buildPostListWidget(context, state);
-        },
-      );
-    }
+    return BlocBuilder<PostListBloc, PostListState>(
+      bloc: BlocProvider.of<PostListBloc>(context),
+      builder: (BuildContext context, PostListState state) {
+        if (state is PostListLoading) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
 
-    return BlocBuilder<DiscoverPostBloc, PostState>(
-      builder: (BuildContext context, PostState state) {
-        return _buildPostListWidget(context, state);
-      },
-    );
-  }
+        if (state is PostsPrivate) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
+              ),
+              child: Text(
+                'Posts are private. Join the group to view posts.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+          );
+        }
 
-  Widget _buildPostListWidget(BuildContext context, PostState state) {
-    if (state is PostsLoading) {
-      return Center(
-        child: CupertinoActivityIndicator(),
-      );
-    }
+        if (state is PostListLoaded) {
+          return CustomScrollView(
+            key: PageStorageKey<String>('posts'),
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  final post = state.postList[index];
 
-    if (state is PostsPrivate) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
-          ),
-          child: Text(
-            'Posts are private. Join the group to view posts.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-      );
-    }
-
-    if (state is PostsLoaded) {
-      return CustomScrollView(
-        key: PageStorageKey<String>('posts'),
-        slivers: <Widget>[
-          SliverOverlapInjector(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-          ),
-          SliverList(
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              final post = state.posts[index];
-
-              return GestureDetector(
-                onTap: () {
-                  BlocProvider.of<CommentBloc>(context).add(
-                      LoadComments(groupId: state.groupId, postId: post.id));
-                  Navigator.pushNamed(
-                    context,
-                    SinglePostScreen.routeName,
-                    arguments: SinglePostArguments(
-                      post: post,
-                      groupId: state.groupId,
-                    ),
-                  );
-                },
-                child: PostContainer(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.instance.blockSizeHorizontal * 4,
-                      right: SizeConfig.instance.blockSizeHorizontal * 4,
-                      top: SizeConfig.instance.blockSizeHorizontal * 3,
-                      bottom: SizeConfig.instance.blockSizeHorizontal * 3,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              ViewUserProfileScreen.routeName,
-                              arguments: UserArguments(
-                                user: post.user,
-                              ),
-                            ),
-                            child: Container(
-                              alignment: Alignment.topCenter,
-                              child: ProfilePicture(
-                                photoUrl: post.user.photoUrl,
-                                editable: false,
-                                size: SizeConfig.instance.safeBlockHorizontal *
-                                    15,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left:
-                                    SizeConfig.instance.blockSizeHorizontal * 2,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  PostNameTemplate(
-                                    name: post.user.displayName,
-                                    title: post.user.title,
+                  return GestureDetector(
+                    onTap: () {
+                      BlocProvider.of<CommentBloc>(context).add(LoadComments(
+                          groupId: state.groupId, postId: post.id));
+                      Navigator.pushNamed(
+                        context,
+                        SinglePostScreen.routeName,
+                        arguments: SinglePostArguments(
+                          post: post,
+                          groupId: state.groupId,
+                        ),
+                      );
+                    },
+                    child: PostContainer(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.instance.blockSizeHorizontal * 4,
+                          right: SizeConfig.instance.blockSizeHorizontal * 4,
+                          top: SizeConfig.instance.blockSizeHorizontal * 3,
+                          bottom: SizeConfig.instance.blockSizeHorizontal * 3,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  ViewUserProfileScreen.routeName,
+                                  arguments: UserArguments(
+                                    user: post.user,
+                                  ),
+                                ).then((value) {
+                                  setState(() {});
+                                }),
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  child: ProfilePicture(
                                     photoUrl: post.user.photoUrl,
-                                    time: post.createdOn,
-                                    color: Palette.textSecondaryBaseColor,
+                                    editable: false,
+                                    size: SizeConfig
+                                            .instance.safeBlockHorizontal *
+                                        15,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig
-                                            .instance.safeBlockVertical),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        post.message,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig
+                                            .instance.blockSizeHorizontal *
+                                        2,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      PostNameTemplate(
+                                        name: post.user.displayName,
+                                        title: post.user.title,
+                                        photoUrl: post.user.photoUrl,
+                                        time: post.createdOn,
+                                        color: Palette.textSecondaryBaseColor,
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: LikeButton(
-                                            post: post,
-                                            color:
-                                                Palette.textSecondaryBaseColor,
-                                            onTap: () {
-                                              if (!(post.liked)) {
-                                                final like = Like(
-                                                    from: userId,
-                                                    createdOn: DateTime.now());
-                                                _postBloc.add(AddLike(
-                                                    groupId: state.groupId,
-                                                    postId: post.id,
-                                                    like: like));
-                                              } else {
-                                                _postBloc.add(DeleteLike(
-                                                    groupId: state.groupId,
-                                                    postId: post.id));
-                                              }
-                                            },
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: SizeConfig
+                                                .instance.safeBlockVertical),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            post.message,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
                                           ),
                                         ),
-                                        Expanded(
-                                          child: CommentButton(
-                                              post: post,
-                                              style: buttonTextStyle,
-                                              sideTextColor: Palette
-                                                  .textSecondaryBaseColor),
-                                        ),
-                                        Expanded(
-                                          child: Container(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
-              );
-            }, childCount: state.posts.length),
-          ),
-        ],
-      );
-    }
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: LikeButton(
+                                                liked: post.liked,
+                                                likeCount: post.likeCount,
+                                                color: Palette
+                                                    .textSecondaryBaseColor,
+                                                onTap: () {
+                                                  final postBloc =
+                                                      BlocProvider.of<PostBloc>(
+                                                          context);
 
-    return Container();
+                                                  if (!(post.liked)) {
+                                                    final like = Like(
+                                                        from: userId,
+                                                        createdOn:
+                                                            DateTime.now());
+                                                    postBloc.add(AddLike(
+                                                        groupId: state.groupId,
+                                                        postId: post.id,
+                                                        like: like));
+                                                  } else {
+                                                    postBloc.add(DeleteLike(
+                                                        groupId: state.groupId,
+                                                        postId: post.id));
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: CommentButton(
+                                                  post: post,
+                                                  style: buttonTextStyle,
+                                                  sideTextColor: Palette
+                                                      .textSecondaryBaseColor),
+                                            ),
+                                            Expanded(
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  );
+                }, childCount: state.postList.length),
+              ),
+            ],
+          );
+        }
+
+        return Container();
+      },
+    );
   }
 }

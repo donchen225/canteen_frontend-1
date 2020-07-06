@@ -31,7 +31,6 @@ MaterialPageRoute buildHomeScreenRoutes(
               body: SinglePostBody(
                 post: args.post as DetailedPost,
                 groupId: args.groupId,
-                postBloc: BlocProvider.of<HomePostBloc>(context),
               ),
             );
           case SettingsScreen.routeName:

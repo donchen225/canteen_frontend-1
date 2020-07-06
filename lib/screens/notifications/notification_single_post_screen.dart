@@ -43,7 +43,6 @@ class _NotificationSinglePostScreenState
               return SinglePostBody(
                 post: state.post,
                 groupId: state.groupId,
-                postBloc: BlocProvider.of<DiscoverPostBloc>(context),
               );
             }
 

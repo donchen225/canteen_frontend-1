@@ -12,6 +12,7 @@ import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/post_list_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
@@ -264,17 +265,11 @@ class App extends StatelessWidget {
                         groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
                       ),
                     ),
-                    BlocProvider<HomePostBloc>(
+                    BlocProvider<PostBloc>(
                       create: (context) => PostBloc(
                         userRepository: _userRepository,
                         postRepository: _postRepository,
                         groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
-                      ),
-                    ),
-                    BlocProvider<DiscoverPostBloc>(
-                      create: (context) => PostBloc(
-                        userRepository: _userRepository,
-                        postRepository: _postRepository,
                         groupBloc: BlocProvider.of<GroupBloc>(context),
                       ),
                     ),

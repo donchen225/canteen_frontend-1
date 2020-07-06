@@ -129,7 +129,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                       groupId: _groupHomeBloc.currentGroup.id,
                       height: SizeConfig.instance.blockSizeVertical *
                           kDialogScreenHeightBlocks,
-                      postBloc: BlocProvider.of<HomePostBloc>(context),
                     ),
                   );
                 } else {

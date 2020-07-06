@@ -47,7 +47,6 @@ MaterialPageRoute buildSearchScreenRoutes(
               body: SinglePostBody(
                 post: args.post as DetailedPost,
                 groupId: args.groupId,
-                postBloc: BlocProvider.of<DiscoverPostBloc>(context),
               ),
             );
           case SettingsScreen.routeName:

@@ -14,19 +14,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
-mixin HomePostBloc on Bloc<PostEvent, PostState> {}
-
-mixin DiscoverPostBloc on Bloc<PostEvent, PostState> {}
-
-class PostBloc extends Bloc<PostEvent, PostState>
-    with HomePostBloc, DiscoverPostBloc {
+class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
   GroupBloc _groupBloc;
   GroupHomeBloc _groupHomeBloc;
   StreamSubscription _groupSubscription;
   StreamSubscription _groupHomeSubscription;
-  Map<String, List<Post>> _postList = {};
+  Map<String, List<Post>> postList = {};
 
   PostBloc({
     @required PostRepository postRepository,
@@ -113,7 +108,7 @@ class PostBloc extends Bloc<PostEvent, PostState>
       posts.add(DetailedPost.fromPost(update, user, liked));
     }
 
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
@@ -126,27 +121,28 @@ class PostBloc extends Bloc<PostEvent, PostState>
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
     _postRepository.addLike(event.groupId, event.postId, event.like);
 
-    var posts = _postList[event.groupId]
+    var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())
         .toList();
 
     final postIdx = posts.indexWhere((post) => post.id == event.postId);
     posts[postIdx] = posts[postIdx].incrementLikeCount();
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
-    yield PostsLoaded(groupId: event.groupId, posts: posts);
+    yield PostsLoaded(
+        groupId: event.groupId, posts: posts, hash: DateTime.now().toString());
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
     _postRepository.deleteLike(event.groupId, event.postId);
 
-    var posts = _postList[event.groupId]
+    var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())
         .toList();
 
     final postIdx = posts.indexWhere((post) => post.id == event.postId);
     posts[postIdx] = posts[postIdx].decrementLikeCount();
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
   }

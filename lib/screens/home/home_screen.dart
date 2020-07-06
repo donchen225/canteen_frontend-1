@@ -20,6 +20,8 @@ import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
@@ -34,6 +36,7 @@ import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -353,11 +356,19 @@ class _HomeScreenState extends State<HomeScreen> {
               return IndexedStack(
                 index: _currentIndex,
                 children: [
-                  Navigator(
-                    key: getIt<NavigationService>().homeNavigatorKey,
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildHomeScreenRoutes(context, settings);
-                    },
+                  BlocProvider<PostListBloc>(
+                    create: (context) => PostListBloc(
+                      userRepository: widget._userRepository,
+                      postRepository: widget._postRepository,
+                      groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                      postBloc: BlocProvider.of<PostBloc>(context),
+                    ),
+                    child: Navigator(
+                      key: getIt<NavigationService>().homeNavigatorKey,
+                      onGenerateRoute: (RouteSettings settings) {
+                        return buildHomeScreenRoutes(context, settings);
+                      },
+                    ),
                   ),
                   MultiBlocProvider(
                     providers: [
@@ -372,6 +383,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             recommendationRepository: _recommendationRepository,
                             groupRepository: _groupRepository)
                           ..add(LoadDiscover()),
+                      ),
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          groupBloc: BlocProvider.of<GroupBloc>(context),
+                        ),
                       ),
                     ],
                     child: Navigator(

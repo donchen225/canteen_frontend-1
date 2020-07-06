@@ -29,12 +29,10 @@ class SinglePostBody extends StatelessWidget {
     Key key,
     @required this.post,
     @required this.groupId,
-    @required this.postBloc,
   }) : super(key: key);
 
   final DetailedPost post;
   final String groupId;
-  final PostBloc postBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +157,13 @@ class SinglePostBody extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               LikeButton(
-                                post: post,
+                                liked: post.liked,
+                                likeCount: post.likeCount,
                                 color: Palette.textSecondaryBaseColor,
                                 onTap: () {
+                                  final postBloc =
+                                      BlocProvider.of<PostBloc>(context);
+
                                   if (!(post.liked)) {
                                     final like = Like(
                                         from: curentUserId,
