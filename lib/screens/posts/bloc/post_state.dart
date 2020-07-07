@@ -23,6 +23,16 @@ class PostsLoaded extends PostState {
   String toString() => 'PostsLoaded';
 }
 
-class PostsPrivate extends PostState {}
+class PostsPrivate extends PostState {
+  final String groupId;
+
+  const PostsPrivate({this.groupId});
+
+  @override
+  List<Object> get props => [groupId];
+
+  @override
+  String toString() => 'PostsPrivate';
+}
 
 class PostsEmpty extends PostState {}

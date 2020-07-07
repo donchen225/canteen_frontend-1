@@ -177,7 +177,7 @@ class DetailedPost extends Post {
       createdOn: createdOn,
       lastUpdated: lastUpdated,
       user: user,
-      liked: true,
+      liked: liked,
     );
   }
 

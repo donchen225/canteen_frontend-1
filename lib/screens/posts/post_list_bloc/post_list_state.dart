@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/request/request.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class PostListState extends Equatable {
@@ -28,4 +27,4 @@ class PostListLoaded extends PostListState {
   }
 }
 
-class PostListUnauthenticated extends PostListState {}
+class PostListPrivate extends PostListState {}

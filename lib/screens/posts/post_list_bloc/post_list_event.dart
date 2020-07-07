@@ -22,6 +22,8 @@ class LoadPostList extends PostListEvent {
       'LoadPostList { grorupId: $groupId, postList: $postList }';
 }
 
+class PrivatePostList extends PostListEvent {}
+
 class LoadingPostList extends PostListEvent {}
 
 class ClearPostList extends PostListEvent {}

@@ -86,7 +86,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     } on PlatformException catch (error) {
       if (error.code == 'Error 7') {
         print('INSUFFICIENT PERMISSIONS');
-        yield PostsPrivate();
+        yield PostsPrivate(groupId: event.groupId);
       }
     }
   }

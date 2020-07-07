@@ -44,9 +44,12 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         }
       }
 
-      // if (state is RequestsUnauthenticated) {
-      //   add(ClearPostList());
-      // }
+      if (state is PostsPrivate) {
+        final groupId = state.groupId;
+        if (_currentGroupId == groupId) {
+          add(PrivatePostList());
+        }
+      }
     });
     if (_groupBloc != null) {
       _groupSubscription = _groupBloc.listen((state) {
@@ -90,6 +93,8 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
       yield* _mapLoadPostListToState(event);
     } else if (event is LoadingPostList) {
       yield* _mapLoadingPostListToState();
+    } else if (event is PrivatePostList) {
+      yield* _mapPrivatePostListToState();
     } else if (event is ClearPostList) {
       yield* _mapClearPostListToState();
     }
@@ -101,6 +106,10 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
 
   Stream<PostListState> _mapLoadingPostListToState() async* {
     yield PostListLoading();
+  }
+
+  Stream<PostListState> _mapPrivatePostListToState() async* {
+    yield PostListPrivate();
   }
 
   Stream<PostListState> _mapClearPostListToState() async* {

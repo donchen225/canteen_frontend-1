@@ -50,7 +50,7 @@ class _PostListScreenState extends State<PostListScreen> {
           );
         }
 
-        if (state is PostsPrivate) {
+        if (state is PostListPrivate) {
           return Center(
             child: Padding(
               padding: EdgeInsets.symmetric(
