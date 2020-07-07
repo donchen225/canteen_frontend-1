@@ -116,6 +116,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
         visible: _showFAB && _joined,
         child: FloatingActionButton(
           child: Icon(Icons.add),
+          backgroundColor: Palette.primaryColor,
           onPressed: () {
             showModalBottomSheet(
               context: context,
