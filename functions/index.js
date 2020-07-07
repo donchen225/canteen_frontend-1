@@ -521,6 +521,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     const docAfterChange = change.after.data();
 
     if (!docAfterChange) {
+        console.log("Notification document does not exist.");
         return;
     }
 
@@ -530,6 +531,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
         const oldCount = docBeforeChange.count;
 
         if (count <= oldCount) {
+            console.log(`New notification count (${count}) less than or equal to old notification count (${oldCount})`);
             return;
         }
     }
@@ -548,7 +550,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     const tokens = querySnapshot.docs.map(snap => snap.data().token);
 
     if (!Array.isArray(tokens) || !tokens.length) {
-        console.log("Token doesn't exist")
+        console.log("FCM token doesn't exist")
         return;
     }
 
@@ -600,7 +602,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
             object_id: docAfterChange.object_id
         }
     };
-
+    console.log(payload);
     return fcm.sendToDevice(tokens, payload);
 });
 
