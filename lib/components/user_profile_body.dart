@@ -5,6 +5,7 @@ import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -32,6 +33,7 @@ class UserProfileBody extends StatefulWidget {
 
 class _UserProfileBodyState extends State<UserProfileBody>
     with SingleTickerProviderStateMixin {
+  User user;
   TabController _tabController;
 
   final List<String> tabs = [
@@ -42,6 +44,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
   @override
   void initState() {
     super.initState();
+
+    user = widget.user;
     _tabController = TabController(vsync: this, length: tabs.length);
   }
 
@@ -182,7 +186,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                     child: Row(
                       children: <Widget>[
                         ProfilePicture(
-                          photoUrl: widget.user.photoUrl,
+                          photoUrl: user.photoUrl,
                           shape: BoxShape.circle,
                           editable: false,
                           size: kProfileSize,
@@ -204,7 +208,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                             0.5,
                                   ),
                                   child: Text(
-                                    widget.user.displayName ?? '',
+                                    user.displayName ?? '',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -212,7 +216,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                   ),
                                 ),
                                 Text(
-                                  widget.user.title ?? '',
+                                  user.title ?? '',
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -232,23 +236,37 @@ class _UserProfileBodyState extends State<UserProfileBody>
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.safeBlockVertical,
                     ),
-                    child: Text(widget.user.about ?? '', style: bodyTextStyle),
+                    child: Text(user.about ?? '', style: bodyTextStyle),
                   ),
                   Visibility(
                     visible: widget.editable,
                     child: Container(
                       width: double.infinity,
                       child: FlatButton(
-                        onPressed: () {
-                          showModalBottomSheet(
+                        onPressed: () async {
+                          final userProfileBloc =
+                              BlocProvider.of<UserProfileBloc>(context);
+                          final userRepository =
+                              BlocProvider.of<UserBloc>(context).userRepository;
+
+                          await showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             builder: (context) => UserProfileScreen(
-                              userRepository: BlocProvider.of<UserBloc>(context)
-                                  .userRepository,
+                              userRepository: userRepository,
                             ),
                           );
+
+                          final state = userProfileBloc.state;
+
+                          setState(() {
+                            if (state is UserProfileLoaded) {
+                              user = state.user;
+                            } else {
+                              user = userRepository.currentUserNow();
+                            }
+                          });
                         },
                         child: Text(
                           'Edit Profile',
@@ -265,7 +283,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Wrap(
-                        children: widget.user.interests
+                        children: user.interests
                                 ?.map((x) => Padding(
                                       padding: EdgeInsets.only(
                                           right: SizeConfig.instance
@@ -314,7 +332,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
             bottom: false,
             child: Builder(
               builder: (BuildContext context) {
-                return _buildItemList(context, name, widget.user);
+                return _buildItemList(context, name, user);
               },
             ),
           );
