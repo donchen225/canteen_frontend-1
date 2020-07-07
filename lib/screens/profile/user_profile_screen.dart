@@ -304,7 +304,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               child: Text(
                 'Time Zone',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .apply(fontWeightDelta: 1),
               ),
             ),
             Padding(
@@ -315,11 +318,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Users see their local time',
-                  ),
-                  Text(
                     'Your time zone is ${state.settings.timeZoneName}',
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.bodyText2.apply(
                         fontStyle: FontStyle.italic, color: Colors.grey[600]),
                   )
                 ],
@@ -332,7 +332,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   vertical: SizeConfig.instance.blockSizeVertical),
               child: Text(
                 'Recurring Availability',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .apply(fontWeightDelta: 1),
               ),
             ),
             Padding(
