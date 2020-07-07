@@ -35,7 +35,7 @@ class CommentContainer extends StatelessWidget {
                 ),
               ),
               child: ProfilePicture(
-                photoUrl: comment.user.photoUrl,
+                photoUrl: comment.user?.photoUrl ?? "",
                 editable: false,
                 size: SizeConfig.instance.safeBlockHorizontal * 12,
               ),
@@ -57,9 +57,9 @@ class CommentContainer extends StatelessWidget {
                         ),
                       ),
                       child: PostNameTemplate(
-                        name: comment.user.displayName,
-                        title: comment.user.title,
-                        photoUrl: comment.user.photoUrl,
+                        name: comment.user?.displayName ?? "Canteen User",
+                        title: comment.user?.title ?? "",
+                        photoUrl: comment.user?.photoUrl ?? "",
                         time: comment.createdOn,
                         color: Palette.textSecondaryBaseColor,
                         showDate: true,

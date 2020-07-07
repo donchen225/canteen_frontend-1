@@ -30,7 +30,7 @@ class _MatchScreenState extends State<MatchScreen>
       'Chat',
     ),
     Text(
-      'Details',
+      'Profile',
     ),
   ];
 

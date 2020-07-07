@@ -26,8 +26,8 @@ class _NotificationListState extends State<NotificationList> {
 
           return NotificationItem(
             key: Key(notification.id),
-            name: notification.user.displayName,
-            photoUrl: notification.user.photoUrl,
+            name: notification.user?.displayName ?? "Canteen User",
+            photoUrl: notification.user?.photoUrl ?? "",
             type: notification.object,
             count: notification.count,
             time: notification.lastUpdated,
