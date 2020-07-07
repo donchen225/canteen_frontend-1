@@ -193,11 +193,16 @@ class FirebaseUserRepository extends UserRepository {
     }
 
     return userCollection.document(id).get().then((snapshot) {
+      if (!snapshot.exists) {
+        throw Exception("User doesn't exist.");
+      }
       return UserEntity.fromSnapshot(snapshot);
     }).then((userEntity) {
       final user = User.fromEntity(userEntity);
       saveUserMap(user);
       return user;
+    }).catchError((error) {
+      print('Failed to get user: $error');
     });
   }
 
