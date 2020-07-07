@@ -71,7 +71,7 @@ class CommentsUpdated extends CommentEvent {
   List<Object> get props => [postId, updates];
 
   @override
-  String toString() => 'CommentsUpdated { postId: $postId updates: $updates }';
+  String toString() => 'CommentsUpdated { postId: $postId}';
 }
 
 class ClearComments extends CommentEvent {}

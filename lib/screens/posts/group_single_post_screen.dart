@@ -1,5 +1,4 @@
-import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
@@ -20,9 +19,10 @@ class _GroupSinglePostScreenState extends State<GroupSinglePostScreen> {
     return SinglePostScreen(
       body: BlocListener<SinglePostBloc, SinglePostState>(
         listener: (BuildContext context, SinglePostState state) {
+          print('BLOC LISTENER: $state');
           if (state is SinglePostLoaded) {
-            BlocProvider.of<CommentBloc>(context).add(
-                LoadComments(groupId: state.groupId, postId: state.post.id));
+            BlocProvider.of<CommentListBloc>(context).add(
+                LoadCommentList(groupId: state.groupId, postId: state.post.id));
           }
         },
         child: BlocBuilder<SinglePostBloc, SinglePostState>(

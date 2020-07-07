@@ -21,6 +21,8 @@ import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/comment_list_bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
 import 'package:canteen_frontend/screens/posts/single_post_bloc/single_post_bloc.dart';
@@ -374,6 +376,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           postRepository: widget._postRepository,
                         ),
                       ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
                     ],
                     child: Navigator(
                       key: getIt<NavigationService>().homeNavigatorKey,
@@ -410,6 +418,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           postRepository: widget._postRepository,
                         ),
                       ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
                     ],
                     child: Navigator(
                       key: getIt<NavigationService>().searchNavigatorKey,
@@ -431,6 +445,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           userRepository: widget._userRepository,
                           notificationRepository:
                               widget._notificationRepository,
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
                           postRepository: widget._postRepository,
                         ),
                       ),

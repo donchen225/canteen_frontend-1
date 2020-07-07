@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -105,8 +106,8 @@ class PushNotificationsManager {
                   notificationId: notificationId,
                   read: false));
 
-          BlocProvider.of<CommentBloc>(context)
-              .add(LoadComments(groupId: parentId, postId: targetId));
+          BlocProvider.of<CommentListBloc>(context)
+              .add(LoadCommentList(groupId: parentId, postId: targetId));
 
           navigationBar.onTap(3);
 

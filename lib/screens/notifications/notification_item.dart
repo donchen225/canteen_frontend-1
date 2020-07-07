@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -88,6 +89,8 @@ class _NotificationItemState extends State<NotificationItem> {
           groupId: widget.parentId,
           notificationId: widget.notificationId,
           read: widget.read));
+      BlocProvider.of<CommentListBloc>(context).add(
+          LoadCommentList(groupId: widget.parentId, postId: widget.targetId));
       Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
     }
   }

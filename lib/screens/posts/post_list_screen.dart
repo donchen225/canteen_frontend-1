@@ -2,8 +2,8 @@ import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_single_post_screen.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_container.dart';
@@ -82,8 +82,9 @@ class _PostListScreenState extends State<PostListScreen> {
                     onTap: () {
                       BlocProvider.of<SinglePostBloc>(context).add(
                           LoadSinglePost(post: post, groupId: state.groupId));
-                      BlocProvider.of<CommentBloc>(context).add(LoadComments(
-                          groupId: state.groupId, postId: post.id));
+                      BlocProvider.of<CommentListBloc>(context).add(
+                          LoadCommentList(
+                              groupId: state.groupId, postId: post.id));
                       Navigator.pushNamed(
                         context,
                         GroupSinglePostScreen.routeName,

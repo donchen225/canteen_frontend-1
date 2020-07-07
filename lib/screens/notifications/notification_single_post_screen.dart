@@ -1,5 +1,5 @@
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
 import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,8 +26,8 @@ class _NotificationSinglePostScreenState
       body: BlocListener<NotificationViewBloc, NotificationViewState>(
         listener: (BuildContext context, NotificationViewState state) {
           if (state is NotificationPostLoaded) {
-            BlocProvider.of<CommentBloc>(context).add(
-                LoadComments(groupId: state.groupId, postId: state.post.id));
+            BlocProvider.of<CommentListBloc>(context).add(
+                LoadCommentList(groupId: state.groupId, postId: state.post.id));
           }
         },
         child: BlocBuilder<NotificationViewBloc, NotificationViewState>(

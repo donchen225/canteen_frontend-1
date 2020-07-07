@@ -16,7 +16,7 @@ import 'package:tuple/tuple.dart';
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
-  Map<String, List<Comment>> commentList = {};
+  Map<String, List<DetailedComment>> commentList = {};
   Map<String, StreamSubscription> commentsSubscriptionMap = Map();
 
   CommentBloc(
@@ -47,23 +47,27 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
   Stream<CommentState> _mapLoadCommentsToState(LoadComments event) async* {
     try {
-      yield CommentsLoading();
+      final existingComments = commentList[event.postId];
 
       StreamSubscription commentsSubscription =
           commentsSubscriptionMap[event.postId];
       commentsSubscription?.cancel();
+
+      final lastFetch = existingComments != null && existingComments.isNotEmpty
+          ? existingComments.first.lastUpdated
+          : null;
+
       commentsSubscription = _postRepository
-          .getComments(event.groupId, event.postId)
+          .getComments(event.groupId, event.postId, lastFetch: lastFetch)
           .listen((comments) => add(CommentsUpdated(event.postId, comments)));
 
       commentsSubscriptionMap[event.postId] = commentsSubscription;
     } catch (exception) {
-      print(exception);
+      print('Error loading comments: $exception');
     }
   }
 
   Stream<CommentState> _mapCommentsUpdateToState(CommentsUpdated event) async* {
-    yield CommentsLoading();
     final updatedComments = event.updates;
 
     final userListFuture = Future.wait(updatedComments.map((update) async {
@@ -76,6 +80,9 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
     final userList = await userListFuture;
 
+    List<DetailedComment> comments = [];
+    comments.addAll(commentList[event.postId] ?? []);
+
     for (int i = 0; i < updatedComments.length; i++) {
       User user = userList[i];
       Tuple2<DocumentChangeType, Comment> update = updatedComments[i];
@@ -85,19 +92,20 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         final detailedComment = DetailedComment.fromComment(update.item2, user);
 
         if (update.item1 == DocumentChangeType.added) {
-          _postRepository.saveDetailedComment(event.postId, detailedComment);
+          _saveDetailedComment(comments, event.postId, detailedComment);
         } else {
-          _postRepository.updateDetailedComment(
-              event.postId, update.item1, detailedComment);
+          _updateDetailedComment(
+              comments, event.postId, update.item1, detailedComment);
         }
       } else if (update.item1 == DocumentChangeType.removed) {
-        _postRepository.updateDetailedComment(
-            event.postId, update.item1, update.item2);
+        _updateDetailedComment(
+            comments, event.postId, update.item1, update.item2);
       }
     }
 
-    yield CommentsLoaded(
-        comments: _postRepository.currentDetailedComments(event.postId));
+    commentList[event.postId] = comments;
+
+    yield CommentsLoaded(comments: comments, postId: event.postId);
   }
 
   Stream<CommentState> _mapAddCommentToState(AddComment event) async* {
@@ -105,14 +113,39 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   }
 
   Stream<CommentState> _mapClearCommentsToState() async* {
-    _postRepository.clearComments();
+    commentList = {};
     yield CommentsEmpty();
   }
 
   @override
   Future<void> close() {
-    _postRepository.clearComments();
+    commentList = {};
     commentsSubscriptionMap.forEach((_, subscription) => subscription.cancel());
     return super.close();
+  }
+
+  // TODO: add extension methods for List<DetailedComment>
+  void _saveDetailedComment(List<DetailedComment> commentList, String postId,
+      DetailedComment comment) {
+    var idx = 0;
+
+    while (idx < commentList.length) {
+      if (comment.lastUpdated.isAfter(commentList[idx].lastUpdated)) {
+        break;
+      }
+
+      idx++;
+    }
+    commentList.insert(idx, comment);
+  }
+
+  void _updateDetailedComment(List<DetailedComment> commentList, String postId,
+      DocumentChangeType type, Comment comment) {
+    if (type == DocumentChangeType.modified) {
+      commentList.removeWhere((c) => c.id == comment.id);
+      commentList.insert(0, comment);
+    } else if (type == DocumentChangeType.removed) {
+      commentList.removeWhere((c) => c.id == comment.id);
+    }
   }
 }

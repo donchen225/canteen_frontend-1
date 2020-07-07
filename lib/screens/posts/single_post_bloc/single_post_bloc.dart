@@ -52,4 +52,10 @@ class SinglePostBloc extends Bloc<SinglePostEvent, SinglePostState> {
     _currentPostGroupId = event.groupId;
     yield SinglePostLoaded(post: event.post, groupId: event.groupId);
   }
+
+  @override
+  Future<void> close() {
+    _postSubscription?.cancel();
+    return super.close();
+  }
 }

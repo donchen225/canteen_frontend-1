@@ -9,6 +9,7 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
@@ -209,22 +210,24 @@ class SinglePostBody extends StatelessWidget {
                 ),
               ),
               SliverToBoxAdapter(
-                child: BlocBuilder<CommentBloc, CommentState>(
-                    builder: (BuildContext context, CommentState state) {
-                  if (state is CommentsLoading) {
+                child: BlocBuilder<CommentListBloc, CommentListState>(
+                    builder: (BuildContext context, CommentListState state) {
+                  print('COMMENT LIST STATE: $state');
+
+                  if (state is CommentListLoading) {
                     return Container(
                         height: SizeConfig.instance.safeBlockVertical * 40,
                         child: CupertinoActivityIndicator());
                   }
 
-                  if (state is CommentsLoaded) {
-                    final comments = state.comments;
+                  if (state is CommentListLoaded) {
+                    final comments = state.commentList;
 
                     return ListView.builder(
                         shrinkWrap: true,
                         reverse: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: state.comments.length,
+                        itemCount: comments.length,
                         itemBuilder: (BuildContext context, int index) {
                           final comment = comments[index];
 
