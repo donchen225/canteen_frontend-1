@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/components/dot_spacer.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
@@ -5,7 +7,6 @@ import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
@@ -25,7 +26,7 @@ import 'package:intl/intl.dart';
 
 import 'bloc/post_bloc.dart';
 
-class SinglePostBody extends StatelessWidget {
+class SinglePostBody extends StatefulWidget {
   const SinglePostBody({
     Key key,
     @required this.post,
@@ -34,6 +35,67 @@ class SinglePostBody extends StatelessWidget {
 
   final DetailedPost post;
   final String groupId;
+
+  @override
+  _SinglePostBodyState createState() => _SinglePostBodyState();
+}
+
+class _SinglePostBodyState extends State<SinglePostBody> {
+  ScrollController _scrollController;
+  bool _shouldScrollToBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _scrollToBottom() async {
+    if (_shouldScrollToBottom) {
+      // TODO: remove this hack
+      Timer(
+          Duration(milliseconds: 500),
+          () => _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 300),
+              ));
+
+      _shouldScrollToBottom = false;
+    }
+  }
+
+  void _onTapComment(BuildContext context) async {
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+
+    if (authenticated) {
+      final commented = await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => CommentDialogScreen(
+          post: widget.post,
+          groupId: widget.groupId,
+          height:
+              SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
+        ),
+      );
+
+      if (commented) {
+        _shouldScrollToBottom = true;
+      }
+    } else {
+      UnauthenticatedFunctions.showSignUp(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +107,7 @@ class SinglePostBody extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: CustomScrollView(
+            controller: _scrollController,
             slivers: <Widget>[
               SliverToBoxAdapter(
                 child: Container(
@@ -64,13 +127,13 @@ class SinglePostBody extends StatelessWidget {
                             context,
                             ViewUserProfileScreen.routeName,
                             arguments: UserArguments(
-                              user: post.user,
+                              user: widget.post.user,
                             ),
                           ),
                           child: Row(
                             children: <Widget>[
                               ProfilePicture(
-                                photoUrl: post.user.photoUrl,
+                                photoUrl: widget.post.user.photoUrl,
                                 editable: false,
                                 size: SizeConfig.instance.safeBlockHorizontal *
                                     12,
@@ -83,9 +146,9 @@ class SinglePostBody extends StatelessWidget {
                                         2,
                                   ),
                                   child: PostNameTemplate(
-                                    name: post.user.displayName,
-                                    title: post.user.title,
-                                    photoUrl: post.user.photoUrl,
+                                    name: widget.post.user.displayName,
+                                    title: widget.post.user.title,
+                                    photoUrl: widget.post.user.photoUrl,
                                     showDate: false,
                                   ),
                                 ),
@@ -105,7 +168,7 @@ class SinglePostBody extends StatelessWidget {
                         ),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          post.message,
+                          widget.post.message,
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ),
@@ -119,7 +182,9 @@ class SinglePostBody extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: <Widget>[
-                            Text(DateFormat('yMMMMd').format(post.createdOn),
+                            Text(
+                                DateFormat('yMMMMd')
+                                    .format(widget.post.createdOn),
                                 style: secondaryTextTheme.apply(
                                     color: Palette.textSecondaryBaseColor)),
                             Padding(
@@ -127,7 +192,7 @@ class SinglePostBody extends StatelessWidget {
                                     horizontal: SizeConfig
                                         .instance.safeBlockHorizontal),
                                 child: DotSpacer()),
-                            Text(DateFormat.jm().format(post.createdOn),
+                            Text(DateFormat.jm().format(widget.post.createdOn),
                                 style: secondaryTextTheme.apply(
                                     color: Palette.textSecondaryBaseColor)),
                           ],
@@ -158,44 +223,32 @@ class SinglePostBody extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               LikeButton(
-                                liked: post.liked,
-                                likeCount: post.likeCount,
+                                liked: widget.post.liked,
+                                likeCount: widget.post.likeCount,
                                 color: Palette.textSecondaryBaseColor,
                                 onTap: () {
                                   final postBloc =
                                       BlocProvider.of<PostBloc>(context);
 
-                                  if (!(post.liked)) {
+                                  if (!(widget.post.liked)) {
                                     final like = Like(
                                         from: curentUserId,
                                         createdOn: DateTime.now());
                                     postBloc.add(AddLike(
-                                        groupId: groupId,
-                                        postId: post.id,
+                                        groupId: widget.groupId,
+                                        postId: widget.post.id,
                                         like: like));
                                   } else {
                                     postBloc.add(DeleteLike(
-                                        groupId: groupId, postId: post.id));
+                                        groupId: widget.groupId,
+                                        postId: widget.post.id));
                                   }
                                 },
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) => CommentDialogScreen(
-                                      post: post,
-                                      groupId: groupId,
-                                      height: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          kDialogScreenHeightBlocks,
-                                    ),
-                                  );
-                                },
+                                onTap: () => _onTapComment(context),
                                 child: CommentButton(
-                                    post: post,
+                                    post: widget.post,
                                     style: secondaryTextTheme,
                                     sideTextColor:
                                         Palette.textSecondaryBaseColor),
@@ -221,6 +274,7 @@ class SinglePostBody extends StatelessWidget {
                   }
 
                   if (state is CommentListLoaded) {
+                    _scrollToBottom();
                     final comments = state.commentList;
 
                     return ListView.builder(
@@ -263,27 +317,7 @@ class SinglePostBody extends StatelessWidget {
                   top: SizeConfig.instance.safeBlockVertical * 2,
                 ),
                 child: GestureDetector(
-                  onTap: () {
-                    final authenticated =
-                        BlocProvider.of<AuthenticationBloc>(context).state
-                            is Authenticated;
-
-                    if (authenticated) {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => CommentDialogScreen(
-                          post: post,
-                          groupId: groupId,
-                          height: SizeConfig.instance.blockSizeVertical *
-                              kDialogScreenHeightBlocks,
-                        ),
-                      );
-                    } else {
-                      UnauthenticatedFunctions.showSignUp(context);
-                    }
-                  },
+                  onTap: () => _onTapComment(context),
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.safeBlockHorizontal * 3,

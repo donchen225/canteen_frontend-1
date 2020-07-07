@@ -5,6 +5,7 @@ import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -19,6 +20,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final UserRepository _userRepository;
   GroupBloc _groupBloc;
   GroupHomeBloc _groupHomeBloc;
+  CommentBloc _commentBloc;
   StreamSubscription _groupSubscription;
   StreamSubscription _groupHomeSubscription;
   Map<String, List<Post>> postList = {};
@@ -27,12 +29,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     @required PostRepository postRepository,
     @required UserRepository userRepository,
     GroupBloc groupBloc,
+    CommentBloc commentBloc,
     GroupHomeBloc groupHomeBloc,
   })  : assert(postRepository != null),
         assert(userRepository != null),
         _postRepository = postRepository,
         _userRepository = userRepository,
         _groupBloc = groupBloc,
+        _commentBloc = commentBloc,
         _groupHomeBloc = groupHomeBloc {
     if (_groupBloc != null) {
       _groupSubscription = _groupBloc.listen((state) {
@@ -64,6 +68,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       yield* _mapAddPostToState(event);
     } else if (event is AddLike) {
       yield* _mapAddLikeToState(event);
+    } else if (event is AddComment) {
+      yield* _mapAddCommentToState(event);
     } else if (event is DeleteLike) {
       yield* _mapDeleteLikeToState(event);
     } else if (event is ClearPosts) {
@@ -135,6 +141,25 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
+  }
+
+  Stream<PostState> _mapAddCommentToState(AddComment event) async* {
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.addComment(event.groupId, event.postId, event.comment);
+
+      var posts = postList[event.groupId]
+          .map((post) => (post as DetailedPost).copy())
+          .toList();
+
+      final postIdx = posts.indexWhere((post) => post.id == event.postId);
+      posts[postIdx] = posts[postIdx].incrementCommentCount();
+      postList[event.groupId] = posts;
+
+      yield PostsLoaded(groupId: event.groupId, posts: posts);
+    }
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {

@@ -45,7 +45,7 @@ class DialogScreen extends StatelessWidget {
                       if (onCancel != null) {
                         onCancel();
                       } else {
-                        Navigator.of(context).maybePop();
+                        Navigator.of(context).maybePop(false);
                       }
                     },
                   ),

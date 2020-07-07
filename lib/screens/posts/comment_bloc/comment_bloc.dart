@@ -38,8 +38,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
       yield* _mapLoadCommentsToState(event);
     } else if (event is CommentsUpdated) {
       yield* _mapCommentsUpdateToState(event);
-    } else if (event is AddComment) {
-      yield* _mapAddCommentToState(event);
     } else if (event is ClearComments) {
       yield* _mapClearCommentsToState();
     }
@@ -106,10 +104,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     commentList[event.postId] = comments;
 
     yield CommentsLoaded(comments: comments, postId: event.postId);
-  }
-
-  Stream<CommentState> _mapAddCommentToState(AddComment event) async* {
-    _postRepository.addComment(event.groupId, event.postId, event.comment);
   }
 
   Stream<CommentState> _mapClearCommentsToState() async* {

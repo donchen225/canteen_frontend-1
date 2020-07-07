@@ -1,8 +1,10 @@
+import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tuple/tuple.dart';
+import 'package:meta/meta.dart';
 
 abstract class PostEvent extends Equatable {
   const PostEvent();
@@ -46,6 +48,22 @@ class AddLike extends PostEvent {
   @override
   String toString() =>
       'AddLike { groupId: $groupId, postId: $postId, like: $like }';
+}
+
+class AddComment extends PostEvent {
+  final String groupId;
+  final String postId;
+  final Comment comment;
+
+  const AddComment(
+      {@required this.groupId, @required this.postId, @required this.comment});
+
+  @override
+  List<Object> get props => [groupId, postId, comment];
+
+  @override
+  String toString() =>
+      'AddComment { groupId: $groupId, postId: $postId comment: $comment }';
 }
 
 class DeleteLike extends PostEvent {

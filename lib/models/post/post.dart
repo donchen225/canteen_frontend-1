@@ -166,6 +166,21 @@ class DetailedPost extends Post {
     );
   }
 
+  DetailedPost incrementCommentCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount + 1,
+      likeCount: likeCount,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: true,
+    );
+  }
+
   DetailedPost decrementLikeCount() {
     return DetailedPost(
       id: id,

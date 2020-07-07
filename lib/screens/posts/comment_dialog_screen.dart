@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/action_button.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
@@ -70,11 +70,11 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<CommentBloc>(context).add(AddComment(
+              BlocProvider.of<PostBloc>(context).add(AddComment(
                   groupId: widget.groupId,
                   postId: widget.post.id,
                   comment: comment));
-              Navigator.maybePop(context);
+              Navigator.maybePop(context, true);
             } else {
               final snackBar = SnackBar(
                 behavior: SnackBarBehavior.floating,

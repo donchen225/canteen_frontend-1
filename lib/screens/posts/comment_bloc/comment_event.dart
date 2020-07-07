@@ -21,22 +21,6 @@ class LoadComments extends CommentEvent {
   String toString() => 'LoadComments';
 }
 
-class AddComment extends CommentEvent {
-  final String groupId;
-  final String postId;
-  final Comment comment;
-
-  const AddComment(
-      {@required this.groupId, @required this.postId, @required this.comment});
-
-  @override
-  List<Object> get props => [groupId, postId, comment];
-
-  @override
-  String toString() =>
-      'AddComment { groupId: $groupId, postId: $postId comment: $comment }';
-}
-
 class UpdateComment extends CommentEvent {
   final Comment comment;
 
