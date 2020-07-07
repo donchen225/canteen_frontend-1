@@ -42,6 +42,10 @@ abstract class UserRepository {
 
   Future<void> updateLearnSkill(Skill skill, int index) {}
 
+  Future<void> deleteTeachSkill(int index) {}
+
+  Future<void> deleteLearnSkill(int index) {}
+
   Future<void> updatePhoto(String url) async {}
 
   Future<void> updateTimeZone(int timeZoneOffset) {}

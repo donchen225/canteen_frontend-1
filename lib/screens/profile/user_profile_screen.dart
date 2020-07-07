@@ -228,7 +228,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.instance.safeBlockHorizontal *
-                            horizontalPaddingBlocks),
+                                horizontalPaddingBlocks -
+                            6),
                     child: SkillList(
                       user.teachSkill,
                       onTap: (int index) => _userProfileBloc

@@ -186,4 +186,18 @@ class UpdateSkill extends UserProfileEvent {
       'UpdateSkill { user: ${user.toString()} skill: ${skill.toString()} skillType: $skillType skillIndex: $skillIndex }';
 }
 
+class DeleteSkill extends UserProfileEvent {
+  final SkillType skillType;
+  final int skillIndex;
+
+  const DeleteSkill(this.skillType, this.skillIndex);
+
+  @override
+  List<Object> get props => [skillType, skillIndex];
+
+  @override
+  String toString() =>
+      'DeleteSkill { skillType: $skillType skillIndex: $skillIndex }';
+}
+
 class ShowSettings extends UserProfileEvent {}

@@ -152,6 +152,18 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
+  Future<void> deleteTeachSkill(int index) {
+    return userCollection
+        .document(_firebaseUser.uid)
+        .updateData({"teach_skill.${index.toString()}": FieldValue.delete()});
+  }
+
+  Future<void> deleteLearnSkill(int index) {
+    return userCollection
+        .document(_firebaseUser.uid)
+        .updateData({"learn_skill.${index.toString()}": FieldValue.delete()});
+  }
+
   Future<void> updatePhoto(String url) {
     CachedSharedPreferences.setString(PreferenceConstants.userPhotoUrl, url);
     return Firestore.instance.runTransaction((Transaction tx) async {

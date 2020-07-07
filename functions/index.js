@@ -823,6 +823,15 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
             });
         } else {
             updated = true;
+
+            if (learnSkillBefore.length > learnSkillAfter.length) {
+                var learnSkillReordered = {}
+                learnSkillAfter.forEach((skill, index) => learnSkillReordered[index.toString()] = skill);
+
+                firestore.collection(USER_COLLECTION).doc(userId).update({ "learn_skill": learnSkillReordered }).catch((error) => {
+                    console.log(`Error reordering skills: ${error}`);
+                });
+            }
         }
 
         if (teachSkillBefore.length === teachSkillAfter.length) {
@@ -834,6 +843,15 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
             });
         } else {
             updated = true;
+
+            if (teachSkillBefore.length > teachSkillAfter.length) {
+                var teachSkillReordered = {}
+                teachSkillAfter.forEach((skill, index) => teachSkillReordered[index.toString()] = skill);
+
+                firestore.collection(USER_COLLECTION).doc(userId).update({ "teach_skill": teachSkillReordered }).catch((error) => {
+                    console.log(`Error reordering skills: ${error}`);
+                });
+            }
         }
 
         if (updated) {

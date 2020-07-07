@@ -54,9 +54,11 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     } else if (event is UpdateAboutSection) {
       yield* _mapUpdateAboutSectionToState(event);
     } else if (event is EditSkill) {
-      yield* _mapEditTeachSkillToState(event);
+      yield* _mapEditSkillToState(event);
     } else if (event is UpdateSkill) {
-      yield* _mapUpdateTeachSkillToState(event);
+      yield* _mapUpdateSkillToState(event);
+    } else if (event is DeleteSkill) {
+      yield* _mapDeleteSkillToState(event);
     } else if (event is EditName) {
       yield* _mapEditNameToState(event);
     } else if (event is UpdateName) {
@@ -146,16 +148,37 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         event.day.index, event.startTimeSeconds, event.endTimeSeconds);
   }
 
-  Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {
+  Stream<UserProfileState> _mapEditSkillToState(EditSkill event) async* {
     yield UserProfileEditingSkill(
         event.user, event.skillType, event.skillIndex);
   }
 
-  Stream<UserProfileState> _mapUpdateTeachSkillToState(
-      UpdateSkill event) async* {
+  Stream<UserProfileState> _mapUpdateSkillToState(UpdateSkill event) async* {
     event.skillType == SkillType.teach
         ? await _userRepository.updateTeachSkill(event.skill, event.skillIndex)
         : await _userRepository.updateLearnSkill(event.skill, event.skillIndex);
+  }
+
+  Stream<UserProfileState> _mapDeleteSkillToState(DeleteSkill event) async* {
+    final user = _userRepository.currentUserNow();
+
+    if (event.skillType == SkillType.teach) {
+      if (user.teachSkill.length > 0 &&
+          event.skillIndex >= 0 &&
+          event.skillIndex <= user.teachSkill.length) {
+        _userRepository.deleteTeachSkill(event.skillIndex);
+        user.teachSkill.removeAt(event.skillIndex);
+      }
+    } else {
+      if (user.learnSkill.length > 0 &&
+          event.skillIndex >= 0 &&
+          event.skillIndex <= user.learnSkill.length) {
+        _userRepository.deleteLearnSkill(event.skillIndex);
+        user.learnSkill.removeAt(event.skillIndex);
+      }
+    }
+
+    yield UserProfileLoaded(user, _settingsRepository.getCurrentSettings());
   }
 
   Stream<UserProfileState> _mapShowSettingsToState() async* {
