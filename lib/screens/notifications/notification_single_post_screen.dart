@@ -20,8 +20,8 @@ class _NotificationSinglePostScreenState
   Widget build(BuildContext context) {
     return SinglePostScreen(
       onTapBack: () {
-        BlocProvider.of<NotificationViewBloc>(context)
-            .add(ClearNotificationView());
+        // BlocProvider.of<NotificationViewBloc>(context)
+        //     .add(ClearNotificationView());
       },
       body: BlocListener<NotificationViewBloc, NotificationViewState>(
         listener: (BuildContext context, NotificationViewState state) {

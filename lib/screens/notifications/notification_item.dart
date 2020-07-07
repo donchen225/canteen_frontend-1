@@ -84,6 +84,8 @@ class _NotificationItemState extends State<NotificationItem> {
 
   void _onTap(BuildContext context, String type) {
     if (type == 'like' || type == 'comment') {
+      BlocProvider.of<NotificationViewBloc>(context)
+          .add(ClearNotificationView());
       BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
           postId: widget.targetId,
           groupId: widget.parentId,
