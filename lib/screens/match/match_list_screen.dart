@@ -26,10 +26,12 @@ class MatchListScreen extends StatelessWidget {
                 color: Colors.grey,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.instance.safeBlockVertical,
+                padding: EdgeInsets.only(
+                  top: SizeConfig.instance.safeBlockVertical,
+                  bottom: SizeConfig.instance.safeBlockVertical * 3,
                 ),
-                child: Text('Messages will appear here'),
+                child: Text('Messages will appear here',
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
               SignUpButton(),
             ],
