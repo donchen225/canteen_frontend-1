@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/screens/profile/profile_text_card.dart';
-import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +11,13 @@ class SkillList extends StatefulWidget {
   final bool selectable;
   final bool selector;
   final Function onTap;
-  final Function onTapExtraButton;
 
   SkillList(this.skills,
       {this.height = 100,
       this.showDescription = true,
       this.selectable = false,
       this.selector = true,
-      this.onTap,
-      this.onTapExtraButton})
+      this.onTap})
       : assert(skills != null);
 
   _SkillListState createState() => _SkillListState();
@@ -58,6 +55,9 @@ class _SkillListState extends State<SkillList> {
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline6;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+
     return ListView.builder(
       padding: EdgeInsets.all(0),
       physics: NeverScrollableScrollPhysics(),
@@ -78,50 +78,29 @@ class _SkillListState extends State<SkillList> {
                   Container(
                     child: Text(
                       skill.name,
-                      style: TextStyle(
-                          fontSize:
-                              SizeConfig.instance.blockSizeHorizontal * 4 * 1.2,
-                          fontWeight: FontWeight.bold),
+                      style: titleStyle,
                     ),
                   ),
-                  widget.showDescription && skill.description.isNotEmpty
-                      ? Padding(
-                          padding: EdgeInsets.only(
-                              top: SizeConfig.instance.blockSizeVertical),
-                          child: Text(skill.description),
-                        )
-                      : Container(),
                   Visibility(
-                    visible: widget.onTapExtraButton != null,
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '\$${(skill.price).toString()}' +
-                                (skill.duration != null
-                                    ? ' / ${skill.duration} minutes'
-                                    : ''),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          FlatButton(
-                            color: Palette.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              'Connect',
-                              style: Theme.of(context).textTheme.button.apply(
-                                    color: Palette.buttonDarkTextColor,
-                                  ),
-                            ),
-                            onPressed: () => widget.onTapExtraButton(skill),
-                          ),
-                        ],
+                    visible: widget.showDescription &&
+                        (skill.description?.isNotEmpty ?? false),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical,
                       ),
+                      child: Text(skill.description, style: bodyTextStyle),
                     ),
-                  )
+                  ),
+                  Container(
+                    child: Text(
+                      '\$${(skill.price).toString()}' +
+                          (skill.duration != null
+                              ? ' / ${skill.duration} minutes'
+                              : ''),
+                      style: titleStyle,
+                    ),
+                  ),
                 ],
               ),
             ),
