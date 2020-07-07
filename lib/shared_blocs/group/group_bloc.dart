@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
-import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_event.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_state.dart';
@@ -14,7 +13,6 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final GroupRepository _groupRepository;
   final UserRepository _userRepository;
   Group currentGroup;
-  List<UserGroup> currentUserGroups = [];
   List<Group> currentGroups = [];
   GroupHomeBloc _groupHomeBloc;
 

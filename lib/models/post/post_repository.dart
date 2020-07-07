@@ -60,6 +60,8 @@ class PostRepository {
       if (!docSnapshot.exists) {
         likeRef.setData(like.toEntity().toDocument());
       }
+    }).catchError((error) {
+      print('Error adding like: $error');
     });
   }
 
@@ -73,7 +75,11 @@ class PostRepository {
         .document(postId)
         .collection(likesCollection)
         .document(userId)
-        .delete();
+        .delete()
+        .catchError((error) {
+      print('Error deleting like: $error');
+    });
+    ;
   }
 
   Future<bool> checkLike(String groupId, String postId) async {

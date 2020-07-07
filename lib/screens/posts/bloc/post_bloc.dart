@@ -119,7 +119,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
-    _postRepository.addLike(event.groupId, event.postId, event.like);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.addLike(event.groupId, event.postId, event.like);
+    }
 
     var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())
@@ -133,7 +138,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
-    _postRepository.deleteLike(event.groupId, event.postId);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.deleteLike(event.groupId, event.postId);
+    }
 
     var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())

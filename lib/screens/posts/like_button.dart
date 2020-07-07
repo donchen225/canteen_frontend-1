@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
