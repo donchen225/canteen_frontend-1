@@ -90,20 +90,20 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             BackButton(
               color: Palette.primaryColor,
             ),
-            SearchBar(
-              height: kToolbarHeight * 0.7,
-              width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 1.5 -
-                  NavigationToolbar.kMiddleSpacing * 4,
-              color: Colors.grey[200],
-              child: Text(
-                "Search Group",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .apply(color: Palette.textSecondaryBaseColor),
-              ),
-            ),
+            // SearchBar(
+            //   height: kToolbarHeight * 0.7,
+            //   width: SizeConfig.instance.safeBlockHorizontal * 100 -
+            //       kProfileIconSize * 1.5 -
+            //       NavigationToolbar.kMiddleSpacing * 4,
+            //   color: Colors.grey[200],
+            //   child: Text(
+            //     "Search Group",
+            //     style: Theme.of(context)
+            //         .textTheme
+            //         .bodyText1
+            //         .apply(color: Palette.textSecondaryBaseColor),
+            //   ),
+            // ),
             Container(
               width: kProfileIconSize * 0.5,
             )

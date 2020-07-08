@@ -15,6 +15,7 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
@@ -284,6 +285,11 @@ class App extends StatelessWidget {
                         userRepository: _userRepository,
                         requestRepository: _requestRepository,
                       ),
+                    ),
+                    BlocProvider<SearchBloc>(
+                      create: (context) => SearchBloc(
+                        userRepository: _userRepository,
+                      )..add(SearchHome()),
                     ),
                     BlocProvider<HomeNavigationBarBadgeBloc>(
                       create: (BuildContext context) =>

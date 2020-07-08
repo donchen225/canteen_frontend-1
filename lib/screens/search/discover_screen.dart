@@ -62,7 +62,7 @@ class DiscoverScreen extends StatelessWidget {
                     NavigationToolbar.kMiddleSpacing * 4,
                 color: Colors.grey[200],
                 child: Text(
-                  "What are you looking for?",
+                  "Search",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1

@@ -392,11 +392,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<SearchBloc>(
-                        create: (context) => SearchBloc(
-                          userRepository: widget._userRepository,
-                        )..add(SearchHome()),
-                      ),
                       BlocProvider<DiscoverBloc>(
                         create: (context) => DiscoverBloc(
                             userRepository: widget._userRepository,

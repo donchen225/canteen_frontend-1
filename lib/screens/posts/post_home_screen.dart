@@ -6,7 +6,10 @@ import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -87,18 +90,35 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               userPhotoUrl: userPhotoUrl,
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            SearchBar(
-              height: kToolbarHeight * 0.7,
-              width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 1.5 -
-                  NavigationToolbar.kMiddleSpacing * 4,
-              color: Colors.grey[200],
-              child: Text(
-                "Search Group",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .apply(color: Palette.textSecondaryBaseColor),
+            GestureDetector(
+              onTap: () {
+                final searchHistory =
+                    BlocProvider.of<SearchBloc>(context).searchHistory;
+                Navigator.pushNamed(
+                  context,
+                  SearchingScreen.routeName,
+                  arguments: SearchArguments(
+                    searchHistory: searchHistory
+                        .map((q) => q.displayQuery)
+                        .toList()
+                        .reversed
+                        .toList(),
+                  ),
+                );
+              },
+              child: SearchBar(
+                height: kToolbarHeight * 0.7,
+                width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                    kProfileIconSize * 1.5 -
+                    NavigationToolbar.kMiddleSpacing * 4,
+                color: Colors.grey[200],
+                child: Text(
+                  "Search",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .apply(color: Palette.textSecondaryBaseColor),
+                ),
               ),
             ),
             Container(
