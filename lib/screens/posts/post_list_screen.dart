@@ -101,15 +101,19 @@ class _PostListScreenState extends State<PostListScreen> {
                           child: Row(
                             children: <Widget>[
                               GestureDetector(
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  ViewUserProfileScreen.routeName,
-                                  arguments: UserArguments(
-                                    user: post.user,
-                                  ),
-                                ).then((value) {
-                                  setState(() {});
-                                }),
+                                onTap: () {
+                                  if (post.user != null) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      ViewUserProfileScreen.routeName,
+                                      arguments: UserArguments(
+                                        user: post.user,
+                                      ),
+                                    ).then((value) {
+                                      setState(() {});
+                                    });
+                                  }
+                                },
                                 child: Container(
                                   alignment: Alignment.topCenter,
                                   child: ProfilePicture(

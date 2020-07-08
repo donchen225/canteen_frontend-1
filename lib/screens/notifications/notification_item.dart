@@ -82,10 +82,8 @@ class _NotificationItemState extends State<NotificationItem> {
     return '';
   }
 
-  void _onTap(BuildContext context, String type) {
+  void _onTap(BuildContext context, String type) async {
     if (type == 'like' || type == 'comment') {
-      BlocProvider.of<NotificationViewBloc>(context)
-          .add(ClearNotificationView());
       BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
           postId: widget.targetId,
           groupId: widget.parentId,
@@ -93,7 +91,9 @@ class _NotificationItemState extends State<NotificationItem> {
           read: widget.read));
       BlocProvider.of<CommentListBloc>(context).add(
           LoadCommentList(groupId: widget.parentId, postId: widget.targetId));
-      Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
+      final onBack = await Navigator.pushNamed<bool>(
+          context, NotificationSinglePostScreen.routeName);
+      print('ON BACK: $onBack');
     }
   }
 

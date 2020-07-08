@@ -27,13 +27,17 @@ class CommentContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
-              onTap: () => Navigator.pushNamed(
-                context,
-                ViewUserProfileScreen.routeName,
-                arguments: UserArguments(
-                  user: comment.user,
-                ),
-              ),
+              onTap: () {
+                if (comment.user != null) {
+                  Navigator.pushNamed(
+                    context,
+                    ViewUserProfileScreen.routeName,
+                    arguments: UserArguments(
+                      user: comment.user,
+                    ),
+                  );
+                }
+              },
               child: ProfilePicture(
                 photoUrl: comment.user?.photoUrl ?? "",
                 editable: false,
@@ -49,13 +53,17 @@ class CommentContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        ViewUserProfileScreen.routeName,
-                        arguments: UserArguments(
-                          user: comment.user,
-                        ),
-                      ),
+                      onTap: () {
+                        if (comment.user != null) {
+                          Navigator.pushNamed(
+                            context,
+                            ViewUserProfileScreen.routeName,
+                            arguments: UserArguments(
+                              user: comment.user,
+                            ),
+                          );
+                        }
+                      },
                       child: PostNameTemplate(
                         name: comment.user?.displayName ?? "Canteen User",
                         title: comment.user?.title ?? "",

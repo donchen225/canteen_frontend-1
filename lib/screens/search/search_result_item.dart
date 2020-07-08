@@ -18,13 +18,17 @@ class SearchResultItem extends StatelessWidget {
     final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
 
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        ViewUserProfileScreen.routeName,
-        arguments: UserArguments(
-          user: user,
-        ),
-      ),
+      onTap: () {
+        if (user != null) {
+          Navigator.pushNamed(
+            context,
+            ViewUserProfileScreen.routeName,
+            arguments: UserArguments(
+              user: user,
+            ),
+          );
+        }
+      },
       child: Container(
         height: height,
         decoration: BoxDecoration(

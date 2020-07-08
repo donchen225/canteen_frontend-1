@@ -129,13 +129,17 @@ class DiscoverScreen extends StatelessWidget {
                               user: user,
                               height:
                                   SizeConfig.instance.scaffoldBodyHeight * 0.49,
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                ViewUserProfileScreen.routeName,
-                                arguments: UserArguments(
-                                  user: user,
-                                ),
-                              ),
+                              onTap: () {
+                                if (user != null) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ViewUserProfileScreen.routeName,
+                                    arguments: UserArguments(
+                                      user: user,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           );
                         },
@@ -227,13 +231,17 @@ class DiscoverScreen extends StatelessWidget {
                               user: user,
                               height:
                                   SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                ViewUserProfileScreen.routeName,
-                                arguments: UserArguments(
-                                  user: user,
-                                ),
-                              ),
+                              onTap: () {
+                                if (user != null) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ViewUserProfileScreen.routeName,
+                                    arguments: UserArguments(
+                                      user: user,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           );
                         }

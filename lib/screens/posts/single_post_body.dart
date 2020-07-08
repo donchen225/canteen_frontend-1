@@ -123,13 +123,17 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               kHorizontalPaddingBlocks,
                         ),
                         child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            ViewUserProfileScreen.routeName,
-                            arguments: UserArguments(
-                              user: widget.post.user,
-                            ),
-                          ),
+                          onTap: () {
+                            if (widget.post.user != null) {
+                              Navigator.pushNamed(
+                                context,
+                                ViewUserProfileScreen.routeName,
+                                arguments: UserArguments(
+                                  user: widget.post.user,
+                                ),
+                              );
+                            }
+                          },
                           child: Row(
                             children: <Widget>[
                               ProfilePicture(

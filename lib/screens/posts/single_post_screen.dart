@@ -19,7 +19,7 @@ class SinglePostScreen extends StatelessWidget {
         leading: BackButton(
           color: Palette.primaryColor,
           onPressed: () {
-            Navigator.of(context).maybePop();
+            Navigator.of(context).maybePop(true);
 
             if (onTapBack != null) {
               onTapBack();
