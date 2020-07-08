@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
@@ -91,9 +93,13 @@ class _NotificationItemState extends State<NotificationItem> {
           read: widget.read));
       BlocProvider.of<CommentListBloc>(context).add(
           LoadCommentList(groupId: widget.parentId, postId: widget.targetId));
-      final onBack = await Navigator.pushNamed<bool>(
-          context, NotificationSinglePostScreen.routeName);
-      print('ON BACK: $onBack');
+      Navigator.pushNamed<bool>(context, NotificationSinglePostScreen.routeName)
+          .then((value) {
+        Timer(
+            Duration(milliseconds: 300),
+            () => BlocProvider.of<NotificationViewBloc>(context)
+                .add(ClearNotificationView()));
+      });
     }
   }
 
