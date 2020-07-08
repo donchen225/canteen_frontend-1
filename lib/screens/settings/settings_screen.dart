@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dar
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -181,6 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         BlocProvider.of<MatchBloc>(context).add(ClearMatches());
                         BlocProvider.of<RequestBloc>(context)
                             .add(ClearRequests());
+                        BlocProvider.of<SearchBloc>(context).add(ClearSearch());
                         BlocProvider.of<GroupHomeBloc>(context)
                             .add(ClearHomeGroup());
                         BlocProvider.of<NotificationListBloc>(context)

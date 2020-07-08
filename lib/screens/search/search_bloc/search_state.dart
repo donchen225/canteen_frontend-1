@@ -9,13 +9,6 @@ abstract class SearchState extends Equatable {
 }
 
 class SearchUninitialized extends SearchState {
-  final List<User> allUsers;
-
-  const SearchUninitialized(this.allUsers);
-
-  @override
-  List<Object> get props => [allUsers];
-
   @override
   String toString() => 'SearchUninitialized';
 }

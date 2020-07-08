@@ -287,9 +287,7 @@ class App extends StatelessWidget {
                       ),
                     ),
                     BlocProvider<SearchBloc>(
-                      create: (context) => SearchBloc(
-                        userRepository: _userRepository,
-                      )..add(SearchHome()),
+                      create: (context) => SearchBloc(),
                     ),
                     BlocProvider<HomeNavigationBarBadgeBloc>(
                       create: (BuildContext context) =>
