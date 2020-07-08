@@ -113,7 +113,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     NavigationToolbar.kMiddleSpacing * 4,
                 color: Colors.grey[200],
                 child: Text(
-                  "Search",
+                  "Search Canteen",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
