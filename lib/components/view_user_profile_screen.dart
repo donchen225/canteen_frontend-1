@@ -11,10 +11,14 @@ class ViewUserProfileScreen extends StatefulWidget {
   final User user;
   final bool editable;
   final bool showAppBar;
+  final bool canConnect;
   static const routeName = '/user';
 
   ViewUserProfileScreen(
-      {this.user, this.editable = false, this.showAppBar = true});
+      {this.user,
+      this.editable = false,
+      this.showAppBar = true,
+      this.canConnect = true});
 
   @override
   _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
@@ -26,6 +30,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
         ? UserProfileBody(
             user: user,
             editable: widget.editable,
+            canConnect: widget.canConnect,
             headerWidget: widget.showAppBar
                 ? null
                 : Container(

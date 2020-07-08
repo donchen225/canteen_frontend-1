@@ -59,6 +59,7 @@ class _MatchScreenState extends State<MatchScreen>
         ),
         ViewUserProfileScreen(
           user: prospect,
+          canConnect: false,
           showAppBar: false,
         ),
       ],
