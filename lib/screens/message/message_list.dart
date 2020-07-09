@@ -56,6 +56,7 @@ class _MessageListState extends State<MessageList> {
       }
       return ListView.builder(
         padding: EdgeInsets.all(10.0),
+        physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) => MessageItem(messages[index]),
         itemCount: messages.length,
         reverse: true,

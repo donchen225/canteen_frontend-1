@@ -38,8 +38,9 @@ class SendRequestBloc extends Bloc<SendRequestEvent, SendRequestState> {
         comment: event.comment,
         index: event.index,
         type: event.type,
-        time: event.time,
+        time: event.time != null ? event.time.toUtc() : event.time,
       );
+
       final response = await _requestRepository.addRequest(payload);
 
       if (response.status == ApiResponseStatus.success) {

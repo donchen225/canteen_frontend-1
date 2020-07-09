@@ -84,10 +84,13 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       List<User> users = userList[i];
       Tuple2<DocumentChangeType, Match> update = updatedMatches[i];
 
-      // TODO: set a message on initial match (with no messages sent)
       if (update.item1 == DocumentChangeType.added ||
           update.item1 == DocumentChangeType.modified) {
         Message message = messageList[i];
+        if (message != null) {
+          print('MESSAGE ID: ${message.id}');
+        }
+
         final detailedMatch =
             DetailedMatch.fromMatch(update.item2, users, lastMessage: message);
 

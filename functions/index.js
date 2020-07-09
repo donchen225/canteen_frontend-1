@@ -163,41 +163,87 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
         return { 'status': 'SKIPPED', 'message': 'Status condition not met.' };
     }
 
-    const time = admin.firestore.Timestamp.now();
+    const receiverId = newValue.receiver_id;
+    const senderId = newValue.sender_id;
 
-    const matchId = (utils.hashCode(previousValue.sender_id) < utils.hashCode(previousValue.receiver_id)) ? previousValue.sender_id + previousValue.receiver_id : previousValue.receiver_id + previousValue.sender_id;
+    const time = admin.firestore.Timestamp.now();
+    var firstMessageTime = time.toDate();
+    firstMessageTime.setSeconds(firstMessageTime.getSeconds() + 1);
+
+    const matchId = (utils.hashCode(senderId) < utils.hashCode(receiverId)) ? senderId + receiverId : receiverId + senderId;
 
     const match = {
-        "user_id": [previousValue.sender_id, previousValue.receiver_id],
-        "sender_id": previousValue.sender_id,
-        "payer": previousValue.payer,
+        "user_id": [senderId, receiverId],
+        "sender_id": senderId,
+        "payer": newValue.payer,
         "status": 0,
-        "time": previousValue.time,
+        "time": newValue.time,
         "created_on": time,
-        "last_updated": time,
+        "last_updated": firstMessageTime,
     };
 
     const matchRef = firestore.collection(MATCH_COLLECTION).doc(matchId);
 
-    const create = shouldCreate(matchRef);
+    const create = matchRef.get().then(matchDoc => {
+        return !matchDoc.exists;
+    });
 
     if (!create) {
-        return {};
+        return { "status": "failure", "message": "Match already exists." };
     }
 
-    await matchRef.set(match, { merge: true }).then(() => {
-        return match;
+    const sender = await firestore.collection(USER_COLLECTION).doc(senderId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
     }).catch((error) => {
+        console.log(error);
+    });
+
+    if (sender === null) {
+        return { "status": "failure" }
+    }
+
+    const receiver = await firestore.collection(USER_COLLECTION).doc(receiverId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    if (receiver === null) {
+        return { "status": "failure" }
+    }
+
+    const systemMessage = {
+        "timestamp": time,
+        "data": { "time": newValue.time, "price": newValue.price, "skill": newValue.skill, "title": "Request Details" },
+        "type": 0,
+        "event": "match_start",
+        "source": 1
+    };
+
+    const receiverMessage = `You accepted ${sender.display_name}'s request and invited them to start the chat`;
+    const senderMessage = `${receiver.display_name} accepted your request and invited you to start the chat`;
+
+    const firstMessage = {
+        "sender_id": receiverId,
+        "timestamp": firstMessageTime,
+        "data": { receiver: receiverMessage, sender: senderMessage },
+        "type": 0,
+        "source": 0
+    };
+
+    await matchRef.set(match, { merge: true }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
-    return match;
+    await matchRef.collection('messages').doc(`${matchId}-match-start`).set(systemMessage, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
 
-    function shouldCreate(matchRef) {
-        return matchRef.get().then(matchDoc => {
-            return !matchDoc.exists;
-        });
-    }
+    await matchRef.collection('messages').doc(`${matchId}-first-message`).set(firstMessage, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    return { "status": "success", "data": match }
 });
 
 // Set up Algolia.
@@ -1326,3 +1372,7 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
 
     return { "status": "success", "data": groupMemberDoc };
 });
+
+// exports.generatePopularUsers = functions.https.onRequest(async (req, res) => {
+
+// });
