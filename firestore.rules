@@ -19,6 +19,14 @@ service cloud.firestore {
       allow read: if isAuthenticated();
     }
 
+    match /discover/{discoverId} {
+      allow read: if true;
+    }
+
+    match /discover/{discoverId}/users/{document=**} {
+      allow read: if true;
+    }
+
     match /matches/{document=**} {
       allow read, write: if isAuthenticated();
     }
