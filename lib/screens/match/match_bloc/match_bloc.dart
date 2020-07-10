@@ -87,9 +87,6 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       if (update.item1 == DocumentChangeType.added ||
           update.item1 == DocumentChangeType.modified) {
         Message message = messageList[i];
-        if (message != null) {
-          print('MESSAGE ID: ${message.id}');
-        }
 
         final detailedMatch =
             DetailedMatch.fromMatch(update.item2, users, lastMessage: message);

@@ -60,7 +60,6 @@ class MatchRepository {
 
   Future<Message> getMessage(String matchId, DateTime dateTime) {
     try {
-      print('MESSAGE DATE: $dateTime');
       return matchCollection
           .document(matchId)
           .collection(messages)

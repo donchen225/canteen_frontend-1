@@ -6,5 +6,5 @@ GetIt getIt = GetIt.instance;
 
 void setupServiceLocator() {
   getIt.registerLazySingleton(() => NavigationService());
-  getIt.registerLazySingleton(() => HomeNavigationBarService());
+  getIt.registerLazySingleton(() => NavigationBarService());
 }

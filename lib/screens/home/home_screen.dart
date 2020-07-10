@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
                 return BottomNavigationBar(
-                  key: getIt<HomeNavigationBarService>().homeNavigationBarKey,
+                  key: getIt<NavigationBarService>().homeNavigationBarKey,
                   currentIndex: _currentIndex,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,

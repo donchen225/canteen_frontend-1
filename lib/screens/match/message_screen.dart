@@ -2,6 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
+import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -92,6 +94,7 @@ class _MessageScreenState extends State<MessageScreen>
         backgroundColor: Palette.appBarBackgroundColor,
         elevation: 1,
         bottom: TabBar(
+          key: getIt<NavigationBarService>().messageTabBarKey,
           indicatorSize: TabBarIndicatorSize.label,
           controller: _tabController,
           labelColor: Palette.primaryColor,

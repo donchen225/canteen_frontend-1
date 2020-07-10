@@ -564,10 +564,15 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
 exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages/{messageId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
-    const matchId = context.params.matchId;
 
+    const event = data.event;
+
+    if (event !== null && event === "match_start") {
+        return { "status": "skipped", "message": "Match start message skipped." };
+    }
+
+    const matchId = context.params.matchId;
     const senderId = data.sender_id;
-    const message = data.text;
 
     const receiverId = matchId.replace(senderId, '');
 
@@ -590,11 +595,23 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
         .doc(senderId).get();
     const senderData = sender.data();
 
+    var message = "";
+    if (data.text !== undefined) {
+        message = data.text;
+    } else if (data.text === undefined && data.data !== undefined) {
+        const messageData = data.data;
+        const senderMessage = messageData["sender"];
+        const receiverMessage = messageData["receiver"];
+
+        if (senderMessage !== null && receiverMessage !== null) {
+            message = senderMessage;
+        }
+    }
+
     const payload = {
         notification: {
             title: senderData.display_name,
             body: message,
-            // icon: 'your-icon-url',
             click_action: 'FLUTTER_NOTIFICATION_CLICK'
         },
         data: {

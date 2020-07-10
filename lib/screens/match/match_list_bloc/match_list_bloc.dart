@@ -13,14 +13,9 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   MatchListBloc({@required matchBloc})
       : assert(matchBloc != null),
         _matchBloc = matchBloc {
-    _matchSubscription = matchBloc.listen((state) {
-      print('MATCH BLOC STATE: $state');
-
-      if (state is MatchesLoaded) {
-        add(LoadMatchList((matchBloc.state as MatchesLoaded).matches));
-      } else if (state is MatchesUnauthenticated) {
-        print('MATCHES UNAUTHENTICATED');
-        add(ClearMatchList());
+    _matchSubscription = matchBloc.listen((matchState) {
+      if (matchState is MatchesLoaded) {
+        add(LoadMatchList(matchState.matches));
       }
     });
   }

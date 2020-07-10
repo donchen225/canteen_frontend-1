@@ -5,8 +5,10 @@ import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -180,8 +182,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
                             .add(ClearBadgeCounts());
                         BlocProvider.of<MatchBloc>(context).add(ClearMatches());
+                        BlocProvider.of<MatchListBloc>(context)
+                            .add(ClearMatchList());
                         BlocProvider.of<RequestBloc>(context)
                             .add(ClearRequests());
+                        BlocProvider.of<RequestListBloc>(context)
+                            .add(ClearRequestList());
                         BlocProvider.of<SearchBloc>(context).add(ClearSearch());
                         BlocProvider.of<GroupHomeBloc>(context)
                             .add(ClearHomeGroup());
