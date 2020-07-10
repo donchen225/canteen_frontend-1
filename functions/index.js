@@ -9,6 +9,7 @@ const utils = require('./utils');
 const REQUEST_COLLECTION = 'requests';
 const GROUPS_COLLECTION = 'groups';
 const MATCH_COLLECTION = 'matches';
+const DISCOVER_COLLECTION = 'discover';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
@@ -1437,4 +1438,85 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     });
 
     return { "status": "success", "data": groupMemberDoc };
+});
+
+exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) => {
+
+    const startDate = admin.firestore.Timestamp.now();
+    var endDate = startDate.toDate();
+    endDate.setTime(endDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+    const doc = {
+        "start_date": startDate,
+        "end_date": endDate
+    };
+
+    const id = utils.generateUniqueFirestoreId();
+    const docRef = firestore.collection(DISCOVER_COLLECTION).doc(id);
+
+    await docRef.set(doc).catch((error) => {
+        console.log(error);
+    });
+
+    var requestCount = {};
+    await firestore.collection(REQUEST_COLLECTION).get().then((querySnapshot) => {
+
+        querySnapshot.forEach((docSnapshot) => {
+            const data = docSnapshot.data();
+
+            const userId = data.receiver_id;
+            const skill = data.skill;
+            const price = data.price;
+            const duration = data.duration;
+
+            if (userId !== undefined && skill !== undefined && skill !== "" && price !== undefined && duration !== undefined) {
+                const key = `${userId}-${skill}`;
+                if (key in requestCount) {
+                    const count = requestCount[key]["count"];
+                    requestCount[key]["count"] = count + 1;
+                } else {
+                    requestCount[key] = {
+                        "user_id": userId,
+                        "skill": skill,
+                        "price": price,
+                        "duration": duration,
+                        "count": 1
+                    };
+                }
+            }
+        });
+        return;
+    });
+
+    var requestCountList = Object.values(requestCount);
+    requestCountList.sort((a, b) => b["count"] - a["count"]);
+
+    if (requestCountList.length > 5) {
+        requestCountList = requestCountList.slice(0, 5);
+    }
+
+    const userCollection = docRef.collection('users');
+
+    var batch = firestore.batch();
+
+    for (let [index, val] of requestCountList.entries()) {
+        const userDoc = {
+            "user_id": val["user_id"],
+            "rank": index + 1,
+            "name": val["skill"],
+            "price": val["price"],
+            "duration": val["duration"]
+        };
+
+        batch.set(userCollection.doc(), userDoc);
+    }
+
+    return batch.commit().then(() => {
+        res.status(200).send("Successfully generated most popular users.");
+        return;
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+        return;
+    });
 });
