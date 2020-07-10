@@ -151,6 +151,51 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
 
 });
 
+exports.onRequestReceived = functions.firestore.document('requests/{requestId}').onCreate(async (snap, context) => {
+
+    const data = snap.data();
+
+    const senderId = data.sender_id;
+    const receiverId = data.receiver_id;
+    const requestId = context.params.requestId;
+
+    const querySnapshot = await firestore
+        .collection(USER_COLLECTION)
+        .doc(receiverId)
+        .collection('tokens')
+        .where('active', '==', true)
+        .get();
+
+    const tokens = querySnapshot.docs.map(snap => snap.data().token);
+
+    if (!Array.isArray(tokens) || !tokens.length) {
+        console.log("Token doesn't exist")
+        return;
+    }
+
+    const sender = await firestore
+        .collection(USER_COLLECTION)
+        .doc(senderId).get().then((docSnapshot) => {
+            return docSnapshot.data();
+        }).catch((error) => {
+            console.log(error);
+        });
+
+    const payload = {
+        notification: {
+            title: `${sender.display_name} sent you a request!`,
+            body: "Accept to continue the conversation.",
+            click_action: 'FLUTTER_NOTIFICATION_CLICK'
+        },
+        data: {
+            screen: "request",
+            request_id: requestId
+        }
+    };
+
+    return fcm.sendToDevice(tokens, payload);
+});
+
 // Create match in Firestore
 exports.createMatch = functions.firestore.document('requests/{requestId}').onUpdate(async (change, context) => {
     const newValue = change.after.data();
@@ -550,7 +595,7 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
             title: senderData.display_name,
             body: message,
             // icon: 'your-icon-url',
-            click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+            click_action: 'FLUTTER_NOTIFICATION_CLICK'
         },
         data: {
             screen: "message",
@@ -1372,7 +1417,3 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
 
     return { "status": "success", "data": groupMemberDoc };
 });
-
-// exports.generatePopularUsers = functions.https.onRequest(async (req, res) => {
-
-// });
