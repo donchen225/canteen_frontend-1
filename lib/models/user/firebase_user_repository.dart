@@ -241,15 +241,6 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
-  // TODO: remove this function
-  Future<List<User>> getAllUsers() async {
-    return userCollection.limit(10).getDocuments().then((querySnapshot) =>
-        querySnapshot.documents
-            .map((documentSnapshot) =>
-                User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
-            .toList());
-  }
-
   User currentUserNow() {
     return user;
   }

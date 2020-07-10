@@ -21,8 +21,6 @@ abstract class UserRepository {
   // Get the User and listen to all future changes
   Stream<User> getCurrentUser(String userId) {}
 
-  Future<List<User>> getAllUsers() async {}
-
   Future<FirebaseUser> getFirebaseUser() async {}
 
   Future<void> updateUserSignInTime(FirebaseUser user) async {}
