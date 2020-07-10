@@ -1440,6 +1440,9 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     return { "status": "success", "data": groupMemberDoc };
 });
 
+// Generate Most popular users. Start and end date on not used in the application,
+// they are only used for record keeping. The "active" field determines which
+// document will be accessed. TODO: change other documents to inactive.
 exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) => {
 
     const startDate = admin.firestore.Timestamp.now();
@@ -1448,7 +1451,8 @@ exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) =>
 
     const doc = {
         "start_date": startDate,
-        "end_date": endDate
+        "end_date": endDate,
+        "active": true
     };
 
     const id = utils.generateUniqueFirestoreId();

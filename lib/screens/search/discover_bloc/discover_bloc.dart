@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/discover/discover_repository.dart';
+import 'package:canteen_frontend/models/discover/popular_user.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
@@ -9,21 +11,27 @@ import 'package:canteen_frontend/screens/search/discover_bloc/discover_event.dar
 import 'package:canteen_frontend/screens/search/discover_bloc/discover_state.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiver/iterables.dart';
+import 'package:tuple/tuple.dart';
 
 class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   final UserRepository _userRepository;
+  final DiscoverRepository _discoverRepository;
   final RecommendationRepository _recommendationRepository;
   final GroupRepository _groupRepository;
-  List<User> _latestUsers = [];
+  List<Tuple2<PopularUser, User>> _popularUsers = [];
   List<Group> _latestGroups = [];
   List<User> _recommendations = [];
 
   DiscoverBloc({
     @required UserRepository userRepository,
+    @required DiscoverRepository discoverRepository,
     @required RecommendationRepository recommendationRepository,
     @required GroupRepository groupRepository,
   })  : assert(userRepository != null),
+        assert(discoverRepository != null),
         _userRepository = userRepository,
+        _discoverRepository = discoverRepository,
         _recommendationRepository = recommendationRepository,
         _groupRepository = groupRepository;
 
@@ -44,22 +52,32 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
   Stream<DiscoverState> _mapLoadDiscoverToState(LoadDiscover event) async* {
     yield DiscoverLoading();
 
-    final usersFuture = _latestUsers.length == 0
-        ? _userRepository.getAllUsers()
-        : Future.value(_latestUsers);
+    List<Future> futureList = [];
+    if (_popularUsers.length == 0) {
+      final popularUsers = await _discoverRepository.getPopularUsers();
+      popularUsers.sort((a, b) => a.rank.compareTo(b.rank));
 
-    final groupsFuture = _latestGroups.length == 0
-        ? _groupRepository.getAllGroups(ignoreMainGroup: false)
-        : Future.value(_latestGroups);
+      futureList.add(Future.wait(
+              popularUsers.map((user) => _userRepository.getUser(user.id)))
+          .then((users) {
+        _popularUsers = zip([popularUsers, users])
+            .map((entry) => Tuple2<PopularUser, User>(entry[0], entry[1]))
+            .toList();
+      }));
+    }
 
-    await Future.wait<void>([
-      usersFuture.then((users) => _latestUsers = users),
-      _loadRecommended(),
-      groupsFuture.then((groups) => _latestGroups = groups)
-    ]);
+    if (_latestGroups.length == 0) {
+      futureList.add(_groupRepository
+          .getAllGroups(ignoreMainGroup: false)
+          .then((groups) => _latestGroups = groups));
+    }
+
+    futureList.add(_loadRecommended());
+
+    await Future.wait<void>(futureList);
 
     yield DiscoverLoaded(
-        users: _latestUsers,
+        popularUsers: _popularUsers,
         recommendations: _recommendations,
         groups: _latestGroups);
   }

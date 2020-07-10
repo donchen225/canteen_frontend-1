@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:canteen_frontend/components/custom_card.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 class ProfileCard extends StatelessWidget {
   final User user;
   final int skillIndex;
+  final Skill skill;
   final Function onTap;
   final double height;
   final double width;
@@ -16,6 +18,7 @@ class ProfileCard extends StatelessWidget {
   const ProfileCard({
     Key key,
     this.onTap,
+    this.skill,
     this.skillIndex = 0,
     this.height = 400,
     this.width = 250,
@@ -24,8 +27,9 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final skill =
-        user.teachSkill.isNotEmpty ? user.teachSkill[skillIndex] : null;
+    final userSkill = skill != null
+        ? skill
+        : (user.teachSkill.isNotEmpty ? user.teachSkill[skillIndex] : null);
 
     return CustomCard(
       height: height,
@@ -96,7 +100,8 @@ class ProfileCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Visibility(
-                            visible: skill != null && skill?.name != null,
+                            visible:
+                                userSkill != null && userSkill?.name != null,
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: height * 0.03,
@@ -105,9 +110,10 @@ class ProfileCard extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  skill?.name != null && skill.name.isNotEmpty
-                                      ? skill.name[0].toUpperCase() +
-                                          skill.name.substring(1)
+                                  userSkill?.name != null &&
+                                          userSkill.name.isNotEmpty
+                                      ? userSkill.name[0].toUpperCase() +
+                                          userSkill.name.substring(1)
                                       : '',
                                   style: Theme.of(context)
                                       .textTheme
@@ -123,10 +129,11 @@ class ProfileCard extends StatelessWidget {
                             ),
                           ),
                           Visibility(
-                            visible: skill != null && skill?.name != null,
+                            visible:
+                                userSkill != null && userSkill?.name != null,
                             child: Builder(builder: (BuildContext context) {
-                              final duration = skill?.duration != null
-                                  ? '${skill.duration.toString()}m'
+                              final duration = userSkill?.duration != null
+                                  ? '${userSkill.duration.toString()}m'
                                   : '';
                               return Padding(
                                 padding: EdgeInsets.only(
@@ -159,7 +166,7 @@ class ProfileCard extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        '\$${skill.price}',
+                                        '\$${userSkill.price}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1

@@ -188,12 +188,13 @@ class DiscoverScreen extends StatelessWidget {
                     height: 350,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: state.users.length,
+                      itemCount: state.popularUsers.length,
                       itemBuilder: (context, index) {
-                        final user = state.users[index];
+                        final userPair = state.popularUsers[index];
+                        final popularData = userPair.item1;
+                        final user = userPair.item2;
 
-                        if (user.teachSkill.isNotEmpty &&
-                            user.teachSkill[0].name.isNotEmpty) {
+                        if (popularData != null && popularData.skill != null) {
                           return Padding(
                             padding: EdgeInsets.only(
                               left: SizeConfig.instance.safeBlockHorizontal * 6,
@@ -204,6 +205,7 @@ class DiscoverScreen extends StatelessWidget {
                             ),
                             child: ProfileCard(
                               user: user,
+                              skill: popularData.skill,
                               height:
                                   SizeConfig.instance.scaffoldBodyHeight * 0.44,
                               onTap: () {
