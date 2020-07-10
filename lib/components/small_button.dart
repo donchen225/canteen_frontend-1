@@ -20,6 +20,7 @@ class SmallButton extends StatelessWidget {
         text,
         style: Theme.of(context).textTheme.button.apply(
               color: Palette.whiteColor,
+              fontWeightDelta: 2,
             ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
