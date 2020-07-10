@@ -1,4 +1,5 @@
-import 'package:canteen_frontend/components/sign_up_button.dart';
+import 'package:canteen_frontend/components/small_button.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/request/request_list.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -34,7 +35,10 @@ class RequestScreen extends StatelessWidget {
                   child: Text('Requests will appear here',
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
-                SignUpButton(),
+                SmallButton(
+                  text: 'Sign Up',
+                  onPressed: () => UnauthenticatedFunctions.showSignUp(context),
+                ),
               ],
             ),
           );

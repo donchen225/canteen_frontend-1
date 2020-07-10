@@ -1,6 +1,9 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_card.dart';
@@ -9,7 +12,9 @@ import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_group_screen.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -92,59 +97,30 @@ class DiscoverScreen extends StatelessWidget {
             return CustomScrollView(
               slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.scaffoldBodyHeight * 0.02,
-                      bottom: SizeConfig.instance.scaffoldBodyHeight * 0.01,
-                      left: SizeConfig.instance.safeBlockHorizontal * 6,
-                      right: SizeConfig.instance.safeBlockHorizontal * 6,
+                  child: Visibility(
+                    visible: BlocProvider.of<AuthenticationBloc>(context).state
+                        is Authenticated,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.instance.scaffoldBodyHeight * 0.02,
+                        bottom: SizeConfig.instance.scaffoldBodyHeight * 0.01,
+                        left: SizeConfig.instance.safeBlockHorizontal * 6,
+                        right: SizeConfig.instance.safeBlockHorizontal * 6,
+                      ),
+                      child: Text('Recommended For You',
+                          style: Theme.of(context).textTheme.headline5.apply(
+                                fontFamily: '.SF UI Text',
+                                fontWeightDelta: 2,
+                              )),
                     ),
-                    child: Text('Recommended For You',
-                        style: Theme.of(context).textTheme.headline5.apply(
-                              fontFamily: '.SF UI Text',
-                              fontWeightDelta: 2,
-                            )),
                   ),
                 ),
                 SliverToBoxAdapter(
                   child: Visibility(
-                    visible: state.recommendations.length > 0,
-                    child: Container(
-                      height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.recommendations.length,
-                        itemBuilder: (context, index) {
-                          final user = state.recommendations[index];
-
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.instance.safeBlockHorizontal * 6,
-                              bottom:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                              top:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                            ),
-                            child: ProfileCard(
-                              user: user,
-                              height:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.49,
-                              onTap: () {
-                                if (user != null) {
-                                  Navigator.pushNamed(
-                                    context,
-                                    ViewUserProfileScreen.routeName,
-                                    arguments: UserArguments(
-                                      user: user,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    visible: BlocProvider.of<AuthenticationBloc>(context).state
+                        is Authenticated,
+                    child: _buildRecommendationList(
+                        context, state.recommendations),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -169,7 +145,6 @@ class DiscoverScreen extends StatelessWidget {
                       itemCount: state.groups.length,
                       itemBuilder: (context, index) {
                         final group = state.groups[index];
-                        print(group);
                         return Padding(
                           padding: EdgeInsets.only(
                             left: SizeConfig.instance.safeBlockHorizontal * 6,
@@ -255,6 +230,87 @@ class DiscoverScreen extends StatelessWidget {
           }
 
           return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecommendationList(
+      BuildContext context, List<User> recommendations) {
+    if (recommendations == null || recommendations.isEmpty) {
+      return Container(
+        padding: EdgeInsets.only(
+          top: SizeConfig.instance.safeBlockVertical * 3,
+          bottom: SizeConfig.instance.safeBlockVertical,
+          left: SizeConfig.instance.safeBlockHorizontal * 9,
+          right: SizeConfig.instance.safeBlockHorizontal * 9,
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: SizeConfig.instance.safeBlockVertical * 2,
+              ),
+              child: Text(
+                'Update your offerings and asks to receive new recommendations!',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .apply(fontWeightDelta: 1),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SmallButton(
+              text: 'Edit Profile',
+              onPressed: () {
+                final userRepository =
+                    BlocProvider.of<UserBloc>(context).userRepository;
+
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => UserProfileScreen(
+                    userRepository: userRepository,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: recommendations.length,
+        itemBuilder: (context, index) {
+          final user = recommendations[index];
+
+          return Padding(
+            padding: EdgeInsets.only(
+              left: SizeConfig.instance.safeBlockHorizontal * 6,
+              bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+              top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+            ),
+            child: ProfileCard(
+              user: user,
+              height: SizeConfig.instance.scaffoldBodyHeight * 0.49,
+              onTap: () {
+                if (user != null) {
+                  Navigator.pushNamed(
+                    context,
+                    ViewUserProfileScreen.routeName,
+                    arguments: UserArguments(
+                      user: user,
+                    ),
+                  );
+                }
+              },
+            ),
+          );
         },
       ),
     );

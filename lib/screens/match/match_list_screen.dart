@@ -1,4 +1,5 @@
-import 'package:canteen_frontend/components/sign_up_button.dart';
+import 'package:canteen_frontend/components/small_button.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/match/match_list.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,10 @@ class MatchListScreen extends StatelessWidget {
                 child: Text('Messages will appear here',
                     style: Theme.of(context).textTheme.bodyText1),
               ),
-              SignUpButton(),
+              SmallButton(
+                text: 'Sign Up',
+                onPressed: () => UnauthenticatedFunctions.showSignUp(context),
+              ),
             ],
           );
         } else if (matchState is MatchListLoaded) {

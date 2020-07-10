@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
-import 'package:canteen_frontend/components/sign_up_button.dart';
+import 'package:canteen_frontend/components/small_button.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_list.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
@@ -70,7 +71,11 @@ class NotificationScreen extends StatelessWidget {
                     child: Text('Notifications will appear here',
                         style: Theme.of(context).textTheme.bodyText1),
                   ),
-                  SignUpButton(),
+                  SmallButton(
+                    text: 'Sign Up',
+                    onPressed: () =>
+                        UnauthenticatedFunctions.showSignUp(context),
+                  ),
                 ],
               ),
             );
