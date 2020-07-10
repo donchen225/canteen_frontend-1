@@ -60,7 +60,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       if (update.item1 == DocumentChangeType.modified ||
           update.item1 == DocumentChangeType.added) {
         return _matchRepository
-            .getMessage(update.item2.id, update.item2.lastUpdated)
+            .getMessage(update.item2.id)
             .catchError((w) => Future<Message>.value(null));
       }
       return Future<Message>.value(null);

@@ -224,7 +224,7 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
         "status": 0,
         "time": newValue.time,
         "created_on": time,
-        "last_updated": firstMessageTime,
+        "last_updated": time,
     };
 
     const matchRef = firestore.collection(MATCH_COLLECTION).doc(matchId);
@@ -285,6 +285,10 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
     });
 
     await matchRef.collection('messages').doc(`${matchId}-first-message`).set(firstMessage, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    await matchRef.set({ "last_updated": firstMessageTime }, { merge: true }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
