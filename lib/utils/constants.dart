@@ -35,7 +35,7 @@ const double kSearchBarBorderRadius = 0.25;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;
-const double kButtonTextSpacing = 5;
+const double kButtonTextSpacing = 2;
 
 // Login/Sign-up constants
 const int formRefreshMilliseconds = 300;

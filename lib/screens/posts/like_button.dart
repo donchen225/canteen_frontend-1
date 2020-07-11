@@ -1,8 +1,8 @@
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,29 +36,35 @@ class LikeButton extends StatelessWidget {
         }
       },
       child: Container(
+          color: Colors.white,
+          height: 26,
           padding: EdgeInsets.only(
             left: SizeConfig.instance.blockSizeHorizontal * 3,
             right: SizeConfig.instance.blockSizeHorizontal * 3,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(
+              Container(
                 padding: EdgeInsets.only(right: kButtonTextSpacing),
-                child: Container(
-                  child: Image.asset(
-                    'assets/up-arrow.png',
-                    color: liked ? Palette.primaryColor : color,
-                    height: buttonTextStyle.fontSize,
-                    width: buttonTextStyle.fontSize,
-                    fit: BoxFit.cover,
-                  ),
+                alignment: Alignment.center,
+                child: Icon(
+                  IconData(liked ? 0xf388 : 0xf387,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                  color: liked ? Palette.primaryColor : color,
+                  size: 20,
                 ),
               ),
-              Text(
-                likeCount.toString(),
-                style: buttonTextStyle.apply(
-                    color: liked ? Palette.primaryColor : color,
-                    fontWeightDelta: 1),
+              Container(
+                padding: EdgeInsets.only(top: 2),
+                alignment: Alignment.center,
+                child: Text(
+                  likeCount.toString(),
+                  style: buttonTextStyle.apply(
+                      color: liked ? Palette.primaryColor : color,
+                      fontWeightDelta: 1),
+                ),
               ),
             ],
           )),

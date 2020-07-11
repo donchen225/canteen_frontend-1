@@ -94,8 +94,8 @@ class _PostListScreenState extends State<PostListScreen> {
                         padding: EdgeInsets.only(
                           left: SizeConfig.instance.blockSizeHorizontal * 4,
                           right: SizeConfig.instance.blockSizeHorizontal * 4,
-                          top: SizeConfig.instance.blockSizeHorizontal * 3,
-                          bottom: SizeConfig.instance.blockSizeHorizontal * 3,
+                          top: SizeConfig.instance.safeBlockVertical * 1.5,
+                          bottom: SizeConfig.instance.safeBlockVertical * 0.5,
                         ),
                         child: IntrinsicHeight(
                           child: Row(
@@ -143,9 +143,13 @@ class _PostListScreenState extends State<PostListScreen> {
                                         color: Palette.textSecondaryBaseColor,
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: SizeConfig
-                                                .instance.safeBlockVertical),
+                                        padding: EdgeInsets.only(
+                                            top: SizeConfig.instance
+                                                    .safeBlockVertical *
+                                                0.5,
+                                            bottom: SizeConfig.instance
+                                                    .safeBlockVertical *
+                                                0.5),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(

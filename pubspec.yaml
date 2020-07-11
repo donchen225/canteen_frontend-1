@@ -97,7 +97,6 @@ flutter:
     - assets/icon.jpeg
     - assets/loading-icon.png
     - assets/blank-profile-picture.png
-    - assets/up-arrow.png
     - assets/app_config.json
 
 
