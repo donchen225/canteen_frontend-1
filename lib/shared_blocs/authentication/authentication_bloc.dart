@@ -14,9 +14,7 @@ class AuthenticationBloc
 
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository {
-    print('IN AUTH BLOC CONSTRUCTOR');
-  }
+        _userRepository = userRepository {}
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -39,7 +37,6 @@ class AuthenticationBloc
       final user = await _userRepository.getFirebaseUser();
       if (user != null) {
         _userRepository.updateUserSignInTime(user);
-        print('APP STARTED WITH USER ID: ${user.uid}');
         await CachedSharedPreferences.setString(
             PreferenceConstants.userId, user.uid);
         yield Authenticated(user);

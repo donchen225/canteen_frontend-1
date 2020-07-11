@@ -63,7 +63,6 @@ class PushNotificationsManager {
 
     _firebaseMessaging.onTokenRefresh.listen((token) {
       // Save token to firestore
-      print('ON TOKEN REFRESH');
       assert(token != null);
 
       saveToken(token);
@@ -71,7 +70,6 @@ class PushNotificationsManager {
 
     _firebaseMessaging.getToken().then((String token) {
       // Save token to firestore
-      print('GET TOKEN');
       assert(token != null);
 
       saveToken(token);
@@ -161,8 +159,6 @@ class PushNotificationsManager {
     _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
       // Save settings to firestore
-      print('ON SETTINGS REGISTERED');
-      print(settings);
       saveSettings(settings);
     });
   }

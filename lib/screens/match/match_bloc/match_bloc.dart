@@ -42,10 +42,8 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   Stream<MatchState> _mapLoadMatchesToState() async* {
     try {
-      print('LOADING MATCHES');
       _matchSubscription?.cancel();
       _matchSubscription = _matchRepository.getMatches().listen((matches) {
-        print('RECEIVED MATCH EVENT');
         add(MatchesUpdated(matches));
       });
     } catch (exception) {

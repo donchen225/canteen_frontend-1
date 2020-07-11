@@ -94,7 +94,6 @@ class SettingsRepository {
     final pushNotificationApp = CachedSharedPreferences.getBool(
         PreferenceConstants.pushNotificationsApp);
 
-    print('TOKEN: $token');
     if (token == null || token.isEmpty) {
       return null;
     }

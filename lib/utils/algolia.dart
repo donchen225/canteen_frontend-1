@@ -26,8 +26,6 @@ class AlgoliaSearch {
       print('ERROR GETTING API KEY: $error');
     });
 
-    print('API KEY: $credentials');
-
     _algolia = Algolia.init(
       applicationId: credentials['application_id'],
       apiKey: credentials['api_key'],

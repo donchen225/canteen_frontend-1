@@ -50,7 +50,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     _userSubscription?.cancel();
     _userSubscription =
         userRepository.getCurrentUser(firebaseUser.uid).listen((user) {
-      print('DETECTED USER CHANGE');
       add(LoadUser(user));
     });
   }
