@@ -185,7 +185,7 @@ class DiscoverScreen extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 350,
+                    height: 335,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.popularUsers.length,
@@ -284,7 +284,7 @@ class DiscoverScreen extends StatelessWidget {
     }
 
     return Container(
-      height: SizeConfig.instance.scaffoldBodyHeight * 0.55,
+      height: 335,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: recommendations.length,
@@ -299,7 +299,7 @@ class DiscoverScreen extends StatelessWidget {
             ),
             child: ProfileCard(
               user: user,
-              height: SizeConfig.instance.scaffoldBodyHeight * 0.49,
+              height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
               onTap: () {
                 if (user != null) {
                   Navigator.pushNamed(

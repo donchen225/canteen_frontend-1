@@ -81,7 +81,7 @@ class ProfileCard extends StatelessWidget {
                             user.title ?? '',
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle1
+                                .bodyText2
                                 .apply(color: Palette.textSecondaryBaseColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
