@@ -2,6 +2,7 @@ import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/discover/popular_user.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
@@ -22,6 +23,7 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuple/tuple.dart';
 
 class DiscoverScreen extends StatelessWidget {
   static const routeName = '/';
@@ -142,7 +144,7 @@ class DiscoverScreen extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 280,
+                    height: 300,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.groups.length,
@@ -150,14 +152,17 @@ class DiscoverScreen extends StatelessWidget {
                         final group = state.groups[index];
                         return Padding(
                           padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal * 6,
+                            left: index == 0
+                                ? SizeConfig.instance.safeBlockHorizontal * 6
+                                : 0,
+                            right: SizeConfig.instance.safeBlockHorizontal * 6,
                             bottom:
                                 SizeConfig.instance.scaffoldBodyHeight * 0.03,
                             top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                           ),
                           child: GroupCard(
                               group: group,
-                              height: 280 * 0.9,
+                              height: 300 * 0.9,
                               onTap: () {
                                 BlocProvider.of<GroupBloc>(context)
                                     .add(LoadGroup(group));
@@ -187,53 +192,86 @@ class DiscoverScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Container(
-                    height: 335,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.popularUsers.length,
-                      itemBuilder: (context, index) {
-                        final userPair = state.popularUsers[index];
-                        final popularData = userPair.item1;
-                        final user = userPair.item2;
-
-                        if (popularData != null && popularData.skill != null) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.instance.safeBlockHorizontal * 6,
-                              bottom:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                              top:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                            ),
-                            child: ProfileCard(
-                              user: user,
-                              skill: popularData.skill,
-                              height:
-                                  SizeConfig.instance.scaffoldBodyHeight * 0.44,
-                              onTap: () {
-                                if (user != null) {
-                                  Navigator.pushNamed(
-                                    context,
-                                    ViewUserProfileScreen.routeName,
-                                    arguments: UserArguments(
-                                      user: user,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
+                  child: _buildMostPopularList(context, state.popularUsers),
                 ),
               ],
             );
           }
 
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _buildMostPopularList(
+      BuildContext context, List<Tuple2<PopularUser, User>> users) {
+    if (users == null || users.isEmpty) {
+      return Container(
+        padding: EdgeInsets.only(
+          top: SizeConfig.instance.safeBlockVertical * 3,
+          bottom: SizeConfig.instance.safeBlockVertical,
+          left: SizeConfig.instance.safeBlockHorizontal * 9,
+          right: SizeConfig.instance.safeBlockHorizontal * 9,
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: SizeConfig.instance.safeBlockVertical * 2,
+              ),
+              child: Text(
+                'Most popular users are updated weekly. Come back next week!',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .apply(fontWeightDelta: 1),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      height: 335,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          final userPair = users[index];
+          final popularData = userPair.item1;
+          final user = userPair.item2;
+
+          if (popularData != null && popularData.skill != null) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: index == 0
+                    ? SizeConfig.instance.safeBlockHorizontal * 6
+                    : 0,
+                right: SizeConfig.instance.safeBlockHorizontal * 6,
+                bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+              ),
+              child: ProfileCard(
+                user: user,
+                skill: popularData.skill,
+                height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                onTap: () {
+                  if (user != null) {
+                    Navigator.pushNamed(
+                      context,
+                      ViewUserProfileScreen.routeName,
+                      arguments: UserArguments(
+                        user: user,
+                      ),
+                    );
+                  }
+                },
+              ),
+            );
+          }
           return Container();
         },
       ),
