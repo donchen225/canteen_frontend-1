@@ -34,9 +34,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
     _searchController.selection = TextSelection.fromPosition(
         TextPosition(offset: _searchController.text.length));
 
-    final textTheme = Theme.of(context).textTheme.subtitle1.apply(
-          fontFamily: '.SF UI Text',
-        );
+    final textTheme = Theme.of(context).textTheme.bodyText2;
 
     return Scaffold(
         appBar: AppBar(
@@ -67,10 +65,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                               autofocus: true,
                               autocorrect: false,
                               textInputAction: TextInputAction.search,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
+                              style: textTheme,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(
                                   bottom: constraints.maxHeight * 0.15,
