@@ -11,6 +11,7 @@ class LikeButton extends StatelessWidget {
   final int likeCount;
   final Color color;
   final Function onTap;
+  final double size;
 
   const LikeButton({
     Key key,
@@ -18,6 +19,7 @@ class LikeButton extends StatelessWidget {
     @required this.likeCount,
     @required this.color,
     @required this.onTap,
+    this.size = 26,
   }) : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class LikeButton extends StatelessWidget {
       },
       child: Container(
           color: Colors.white,
-          height: 26,
+          height: size,
           padding: EdgeInsets.only(
             left: SizeConfig.instance.blockSizeHorizontal * 3,
             right: SizeConfig.instance.blockSizeHorizontal * 3,
@@ -53,16 +55,17 @@ class LikeButton extends StatelessWidget {
                       fontFamily: CupertinoIcons.iconFont,
                       fontPackage: CupertinoIcons.iconFontPackage),
                   color: liked ? Palette.primaryColor : color,
-                  size: 20,
+                  size: size * 0.8,
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 2),
+                padding: EdgeInsets.only(top: size > 26 ? 3 : 2),
                 alignment: Alignment.center,
                 child: Text(
                   likeCount.toString(),
                   style: buttonTextStyle.apply(
                       color: liked ? Palette.primaryColor : color,
+                      fontSizeDelta: size > 26 ? 1.8 : 1,
                       fontWeightDelta: 1),
                 ),
               ),

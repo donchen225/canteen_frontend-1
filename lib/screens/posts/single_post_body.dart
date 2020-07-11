@@ -163,8 +163,8 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                          top: SizeConfig.instance.safeBlockVertical,
-                          bottom: SizeConfig.instance.safeBlockVertical,
+                          top: SizeConfig.instance.safeBlockVertical * 2,
+                          bottom: SizeConfig.instance.safeBlockVertical * 2,
                           left: SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
                           right: SizeConfig.instance.safeBlockHorizontal *
@@ -208,8 +208,8 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                         ),
                         child: Container(
                           padding: EdgeInsets.only(
-                            top: SizeConfig.instance.safeBlockVertical * 1.5,
-                            bottom: SizeConfig.instance.safeBlockVertical * 1.5,
+                            top: SizeConfig.instance.safeBlockVertical * 0.5,
+                            bottom: SizeConfig.instance.safeBlockVertical * 0.5,
                           ),
                           decoration: BoxDecoration(
                             border: Border(
@@ -230,6 +230,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                                 liked: widget.post.liked,
                                 likeCount: widget.post.likeCount,
                                 color: Palette.textSecondaryBaseColor,
+                                size: 32,
                                 onTap: () {
                                   final postBloc =
                                       BlocProvider.of<PostBloc>(context);
