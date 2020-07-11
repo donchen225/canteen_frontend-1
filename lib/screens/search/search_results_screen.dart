@@ -112,23 +112,6 @@ class _SearchResultScreenState extends State<SearchResultScreen>
               },
             ),
           ),
-          // bottom: TabBar(
-          //   indicatorSize: TabBarIndicatorSize.label,
-          //   controller: _tabController,
-          //   labelColor: Palette.primaryColor,
-          //   unselectedLabelColor: Palette.appBarTextColor,
-          //   labelStyle: Theme.of(context).textTheme.headline6,
-          //   tabs: tabChoices.map((text) {
-          //     return Padding(
-          //       padding: EdgeInsets.symmetric(
-          //         horizontal: kTabBarTextPadding,
-          //       ),
-          //       child: Tab(
-          //         text: text,
-          //       ),
-          //     );
-          //   }).toList(),
-          // ),
         ),
       ),
       body: BlocBuilder<SearchBloc, SearchState>(

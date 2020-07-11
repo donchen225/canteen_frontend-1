@@ -378,14 +378,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar _tabBar;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => kTabBarHeight;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => kTabBarHeight;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      height: kTabBarHeight,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
