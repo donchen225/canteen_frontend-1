@@ -27,29 +27,32 @@ class NotificationScreen extends StatelessWidget {
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ProfileSideBarButton(
-              userPhotoUrl: userPhotoUrl,
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-            Text(
-              'Notifications',
-              style: Theme.of(context).textTheme.headline6.apply(
-                    color: Palette.appBarTextColor,
-                    fontWeightDelta: 2,
-                  ),
-            ),
-            Container(
-              width: kProfileIconSize,
-            )
-          ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ProfileSideBarButton(
+                userPhotoUrl: userPhotoUrl,
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+              Text(
+                'Notifications',
+                style: Theme.of(context).textTheme.headline6.apply(
+                      color: Palette.appBarTextColor,
+                      fontWeightDelta: 2,
+                    ),
+              ),
+              Container(
+                width: kProfileIconSize,
+              )
+            ],
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
         ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
       ),
       body: BlocBuilder<NotificationListBloc, NotificationListState>(
         builder: (BuildContext context, NotificationListState state) {

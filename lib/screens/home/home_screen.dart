@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 11,
               )
             : TextStyle(
                 color: Colors.white,
@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     BottomNavigationBarItem(
                       icon: FaIcon(
                         FontAwesomeIcons.home,
-                        size: 26,
+                        size: 24,
                       ),
                       title: Text(''),
                     ),
@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         navBarState.numRequests,
                         FaIcon(
                           FontAwesomeIcons.envelope,
-                          size: 26,
+                          size: 24,
                         ),
                       ),
                       title: Text(''),
@@ -293,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         navBarState.numNotifications,
                         FaIcon(
                           FontAwesomeIcons.bell,
-                          size: 26,
+                          size: 24,
                         ),
                       ),
                       title: Text(''),

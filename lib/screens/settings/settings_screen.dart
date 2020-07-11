@@ -15,6 +15,7 @@ import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -74,20 +75,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (BuildContext context, SettingState state) {
           return Scaffold(
             backgroundColor: Palette.scaffoldBackgroundLightColor,
-            appBar: AppBar(
-                title: Text(
-                  'Settings',
-                  style: Theme.of(context).textTheme.headline6.apply(
-                        color: Palette.appBarTextColor,
-                        fontWeightDelta: 2,
-                      ),
-                ),
-                backgroundColor: Palette.appBarBackgroundColor,
-                leading: BackButton(
-                  color: Palette.appBarTextColor,
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-                elevation: 1),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kAppBarHeight),
+              child: AppBar(
+                  title: Text(
+                    'Settings',
+                    style: Theme.of(context).textTheme.headline6.apply(
+                          color: Palette.appBarTextColor,
+                          fontWeightDelta: 2,
+                        ),
+                  ),
+                  backgroundColor: Palette.appBarBackgroundColor,
+                  leading: BackButton(
+                    color: Palette.appBarTextColor,
+                    onPressed: () => Navigator.of(context).maybePop(),
+                  ),
+                  elevation: 1),
+            ),
             body: ListView(
               padding: EdgeInsets.symmetric(
                   vertical: SizeConfig.instance.blockSizeVertical * 3),

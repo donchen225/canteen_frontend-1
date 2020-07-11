@@ -76,42 +76,51 @@ class _MatchScreenState extends State<MatchScreen>
         bloc: _matchDetailBloc,
         builder: (BuildContext context, MatchDetailState state) {
           return Scaffold(
-            appBar: AppBar(
-              leading: BackButton(
-                color: Palette.primaryColor,
-              ),
-              title: Text(
-                prospect != null
-                    ? (prospect.displayName ?? prospect.email)
-                    : (state is MatchLoaded
-                        ? (state.match as DetailedMatch)
-                            .userList
-                            .firstWhere((u) => u.id != user.id)
-                            .displayName
-                        : ""),
-                style: Theme.of(context).textTheme.headline6.apply(
-                      color: Palette.appBarTextColor,
-                      fontWeightDelta: 2,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kAppBarHeight + kTabBarHeight),
+              child: AppBar(
+                leading: BackButton(
+                  color: Palette.primaryColor,
+                ),
+                title: Text(
+                  prospect != null
+                      ? (prospect.displayName ?? prospect.email)
+                      : (state is MatchLoaded
+                          ? (state.match as DetailedMatch)
+                              .userList
+                              .firstWhere((u) => u.id != user.id)
+                              .displayName
+                          : ""),
+                  style: Theme.of(context).textTheme.headline6.apply(
+                        color: Palette.appBarTextColor,
+                        fontWeightDelta: 2,
+                      ),
+                ),
+                backgroundColor: Palette.appBarBackgroundColor,
+                elevation: 1,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(kTabBarHeight),
+                  child: Container(
+                    height: kTabBarHeight,
+                    child: TabBar(
+                      indicatorSize: TabBarIndicatorSize.label,
+                      controller: _tabController,
+                      labelColor: Palette.primaryColor,
+                      unselectedLabelColor: Palette.appBarTextColor,
+                      labelStyle: Theme.of(context).textTheme.headline6,
+                      tabs: tabChoices.map((text) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: kTabBarTextPadding,
+                          ),
+                          child: Tab(
+                            child: text,
+                          ),
+                        );
+                      }).toList(),
                     ),
-              ),
-              backgroundColor: Palette.appBarBackgroundColor,
-              elevation: 1,
-              bottom: TabBar(
-                indicatorSize: TabBarIndicatorSize.label,
-                controller: _tabController,
-                labelColor: Palette.primaryColor,
-                unselectedLabelColor: Palette.appBarTextColor,
-                labelStyle: Theme.of(context).textTheme.headline6,
-                tabs: tabChoices.map((text) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: kTabBarTextPadding,
-                    ),
-                    child: Tab(
-                      child: text,
-                    ),
-                  );
-                }).toList(),
+                  ),
+                ),
               ),
             ),
             body: Builder(

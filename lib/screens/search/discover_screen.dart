@@ -33,52 +33,55 @@ class DiscoverScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ProfileSideBarButton(
-              userPhotoUrl: userPhotoUrl,
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-            GestureDetector(
-              onTap: () {
-                final searchHistory =
-                    BlocProvider.of<SearchBloc>(context).searchHistory;
-                Navigator.pushNamed(
-                  context,
-                  SearchingScreen.routeName,
-                  arguments: SearchArguments(
-                    searchHistory: searchHistory
-                        .map((q) => q.displayQuery)
-                        .toList()
-                        .reversed
-                        .toList(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ProfileSideBarButton(
+                userPhotoUrl: userPhotoUrl,
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final searchHistory =
+                      BlocProvider.of<SearchBloc>(context).searchHistory;
+                  Navigator.pushNamed(
+                    context,
+                    SearchingScreen.routeName,
+                    arguments: SearchArguments(
+                      searchHistory: searchHistory
+                          .map((q) => q.displayQuery)
+                          .toList()
+                          .reversed
+                          .toList(),
+                    ),
+                  );
+                },
+                child: SearchBar(
+                  height: kAppBarHeight * 0.75,
+                  width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                      kProfileIconSize * 1.5 -
+                      NavigationToolbar.kMiddleSpacing * 4,
+                  color: Colors.grey[200],
+                  child: Text(
+                    "Search Canteen",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .apply(color: Palette.textSecondaryBaseColor),
                   ),
-                );
-              },
-              child: SearchBar(
-                height: kToolbarHeight * 0.7,
-                width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                    kProfileIconSize * 1.5 -
-                    NavigationToolbar.kMiddleSpacing * 4,
-                color: Colors.grey[200],
-                child: Text(
-                  "Search Canteen",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      .apply(color: Palette.textSecondaryBaseColor),
                 ),
               ),
-            ),
-            Container(
-              width: kProfileIconSize * 0.5,
-            )
-          ],
+              Container(
+                width: kProfileIconSize * 0.5,
+              )
+            ],
+          ),
         ),
       ),
       body: BlocBuilder<DiscoverBloc, DiscoverState>(

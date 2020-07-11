@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/cancel_button.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class DialogScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFFFF),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + additionalTopPadding),
+        preferredSize: Size.fromHeight(kAppBarHeight + additionalTopPadding),
         child: SafeArea(
           child: AppBar(
             backgroundColor: const Color(0xFFFEFFFF),

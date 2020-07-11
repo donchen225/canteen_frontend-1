@@ -2,6 +2,7 @@ import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_results_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -37,23 +38,23 @@ class _SearchingScreenState extends State<SearchingScreen> {
     final textTheme = Theme.of(context).textTheme.bodyText2;
 
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Palette.appBarBackgroundColor,
-          elevation: 1,
-          flexibleSpace: SafeArea(
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final height = kToolbarHeight * 0.7;
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kAppBarHeight),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Palette.appBarBackgroundColor,
+            elevation: 1,
+            flexibleSpace: SafeArea(
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final height = kAppBarHeight * 0.75;
 
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: constraints.maxWidth * 0.05,
-                    right: constraints.maxWidth * 0.05,
-                    top: kToolbarHeight * 0.15,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topCenter,
+                  return Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(
+                      left: constraints.maxWidth * 0.05,
+                      right: constraints.maxWidth * 0.05,
+                    ),
                     child: Row(
                       children: <Widget>[
                         Flexible(
@@ -67,9 +68,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                               textInputAction: TextInputAction.search,
                               style: textTheme,
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  bottom: constraints.maxHeight * 0.15,
-                                ),
+                                isDense: true,
                                 border: InputBorder.none,
                                 hintText: "Search skills, groups, people",
                                 hintStyle: textTheme.apply(
@@ -101,14 +100,19 @@ class _SearchingScreenState extends State<SearchingScreen> {
                             padding: EdgeInsets.only(
                               left: SizeConfig.instance.safeBlockHorizontal * 3,
                             ),
-                            child: Text('Cancel', style: textTheme),
+                            child: Text(
+                              'Cancel',
+                              style: textTheme.apply(
+                                color: Palette.primaryColor,
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),

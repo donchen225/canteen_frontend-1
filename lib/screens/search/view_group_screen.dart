@@ -82,35 +82,24 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
         BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            BackButton(
-              color: Palette.primaryColor,
-            ),
-            // SearchBar(
-            //   height: kToolbarHeight * 0.7,
-            //   width: SizeConfig.instance.safeBlockHorizontal * 100 -
-            //       kProfileIconSize * 1.5 -
-            //       NavigationToolbar.kMiddleSpacing * 4,
-            //   color: Colors.grey[200],
-            //   child: Text(
-            //     "Search Group",
-            //     style: Theme.of(context)
-            //         .textTheme
-            //         .bodyText1
-            //         .apply(color: Palette.textSecondaryBaseColor),
-            //   ),
-            // ),
-            Container(
-              width: kProfileIconSize * 0.5,
-            )
-          ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              BackButton(
+                color: Palette.primaryColor,
+              ),
+              Container(
+                width: kProfileIconSize * 0.5,
+              )
+            ],
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 0,
         ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 0,
       ),
       floatingActionButton: Visibility(
         visible: _showFAB && _joined,

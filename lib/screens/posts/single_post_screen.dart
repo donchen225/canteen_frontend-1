@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,20 +14,23 @@ class SinglePostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      appBar: AppBar(
-        backgroundColor: Palette.containerColor,
-        elevation: 1,
-        leading: BackButton(
-          color: Palette.primaryColor,
-          onPressed: () {
-            Navigator.of(context).maybePop(true);
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          backgroundColor: Palette.containerColor,
+          elevation: 1,
+          leading: BackButton(
+            color: Palette.primaryColor,
+            onPressed: () {
+              Navigator.of(context).maybePop(true);
 
-            if (onTapBack != null) {
-              onTapBack();
-            }
-          },
+              if (onTapBack != null) {
+                onTapBack();
+              }
+            },
+          ),
+          title: Text('Post', style: Theme.of(context).textTheme.headline6),
         ),
-        title: Text('Post', style: Theme.of(context).textTheme.headline6),
       ),
       body: body,
     );

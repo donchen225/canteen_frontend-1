@@ -48,16 +48,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundLightColor,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        title: Container(
-          height: kToolbarHeight - 10,
-          width: kToolbarHeight - 10,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/loading-icon.png'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          title: Container(
+            height: kAppBarHeight - 10,
+            width: kAppBarHeight - 10,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/loading-icon.png'),
+              ),
             ),
           ),
         ),
@@ -98,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     horizontal: SizeConfig.instance.safeBlockHorizontal *
                         kOnboardingHorizontalPaddingBlocks,
                   ),
-                  height: kToolbarHeight,
+                  height: kBottomNavigationBarHeight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
