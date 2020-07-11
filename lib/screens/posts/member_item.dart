@@ -76,7 +76,7 @@ class _MemberItemState extends State<MemberItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(widget.member.name,
+                  Text(widget.member.name ?? '',
                       style: Theme.of(context).textTheme.headline6),
                   Padding(
                     padding: EdgeInsets.only(
