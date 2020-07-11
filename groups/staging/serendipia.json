@@ -1,0 +1,15 @@
+{
+    "id": "6bcec1a4-1f67-4220-8715-df2579e2a1d9",
+    "name": "Serendipia",
+    "description": "A global community of coliving and coworking spaces for change makers, life long learners, and inventors.",
+    "tags": [
+        "coliving",
+        "coworking",
+        "changemakers",
+        "learners",
+        "inventors"
+    ],
+    "type": "private",
+    "password": "carpediem",
+    "photo_url": "https://firebasestorage.googleapis.com/v0/b/get-canteen-staging.appspot.com/o/groups%2F6bcec1a4-1f67-4220-8715-df2579e2a1d9%2Fserendipia.jpeg?alt=media&token=fef05daa-e9bb-41b0-99ca-6f5a5e2325d1"
+}
