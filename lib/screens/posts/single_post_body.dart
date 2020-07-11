@@ -173,7 +173,10 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           widget.post.message,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .apply(fontWeightDelta: -1),
                         ),
                       ),
                       Container(
