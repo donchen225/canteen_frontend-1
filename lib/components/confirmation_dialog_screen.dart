@@ -153,6 +153,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline6;
     final subTitleStyle = Theme.of(context).textTheme.subtitle1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return TextDialogScreen(
       title: 'Request Time',
@@ -266,7 +267,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                   ),
                   child: Text(
                     widget.skill.description,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: bodyTextStyle,
                   ),
                 ),
                 Text(
@@ -274,7 +275,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                       (widget.skill.duration != null
                           ? ' / ${widget.skill.duration} minutes'
                           : ''),
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: bodyTextStyle,
                 ),
               ],
             ),

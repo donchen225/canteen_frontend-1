@@ -198,7 +198,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                 widget.group.description ?? '',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyText2,
                                               ),
                                             ),
                                             Text(

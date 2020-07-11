@@ -98,7 +98,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                                 widget.query,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodyText1
+                                    .bodyText2
                                     .apply(
                                         color: Palette.textSecondaryBaseColor),
                               ),

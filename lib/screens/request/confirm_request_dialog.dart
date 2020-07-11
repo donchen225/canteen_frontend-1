@@ -30,7 +30,7 @@ class ConfirmRequestDialog extends StatelessWidget {
         return Container();
     }
 
-    final textStyle = Theme.of(context).textTheme.bodyText1;
+    final textStyle = Theme.of(context).textTheme.bodyText2;
 
     return RichText(
         textAlign: TextAlign.start,

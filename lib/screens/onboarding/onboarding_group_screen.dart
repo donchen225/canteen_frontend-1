@@ -63,7 +63,7 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline4;
     final subtitleTextStyle = Theme.of(context).textTheme.headline5;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
     final buttonTextStyle = Theme.of(context).textTheme.button;
 
     return OnboardingScreen(

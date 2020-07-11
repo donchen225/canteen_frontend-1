@@ -116,7 +116,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   "Search Canteen",
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyText2
                       .apply(color: Palette.textSecondaryBaseColor),
                 ),
               ),
@@ -270,7 +270,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                   group.description ?? '',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .bodyText1,
+                                                      .bodyText2,
                                                 ),
                                               ),
                                               Text(

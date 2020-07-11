@@ -15,7 +15,7 @@ class SearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameStyle = Theme.of(context).textTheme.subtitle1;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return GestureDetector(
       onTap: () {

@@ -48,7 +48,7 @@ class _TimeConfirmationState extends State<TimeConfirmation> {
   @override
   Widget build(BuildContext context) {
     final bodyTextStyle =
-        Theme.of(context).textTheme.bodyText1.apply(fontWeightDelta: 1);
+        Theme.of(context).textTheme.bodyText2.apply(fontWeightDelta: 1);
     final timeTextStyle = bodyTextStyle.apply(color: Colors.green);
 
     return Column(

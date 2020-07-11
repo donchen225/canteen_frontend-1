@@ -23,6 +23,8 @@ class ViewUserRequestScreen extends StatefulWidget {
 
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget _buildProfileWidget(BuildContext context, User user) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return user != null
         ? UserProfileBody(
             user: user,
@@ -47,9 +49,9 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   children: [
                     Text(
                       "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}",
-                      style: Theme.of(context).textTheme.bodyText1.apply(
-                            fontWeightDelta: 1,
-                          ),
+                      style: bodyTextStyle.apply(
+                        fontWeightDelta: 1,
+                      ),
                     ),
                     Visibility(
                       visible: widget.request.comment != null &&
@@ -58,9 +60,9 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                         padding: EdgeInsets.only(top: 5),
                         child: Text(
                           "\"${widget.request.comment}\"",
-                          style: Theme.of(context).textTheme.bodyText1.apply(
-                                fontStyle: FontStyle.italic,
-                              ),
+                          style: bodyTextStyle.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),

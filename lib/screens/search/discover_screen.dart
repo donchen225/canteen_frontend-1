@@ -70,7 +70,7 @@ class DiscoverScreen extends StatelessWidget {
                   "Search Canteen",
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
+                      .bodyText2
                       .apply(color: Palette.textSecondaryBaseColor),
                 ),
               ),
@@ -257,7 +257,7 @@ class DiscoverScreen extends StatelessWidget {
                 'Update your offerings and asks to receive new recommendations!',
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1
+                    .bodyText2
                     .apply(fontWeightDelta: 1),
                 textAlign: TextAlign.center,
               ),

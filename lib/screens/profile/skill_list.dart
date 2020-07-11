@@ -59,7 +59,7 @@ class _SkillListState extends State<SkillList> {
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline6;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return ListView.builder(
       padding: EdgeInsets.all(0),
@@ -111,7 +111,7 @@ class _SkillListState extends State<SkillList> {
                                 (skill.duration != null
                                     ? ' / ${skill.duration} minutes'
                                     : ''),
-                            style: titleStyle,
+                            style: bodyTextStyle.apply(fontWeightDelta: 1),
                           ),
                         ),
                       ],

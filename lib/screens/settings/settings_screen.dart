@@ -60,6 +60,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return BlocListener<SettingBloc, SettingState>(
       listener: (BuildContext context, SettingState state) {
         if (state is SettingsUninitialized) {
@@ -109,9 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text('Push Notifications',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
+                                          style: bodyTextStyle),
                                       CupertinoSwitch(
                                         value:
                                             _settings['push_notifications_app'],
@@ -176,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                           _authenticated ? 'Log out' : 'Sign up / Log in',
-                          style: Theme.of(context).textTheme.bodyText1),
+                          style: bodyTextStyle),
                     ),
                     onTap: () {
                       if (_authenticated) {

@@ -71,7 +71,7 @@ class NotificationScreen extends StatelessWidget {
                       bottom: SizeConfig.instance.safeBlockVertical * 2,
                     ),
                     child: Text('Notifications will appear here',
-                        style: Theme.of(context).textTheme.bodyText1),
+                        style: Theme.of(context).textTheme.bodyText2),
                   ),
                   SmallButton(
                     text: 'Sign Up',

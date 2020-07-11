@@ -344,7 +344,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                           'Add a comment',
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1
+                              .bodyText2
                               .apply(color: Palette.textSecondaryBaseColor),
                         ),
                       ],
