@@ -1270,6 +1270,7 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     const description = data.description;
     const tags = data.tags ? data.tags : [];
     const type = data.type;
+    const photoUrl = data.photo_url;
     const password = data.password;
 
     // Checking attribute.
@@ -1304,6 +1305,10 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         "created_on": time,
         "last_updated": time,
     };
+
+    if (photoUrl) {
+        doc["photo_url"] = photoUrl;
+    }
 
     const existingGroup = await firestore.collection(GROUPS_COLLECTION).doc(id).get();
 
