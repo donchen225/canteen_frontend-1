@@ -48,6 +48,7 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -264,32 +265,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   type: BottomNavigationBarType.fixed,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf38f,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                      icon: FaIcon(
+                        FontAwesomeIcons.home,
+                        size: 26,
+                      ),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf2f5,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
+                      icon: FaIcon(
+                        FontAwesomeIcons.search,
+                        size: 22,
+                      ),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
                       icon: _buildBadge(
                         navBarState.numRequests,
-                        const Icon(IconData(0xf2eb,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)),
+                        FaIcon(
+                          FontAwesomeIcons.envelope,
+                          size: 26,
+                        ),
                       ),
                       title: Text(''),
                     ),
                     BottomNavigationBarItem(
                       icon: _buildBadge(
                         navBarState.numNotifications,
-                        const Icon(IconData(0xf39b,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)),
+                        FaIcon(
+                          FontAwesomeIcons.bell,
+                          size: 26,
+                        ),
                       ),
                       title: Text(''),
                     ),
