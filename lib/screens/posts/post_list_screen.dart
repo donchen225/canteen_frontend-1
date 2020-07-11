@@ -156,7 +156,7 @@ class _PostListScreenState extends State<PostListScreen> {
                                             post.message,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1,
+                                                .bodyText2,
                                           ),
                                         ),
                                       ),

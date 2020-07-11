@@ -30,6 +30,7 @@ dependencies:
   # Formatting
   intl: ^0.16.1
   google_fonts: ^1.0.0
+  font_awesome_flutter: ^8.8.1
   timeago: ^2.0.26
   
   # Services

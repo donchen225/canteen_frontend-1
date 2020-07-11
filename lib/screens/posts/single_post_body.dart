@@ -173,7 +173,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           widget.post.message,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                       Container(
@@ -182,6 +182,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               kHorizontalPaddingBlocks,
                           right: SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
+                          bottom: SizeConfig.instance.safeBlockVertical * 0.5,
                         ),
                         alignment: Alignment.centerLeft,
                         child: Row(
@@ -253,10 +254,11 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               GestureDetector(
                                 onTap: () => _onTapComment(context),
                                 child: CommentButton(
-                                    post: widget.post,
-                                    style: secondaryTextTheme,
-                                    sideTextColor:
-                                        Palette.textSecondaryBaseColor),
+                                  post: widget.post,
+                                  style: secondaryTextTheme,
+                                  sideTextColor: Palette.textSecondaryBaseColor,
+                                  size: 32,
+                                ),
                               ),
                               Container(),
                             ],

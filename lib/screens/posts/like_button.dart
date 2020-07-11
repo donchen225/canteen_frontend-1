@@ -5,6 +5,7 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LikeButton extends StatelessWidget {
   final bool liked;
@@ -38,7 +39,6 @@ class LikeButton extends StatelessWidget {
         }
       },
       child: Container(
-          color: Colors.white,
           height: size,
           padding: EdgeInsets.only(
             left: SizeConfig.instance.blockSizeHorizontal * 3,
@@ -48,24 +48,24 @@ class LikeButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(right: kButtonTextSpacing),
+                padding: EdgeInsets.only(
+                    right: size > 26
+                        ? kButtonTextSpacing * 1.5
+                        : kButtonTextSpacing),
                 alignment: Alignment.center,
-                child: Icon(
-                  IconData(liked ? 0xf388 : 0xf387,
-                      fontFamily: CupertinoIcons.iconFont,
-                      fontPackage: CupertinoIcons.iconFontPackage),
+                child: FaIcon(
+                  liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
                   color: liked ? Palette.primaryColor : color,
-                  size: size * 0.8,
+                  size: size * 0.65,
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: size > 26 ? 3 : 2),
                 alignment: Alignment.center,
                 child: Text(
                   likeCount.toString(),
                   style: buttonTextStyle.apply(
                       color: liked ? Palette.primaryColor : color,
-                      fontSizeDelta: size > 26 ? 1.8 : 1,
+                      fontSizeFactor: size > 26 ? 1.1 : 0.92,
                       fontWeightDelta: 1),
                 ),
               ),
