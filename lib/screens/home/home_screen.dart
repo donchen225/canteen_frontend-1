@@ -45,6 +45,7 @@ import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -254,52 +255,55 @@ class _HomeScreenState extends State<HomeScreen> {
                       HomeNavigationBarBadgeState>(
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
-                return BottomNavigationBar(
-                  key: getIt<NavigationBarService>().homeNavigationBarKey,
-                  currentIndex: _currentIndex,
-                  showSelectedLabels: false,
-                  showUnselectedLabels: false,
-                  selectedFontSize: kBottomNavigationBarFontSize,
-                  unselectedFontSize: kBottomNavigationBarFontSize,
-                  backgroundColor: Palette.appBarBackgroundColor,
-                  type: BottomNavigationBarType.fixed,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: FaIcon(
-                        FontAwesomeIcons.home,
-                        size: 24,
-                      ),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: FaIcon(
-                        FontAwesomeIcons.search,
-                        size: 22,
-                      ),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numRequests,
-                        FaIcon(
-                          FontAwesomeIcons.envelope,
+                return SizedBox(
+                  height: kAppBarHeight + SizeConfig.instance.paddingBottom,
+                  child: BottomNavigationBar(
+                    key: getIt<NavigationBarService>().homeNavigationBarKey,
+                    currentIndex: _currentIndex,
+                    showSelectedLabels: false,
+                    showUnselectedLabels: false,
+                    selectedFontSize: kBottomNavigationBarFontSize,
+                    unselectedFontSize: kBottomNavigationBarFontSize,
+                    backgroundColor: Palette.appBarBackgroundColor,
+                    type: BottomNavigationBarType.fixed,
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: FaIcon(
+                          FontAwesomeIcons.home,
                           size: 24,
                         ),
+                        title: Text(''),
                       ),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numNotifications,
-                        FaIcon(
-                          FontAwesomeIcons.bell,
-                          size: 24,
+                      BottomNavigationBarItem(
+                        icon: FaIcon(
+                          FontAwesomeIcons.search,
+                          size: 22,
                         ),
+                        title: Text(''),
                       ),
-                      title: Text(''),
-                    ),
-                  ],
-                  onTap: (int index) => _onItemTapped(context, index),
+                      BottomNavigationBarItem(
+                        icon: _buildBadge(
+                          navBarState.numRequests,
+                          FaIcon(
+                            FontAwesomeIcons.envelope,
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(''),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: _buildBadge(
+                          navBarState.numNotifications,
+                          FaIcon(
+                            FontAwesomeIcons.bell,
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(''),
+                      ),
+                    ],
+                    onTap: (int index) => _onItemTapped(context, index),
+                  ),
                 );
               });
             },
