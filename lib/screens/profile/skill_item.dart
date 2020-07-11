@@ -25,6 +25,7 @@ class SkillItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline6;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return Container(
       padding: EdgeInsets.only(
@@ -57,8 +58,7 @@ class SkillItem extends StatelessWidget {
                 top: SizeConfig.instance.safeBlockVertical,
                 bottom: SizeConfig.instance.safeBlockVertical,
               ),
-              child: Text(skill.description,
-                  style: Theme.of(context).textTheme.bodyText1),
+              child: Text(skill.description, style: bodyTextStyle),
             ),
           ),
           Visibility(
@@ -73,7 +73,7 @@ class SkillItem extends StatelessWidget {
                         (skill.duration != null
                             ? ' / ${skill.duration} minutes'
                             : ''),
-                    style: titleStyle,
+                    style: bodyTextStyle.apply(fontWeightDelta: 1),
                   ),
                   Visibility(
                     visible: showButton,

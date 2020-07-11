@@ -108,7 +108,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
 
                     return SkillItem(
                       verticalPadding:
-                          SizeConfig.instance.safeBlockVertical * 2,
+                          SizeConfig.instance.safeBlockVertical * 1.5,
                       horizontalPadding:
                           SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
@@ -164,7 +164,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline6;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -217,12 +217,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                 ),
                                 Text(
                                   user.title ?? '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .apply(
-                                          color:
-                                              Palette.textSecondaryBaseColor),
+                                  style: bodyTextStyle.apply(
+                                      color: Palette.textSecondaryBaseColor),
                                 ),
                               ],
                             ),
