@@ -31,13 +31,21 @@ class FirebaseUserRepository extends UserRepository {
 
   /// Sign up a user to Firebase Authentication with email/password,
   /// and creates a user in the Firestore users collection
-  Future<void> signUp({String email, String password}) async {
+  Future<void> signUp({String email, String password, String name}) async {
     return await _firebaseAuth
         .createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        )
-        .then((result) => addFirebaseUser(result.user));
+      email: email,
+      password: password,
+    )
+        .then((result) async {
+      if (name != null && name.isNotEmpty) {
+        UserUpdateInfo info = UserUpdateInfo();
+        info.displayName = name;
+        result.user.updateProfile(info);
+      }
+
+      await addFirebaseUser(result.user, name: name);
+    });
   }
 
   Future<void> signOut() async {
@@ -48,15 +56,11 @@ class FirebaseUserRepository extends UserRepository {
     ]);
   }
 
-  // TODO: catch ALL transactions, transactions do NOT run offline
-  Future<void> addFirebaseUser(FirebaseUser user) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.set(
-          userCollection.document(user.uid),
-          UserEntity.fromFirebaseUserEntity(
-                  FirebaseUserEntity.fromFirebaseUser(user))
-              .toDocument());
-    });
+  Future<void> addFirebaseUser(FirebaseUser user, {String name}) {
+    return userCollection.document(user.uid).setData(
+        UserEntity.fromFirebaseUserEntity(
+                FirebaseUserEntity.fromFirebaseUser(user, name: name))
+            .toDocument());
   }
 
   Future<void> addLearnSkill(int position, SkillEntity skill) {
@@ -68,10 +72,10 @@ class FirebaseUserRepository extends UserRepository {
   }
 
   Future<void> updateUserSignInTime(FirebaseUser user) {
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(userCollection.document(user.uid), {
-        "last_sign_in_time": user.metadata.lastSignInTime,
-      });
+    return userCollection.document(user.uid).updateData({
+      "last_sign_in_time": user.metadata.lastSignInTime,
+    }).catchError((error) {
+      print('Error updating user sign in time.');
     });
   }
 
@@ -148,6 +152,18 @@ class FirebaseUserRepository extends UserRepository {
     });
   }
 
+  Future<void> deleteTeachSkill(int index) {
+    return userCollection
+        .document(_firebaseUser.uid)
+        .updateData({"teach_skill.${index.toString()}": FieldValue.delete()});
+  }
+
+  Future<void> deleteLearnSkill(int index) {
+    return userCollection
+        .document(_firebaseUser.uid)
+        .updateData({"learn_skill.${index.toString()}": FieldValue.delete()});
+  }
+
   Future<void> updatePhoto(String url) {
     CachedSharedPreferences.setString(PreferenceConstants.userPhotoUrl, url);
     return Firestore.instance.runTransaction((Transaction tx) async {
@@ -177,11 +193,16 @@ class FirebaseUserRepository extends UserRepository {
     }
 
     return userCollection.document(id).get().then((snapshot) {
+      if (!snapshot.exists) {
+        throw Exception("User doesn't exist.");
+      }
       return UserEntity.fromSnapshot(snapshot);
     }).then((userEntity) {
       final user = User.fromEntity(userEntity);
       saveUserMap(user);
       return user;
+    }).catchError((error) {
+      print('Failed to get user: $error');
     });
   }
 
@@ -190,7 +211,12 @@ class FirebaseUserRepository extends UserRepository {
       return Future.value(user);
     }
     try {
-      return getUser((await getFirebaseUser()).uid, cache: false);
+      final firebaseUser = await getFirebaseUser();
+      if (firebaseUser == null) {
+        return null;
+      }
+
+      return getUser(firebaseUser.uid, cache: false);
     } catch (e) {
       print(e);
     }
@@ -213,15 +239,6 @@ class FirebaseUserRepository extends UserRepository {
 
       return currentUser;
     });
-  }
-
-  // TODO: remove this function
-  Future<List<User>> getAllUsers() async {
-    return userCollection.limit(10).getDocuments().then((querySnapshot) =>
-        querySnapshot.documents
-            .map((documentSnapshot) =>
-                User.fromEntity(UserEntity.fromSnapshot(documentSnapshot)))
-            .toList());
   }
 
   User currentUserNow() {

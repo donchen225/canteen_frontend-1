@@ -1,11 +1,11 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/onboarding/access_code_dialog.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/next_button.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_skill_screen.dart';
-import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/bloc/private_group_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -54,22 +54,23 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
     });
   }
 
+  void _nextFunction(BuildContext context) {
+    BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding());
+    BlocProvider.of<HomeBloc>(context).add(InitializeHome());
+  }
+
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline4;
     final subtitleTextStyle = Theme.of(context).textTheme.headline5;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
     final buttonTextStyle = Theme.of(context).textTheme.button;
-    final nextFunction = () {
-      BlocProvider.of<OnboardingBloc>(context).add(CompleteOnboarding());
-      BlocProvider.of<HomeBloc>(context).add(InitializeHome());
-    };
 
     return OnboardingScreen(
       horizontalPadding: false,
-      next: NextButton(onTap: nextFunction),
+      next: NextButton(onTap: () => _nextFunction(context)),
       nodes: [_focusNode],
-      onSkip: nextFunction,
+      onSkip: () => _nextFunction(context),
       child: Container(
         width: double.infinity,
         color: Colors.transparent,
@@ -183,12 +184,28 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
                                     if (!(joined[index])) {
                                       if (group.type == 'private') {
                                         showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AccessCodeDialog());
+                                          context: context,
+                                          builder: (BuildContext
+                                                  dialogContext) =>
+                                              BlocProvider<PrivateGroupBloc>(
+                                            create: (dialogContext) =>
+                                                PrivateGroupBloc(
+                                                    groupRepository:
+                                                        GroupRepository()),
+                                            child: AccessCodeDialog(
+                                              groupId: group.id,
+                                              onSuccess: (String groupId) {
+                                                BlocProvider.of<OnboardingBloc>(
+                                                        context)
+                                                    .add(JoinedPrivateGroup(
+                                                        id: groupId));
+                                              },
+                                            ),
+                                          ),
+                                        );
                                       } else {
                                         BlocProvider.of<OnboardingBloc>(context)
-                                            .add(JoinGroup(groupId: group.id));
+                                            .add(JoinPublicGroup(id: group.id));
                                       }
                                     }
                                   },

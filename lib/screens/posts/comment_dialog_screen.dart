@@ -1,9 +1,10 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/action_button.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -50,13 +51,16 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
     final userName =
         CachedSharedPreferences.getString(PreferenceConstants.userName);
+    final userGroups =
+        BlocProvider.of<GroupHomeBloc>(context).currentUserGroups;
+    final isMember = userGroups.any((group) => group.id == widget.groupId);
 
     return TextDialogScreen(
       title: 'Add Comment',
       height: widget.height,
       sendWidget: ActionButton(
           text: 'Send',
-          enabled: _messageController.text.isNotEmpty,
+          enabled: isMember && _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
             if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
@@ -66,11 +70,11 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<CommentBloc>(context).add(AddComment(
+              BlocProvider.of<PostBloc>(context).add(AddComment(
                   groupId: widget.groupId,
                   postId: widget.post.id,
                   comment: comment));
-              Navigator.maybePop(context);
+              Navigator.maybePop(context, true);
             } else {
               final snackBar = SnackBar(
                 behavior: SnackBarBehavior.floating,

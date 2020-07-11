@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "algolia_api_keys",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "public",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "valid_until",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "matches",
       "queryScope": "COLLECTION",
       "fields": [
@@ -25,6 +39,24 @@
         {
           "fieldPath": "queried_on",
           "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "requests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "receiver_id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "created_on",
+          "order": "DESCENDING"
         }
       ]
     }

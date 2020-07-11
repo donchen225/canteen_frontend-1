@@ -4,7 +4,7 @@ class AppLogo extends StatelessWidget {
   final double size;
   final Color color;
 
-  AppLogo({this.size = 50, this.color = const Color(0xFFEE8442)});
+  AppLogo({this.size = 50, this.color = const Color(0xFF1877F2)});
 
   @override
   Widget build(BuildContext context) {

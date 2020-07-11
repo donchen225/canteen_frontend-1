@@ -38,4 +38,4 @@ class DetailedRequestListLoaded extends RequestListState {
   }
 }
 
-class RequestListEmpty extends RequestListState {}
+class RequestListUnauthenticated extends RequestListState {}

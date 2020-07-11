@@ -41,22 +41,22 @@ class _SearchResultScreenState extends State<SearchResultScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        flexibleSpace: SafeArea(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              final height = kToolbarHeight * 0.7;
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: constraints.maxWidth * 0.05,
-                  right: constraints.maxWidth * 0.05,
-                  top: kToolbarHeight * 0.15,
-                ),
-                child: Align(
-                  alignment: Alignment.topCenter,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
+          flexibleSpace: SafeArea(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final height = kAppBarHeight * 0.75;
+                return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(
+                    left: constraints.maxWidth * 0.05,
+                    right: constraints.maxWidth * 0.05,
+                  ),
                   child: Row(
                     children: <Widget>[
                       IconButton(
@@ -98,7 +98,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                                 widget.query,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .bodyText1
+                                    .bodyText2
                                     .apply(
                                         color: Palette.textSecondaryBaseColor),
                               ),
@@ -108,28 +108,11 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
-        // bottom: TabBar(
-        //   indicatorSize: TabBarIndicatorSize.label,
-        //   controller: _tabController,
-        //   labelColor: Palette.primaryColor,
-        //   unselectedLabelColor: Palette.appBarTextColor,
-        //   labelStyle: Theme.of(context).textTheme.headline6,
-        //   tabs: tabChoices.map((text) {
-        //     return Padding(
-        //       padding: EdgeInsets.symmetric(
-        //         horizontal: kTabBarTextPadding,
-        //       ),
-        //       child: Tab(
-        //         text: text,
-        //       ),
-        //     );
-        //   }).toList(),
-        // ),
       ),
       body: BlocBuilder<SearchBloc, SearchState>(
         builder: (BuildContext context, SearchState state) {

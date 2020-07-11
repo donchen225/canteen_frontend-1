@@ -1,9 +1,6 @@
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
-import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/screens/posts/arguments.dart';
-import 'package:canteen_frontend/screens/posts/single_post_body.dart';
-import 'package:canteen_frontend/screens/posts/single_post_screen.dart';
+import 'package:canteen_frontend/screens/posts/group_single_post_screen.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/discover_screen.dart';
 import 'package:canteen_frontend/screens/search/search_results_screen.dart';
@@ -12,10 +9,11 @@ import 'package:canteen_frontend/screens/search/view_group_screen.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
-MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
+MaterialPageRoute buildSearchScreenRoutes(
+    BuildContext context, RouteSettings settings) {
   return MaterialPageRoute(
       settings: settings,
-      builder: (BuildContext context) {
+      builder: (BuildContext builderContext) {
         switch (settings.name) {
           case DiscoverScreen.routeName:
             return DiscoverScreen();
@@ -38,12 +36,8 @@ MaterialPageRoute buildSearchScreenRoutes(RouteSettings settings) {
             return ViewGroupScreen(
               group: args.group,
             );
-          case SinglePostScreen.routeName:
-            final SinglePostArguments args = settings.arguments;
-            return SinglePostScreen(
-              body: SinglePostBody(
-                  post: args.post as DetailedPost, groupId: args.groupId),
-            );
+          case GroupSinglePostScreen.routeName:
+            return GroupSinglePostScreen();
           case SettingsScreen.routeName:
             return SettingsScreen();
         }

@@ -15,16 +15,20 @@ class SearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameStyle = Theme.of(context).textTheme.subtitle1;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        ViewUserProfileScreen.routeName,
-        arguments: UserArguments(
-          user: user,
-        ),
-      ),
+      onTap: () {
+        if (user != null) {
+          Navigator.pushNamed(
+            context,
+            ViewUserProfileScreen.routeName,
+            arguments: UserArguments(
+              user: user,
+            ),
+          );
+        }
+      },
       child: Container(
         height: height,
         decoration: BoxDecoration(

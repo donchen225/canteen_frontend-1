@@ -6,6 +6,7 @@ import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_event.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_state.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 
@@ -26,7 +27,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
 
   // Load local settings if exists
   @override
-  GroupHomeState get initialState => GroupHomeUninitialized();
+  GroupHomeState get initialState => GroupHomeUnauthenticated();
 
   @override
   Stream<GroupHomeState> mapEventToState(
@@ -35,15 +36,19 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     if (event is LoadUserGroups) {
       yield* _mapLoadUserGroupsToState();
     } else if (event is LoadHomeGroup) {
-      yield* _mapLoadGroupToState(event);
-    } else if (event is LoadCurrentGroup) {
-      yield* _mapLoadCurrentGroupToState();
+      yield* _mapLoadHomeGroupToState(event);
     } else if (event is LoadHomeGroupMembers) {
       yield* _mapLoadHomeGroupMembersToState();
+    } else if (event is LoadDefaultGroup) {
+      yield* _mapLoadDefaultGroupToState();
+    } else if (event is ClearHomeGroup) {
+      yield* _mapClearHomeGroupToState();
     }
   }
 
   Stream<GroupHomeState> _mapLoadUserGroupsToState() async* {
+    yield GroupHomeLoading();
+
     final userGroups = await _groupRepository.getUserGroups();
 
     currentUserGroups = userGroups;
@@ -62,18 +67,9 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     }
   }
 
-  Stream<GroupHomeState> _mapLoadGroupToState(LoadHomeGroup event) async* {
+  Stream<GroupHomeState> _mapLoadHomeGroupToState(LoadHomeGroup event) async* {
     currentGroup = event.group;
     yield GroupHomeLoaded(group: event.group);
-  }
-
-  Stream<GroupHomeState> _mapLoadCurrentGroupToState() async* {
-    if (currentGroup != null) {
-      yield GroupHomeLoaded(group: currentGroup);
-    } else {
-      //_userRepository
-      yield GroupHomeLoaded(group: currentGroup);
-    }
   }
 
   Stream<GroupHomeState> _mapLoadHomeGroupMembersToState() async* {
@@ -92,5 +88,25 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
         yield GroupHomeLoaded(group: detailedGroup);
       }
     }
+  }
+
+  Stream<GroupHomeState> _mapLoadDefaultGroupToState() async* {
+    final group = await _groupRepository.getGroup(AppConfig.defaultGroupId);
+
+    final members = await _groupRepository.getGroupMembers(group.id);
+    final detailedGroup = DetailedGroup.fromGroup(group, members);
+
+    currentGroup = detailedGroup;
+    currentGroups = [detailedGroup];
+
+    yield GroupHomeLoaded(group: detailedGroup);
+  }
+
+  Stream<GroupHomeState> _mapClearHomeGroupToState() async* {
+    currentGroup = null;
+    currentGroups = [];
+    currentUserGroups = [];
+
+    yield GroupHomeUnauthenticated();
   }
 }

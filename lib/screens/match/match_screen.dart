@@ -1,6 +1,6 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/screens/match/match_detail_screen.dart';
 import 'package:canteen_frontend/screens/message/chat_screen.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
@@ -30,7 +30,7 @@ class _MatchScreenState extends State<MatchScreen>
       'Chat',
     ),
     Text(
-      'Details',
+      'Profile',
     ),
   ];
 
@@ -56,7 +56,11 @@ class _MatchScreenState extends State<MatchScreen>
           user: prospect,
           match: match,
         ),
-        MatchDetailScreen(),
+        ViewUserProfileScreen(
+          user: prospect,
+          canConnect: false,
+          showAppBar: false,
+        ),
       ],
     );
   }
@@ -72,42 +76,51 @@ class _MatchScreenState extends State<MatchScreen>
         bloc: _matchDetailBloc,
         builder: (BuildContext context, MatchDetailState state) {
           return Scaffold(
-            appBar: AppBar(
-              leading: BackButton(
-                color: Palette.primaryColor,
-              ),
-              title: Text(
-                prospect != null
-                    ? (prospect.displayName ?? prospect.email)
-                    : (state is MatchLoaded
-                        ? (state.match as DetailedMatch)
-                            .userList
-                            .firstWhere((u) => u.id != user.id)
-                            .displayName
-                        : ""),
-                style: Theme.of(context).textTheme.headline6.apply(
-                      color: Palette.appBarTextColor,
-                      fontWeightDelta: 2,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kAppBarHeight + kTabBarHeight),
+              child: AppBar(
+                leading: BackButton(
+                  color: Palette.primaryColor,
+                ),
+                title: Text(
+                  prospect != null
+                      ? (prospect.displayName ?? prospect.email)
+                      : (state is MatchLoaded
+                          ? (state.match as DetailedMatch)
+                              .userList
+                              .firstWhere((u) => u.id != user.id)
+                              .displayName
+                          : ""),
+                  style: Theme.of(context).textTheme.headline6.apply(
+                        color: Palette.appBarTextColor,
+                        fontWeightDelta: 2,
+                      ),
+                ),
+                backgroundColor: Palette.appBarBackgroundColor,
+                elevation: 1,
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(kTabBarHeight),
+                  child: Container(
+                    height: kTabBarHeight,
+                    child: TabBar(
+                      indicatorSize: TabBarIndicatorSize.label,
+                      controller: _tabController,
+                      labelColor: Palette.primaryColor,
+                      unselectedLabelColor: Palette.appBarTextColor,
+                      labelStyle: Theme.of(context).textTheme.headline6,
+                      tabs: tabChoices.map((text) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: kTabBarTextPadding,
+                          ),
+                          child: Tab(
+                            child: text,
+                          ),
+                        );
+                      }).toList(),
                     ),
-              ),
-              backgroundColor: Palette.appBarBackgroundColor,
-              elevation: 1,
-              bottom: TabBar(
-                indicatorSize: TabBarIndicatorSize.label,
-                controller: _tabController,
-                labelColor: Palette.primaryColor,
-                unselectedLabelColor: Palette.appBarTextColor,
-                labelStyle: Theme.of(context).textTheme.headline6,
-                tabs: tabChoices.map((text) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: kTabBarTextPadding,
-                    ),
-                    child: Tab(
-                      child: text,
-                    ),
-                  );
-                }).toList(),
+                  ),
+                ),
               ),
             ),
             body: Builder(

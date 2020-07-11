@@ -20,7 +20,7 @@ class CreateRequestPayload {
       'comment': comment,
       'index': index,
       'type': type,
-      'time': time.millisecondsSinceEpoch,
+      'time': time?.millisecondsSinceEpoch ?? null,
     };
   }
 }

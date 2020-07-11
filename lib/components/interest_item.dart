@@ -32,6 +32,7 @@ class InterestItem extends StatelessWidget {
             '#' + text,
             style: Theme.of(context).textTheme.bodyText2.apply(
                   color: Palette.textClickableColor,
+                  fontSizeFactor: 0.9,
                 ),
           ),
           Visibility(

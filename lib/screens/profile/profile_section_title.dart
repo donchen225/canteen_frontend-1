@@ -12,7 +12,7 @@ class ProfileSectionTitle extends StatelessWidget {
       padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.subtitle1.apply(
+        style: Theme.of(context).textTheme.headline6.apply(
               color: Palette.textSecondaryBaseColor,
               fontWeightDelta: 2,
             ),

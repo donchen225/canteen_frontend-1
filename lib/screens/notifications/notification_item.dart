@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -81,19 +84,29 @@ class _NotificationItemState extends State<NotificationItem> {
     return '';
   }
 
-  void _onTap(BuildContext context, String type) {
+  void _onTap(BuildContext context, String type) async {
     if (type == 'like' || type == 'comment') {
       BlocProvider.of<NotificationViewBloc>(context).add(LoadNotificationPost(
           postId: widget.targetId,
           groupId: widget.parentId,
           notificationId: widget.notificationId,
           read: widget.read));
-      Navigator.pushNamed(context, NotificationSinglePostScreen.routeName);
+      BlocProvider.of<CommentListBloc>(context).add(
+          LoadCommentList(groupId: widget.parentId, postId: widget.targetId));
+      Navigator.pushNamed<bool>(context, NotificationSinglePostScreen.routeName)
+          .then((value) {
+        Timer(
+            Duration(milliseconds: 300),
+            () => BlocProvider.of<NotificationViewBloc>(context)
+                .add(ClearNotificationView()));
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return Material(
       key: widget.key,
       child: GestureDetector(
@@ -152,17 +165,13 @@ class _NotificationItemState extends State<NotificationItem> {
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   text: TextSpan(
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyTextStyle,
                                     children: [
                                       TextSpan(
                                         text: '${widget.name}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .apply(
-                                              fontWeightDelta: 2,
-                                            ),
+                                        style: bodyTextStyle.apply(
+                                          fontWeightDelta: 2,
+                                        ),
                                       ),
                                       TextSpan(
                                           text:
@@ -175,12 +184,9 @@ class _NotificationItemState extends State<NotificationItem> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   formatTime(widget.time),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .apply(
-                                        color: Palette.textSecondaryBaseColor,
-                                      ),
+                                  style: bodyTextStyle.apply(
+                                    color: Palette.textSecondaryBaseColor,
+                                  ),
                                 ),
                               )
                             ],

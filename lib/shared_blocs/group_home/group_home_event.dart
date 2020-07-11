@@ -10,8 +10,6 @@ abstract class GroupHomeEvent extends Equatable {
 
 class LoadUserGroups extends GroupHomeEvent {}
 
-class LoadCurrentGroup extends GroupHomeEvent {}
-
 class LoadHomeGroup extends GroupHomeEvent {
   final Group group;
 
@@ -34,4 +32,14 @@ class LoadHomeGroupMembers extends GroupHomeEvent {
 
   @override
   String toString() => 'LoadHomeGroupMembers { groupId: $groupId }';
+}
+
+class LoadDefaultGroup extends GroupHomeEvent {
+  @override
+  String toString() => 'LoadDefaultGroup';
+}
+
+class ClearHomeGroup extends GroupHomeEvent {
+  @override
+  String toString() => 'ClearHomeGroup';
 }

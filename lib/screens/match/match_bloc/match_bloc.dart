@@ -27,7 +27,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   // TODO: load local matches
   @override
-  MatchState get initialState => MatchesLoaded([]);
+  MatchState get initialState => MatchesUnauthenticated();
 
   @override
   Stream<MatchState> mapEventToState(MatchEvent event) async* {
@@ -42,6 +42,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   Stream<MatchState> _mapLoadMatchesToState() async* {
     try {
+      print('LOADING MATCHES');
       _matchSubscription?.cancel();
       _matchSubscription = _matchRepository.getMatches().listen((matches) {
         print('RECEIVED MATCH EVENT');
@@ -59,7 +60,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       if (update.item1 == DocumentChangeType.modified ||
           update.item1 == DocumentChangeType.added) {
         return _matchRepository
-            .getMessage(update.item2.id, update.item2.lastUpdated)
+            .getMessage(update.item2.id)
             .catchError((w) => Future<Message>.value(null));
       }
       return Future<Message>.value(null);
@@ -83,10 +84,10 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
       List<User> users = userList[i];
       Tuple2<DocumentChangeType, Match> update = updatedMatches[i];
 
-      // TODO: set a message on initial match (with no messages sent)
       if (update.item1 == DocumentChangeType.added ||
           update.item1 == DocumentChangeType.modified) {
         Message message = messageList[i];
+
         final detailedMatch =
             DetailedMatch.fromMatch(update.item2, users, lastMessage: message);
 
@@ -106,7 +107,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   Stream<MatchState> _mapClearMatchesToState() async* {
     _matchRepository.clearMatches();
     _matchSubscription?.cancel();
-    yield MatchesNotLoaded();
+    yield MatchesUnauthenticated();
   }
 
   @override

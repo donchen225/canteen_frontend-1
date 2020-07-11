@@ -7,5 +7,6 @@
         "ai",
         "artificial intelligence"
     ],
-    "type": "private"
+    "type": "private",
+    "password": "tensor"
 }

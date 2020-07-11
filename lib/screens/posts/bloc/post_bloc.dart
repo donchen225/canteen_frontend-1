@@ -5,6 +5,7 @@ import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -19,20 +20,23 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final UserRepository _userRepository;
   GroupBloc _groupBloc;
   GroupHomeBloc _groupHomeBloc;
+  CommentBloc _commentBloc;
   StreamSubscription _groupSubscription;
   StreamSubscription _groupHomeSubscription;
-  Map<String, List<Post>> _postList = {};
+  Map<String, List<Post>> postList = {};
 
   PostBloc({
     @required PostRepository postRepository,
     @required UserRepository userRepository,
     GroupBloc groupBloc,
+    CommentBloc commentBloc,
     GroupHomeBloc groupHomeBloc,
   })  : assert(postRepository != null),
         assert(userRepository != null),
         _postRepository = postRepository,
         _userRepository = userRepository,
         _groupBloc = groupBloc,
+        _commentBloc = commentBloc,
         _groupHomeBloc = groupHomeBloc {
     if (_groupBloc != null) {
       _groupSubscription = _groupBloc.listen((state) {
@@ -64,6 +68,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       yield* _mapAddPostToState(event);
     } else if (event is AddLike) {
       yield* _mapAddLikeToState(event);
+    } else if (event is AddComment) {
+      yield* _mapAddCommentToState(event);
     } else if (event is DeleteLike) {
       yield* _mapDeleteLikeToState(event);
     } else if (event is ClearPosts) {
@@ -72,19 +78,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
+    yield PostsLoading();
+
     try {
       final posts = await _postRepository.getPosts(event.groupId);
       add(PostsUpdated(groupId: event.groupId, updates: posts));
     } on PlatformException catch (error) {
       if (error.code == 'Error 7') {
         print('INSUFFICIENT PERMISSIONS');
-        yield PostsPrivate();
+        yield PostsPrivate(groupId: event.groupId);
       }
     }
   }
 
   Stream<PostState> _mapPostsUpdateToState(PostsUpdated event) async* {
-    yield PostsLoading();
     final updatedPosts = event.updates.item1;
 
     final userListFuture = Future.wait(updatedPosts.map((update) async {
@@ -107,7 +114,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       posts.add(DetailedPost.fromPost(update, user, liked));
     }
 
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
@@ -118,41 +125,89 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
-    _postRepository.addLike(event.groupId, event.postId, event.like);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
 
-    var posts = _postList[event.groupId]
+    if (isMember) {
+      _postRepository.addLike(event.groupId, event.postId, event.like);
+    }
+
+    var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())
         .toList();
 
     final postIdx = posts.indexWhere((post) => post.id == event.postId);
     posts[postIdx] = posts[postIdx].incrementLikeCount();
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
-  Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
-    _postRepository.deleteLike(event.groupId, event.postId);
+  Stream<PostState> _mapAddCommentToState(AddComment event) async* {
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
 
-    var posts = _postList[event.groupId]
+    if (isMember) {
+      _postRepository.addComment(event.groupId, event.postId, event.comment);
+
+      var posts = postList[event.groupId]
+          .map((post) => (post as DetailedPost).copy())
+          .toList();
+
+      final postIdx = posts.indexWhere((post) => post.id == event.postId);
+      posts[postIdx] = posts[postIdx].incrementCommentCount();
+      postList[event.groupId] = posts;
+
+      yield PostsLoaded(groupId: event.groupId, posts: posts);
+    }
+  }
+
+  Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.deleteLike(event.groupId, event.postId);
+    }
+
+    var posts = postList[event.groupId]
         .map((post) => (post as DetailedPost).copy())
         .toList();
 
     final postIdx = posts.indexWhere((post) => post.id == event.postId);
     posts[postIdx] = posts[postIdx].decrementLikeCount();
-    _postList[event.groupId] = posts;
+    postList[event.groupId] = posts;
 
     yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {
-    _postRepository.clearPosts();
     yield PostsEmpty();
   }
 
   @override
   Future<void> close() {
-    _postRepository.clearPosts();
     return super.close();
   }
+
+  // void saveDetailedPost(DetailedPost post) {
+  //   var idx = 0;
+  //   while (idx < _detailedPosts.length) {
+  //     if (post.lastUpdated.isAfter(_detailedPosts[idx].lastUpdated)) {
+  //       break;
+  //     }
+
+  //     idx++;
+  //   }
+  //   _detailedPosts.insert(idx, post);
+  // }
+
+  // void updateDetailedPost(DocumentChangeType type, Post post) {
+  //   if (type == DocumentChangeType.modified) {
+  //     _detailedPosts.removeWhere((p) => p.id == post.id);
+  //     _detailedPosts.insert(0, post);
+  //   } else if (type == DocumentChangeType.removed) {
+  //     _detailedPosts.removeWhere((p) => p.id == post.id);
+  //   }
+  // }
 }

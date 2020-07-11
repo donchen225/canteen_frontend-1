@@ -6,7 +6,7 @@ import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 MaterialPageRoute buildNotificationScreenRoutes(RouteSettings settings) {
-  return MaterialPageRoute(
+  return MaterialPageRoute<bool>(
       settings: settings,
       builder: (BuildContext context) {
         switch (settings.name) {

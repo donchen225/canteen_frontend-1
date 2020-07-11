@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:canteen_frontend/models/notification/notification_repository.dart';
-import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/notification_list_event.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/notification_list_state.dart';
@@ -30,7 +29,7 @@ class NotificationListBloc
         _notificationRepository = notificationRepository;
 
   @override
-  NotificationListState get initialState => NotificationsUninitialized();
+  NotificationListState get initialState => NotificationsUnauthenticated();
 
   @override
   Stream<NotificationListState> mapEventToState(
@@ -41,11 +40,14 @@ class NotificationListBloc
       yield* _mapNotificationsUpdatedToState(event);
     } else if (event is LoadOldNotifications) {
       yield* _mapLoadOldNotificationsToState(event);
+    } else if (event is ClearNotifications) {
+      yield* _mapClearNotificationsToState();
     }
   }
 
   Stream<NotificationListState> _mapLoadNotificationsToState(
       LoadNotifications event) async* {
+    yield NotificationsLoading();
     try {
       _latestNotificationSubscription?.cancel();
       _latestNotificationSubscription = _notificationRepository
@@ -138,5 +140,19 @@ class NotificationListBloc
 
       yield NotificationsLoaded(notifications: newNotificationList);
     }
+  }
+
+  Stream<NotificationListState> _mapClearNotificationsToState() async* {
+    _latestNotificationSubscription?.cancel();
+    _notifications = [];
+    _currentPage = 0;
+    _lastNotification = null;
+    yield NotificationsUnauthenticated();
+  }
+
+  @override
+  Future<void> close() {
+    _latestNotificationSubscription?.cancel();
+    return super.close();
   }
 }

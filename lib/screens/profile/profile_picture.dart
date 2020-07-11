@@ -27,7 +27,7 @@ class ProfilePicture extends StatelessWidget {
           // TODO: fix profile picture is updated locally first
           image: (photoUrl != null && photoUrl.isNotEmpty)
               ? CachedNetworkImageProvider(photoUrl)
-              : AssetImage('assets/blank-profile-picture.jpeg'),
+              : AssetImage('assets/blank-profile-picture.png'),
           fit: BoxFit.cover,
         ),
         shape: shape,

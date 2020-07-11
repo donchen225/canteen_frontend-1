@@ -31,7 +31,9 @@ class MatchList extends StatelessWidget {
         return MatchItem(
             displayName: partner.displayName,
             photoUrl: partner.photoUrl,
-            message: match.lastMessage != null
+            message: match.lastMessage != null &&
+                    match.lastMessage is TextMessage &&
+                    (match.lastMessage as TextMessage).text != null
                 ? (match.lastMessage as TextMessage).text
                 : '',
             time: match.lastUpdated,

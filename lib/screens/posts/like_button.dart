@@ -1,36 +1,27 @@
-import 'package:canteen_frontend/models/post/post.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LikeButton extends StatefulWidget {
-  final DetailedPost post;
+class LikeButton extends StatelessWidget {
+  final bool liked;
+  final int likeCount;
   final Color color;
   final Function onTap;
+  final double size;
 
   const LikeButton({
     Key key,
-    @required this.post,
+    @required this.liked,
+    @required this.likeCount,
     @required this.color,
     @required this.onTap,
+    this.size = 26,
   }) : super(key: key);
-
-  @override
-  _LikeButtonState createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  bool _tapped;
-  int _likeCount;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _tapped = widget.post.liked;
-    _likeCount = widget.post.likeCount;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,39 +29,45 @@ class _LikeButtonState extends State<LikeButton> {
 
     return GestureDetector(
       onTap: () {
-        if (widget.onTap != null) {
-          widget.onTap();
-          setState(() {
-            _tapped = !_tapped;
+        if (onTap != null) {
+          final authenticated = BlocProvider.of<AuthenticationBloc>(context)
+              .state is Authenticated;
 
-            _likeCount = _tapped ? _likeCount + 1 : _likeCount - 1;
-          });
+          if (authenticated) {
+            onTap();
+          }
         }
       },
       child: Container(
+          height: size,
           padding: EdgeInsets.only(
             left: SizeConfig.instance.blockSizeHorizontal * 3,
             right: SizeConfig.instance.blockSizeHorizontal * 3,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: kButtonTextSpacing),
-                child: Container(
-                  child: Image.asset(
-                    'assets/up-arrow.png',
-                    color: _tapped ? Palette.primaryColor : widget.color,
-                    height: buttonTextStyle.fontSize,
-                    width: buttonTextStyle.fontSize,
-                    fit: BoxFit.cover,
-                  ),
+              Container(
+                padding: EdgeInsets.only(
+                    right: size > 26
+                        ? kButtonTextSpacing * 1.5
+                        : kButtonTextSpacing),
+                alignment: Alignment.center,
+                child: FaIcon(
+                  liked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                  color: liked ? Palette.primaryColor : color,
+                  size: size * 0.65,
                 ),
               ),
-              Text(
-                _likeCount.toString(),
-                style: buttonTextStyle.apply(
-                    color: _tapped ? Palette.primaryColor : widget.color,
-                    fontWeightDelta: 1),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  likeCount.toString(),
+                  style: buttonTextStyle.apply(
+                      color: liked ? Palette.primaryColor : color,
+                      fontSizeFactor: size > 26 ? 1.1 : 0.92,
+                      fontWeightDelta: 1),
+                ),
               ),
             ],
           )),

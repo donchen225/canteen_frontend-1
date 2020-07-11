@@ -9,6 +9,7 @@ const utils = require('./utils');
 const REQUEST_COLLECTION = 'requests';
 const GROUPS_COLLECTION = 'groups';
 const MATCH_COLLECTION = 'matches';
+const DISCOVER_COLLECTION = 'discover';
 const RECOMMENDATION_COLLECTION = 'recommendations';
 const NOTIFICATION_COLLECTION = 'notifications';
 const USER_COLLECTION = 'users';
@@ -34,7 +35,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     const comment = data.comment;
     const skillType = data.type;
     const skillIndex = data.index;
-    const requestTime = new Date(data.time);
+    const requestTime = data.time ? new Date(data.time) : data.time;
 
     var output = {};
     var terminate = false;
@@ -82,7 +83,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 0).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+            output = { 'status': 'failure', 'message': 'Request has already been sent.' };
         }
         return;
     }).catch((error) => {
@@ -96,7 +97,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 0).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Request already exists.' };
+            output = { 'status': 'failure', 'message': 'Request has already been received. Check your requests.' };
         }
         return;
     }).catch((error) => {
@@ -112,7 +113,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     await firestore.collection(MATCH_COLLECTION).doc(matchId).get().then((doc) => {
         if (doc.exists) {
             terminate = true;
-            output = { 'status': 'SKIPPED', 'message': 'Match already exists.' };
+            output = { 'status': 'failure', 'message': 'You are already connected!' };
             return;
         }
         return;
@@ -124,32 +125,76 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         return output;
     }
 
-    try {
-        const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
-        const payer = skillType === "offer" ? uid : receiverId;
 
-        // Create document
-        const doc = {
-            "sender_id": uid,
-            "receiver_id": receiverId,
-            "payer": payer,
-            "skill": skill["name"],
-            "price": skill["price"],
-            "duration": skill["duration"],
-            "status": 0,
-            "type": skillType,
-            "comment": comment,
-            "time": requestTime,
-            "created_on": admin.firestore.Timestamp.now(),
-        };
+    const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
+    const payer = skillType === "offer" ? uid : receiverId;
 
-        return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
-            return doc;
-        })
-    }
-    catch (error) {
+    // Create document
+    const doc = {
+        "sender_id": uid,
+        "receiver_id": receiverId,
+        "payer": payer,
+        "skill": skill["name"],
+        "price": skill["price"],
+        "duration": skill["duration"],
+        "status": 0,
+        "type": skillType,
+        "comment": comment,
+        "time": requestTime,
+        "created_on": admin.firestore.Timestamp.now(),
+    };
+
+    return firestore.collection(REQUEST_COLLECTION).add(doc).then(() => {
+        return { "status": "success", "data": doc, "message": "Successfully sent request." };
+    }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+});
+
+exports.onRequestReceived = functions.firestore.document('requests/{requestId}').onCreate(async (snap, context) => {
+
+    const data = snap.data();
+
+    const senderId = data.sender_id;
+    const receiverId = data.receiver_id;
+    const requestId = context.params.requestId;
+
+    const querySnapshot = await firestore
+        .collection(USER_COLLECTION)
+        .doc(receiverId)
+        .collection('tokens')
+        .where('active', '==', true)
+        .get();
+
+    const tokens = querySnapshot.docs.map(snap => snap.data().token);
+
+    if (!Array.isArray(tokens) || !tokens.length) {
+        console.log("Token doesn't exist")
+        return;
     }
+
+    const sender = await firestore
+        .collection(USER_COLLECTION)
+        .doc(senderId).get().then((docSnapshot) => {
+            return docSnapshot.data();
+        }).catch((error) => {
+            console.log(error);
+        });
+
+    const payload = {
+        notification: {
+            title: `${sender.display_name} sent you a request!`,
+            body: "Accept to continue the conversation.",
+            click_action: 'FLUTTER_NOTIFICATION_CLICK'
+        },
+        data: {
+            screen: "request",
+            request_id: requestId
+        }
+    };
+
+    return fcm.sendToDevice(tokens, payload);
 });
 
 // Create match in Firestore
@@ -164,41 +209,91 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
         return { 'status': 'SKIPPED', 'message': 'Status condition not met.' };
     }
 
-    const time = admin.firestore.Timestamp.now();
+    const receiverId = newValue.receiver_id;
+    const senderId = newValue.sender_id;
 
-    const matchId = (utils.hashCode(previousValue.sender_id) < utils.hashCode(previousValue.receiver_id)) ? previousValue.sender_id + previousValue.receiver_id : previousValue.receiver_id + previousValue.sender_id;
+    const time = admin.firestore.Timestamp.now();
+    var firstMessageTime = time.toDate();
+    firstMessageTime.setSeconds(firstMessageTime.getSeconds() + 1);
+
+    const matchId = (utils.hashCode(senderId) < utils.hashCode(receiverId)) ? senderId + receiverId : receiverId + senderId;
 
     const match = {
-        "user_id": [previousValue.sender_id, previousValue.receiver_id],
-        "sender_id": previousValue.sender_id,
-        "payer": previousValue.payer,
+        "user_id": [senderId, receiverId],
+        "sender_id": senderId,
+        "payer": newValue.payer,
         "status": 0,
-        "time": previousValue.time,
+        "time": newValue.time,
         "created_on": time,
         "last_updated": time,
     };
 
     const matchRef = firestore.collection(MATCH_COLLECTION).doc(matchId);
 
-    const create = shouldCreate(matchRef);
+    const create = matchRef.get().then(matchDoc => {
+        return !matchDoc.exists;
+    });
 
     if (!create) {
-        return {};
+        return { "status": "failure", "message": "Match already exists." };
     }
 
-    await matchRef.set(match, { merge: true }).then(() => {
-        return match;
+    const sender = await firestore.collection(USER_COLLECTION).doc(senderId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
     }).catch((error) => {
+        console.log(error);
+    });
+
+    if (sender === null) {
+        return { "status": "failure" }
+    }
+
+    const receiver = await firestore.collection(USER_COLLECTION).doc(receiverId).get().then((documentSnapshot) => {
+        return documentSnapshot.data();
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    if (receiver === null) {
+        return { "status": "failure" }
+    }
+
+    const systemMessage = {
+        "timestamp": time,
+        "data": { "time": newValue.time, "price": newValue.price, "skill": newValue.skill, "title": "Request Details" },
+        "type": 0,
+        "event": "match_start",
+        "source": 1
+    };
+
+    const receiverMessage = `You accepted ${sender.display_name}'s request and invited them to start the chat`;
+    const senderMessage = `${receiver.display_name} accepted your request and invited you to start the chat`;
+
+    const firstMessage = {
+        "sender_id": receiverId,
+        "timestamp": firstMessageTime,
+        "data": { receiver: receiverMessage, sender: senderMessage },
+        "type": 0,
+        "source": 0
+    };
+
+    await matchRef.set(match, { merge: true }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
-    return match;
+    await matchRef.collection('messages').doc(`${matchId}-match-start`).set(systemMessage, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
 
-    function shouldCreate(matchRef) {
-        return matchRef.get().then(matchDoc => {
-            return !matchDoc.exists;
-        });
-    }
+    await matchRef.collection('messages').doc(`${matchId}-first-message`).set(firstMessage, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    await matchRef.set({ "last_updated": firstMessageTime }, { merge: true }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    return { "status": "success", "data": match }
 });
 
 // Set up Algolia.
@@ -209,7 +304,7 @@ const collectionIndex = algoliaClient.initIndex('users');
 exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res) => {
 
     const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
-    const numKeys = 10;
+    const numKeys = 20;
 
     const time = admin.firestore.Timestamp.now();
     const duration = 31104000; // in seconds (1 year)
@@ -218,7 +313,7 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
 
     var i;
     for (i = 0; i < numKeys; i++) {
-        const validUntil = time.seconds + duration + i;
+        const validUntil = time.seconds + duration + (i * 600);
         const validUntilDate = new Date(validUntil * 1000);
 
         const key = algoliaClient.generateSecuredApiKey(searchOnlyApiKey, {
@@ -228,7 +323,8 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
         const document = {
             "key": key,
             "valid_until": validUntilDate,
-            "created_on": time
+            "created_on": time,
+            "public": i < 10
         };
 
         batch.set(firestore.collection(ALGOLIA_API_KEY_COLLECTION).doc(), document);
@@ -246,20 +342,23 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
 
 exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
 
-    // Checking that the user is authenticated.
+    const timestamp = admin.firestore.Timestamp.now();
+    const time = timestamp.toDate();
+
+    // Return public API key if not authenticated
     if (!context.auth) {
-        // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-            'while authenticated.');
+        return firestore.collection(ALGOLIA_API_KEY_COLLECTION).where('public', '==', true).where('valid_until', '>=', time).get().then((querySnapshot) => {
+            return {
+                "application_id": functions.config().algolia.appid,
+                "api_key": querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key
+            };
+        });
     }
 
     const uid = context.auth.uid;
 
     const queryDoc = firestore.collection(QUERY_COLLECTION).doc(uid);
     const docSnapshot = await queryDoc.get();
-
-    const timestamp = admin.firestore.Timestamp.now();
-    const time = timestamp.toDate();
 
     if (docSnapshot.exists) {
         const apiKey = docSnapshot.data().key;
@@ -284,7 +383,7 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
         }
     }
 
-    const apiKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where('valid_until', '>=', time).get().then((querySnapshot) => {
+    const apiKey = await firestore.collection(ALGOLIA_API_KEY_COLLECTION).where('public', '==', false).where('valid_until', '>=', time).get().then((querySnapshot) => {
         if (querySnapshot.empty) {
             const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
             const duration = 31104000; // in seconds (1 year)
@@ -307,16 +406,11 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
                 return;
             });
 
-            return {
-                "application_id": functions.config().algolia.appid,
-                "api_key": key
-            };
+            return key;
         }
 
-        return {
-            "application_id": functions.config().algolia.appid,
-            "api_key": querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key
-        };
+        return querySnapshot.docs[Math.floor(Math.random() * querySnapshot.docs.length)].data().key;
+
     }).catch((error) => {
         console.log(error);
         throw new functions.https.HttpsError('unknown', error.message, error);
@@ -401,6 +495,7 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
 exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) => {
 
     return collectionIndex.setSettings({
+        typoTolerance: false,
         searchableAttributes: [
             'teach_skill.name',
             'learn_skill.name',
@@ -474,10 +569,15 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
 exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages/{messageId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
-    const matchId = context.params.matchId;
 
+    const event = data.event;
+
+    if (event !== null && event === "match_start") {
+        return { "status": "skipped", "message": "Match start message skipped." };
+    }
+
+    const matchId = context.params.matchId;
     const senderId = data.sender_id;
-    const message = data.text;
 
     const receiverId = matchId.replace(senderId, '');
 
@@ -500,12 +600,24 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
         .doc(senderId).get();
     const senderData = sender.data();
 
+    var message = "";
+    if (data.text !== undefined) {
+        message = data.text;
+    } else if (data.text === undefined && data.data !== undefined) {
+        const messageData = data.data;
+        const senderMessage = messageData["sender"];
+        const receiverMessage = messageData["receiver"];
+
+        if (senderMessage !== null && receiverMessage !== null) {
+            message = senderMessage;
+        }
+    }
+
     const payload = {
         notification: {
             title: senderData.display_name,
             body: message,
-            // icon: 'your-icon-url',
-            click_action: 'FLUTTER_NOTIFICATION_CLICK' // required only for onResume or onLaunch callbacks
+            click_action: 'FLUTTER_NOTIFICATION_CLICK'
         },
         data: {
             screen: "message",
@@ -522,6 +634,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     const docAfterChange = change.after.data();
 
     if (!docAfterChange) {
+        console.log("Notification document does not exist.");
         return;
     }
 
@@ -531,6 +644,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
         const oldCount = docBeforeChange.count;
 
         if (count <= oldCount) {
+            console.log(`New notification count (${count}) less than or equal to old notification count (${oldCount})`);
             return;
         }
     }
@@ -549,7 +663,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     const tokens = querySnapshot.docs.map(snap => snap.data().token);
 
     if (!Array.isArray(tokens) || !tokens.length) {
-        console.log("Token doesn't exist")
+        console.log("FCM token doesn't exist")
         return;
     }
 
@@ -601,7 +715,7 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
             object_id: docAfterChange.object_id
         }
     };
-
+    console.log(payload);
     return fcm.sendToDevice(tokens, payload);
 });
 
@@ -813,20 +927,44 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
             updated = true;
         }
 
-        if (learnSkillBefore.length === learnSkillAfter.length && teachSkillBefore.length === teachSkillAfter.length) {
+        if (learnSkillBefore.length === learnSkillAfter.length) {
             learnSkillBefore.forEach((item, idx) => {
                 var newLearnSkill = learnSkillAfter[idx];
                 if (item.name !== newLearnSkill.name || item.description !== newLearnSkill.description || item.price !== newLearnSkill.price || item.duration !== newLearnSkill.duration) {
                     updated = true;
                 }
             });
+        } else {
+            updated = true;
 
+            if (learnSkillBefore.length > learnSkillAfter.length) {
+                var learnSkillReordered = {}
+                learnSkillAfter.forEach((skill, index) => learnSkillReordered[index.toString()] = skill);
+
+                firestore.collection(USER_COLLECTION).doc(userId).update({ "learn_skill": learnSkillReordered }).catch((error) => {
+                    console.log(`Error reordering skills: ${error}`);
+                });
+            }
+        }
+
+        if (teachSkillBefore.length === teachSkillAfter.length) {
             teachSkillBefore.forEach((item, idx) => {
                 var newTeachSkill = teachSkillAfter[idx];
                 if (item.name !== newTeachSkill.name || item.description !== newTeachSkill.description || item.price !== newTeachSkill.price || item.duration !== newTeachSkill.duration) {
                     updated = true;
                 }
             });
+        } else {
+            updated = true;
+
+            if (teachSkillBefore.length > teachSkillAfter.length) {
+                var teachSkillReordered = {}
+                teachSkillAfter.forEach((skill, index) => teachSkillReordered[index.toString()] = skill);
+
+                firestore.collection(USER_COLLECTION).doc(userId).update({ "teach_skill": teachSkillReordered }).catch((error) => {
+                    console.log(`Error reordering skills: ${error}`);
+                });
+            }
         }
 
         if (updated) {
@@ -1130,8 +1268,9 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     const name = data.name;
     const id = data.id;
     const description = data.description;
-    const tags = (data.tags !== undefined) ? data.tags : [];
+    const tags = data.tags ? data.tags : [];
     const type = data.type;
+    const password = data.password;
 
     // Checking attribute.
     if (name && !(typeof name === 'string')) {
@@ -1172,11 +1311,19 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
         return { "message": "Group already exists." };
     }
 
-    return firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).then(() => {
-        return doc;
-    }).catch((error) => {
-        throw new functions.https.HttpsError('unknown', error.message, error);
+    await firestore.collection(GROUPS_COLLECTION).doc(id).set(doc).catch((error) => {
+        throw new functions.https.HttpsError('internal', error.message, error);
     });
+
+    if (type === "private") {
+        await firestore.collection(GROUPS_COLLECTION).doc(id).collection('security').doc(id).set({
+            "password": password,
+        }).catch((error) => {
+            throw new functions.https.HttpsError('internal', error.message, error);
+        });
+    }
+
+    return doc;
 });
 
 exports.joinGroup = functions.https.onCall(async (data, context) => {
@@ -1199,44 +1346,57 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     }
 
     const group = await firestore.collection(GROUPS_COLLECTION).doc(groupId).get().then((docSnapshot) => {
-        if (!(docSnapshot.exists)) {
-            throw new Error("The group does not exist.");
+        if (!docSnapshot.exists) {
+            return null;
         }
         return docSnapshot.data();
     }, (error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    if (group === null) {
+        return { "status": "failure", "message": "The group does not exist." };
+    }
+
     var validated = true;
+    var error;
+    var temp = {};
 
     // Check if group is private and verify access code
     if (group.type === 'private') {
-        validated = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('access_code').limit(1).get().then((querySnapshot) => {
-            if (querySnapshot.empty) {
+        validated = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('security').doc(groupId).get().then((documentSnapshot) => {
+            if (documentSnapshot.empty) {
                 throw new Error("Access code not available.");
             }
 
-            const codeDoc = querySnapshot.docs[0].data();
-            return codeDoc.code === accessCode;
-        }, (error) => {
+            const data = documentSnapshot.data();
+            return data.password === accessCode;
+        }).catch((e) => {
             validated = false;
-            throw new functions.https.HttpsError('unknown', error.message, error);
+            error = e;
+            throw new functions.https.HttpsError('internal', e.message, e);
         });
     }
 
-    if (!(validated)) {
-        throw new functions.https.HttpsError('unknown', 'Access code is incorrect.');
+    if (!validated) {
+        var response = { "status": "failure", "message": "Access code is incorrect." };
+        if (error) {
+            response['data'] = error;
+        }
+
+        return response;
     }
 
     // Check if user is in group members
-    await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).get().then((docSnapshot) => {
-        if (docSnapshot.exists) {
-            throw new Error("You are already a member in this group.");
-        }
-        return;
+    const isMember = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('members').doc(userId).get().then((docSnapshot) => {
+        return docSnapshot.exists;
     }, (error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
+
+    if (isMember) {
+        return { "status": "failure", "message": "You are already a member." };
+    }
 
     // Get user
     const user = await firestore.collection(USER_COLLECTION).doc(userId).get().then((docSnapshot) => {
@@ -1273,9 +1433,94 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     };
 
     // Add group to user groups
-    firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
+    await firestore.collection(USER_COLLECTION).doc(userId).collection('groups').doc(groupId).set(userGroupDoc).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
-    return groupMemberDoc;
+    return { "status": "success", "data": groupMemberDoc };
+});
+
+// Generate Most popular users. Start and end date on not used in the application,
+// they are only used for record keeping. The "active" field determines which
+// document will be accessed. TODO: change other documents to inactive.
+exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) => {
+
+    const startDate = admin.firestore.Timestamp.now();
+    var endDate = startDate.toDate();
+    endDate.setTime(endDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+    const doc = {
+        "start_date": startDate,
+        "end_date": endDate,
+        "active": true
+    };
+
+    const id = utils.generateUniqueFirestoreId();
+    const docRef = firestore.collection(DISCOVER_COLLECTION).doc(id);
+
+    await docRef.set(doc).catch((error) => {
+        console.log(error);
+    });
+
+    var requestCount = {};
+    await firestore.collection(REQUEST_COLLECTION).get().then((querySnapshot) => {
+
+        querySnapshot.forEach((docSnapshot) => {
+            const data = docSnapshot.data();
+
+            const userId = data.receiver_id;
+            const skill = data.skill;
+            const price = data.price;
+            const duration = data.duration;
+
+            if (userId !== undefined && skill !== undefined && skill !== "" && price !== undefined && duration !== undefined) {
+                const key = `${userId}-${skill}`;
+                if (key in requestCount) {
+                    const count = requestCount[key]["count"];
+                    requestCount[key]["count"] = count + 1;
+                } else {
+                    requestCount[key] = {
+                        "user_id": userId,
+                        "skill": skill,
+                        "price": price,
+                        "duration": duration,
+                        "count": 1
+                    };
+                }
+            }
+        });
+        return;
+    });
+
+    var requestCountList = Object.values(requestCount);
+    requestCountList.sort((a, b) => b["count"] - a["count"]);
+
+    if (requestCountList.length > 5) {
+        requestCountList = requestCountList.slice(0, 5);
+    }
+
+    const userCollection = docRef.collection('users');
+
+    var batch = firestore.batch();
+
+    for (let [index, val] of requestCountList.entries()) {
+        const userDoc = {
+            "user_id": val["user_id"],
+            "rank": index + 1,
+            "name": val["skill"],
+            "price": val["price"],
+            "duration": val["duration"]
+        };
+
+        batch.set(userCollection.doc(), userDoc);
+    }
+
+    return batch.commit().then(() => {
+        res.status(200).send("Successfully generated most popular users.");
+        return;
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+        return;
+    });
 });

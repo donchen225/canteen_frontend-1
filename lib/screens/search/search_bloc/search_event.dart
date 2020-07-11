@@ -7,8 +7,6 @@ abstract class SearchEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchHome extends SearchEvent {}
-
 class SearchStarted extends SearchEvent {
   final String query;
 
@@ -22,3 +20,5 @@ class SearchStarted extends SearchEvent {
     return 'SearchStarted { query: $query }';
   }
 }
+
+class ClearSearch extends SearchEvent {}

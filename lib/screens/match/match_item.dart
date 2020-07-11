@@ -85,8 +85,10 @@ class MatchItem extends StatelessWidget {
                                           Theme.of(context).textTheme.headline6,
                                     ),
                                     Text(
-                                      formatTime(time),
-                                    )
+                                      formatTime(
+                                        time,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

@@ -4,22 +4,27 @@ import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/landing/routes.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/message/bloc/message_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/profile_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -43,6 +48,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await initializeDateFormatting();
+  AppConfig.getInstance();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
   final SettingsRepository settingsRepository = SettingsRepository();
@@ -53,8 +59,8 @@ void main() async {
   final NotificationRepository notificationRepository =
       NotificationRepository();
   setupServiceLocator();
-  await CachedSharedPreferences.getInstance();
   AlgoliaSearch.getInstance();
+  await CachedSharedPreferences.getInstance();
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
@@ -126,6 +132,25 @@ void main() async {
           create: (BuildContext context) => MatchDetailBloc(
               matchRepository: matchRepository, userRepository: userRepository),
         ),
+        BlocProvider<GroupHomeBloc>(
+          create: (context) => GroupHomeBloc(
+            userRepository: userRepository,
+            groupRepository: groupRepository,
+          ),
+        ),
+        BlocProvider<NotificationListBloc>(
+          create: (context) => NotificationListBloc(
+            userRepository: userRepository,
+            notificationRepository: notificationRepository,
+          ),
+        ),
+        BlocProvider<UserProfileBloc>(
+          create: (context) => UserProfileBloc(
+            userRepository: userRepository,
+            settingsRepository: settingsRepository,
+            userBloc: BlocProvider.of<UserBloc>(context),
+          ),
+        ),
       ],
       child: App(
         userRepository: userRepository,
@@ -189,7 +214,7 @@ class App extends StatelessWidget {
           bodyText1: TextStyle(
               fontSize: 16, fontWeight: FontWeight.normal, letterSpacing: -0.1),
           bodyText2: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.normal, letterSpacing: -0.1),
+              fontSize: 15, fontWeight: FontWeight.normal, letterSpacing: -0.1),
           button: TextStyle(
               fontSize: 16, fontWeight: FontWeight.normal, letterSpacing: -0.1),
         ),
@@ -209,6 +234,15 @@ class App extends StatelessWidget {
               if (state is Authenticated) {
                 BlocProvider.of<UserBloc>(context)
                     .add(InitializeUser(state.user));
+
+                AlgoliaSearch.getInstance(reset: true);
+
+                print('AUTHENTICATION BLOC LISTENER');
+                BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
+              }
+
+              if (state is Unauthenticated) {
+                BlocProvider.of<GroupHomeBloc>(context).add(LoadDefaultGroup());
               }
             },
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -216,52 +250,62 @@ class App extends StatelessWidget {
                 if (state is Uninitialized) {
                   return SplashScreen();
                 }
-                if (state is Unauthenticated) {
-                  return Navigator(
-                    onGenerateRoute: (RouteSettings settings) {
-                      return buildLandingScreenRoutes(settings);
-                    },
-                  );
-                }
-                if (state is Authenticated) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<GroupHomeBloc>(
-                        create: (context) => GroupHomeBloc(
-                          userRepository: _userRepository,
-                          groupRepository: _groupRepository,
-                        ),
+
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<ProfileBloc>(
+                      create: (context) => ProfileBloc(
+                        userRepository: _userRepository,
                       ),
-                      BlocProvider<ProfileBloc>(
-                        create: (context) => ProfileBloc(
-                          userRepository: _userRepository,
-                        ),
-                      ),
-                      BlocProvider<NotificationListBloc>(
-                        create: (context) => NotificationListBloc(
-                          userRepository: _userRepository,
-                          notificationRepository: _notificationRepository,
-                        )..add(LoadNotifications()),
-                      ),
-                      BlocProvider<HomeNavigationBarBadgeBloc>(
-                        create: (BuildContext context) =>
-                            HomeNavigationBarBadgeBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          notificationListBloc:
-                              BlocProvider.of<NotificationListBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: HomeScreen(
-                      userRepository: _userRepository,
-                      requestRepository: _requestRepository,
-                      settingsRepository: _settingsRepository,
-                      postRepository: _postRepository,
-                      notificationRepository: _notificationRepository,
                     ),
-                  );
-                }
-                return Container();
+                    BlocProvider<GroupBloc>(
+                      create: (context) => GroupBloc(
+                        userRepository: _userRepository,
+                        groupRepository: _groupRepository,
+                        groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<PostBloc>(
+                      create: (context) => PostBloc(
+                        userRepository: _userRepository,
+                        postRepository: _postRepository,
+                        groupHomeBloc: BlocProvider.of<GroupHomeBloc>(context),
+                        groupBloc: BlocProvider.of<GroupBloc>(context),
+                        commentBloc: BlocProvider.of<CommentBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<MatchListBloc>(
+                      create: (context) => MatchListBloc(
+                        matchBloc: BlocProvider.of<MatchBloc>(context),
+                      ),
+                    ),
+                    BlocProvider<RequestListBloc>(
+                      create: (context) => RequestListBloc(
+                        requestBloc: BlocProvider.of<RequestBloc>(context),
+                        userRepository: _userRepository,
+                        requestRepository: _requestRepository,
+                      ),
+                    ),
+                    BlocProvider<SearchBloc>(
+                      create: (context) => SearchBloc(),
+                    ),
+                    BlocProvider<HomeNavigationBarBadgeBloc>(
+                      create: (BuildContext context) =>
+                          HomeNavigationBarBadgeBloc(
+                        requestBloc: BlocProvider.of<RequestBloc>(context),
+                        notificationListBloc:
+                            BlocProvider.of<NotificationListBloc>(context),
+                      ),
+                    ),
+                  ],
+                  child: HomeScreen(
+                    userRepository: _userRepository,
+                    requestRepository: _requestRepository,
+                    settingsRepository: _settingsRepository,
+                    postRepository: _postRepository,
+                    notificationRepository: _notificationRepository,
+                  ),
+                );
               },
             ),
           );

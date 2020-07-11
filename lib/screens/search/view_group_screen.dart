@@ -1,9 +1,14 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
+import 'package:canteen_frontend/screens/private_group_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_member_list_screen.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
@@ -73,43 +78,34 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(_joined);
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            BackButton(
-              color: Palette.primaryColor,
-            ),
-            SearchBar(
-              height: kToolbarHeight * 0.7,
-              width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 2 -
-                  NavigationToolbar.kMiddleSpacing * 4,
-              color: Colors.grey[200],
-              child: Text(
-                "Search Group",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .apply(color: Palette.textSecondaryBaseColor),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              BackButton(
+                color: Palette.primaryColor,
               ),
-            ),
-            Container(
-              width: kProfileIconSize,
-            )
-          ],
+              Container(
+                width: kProfileIconSize * 0.5,
+              )
+            ],
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 0,
         ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 0,
       ),
       floatingActionButton: Visibility(
         visible: _showFAB && _joined,
         child: FloatingActionButton(
           child: Icon(Icons.add),
+          backgroundColor: Palette.primaryColor,
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -191,7 +187,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                 widget.group.description ?? '',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1,
+                                                    .bodyText2,
                                               ),
                                             ),
                                             Text(
@@ -206,13 +202,9 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                   ),
                                             ),
                                             FlatButton(
-                                              color:
-                                                  widget.group.type == 'public'
-                                                      ? _joined
-                                                          ? Palette.whiteColor
-                                                          : Palette.primaryColor
-                                                      : Palette.primaryColor
-                                                          .withOpacity(0.3),
+                                              color: _joined
+                                                  ? Palette.whiteColor
+                                                  : Palette.primaryColor,
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(
                                                   color: _joined
@@ -237,15 +229,50 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
                                                         fontWeightDelta: 1),
                                               ),
                                               onPressed: () {
-                                                if (widget.group.type ==
-                                                    'public') {
+                                                if (authenticated) {
                                                   if (!(_joined)) {
-                                                    _groupBloc.add(JoinGroup(
-                                                        widget.group.id));
-                                                    setState(() {
-                                                      _joined = !_joined;
-                                                    });
+                                                    if (widget.group.type ==
+                                                        'public') {
+                                                      _groupBloc.add(
+                                                          JoinPublicGroup(
+                                                              widget.group));
+                                                      setState(() {
+                                                        _joined = !_joined;
+                                                      });
+                                                    } else {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                                dialogContext) =>
+                                                            BlocProvider<
+                                                                PrivateGroupBloc>(
+                                                          create: (dialogContext) =>
+                                                              PrivateGroupBloc(
+                                                                  groupRepository:
+                                                                      GroupRepository()),
+                                                          child:
+                                                              AccessCodeDialog(
+                                                            groupId:
+                                                                widget.group.id,
+                                                            onSuccess: (String
+                                                                groupId) {
+                                                              _groupBloc.add(
+                                                                  JoinedPrivateGroup(
+                                                                      widget
+                                                                          .group));
+                                                              setState(() {
+                                                                _joined =
+                                                                    !_joined;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
                                                   }
+                                                } else {
+                                                  UnauthenticatedFunctions
+                                                      .showSignUp(context);
                                                 }
 
                                                 // TODO: add option to leave group
@@ -304,7 +331,9 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                PostListScreen(),
+                PostListScreen(
+                  isHome: false,
+                ),
                 GroupMemberListScreen(),
               ],
             ),
@@ -321,14 +350,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar _tabBar;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => kTabBarHeight;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => kTabBarHeight;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      height: kTabBarHeight,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(

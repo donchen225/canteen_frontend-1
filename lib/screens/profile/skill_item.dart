@@ -1,7 +1,10 @@
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SkillItem extends StatelessWidget {
   final double verticalPadding;
@@ -22,6 +25,7 @@ class SkillItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline6;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return Container(
       padding: EdgeInsets.only(
@@ -54,8 +58,7 @@ class SkillItem extends StatelessWidget {
                 top: SizeConfig.instance.safeBlockVertical,
                 bottom: SizeConfig.instance.safeBlockVertical,
               ),
-              child: Text(skill.description,
-                  style: Theme.of(context).textTheme.bodyText1),
+              child: Text(skill.description, style: bodyTextStyle),
             ),
           ),
           Visibility(
@@ -70,7 +73,7 @@ class SkillItem extends StatelessWidget {
                         (skill.duration != null
                             ? ' / ${skill.duration} minutes'
                             : ''),
-                    style: titleStyle,
+                    style: bodyTextStyle.apply(fontWeightDelta: 1),
                   ),
                   Visibility(
                     visible: showButton,
@@ -91,7 +94,15 @@ class SkillItem extends StatelessWidget {
                       onPressed: onTap != null
                           ? () {
                               if (tapEnabled) {
-                                onTap();
+                                final authenticated =
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .state is Authenticated;
+
+                                if (authenticated) {
+                                  onTap();
+                                } else {
+                                  UnauthenticatedFunctions.showSignUp(context);
+                                }
                               }
                             }
                           : null,

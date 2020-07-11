@@ -14,10 +14,21 @@ class HomeUninitialized extends HomeState {}
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  HomeLoaded();
+  final bool authenticated;
+  final bool dataLoaded; // only matters if authenticated is true
+  final DateTime lastRequested;
+
+  HomeLoaded(
+      {this.authenticated = false,
+      this.dataLoaded = false,
+      this.lastRequested});
 
   @override
-  String toString() => 'HomeLoaded';
+  List<Object> get props => [authenticated, dataLoaded, lastRequested];
+
+  @override
+  String toString() =>
+      'HomeLoaded { authenticated: $authenticated, dataLoaded: $dataLoaded, lastRequested: $lastRequested }';
 }
 
 class OnboardScreenLoaded extends HomeState {

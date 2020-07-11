@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/chat_input.dart';
 import 'package:canteen_frontend/screens/message/message_list.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,22 +53,12 @@ class _ChatScreenState extends State<ChatScreen>
               child: Stack(
             children: <Widget>[
               Container(
-                color: Colors.white,
+                color: Palette.containerColor,
                 child: MessageList(match),
               ),
             ],
           )),
           ChatInput(),
-          // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
-          //   if (state is UnConfigState)
-          //     configMessagePeek =
-          //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
-          //   if (state is ConfigChangeState) if (state.key ==
-          //       Constants.configMessagePeek) configMessagePeek = state.value;
-          //   return GestureDetector(
-          //     child: ChatInput(),
-          //   );
-          // })
         ],
       ),
     );

@@ -30,7 +30,7 @@ class ConfirmRequestDialog extends StatelessWidget {
         return Container();
     }
 
-    final textStyle = Theme.of(context).textTheme.bodyText1;
+    final textStyle = Theme.of(context).textTheme.bodyText2;
 
     return RichText(
         textAlign: TextAlign.start,
@@ -81,64 +81,77 @@ class ConfirmRequestDialog extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: <Widget>[
-              const Icon(IconData(0xf26e,
-                  fontFamily: CupertinoIcons.iconFont,
-                  fontPackage: CupertinoIcons.iconFontPackage)),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-                ),
-                child: Text(
-                  '${request.duration.toString()} min',
-                  style: bodyTextStyle,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(top: 10, bottom: 10),
+          Padding(
+            padding: EdgeInsets.only(bottom: 5),
             child: Row(
               children: <Widget>[
-                const Icon(IconData(0xf2d1,
+                const Icon(IconData(0xf26e,
                     fontFamily: CupertinoIcons.iconFont,
                     fontPackage: CupertinoIcons.iconFontPackage)),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        DateFormat('yMMMMEEEEd').format(request.time),
-                        style: timeTextStyle,
-                      ),
-                      Text(
-                        '${timeFormat.format(request.time)} - ${timeFormat.format(request.time.add(Duration(minutes: request.duration)))} ${request.time.timeZoneName}',
-                        style: timeTextStyle,
-                      ),
-                    ],
+                  child: Text(
+                    '${request.duration.toString()} min',
+                    style: bodyTextStyle,
                   ),
                 ),
               ],
             ),
           ),
-          Row(
-            children: <Widget>[
-              const Icon(Icons.attach_money),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-                ),
-                child: Text(
-                  '${request.price.toStringAsFixed(2)}',
-                  style: bodyTextStyle,
-                ),
+          Visibility(
+            visible: request.time != null,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(top: 5, bottom: 5),
+              child: Row(
+                children: <Widget>[
+                  const Icon(IconData(0xf2d1,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          request.time != null
+                              ? DateFormat('yMMMMEEEEd').format(request.time)
+                              : '',
+                          style: timeTextStyle,
+                        ),
+                        Text(
+                          request.time != null
+                              ? '${timeFormat.format(request.time)} - ${timeFormat.format(request.time.add(Duration(minutes: request.duration)))} ${request.time.timeZoneName}'
+                              : '',
+                          style: timeTextStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Row(
+              children: <Widget>[
+                const Icon(Icons.attach_money),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                  ),
+                  child: Text(
+                    '${request.price.toStringAsFixed(2)}',
+                    style: bodyTextStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 10),

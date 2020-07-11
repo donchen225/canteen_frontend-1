@@ -13,6 +13,8 @@ const double kDisabledOpacity = 0.5;
 
 // AppBar constants
 const double kProfileIconSize = 35;
+const double kAppBarHeight = 44;
+const double kTabBarHeight = 44;
 
 // Profile constants
 const double kProfileSize = 120;
@@ -35,13 +37,10 @@ const double kSearchBarBorderRadius = 0.25;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;
-const double kButtonTextSpacing = 5;
+const double kButtonTextSpacing = 4;
 
 // Login/Sign-up constants
 const int formRefreshMilliseconds = 300;
-
-// Firebase Storage constants
-const String firebaseStorageUrl = 'gs://get-canteen.appspot.com';
 
 const int firebaseStorageMaxUploadSize = 10000000;
 
@@ -60,3 +59,6 @@ const double offsetdXReverse = -1;
 
 // Notification constants
 const int postsPerPage = 20;
+
+// Dialog constants
+const double dialogIconSize = 80;

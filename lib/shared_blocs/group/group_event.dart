@@ -20,16 +20,28 @@ class LoadGroup extends GroupEvent {
   String toString() => 'LoadGroup { group: $group }';
 }
 
-class JoinGroup extends GroupEvent {
-  final String groupId;
+class JoinPublicGroup extends GroupEvent {
+  final Group group;
 
-  const JoinGroup(this.groupId);
-
-  @override
-  List<Object> get props => [groupId];
+  const JoinPublicGroup(this.group);
 
   @override
-  String toString() => 'LoadGroup { groupId: $groupId }';
+  List<Object> get props => [group];
+
+  @override
+  String toString() => 'JoinPublicGroup { group: $group }';
+}
+
+class JoinedPrivateGroup extends GroupEvent {
+  final Group group;
+
+  const JoinedPrivateGroup(this.group);
+
+  @override
+  List<Object> get props => [group];
+
+  @override
+  String toString() => 'JoinedPrivateGroup { group: $group }';
 }
 
 class LoadGroupMembers extends GroupEvent {

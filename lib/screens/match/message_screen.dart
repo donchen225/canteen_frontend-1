@@ -2,6 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
+import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -68,47 +70,57 @@ class _MessageScreenState extends State<MessageScreen>
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ProfileSideBarButton(
-              userPhotoUrl: userPhotoUrl,
-              onPressed: () => Scaffold.of(context).openDrawer(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight + kTabBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ProfileSideBarButton(
+                userPhotoUrl: userPhotoUrl,
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+              Text(
+                'Messages',
+                style: Theme.of(context).textTheme.headline6.apply(
+                      color: Palette.appBarTextColor,
+                      fontWeightDelta: 2,
+                    ),
+              ),
+              Container(
+                width: kProfileIconSize,
+              )
+            ],
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 1,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(kTabBarHeight),
+            child: Container(
+              height: kTabBarHeight,
+              child: TabBar(
+                key: getIt<NavigationBarService>().messageTabBarKey,
+                indicatorSize: TabBarIndicatorSize.label,
+                controller: _tabController,
+                labelColor: Palette.primaryColor,
+                unselectedLabelColor: Palette.appBarTextColor,
+                labelStyle: Theme.of(context).textTheme.headline6,
+                tabs: tabChoices.map((text) {
+                  return _buildBadge(
+                      0,
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kTabBarTextPadding,
+                        ),
+                        child: Tab(
+                          text: text,
+                        ),
+                      ));
+                }).toList(),
+              ),
             ),
-            Text(
-              'Messages',
-              style: Theme.of(context).textTheme.headline6.apply(
-                    color: Palette.appBarTextColor,
-                    fontWeightDelta: 2,
-                  ),
-            ),
-            Container(
-              width: kProfileIconSize,
-            )
-          ],
-        ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        bottom: TabBar(
-          indicatorSize: TabBarIndicatorSize.label,
-          controller: _tabController,
-          labelColor: Palette.primaryColor,
-          unselectedLabelColor: Palette.appBarTextColor,
-          labelStyle: Theme.of(context).textTheme.headline6,
-          tabs: tabChoices.map((text) {
-            return _buildBadge(
-                0,
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: kTabBarTextPadding,
-                  ),
-                  child: Tab(
-                    text: text,
-                  ),
-                ));
-          }).toList(),
+          ),
         ),
       ),
       body: TabBarView(

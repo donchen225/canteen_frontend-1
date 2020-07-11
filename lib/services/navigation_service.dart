@@ -31,4 +31,12 @@ class NavigationService {
   Future<dynamic> notificationNavigatorTo(String routeName) {
     return notificationNavigatorKey.currentState.pushNamed(routeName);
   }
+
+  void resetAllNavigators() {
+    homeNavigatorKey.currentState.popUntil((route) => route.isFirst);
+    searchNavigatorKey.currentState.popUntil((route) => route.isFirst);
+    messageNavigatorKey.currentState.popUntil((route) => route.isFirst);
+    notificationNavigatorKey.currentState.popUntil((route) => route.isFirst);
+    rootNavigatorKey.currentState.popUntil((route) => route.isFirst);
+  }
 }

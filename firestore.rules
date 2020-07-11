@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow create: if isAuthenticated();
       allow update: if isOwner(userId);
-      allow read: if isAuthenticated();
+      allow read: if true; // TODO: add public parameter
     }
 
     match /users/{userId}/settings/{document=**} {
@@ -19,6 +19,14 @@ service cloud.firestore {
       allow read: if isAuthenticated();
     }
 
+    match /discover/{discoverId} {
+      allow read: if true;
+    }
+
+    match /discover/{discoverId}/users/{document=**} {
+      allow read: if true;
+    }
+
     match /matches/{document=**} {
       allow read, write: if isAuthenticated();
     }
@@ -27,40 +35,29 @@ service cloud.firestore {
       allow read, write: if isOwner(userId);
     }
 
-    match /posts/{postId} {
-      allow read, write: if isAuthenticated();
-    }
-
     match /groups/{groupId} {
-      allow read, write: if isAuthenticated();
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
     match /groups/{groupId}/posts/{postId} {
       allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
-      allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
     match /groups/{groupId}/members/{memberId} {
       allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
-      allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
     match /groups/{groupId}/posts/{postId}/comments/{commentId} {
       allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
-      allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
     match /groups/{groupId}/posts/{postId}/likes/{likeId} {
       allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
-      allow read, write: if isAuthenticated() && get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
-    }
-
-    match /posts/{postId}/comments/{commentId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    match /posts/{postId}/likes/{likeId} {
-      allow read, write: if isAuthenticated();
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
     match /requests/{requestId} {

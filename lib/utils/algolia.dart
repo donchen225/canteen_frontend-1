@@ -9,8 +9,8 @@ class AlgoliaSearch {
 
   AlgoliaSearch._();
 
-  static Future getInstance() async {
-    if (_instance == null) {
+  static Future getInstance({reset: false}) async {
+    if (_instance == null || reset) {
       var algoliaSearch = AlgoliaSearch._();
       algoliaSearch._init();
       _instance = algoliaSearch;

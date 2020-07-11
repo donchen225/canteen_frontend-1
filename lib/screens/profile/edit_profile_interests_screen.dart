@@ -79,6 +79,7 @@ class _EditProfileInterestsScreenState
                 controller: _textController,
                 textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
+                autocorrect: false,
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -97,7 +98,7 @@ class _EditProfileInterestsScreenState
                       child: Text(
                         'Add',
                         style: TextStyle(
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w700,
                           color: _textController.text.length > 1
                               ? Palette.primaryColor
                               : Colors.grey,

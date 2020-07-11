@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
-import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_event.dart';
 import 'package:canteen_frontend/shared_blocs/group/group_state.dart';
@@ -14,7 +13,6 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final GroupRepository _groupRepository;
   final UserRepository _userRepository;
   Group currentGroup;
-  List<UserGroup> currentUserGroups = [];
   List<Group> currentGroups = [];
   GroupHomeBloc _groupHomeBloc;
 
@@ -39,8 +37,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   ) async* {
     if (event is LoadGroup) {
       yield* _mapLoadGroupToState(event);
-    } else if (event is JoinGroup) {
-      yield* _mapJoinGroupToState(event);
+    } else if (event is JoinPublicGroup) {
+      yield* _mapJoinPublicGroupToState(event);
+    } else if (event is JoinedPrivateGroup) {
+      yield* _mapJoinedPrivateGroupToState(event);
     } else if (event is LoadGroupMembers) {
       yield* _mapLoadGroupMembersToState();
     }
@@ -51,9 +51,16 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     yield GroupLoaded(group: event.group);
   }
 
-  Stream<GroupState> _mapJoinGroupToState(JoinGroup event) async* {
-    await _groupRepository.joinGroup(event.groupId);
-    final group = await _groupRepository.getGroup(event.groupId);
+  Stream<GroupState> _mapJoinPublicGroupToState(JoinPublicGroup event) async* {
+    await _groupRepository.joinGroup(event.group.id);
+    final group = await _groupRepository.getGroup(event.group.id);
+    _groupHomeBloc.add(LoadUserGroups());
+    yield GroupLoaded(group: group);
+  }
+
+  Stream<GroupState> _mapJoinedPrivateGroupToState(
+      JoinedPrivateGroup event) async* {
+    final group = await _groupRepository.getGroup(event.group.id);
     _groupHomeBloc.add(LoadUserGroups());
     yield GroupLoaded(group: group);
   }

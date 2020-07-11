@@ -7,7 +7,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -93,9 +93,7 @@ class PushNotificationsManager {
           final notificationNavigatorKey =
               getIt<NavigationService>().notificationNavigatorKey;
           final BottomNavigationBar navigationBar =
-              getIt<HomeNavigationBarService>()
-                  .homeNavigationBarKey
-                  .currentWidget;
+              getIt<NavigationBarService>().homeNavigationBarKey.currentWidget;
 
           final context = notificationNavigatorKey.currentContext;
           BlocProvider.of<NotificationViewBloc>(context).add(
@@ -105,8 +103,8 @@ class PushNotificationsManager {
                   notificationId: notificationId,
                   read: false));
 
-          BlocProvider.of<CommentBloc>(context)
-              .add(LoadComments(groupId: parentId, postId: targetId));
+          BlocProvider.of<CommentListBloc>(context)
+              .add(LoadCommentList(groupId: parentId, postId: targetId));
 
           navigationBar.onTap(3);
 
@@ -117,16 +115,14 @@ class PushNotificationsManager {
             builder: (BuildContext context) => NotificationSinglePostScreen(),
           ));
         }
-      } else if (screen == 'message') {
+      } else if (screen == 'message' || screen == 'match') {
         final matchId = message['match_id'];
 
         if (matchId != null) {
           final messageNavigatorKey =
               getIt<NavigationService>().messageNavigatorKey;
           final BottomNavigationBar navigationBar =
-              getIt<HomeNavigationBarService>()
-                  .homeNavigationBarKey
-                  .currentWidget;
+              getIt<NavigationBarService>().homeNavigationBarKey.currentWidget;
 
           final context = messageNavigatorKey.currentContext;
 
@@ -138,6 +134,23 @@ class PushNotificationsManager {
           messageNavigatorKey.currentState
               .popUntil((Route<dynamic> route) => route is PageRoute);
           messageNavigatorKey.currentState.pushNamed(MatchScreen.routeName);
+        }
+      } else if (screen == 'request') {
+        final requestId = message['request_id'];
+
+        if (requestId != null) {
+          final messageNavigatorKey =
+              getIt<NavigationService>().messageNavigatorKey;
+          final BottomNavigationBar navigationBar =
+              getIt<NavigationBarService>().homeNavigationBarKey.currentWidget;
+          final TabBar tabBar =
+              getIt<NavigationBarService>().messageTabBarKey.currentWidget;
+
+          navigationBar.onTap(2);
+          tabBar.onTap(1);
+
+          messageNavigatorKey.currentState
+              .popUntil((Route<dynamic> route) => route is PageRoute);
         }
       }
     }

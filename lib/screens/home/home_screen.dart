@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
+import 'package:canteen_frontend/models/discover/discover_repository.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/notification/notification_repository.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
@@ -11,35 +12,44 @@ import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_bloc/match_list_bloc.dart';
 import 'package:canteen_frontend/screens/match/routes.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/notification_view_bloc.dart';
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
-import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/comment_list_bloc.dart';
+import 'package:canteen_frontend/screens/posts/post_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/routes.dart';
-import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/posts/single_post_bloc/single_post_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/home_drawer.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
+import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
-import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
-import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -78,13 +88,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final RecommendationRepository _recommendationRepository =
       RecommendationRepository();
   final GroupRepository _groupRepository = GroupRepository();
+  final DiscoverRepository _discoverRepository = DiscoverRepository();
 
   @override
   void initState() {
     super.initState();
 
+    print('HOME INIT STATE');
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(CheckOnboardStatus());
+
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+    if (!authenticated) {
+      _homeBloc.add(CheckOnboardStatus());
+    }
   }
 
   void _onItemTapped(BuildContext context, int index) {
@@ -146,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: 11,
               )
             : TextStyle(
                 color: Colors.white,
@@ -224,18 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
           highlightColor: Colors.transparent,
         ),
         child: BlocListener<HomeBloc, HomeState>(
-          listener: (BuildContext context, HomeState state) {
-            if (state is HomeLoaded) {
-              BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-
-              BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-
-              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
-
-              BlocProvider.of<SettingBloc>(context)
-                  .add(InitializeSettings(hasOnboarded: true));
-            }
-          },
+          listener: (BuildContext context, HomeState state) {},
           child: BlocBuilder<HomeBloc, HomeState>(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
@@ -249,185 +255,194 @@ class _HomeScreenState extends State<HomeScreen> {
                       HomeNavigationBarBadgeState>(
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
-                return BottomNavigationBar(
-                  key: getIt<HomeNavigationBarService>().homeNavigationBarKey,
-                  currentIndex: _currentIndex,
-                  showSelectedLabels: false,
-                  showUnselectedLabels: false,
-                  selectedFontSize: kBottomNavigationBarFontSize,
-                  unselectedFontSize: kBottomNavigationBarFontSize,
-                  selectedItemColor: Palette.primaryColor,
-                  backgroundColor: Palette.appBarBackgroundColor,
-                  type: BottomNavigationBarType.fixed,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf38f,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const Icon(IconData(0xf2f5,
-                          fontFamily: CupertinoIcons.iconFont,
-                          fontPackage: CupertinoIcons.iconFontPackage)),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numRequests,
-                        const Icon(IconData(0xf2eb,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)),
+                return SizedBox(
+                  height: kAppBarHeight + SizeConfig.instance.paddingBottom,
+                  child: BottomNavigationBar(
+                    key: getIt<NavigationBarService>().homeNavigationBarKey,
+                    currentIndex: _currentIndex,
+                    showSelectedLabels: false,
+                    showUnselectedLabels: false,
+                    selectedFontSize: kBottomNavigationBarFontSize,
+                    unselectedFontSize: kBottomNavigationBarFontSize,
+                    backgroundColor: Palette.appBarBackgroundColor,
+                    type: BottomNavigationBarType.fixed,
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: FaIcon(
+                          FontAwesomeIcons.home,
+                          size: 24,
+                        ),
+                        title: Text(''),
                       ),
-                      title: Text(''),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildBadge(
-                        navBarState.numNotifications,
-                        const Icon(IconData(0xf39b,
-                            fontFamily: CupertinoIcons.iconFont,
-                            fontPackage: CupertinoIcons.iconFontPackage)),
+                      BottomNavigationBarItem(
+                        icon: FaIcon(
+                          FontAwesomeIcons.search,
+                          size: 22,
+                        ),
+                        title: Text(''),
                       ),
-                      title: Text(''),
-                    ),
-                  ],
-                  onTap: (int index) => _onItemTapped(context, index),
+                      BottomNavigationBarItem(
+                        icon: _buildBadge(
+                          navBarState.numRequests,
+                          FaIcon(
+                            FontAwesomeIcons.envelope,
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(''),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: _buildBadge(
+                          navBarState.numNotifications,
+                          FaIcon(
+                            FontAwesomeIcons.bell,
+                            size: 24,
+                          ),
+                        ),
+                        title: Text(''),
+                      ),
+                    ],
+                    onTap: (int index) => _onItemTapped(context, index),
+                  ),
                 );
               });
             },
           ),
         ),
       ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        bloc: _homeBloc,
-        builder: (BuildContext context, HomeState state) {
-          if (state is HomeUninitialized) {
-            return Container(
-              color: Palette.containerColor,
-            );
-          }
-
-          if (state is HomeLoading) {
-            return Center(
-              child: Container(
-                height: SizeConfig.instance.blockSizeHorizontal * 30,
-                width: SizeConfig.instance.blockSizeHorizontal * 30,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/loading-icon.png'),
-                  ),
-                ),
-              ),
-            );
-          }
-
-          if (state is OnboardScreenLoaded) {
-            return BlocProvider<OnboardingBloc>(
-              create: (context) => OnboardingBloc(
-                  userRepository: widget._userRepository,
-                  groupRepository: _groupRepository),
-              child: Navigator(
-                onGenerateRoute: (RouteSettings settings) {
-                  return buildOnboardingScreenRoutes(settings);
-                },
-              ),
-            );
-          }
+      body: BlocListener<HomeBloc, HomeState>(
+        listener: (BuildContext context, HomeState state) {
+          print('HOME STATE BLOC LISTENER: $state');
 
           if (state is HomeLoaded) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider<UserProfileBloc>(
-                  create: (context) => UserProfileBloc(
-                    userRepository: widget._userRepository,
-                    settingsRepository: widget._settingsRepository,
-                    userBloc: BlocProvider.of<UserBloc>(context),
+            if (state.authenticated && !state.dataLoaded) {
+              BlocProvider.of<MatchBloc>(context).add(LoadMatches());
+              BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
+
+              BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+              BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
+
+              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
+
+              BlocProvider.of<SettingBloc>(context)
+                  .add(InitializeSettings(hasOnboarded: true));
+
+              BlocProvider.of<NotificationListBloc>(context)
+                  .add(LoadNotifications());
+
+              _homeBloc.add(UserHomeLoaded());
+            }
+          }
+        },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          bloc: _homeBloc,
+          builder: (BuildContext context, HomeState state) {
+            print('HOME STATE BLOC BUILDER: $state');
+
+            if (state is HomeUninitialized || state is HomeLoading) {
+              return SplashScreen();
+            }
+
+            if (state is OnboardScreenLoaded) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<OnboardingBloc>(
+                    create: (context) => OnboardingBloc(
+                        userRepository: widget._userRepository,
+                        groupRepository: _groupRepository),
                   ),
+                ],
+                child: Navigator(
+                  initialRoute: OnboardingGroupScreen.routeName,
+                  onGenerateRoute: (RouteSettings settings) {
+                    return buildOnboardingScreenRoutes(settings);
+                  },
                 ),
-              ],
-              child: IndexedStack(
+              );
+            }
+
+            if (state is HomeLoaded) {
+              if (state.authenticated && !state.dataLoaded) {
+                _homeBloc.add(LoadHome());
+              }
+
+              return IndexedStack(
                 index: _currentIndex,
                 children: [
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<PostBloc>(
-                        create: (context) {
-                          return PostBloc(
-                            userRepository: widget._userRepository,
-                            postRepository: widget._postRepository,
-                            groupHomeBloc:
-                                BlocProvider.of<GroupHomeBloc>(context),
-                          );
-                        },
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          groupHomeBloc:
+                              BlocProvider.of<GroupHomeBloc>(context),
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                        ),
+                      ),
+                      BlocProvider<SinglePostBloc>(
+                        create: (context) => SinglePostBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
                       ),
                     ],
                     child: Navigator(
                       key: getIt<NavigationService>().homeNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
-                        return buildPostScreenRoutes(settings);
+                        return buildHomeScreenRoutes(context, settings);
                       },
                     ),
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<GroupBloc>(
-                        create: (context) => GroupBloc(
-                          userRepository: widget._userRepository,
-                          groupRepository: _groupRepository,
-                          groupHomeBloc:
-                              BlocProvider.of<GroupHomeBloc>(context),
-                        ),
-                      ),
-                      BlocProvider<SearchBloc>(
-                        create: (context) => SearchBloc(
-                          userRepository: widget._userRepository,
-                        )..add(SearchHome()),
-                      ),
                       BlocProvider<DiscoverBloc>(
                         create: (context) => DiscoverBloc(
                             userRepository: widget._userRepository,
+                            discoverRepository: _discoverRepository,
                             recommendationRepository: _recommendationRepository,
                             groupRepository: _groupRepository)
                           ..add(LoadDiscover()),
                       ),
-                      BlocProvider<PostBloc>(
-                        create: (context) {
-                          return PostBloc(
-                            userRepository: widget._userRepository,
-                            postRepository: widget._postRepository,
-                            groupBloc: BlocProvider.of<GroupBloc>(context),
-                          );
-                        },
+                      BlocProvider<PostListBloc>(
+                        create: (context) => PostListBloc(
+                          userRepository: widget._userRepository,
+                          postRepository: widget._postRepository,
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          groupBloc: BlocProvider.of<GroupBloc>(context),
+                        ),
+                      ),
+                      BlocProvider<SinglePostBloc>(
+                        create: (context) => SinglePostBloc(
+                          postBloc: BlocProvider.of<PostBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
+                          postRepository: widget._postRepository,
+                        ),
                       ),
                     ],
                     child: Navigator(
                       key: getIt<NavigationService>().searchNavigatorKey,
                       onGenerateRoute: (RouteSettings settings) {
-                        return buildSearchScreenRoutes(settings);
+                        return buildSearchScreenRoutes(context, settings);
                       },
                     ),
                   ),
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<RequestListBloc>(
-                        create: (context) => RequestListBloc(
-                          requestBloc: BlocProvider.of<RequestBloc>(context),
-                          userRepository: widget._userRepository,
-                          requestRepository: widget._requestRepository,
-                        ),
-                      ),
-                      BlocProvider<MatchListBloc>(
-                        create: (context) => MatchListBloc(
-                          matchBloc: BlocProvider.of<MatchBloc>(context),
-                        ),
-                      ),
-                    ],
-                    child: Navigator(
-                      key: getIt<NavigationService>().messageNavigatorKey,
-                      onGenerateRoute: (RouteSettings settings) {
-                        return buildMessageScreenRoutes(settings);
-                      },
-                    ),
+                  Navigator(
+                    key: getIt<NavigationService>().messageNavigatorKey,
+                    onGenerateRoute: (RouteSettings settings) {
+                      return buildMessageScreenRoutes(settings);
+                    },
                   ),
                   MultiBlocProvider(
                     providers: [
@@ -436,6 +451,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           userRepository: widget._userRepository,
                           notificationRepository:
                               widget._notificationRepository,
+                          postRepository: widget._postRepository,
+                        ),
+                      ),
+                      BlocProvider<CommentListBloc>(
+                        create: (context) => CommentListBloc(
+                          commentBloc: BlocProvider.of<CommentBloc>(context),
                           postRepository: widget._postRepository,
                         ),
                       ),
@@ -448,10 +469,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }

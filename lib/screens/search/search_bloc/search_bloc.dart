@@ -1,24 +1,18 @@
 import 'package:canteen_frontend/models/search/search_query.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final UserRepository _userRepository;
   List<User> _latestUsers = [];
   List<User> _searchResults = [];
   List<SearchQuery> searchHistory = [];
 
-  SearchBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+  SearchBloc();
 
   @override
-  SearchState get initialState =>
-      SearchLoading(); // TODO: change this to SearchUninitialized?
+  SearchState get initialState => SearchUninitialized();
 
   @override
   Stream<SearchState> mapEventToState(
@@ -26,8 +20,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async* {
     if (event is SearchStarted) {
       yield* _mapSearchStartedToState(event);
-    } else if (event is SearchHome) {
-      yield* _mapSearchHomeToState();
+    } else if (event is ClearSearch) {
+      yield* _mapClearSearchToState();
     }
   }
 
@@ -58,13 +52,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
   }
 
-  // TODO: paginate results
-  Stream<SearchState> _mapSearchHomeToState() async* {
-    if (_latestUsers.length == 0) {
-      final users = await _userRepository.getAllUsers();
-      _latestUsers = users;
-    }
-
-    yield SearchUninitialized(_latestUsers);
+  Stream<SearchState> _mapClearSearchToState() async* {
+    _latestUsers = [];
+    _searchResults = [];
+    searchHistory = [];
+    yield SearchUninitialized();
   }
 }

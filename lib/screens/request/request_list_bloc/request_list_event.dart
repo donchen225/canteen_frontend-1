@@ -3,6 +3,9 @@ import 'package:equatable/equatable.dart';
 
 abstract class RequestListEvent extends Equatable {
   const RequestListEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
 class LoadRequestList extends RequestListEvent {
@@ -23,3 +26,5 @@ class UpdateRequestList extends RequestListEvent {
   @override
   String toString() => 'UpdateRequestList { requestList: $requestList }';
 }
+
+class ClearRequestList extends RequestListEvent {}

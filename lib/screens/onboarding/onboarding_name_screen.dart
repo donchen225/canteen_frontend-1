@@ -1,7 +1,7 @@
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/next_button.dart';
-import 'package:canteen_frontend/screens/onboarding/onboarding_profile_picture_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_website_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -46,26 +46,27 @@ class _OnboardingNameScreenState extends State<OnboardingNameScreen> {
     super.dispose();
   }
 
+  void _nextFunction(BuildContext context) {
+    BlocProvider.of<OnboardingBloc>(context)
+        .add(UpdateName(name: _nameController.text));
+    Navigator.pushNamed(context, OnboardingWebsiteScreen.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline4;
-    final nextFunction = () {
-      BlocProvider.of<OnboardingBloc>(context)
-          .add(UpdateName(name: _nameController.text));
-      Navigator.pushNamed(context, OnboardingProfilePictureScreen.routeName);
-    };
 
     return OnboardingScreen(
       next: NextButton(
           onTap: _nextEnabled
               ? () {
                   if (_nameController.text.length > 1) {
-                    nextFunction();
+                    _nextFunction(context);
                   }
                 }
               : null),
       nodes: [_focusNode],
-      onSkip: nextFunction,
+      onSkip: () => _nextFunction(context),
       child: Container(
         color: Colors.transparent,
         width: double.infinity,

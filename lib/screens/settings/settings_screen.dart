@@ -1,10 +1,21 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/components/custom_tile.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/notifications/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -13,7 +24,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'dart:io';
 import 'dart:convert';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,48 +33,65 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool _authenticated;
   Map<String, dynamic> _settings = {};
 
   @override
   void initState() {
     super.initState();
     print('INIT SETTINGS SCREEN');
-    _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
-        PreferenceConstants.pushNotificationsApp);
 
-    PushNotificationsManager().getSettings();
-    _settings['push_notifications_system'] = jsonDecode(
-        CachedSharedPreferences.getString(
-            PreferenceConstants.pushNotificationsSystem));
+    _authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+    if (_authenticated) {
+      _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
+          PreferenceConstants.pushNotificationsApp);
+      PushNotificationsManager().getSettings();
+      final pushNotificationSystem = CachedSharedPreferences.getString(
+          PreferenceConstants.pushNotificationsSystem,
+          defValue: '');
+      if (pushNotificationSystem.isNotEmpty) {
+        _settings['push_notifications_system'] =
+            jsonDecode(pushNotificationSystem);
+      }
+    } else {
+      _settings['push_notifications_app'] = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return BlocListener<SettingBloc, SettingState>(
       listener: (BuildContext context, SettingState state) {
         if (state is SettingsUninitialized) {
-          Navigator.of(context, rootNavigator: true).maybePop();
           BlocProvider.of<HomeBloc>(context).add(ClearHome());
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+          getIt<NavigationService>().resetAllNavigators();
         }
       },
       child: BlocBuilder<SettingBloc, SettingState>(
         builder: (BuildContext context, SettingState state) {
           return Scaffold(
             backgroundColor: Palette.scaffoldBackgroundLightColor,
-            appBar: AppBar(
-                title: Text(
-                  'Settings',
-                  style: TextStyle(
-                    color: Palette.appBarTextColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(kAppBarHeight),
+              child: AppBar(
+                  title: Text(
+                    'Settings',
+                    style: Theme.of(context).textTheme.headline6.apply(
+                          color: Palette.appBarTextColor,
+                          fontWeightDelta: 2,
+                        ),
                   ),
-                ),
-                backgroundColor: Palette.appBarBackgroundColor,
-                leading: BackButton(
-                  color: Palette.appBarTextColor,
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-                elevation: 1),
+                  backgroundColor: Palette.appBarBackgroundColor,
+                  leading: BackButton(
+                    color: Palette.appBarTextColor,
+                    onPressed: () => Navigator.of(context).maybePop(),
+                  ),
+                  elevation: 1),
+            ),
             body: ListView(
               padding: EdgeInsets.symmetric(
                   vertical: SizeConfig.instance.blockSizeVertical * 3),
@@ -88,9 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text('Push Notifications',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
+                                          style: bodyTextStyle),
                                       CupertinoSwitch(
                                         value:
                                             _settings['push_notifications_app'],
@@ -101,10 +126,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             _settings[
                                                     'push_notifications_app'] =
                                                 value;
-                                            BlocProvider.of<SettingBloc>(
-                                                    context)
-                                                .add(ToggleAppPushNotifications(
-                                                    notifications: value));
+                                            if (_authenticated) {
+                                              BlocProvider.of<SettingBloc>(
+                                                      context)
+                                                  .add(
+                                                      ToggleAppPushNotifications(
+                                                          notifications:
+                                                              value));
+                                            }
                                           });
                                         },
                                       )
@@ -112,7 +141,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: !_settings['push_notifications_app'],
+                                  visible: _authenticated &&
+                                      !_settings['push_notifications_app'],
                                   child: Container(
                                     width: double.infinity,
                                     padding: EdgeInsets.only(
@@ -148,29 +178,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: CustomTile(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Log out',
-                          style: Theme.of(context).textTheme.bodyText1),
+                      child: Text(
+                          _authenticated ? 'Log out' : 'Sign up / Log in',
+                          style: bodyTextStyle),
                     ),
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            backgroundColor: Colors.transparent,
-                            child: Center(
-                              child: CupertinoActivityIndicator(),
-                            ),
-                          );
-                        },
-                      );
-                      BlocProvider.of<SettingBloc>(context)
-                          .add(ClearSettings());
-                      BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
-                          .add(ClearBadgeCounts());
-                      BlocProvider.of<MatchBloc>(context).add(ClearMatches());
-                      BlocProvider.of<RequestBloc>(context)
-                          .add(ClearRequests());
+                      if (_authenticated) {
+                        BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                            .add(ClearBadgeCounts());
+                        BlocProvider.of<MatchBloc>(context).add(ClearMatches());
+                        BlocProvider.of<MatchListBloc>(context)
+                            .add(ClearMatchList());
+                        BlocProvider.of<RequestBloc>(context)
+                            .add(ClearRequests());
+                        BlocProvider.of<RequestListBloc>(context)
+                            .add(ClearRequestList());
+                        BlocProvider.of<SearchBloc>(context).add(ClearSearch());
+                        BlocProvider.of<GroupHomeBloc>(context)
+                            .add(ClearHomeGroup());
+                        BlocProvider.of<NotificationListBloc>(context)
+                            .add(ClearNotifications());
+                        BlocProvider.of<SettingBloc>(context)
+                            .add(ClearSettings());
+
+                        showCupertinoDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return CupertinoAlertDialog();
+                          },
+                        ); // TODO: change this to wait for BLoCs;
+                      } else {
+                        UnauthenticatedFunctions.showSignUp(context);
+                      }
                     },
                   ),
                 )

@@ -4,6 +4,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/request/confirm_request_dialog.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,8 @@ class ViewUserRequestScreen extends StatefulWidget {
 
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget _buildProfileWidget(BuildContext context, User user) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return user != null
         ? UserProfileBody(
             user: user,
@@ -47,9 +50,9 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   children: [
                     Text(
                       "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}",
-                      style: Theme.of(context).textTheme.bodyText1.apply(
-                            fontWeightDelta: 1,
-                          ),
+                      style: bodyTextStyle.apply(
+                        fontWeightDelta: 1,
+                      ),
                     ),
                     Visibility(
                       visible: widget.request.comment != null &&
@@ -58,9 +61,9 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                         padding: EdgeInsets.only(top: 5),
                         child: Text(
                           "\"${widget.request.comment}\"",
-                          style: Theme.of(context).textTheme.bodyText1.apply(
-                                fontStyle: FontStyle.italic,
-                              ),
+                          style: bodyTextStyle.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),
@@ -100,12 +103,15 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
-      appBar: AppBar(
-        backgroundColor: Palette.containerColor,
-        elevation: 0,
-        leading: BackButton(
-          color: Palette.primaryColor,
-          onPressed: () => Navigator.of(context).maybePop(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          backgroundColor: Palette.containerColor,
+          elevation: 0,
+          leading: BackButton(
+            color: Palette.primaryColor,
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

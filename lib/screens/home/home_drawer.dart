@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -37,12 +38,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final userName =
         CachedSharedPreferences.getString(PreferenceConstants.userName);
     final titleStyle = Theme.of(context).textTheme.headline6;
-    final subtitleStyle = Theme.of(context).textTheme.subtitle1.apply(
+    final subtitleStyle = Theme.of(context).textTheme.bodyText2.apply(
           color: Palette.textSecondaryBaseColor,
         );
 
     final currentGroup = _groupHomeBloc.currentGroup;
     final userGroups = _groupHomeBloc.currentGroups;
+
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
 
     return Drawer(
       child: SafeArea(
@@ -50,145 +54,165 @@ class _HomeDrawerState extends State<HomeDrawer> {
           builder: (BuildContext context, BoxConstraints constraints) {
             return Column(
               children: <Widget>[
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    width: constraints.maxWidth,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        SizeConfig.instance.safeBlockVertical *
-                                            2,
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).maybePop();
-                                      if (widget.onUserTap != null) {
-                                        widget.onUserTap();
-                                      }
-                                    },
-                                    child: ProfilePicture(
-                                      photoUrl: userPhotoUrl,
-                                      size: constraints.maxWidth * 0.35,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
+                Container(
+                  width: constraints.maxWidth,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical:
+                                    SizeConfig.instance.safeBlockVertical * 2,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  final authenticated =
+                                      BlocProvider.of<AuthenticationBloc>(
+                                              context)
+                                          .state is Authenticated;
+
+                                  if (authenticated) {
                                     Navigator.of(context).maybePop();
                                     if (widget.onUserTap != null) {
                                       widget.onUserTap();
                                     }
-                                  },
-                                  child: Text(userName,
-                                      style:
-                                          titleStyle.apply(fontWeightDelta: 1)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(
-                              bottom: SizeConfig.instance.safeBlockVertical),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              // Padding(
-                              //   padding: EdgeInsets.only(
-                              //     left: constraints.maxWidth * 0.05,
-                              //     right: constraints.maxWidth * 0.05,
-                              //     top: 10,
-                              //     bottom: 10,
-                              //   ),
-                              //   child: Row(
-                              //     mainAxisAlignment:
-                              //         MainAxisAlignment.spaceBetween,
-                              //     children: <Widget>[
-                              //       Text(
-                              //         '\$ 10.00 in Canteen',
-                              //         style:
-                              //             Theme.of(context).textTheme.bodyText1,
-                              //       ),
-                              //       FlatButton(
-                              //         color: Palette.primaryColor,
-                              //         child: Text(
-                              //           'Transfer',
-                              //           style: Theme.of(context)
-                              //               .textTheme
-                              //               .button
-                              //               .apply(
-                              //                   fontWeightDelta: 1,
-                              //                   color: Palette.whiteColor),
-                              //         ),
-                              //         onPressed: () {},
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: constraints.maxWidth * 0.05,
-                                ),
-                                child: Text(
-                                  'Current Group',
-                                  style: subtitleStyle,
+                                  }
+                                },
+                                child: ProfilePicture(
+                                  photoUrl: userPhotoUrl,
+                                  size: constraints.maxWidth * 0.35,
                                 ),
                               ),
-                              currentGroup != null
-                                  ? DrawerItem(
-                                      leading: GroupPicture(
-                                        photoUrl: currentGroup.photoUrl,
-                                        shape: BoxShape.circle,
-                                        size: 30,
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: constraints.maxWidth * 0.05,
-                                      ),
-                                      height: itemHeight,
-                                      onTap: () {
-                                        Navigator.of(context).maybePop();
-                                      },
-                                      title: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            currentGroup?.name ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle1
-                                                .apply(
-                                                  fontWeightDelta: 2,
-                                                ),
-                                          ),
-                                          Text(
-                                              '${currentGroup?.members?.toString() ?? 0} members'),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                final authenticated =
+                                    BlocProvider.of<AuthenticationBloc>(context)
+                                        .state is Authenticated;
+
+                                if (authenticated) {
+                                  Navigator.of(context).maybePop();
+                                  if (widget.onUserTap != null) {
+                                    widget.onUserTap();
+                                  }
+                                }
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: constraints.maxWidth * 0.05),
+                                child: Text(
+                                    authenticated
+                                        ? userName
+                                        : "Sign up to connect with others, customize your feed, share your interests, and more!",
+                                    textAlign: TextAlign.center,
+                                    style: authenticated
+                                        ? titleStyle.apply(fontWeightDelta: 1)
+                                        : subtitleStyle.apply(
+                                            color: Palette.textColor)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(
+                            top: SizeConfig.instance.safeBlockVertical),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            // Padding(
+                            //   padding: EdgeInsets.only(
+                            //     left: constraints.maxWidth * 0.05,
+                            //     right: constraints.maxWidth * 0.05,
+                            //     top: 10,
+                            //     bottom: 10,
+                            //   ),
+                            //   child: Row(
+                            //     mainAxisAlignment:
+                            //         MainAxisAlignment.spaceBetween,
+                            //     children: <Widget>[
+                            //       Text(
+                            //         '\$ 10.00 in Canteen',
+                            //         style:
+                            //             Theme.of(context).textTheme.bodyText1,
+                            //       ),
+                            //       FlatButton(
+                            //         color: Palette.primaryColor,
+                            //         child: Text(
+                            //           'Transfer',
+                            //           style: Theme.of(context)
+                            //               .textTheme
+                            //               .button
+                            //               .apply(
+                            //                   fontWeightDelta: 1,
+                            //                   color: Palette.whiteColor),
+                            //         ),
+                            //         onPressed: () {},
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: constraints.maxWidth * 0.05,
+                              ),
+                              child: Text(
+                                'Current Group',
+                                style: subtitleStyle,
+                              ),
+                            ),
+                            currentGroup != null
+                                ? DrawerItem(
+                                    leading: GroupPicture(
+                                      photoUrl: currentGroup.photoUrl,
+                                      shape: BoxShape.circle,
+                                      size: 30,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: constraints.maxWidth * 0.05,
+                                    ),
+                                    height: itemHeight,
+                                    onTap: () {
+                                      Navigator.of(context).maybePop();
+                                    },
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          currentGroup?.name ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1
+                                              .apply(
+                                                fontWeightDelta: 2,
+                                              ),
+                                        ),
+                                        Text(
+                                          '${currentGroup?.members?.toString() ?? 0} members',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Expanded(
-                  flex: 6,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

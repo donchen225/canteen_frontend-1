@@ -1,12 +1,16 @@
-import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
-import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/searching_screen.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -73,37 +77,60 @@ class _PostHomeScreenState extends State<PostHomeScreen>
     final userPhotoUrl =
         CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
 
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ProfileSideBarButton(
-              userPhotoUrl: userPhotoUrl,
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-            SearchBar(
-              height: kToolbarHeight * 0.7,
-              width: SizeConfig.instance.safeBlockHorizontal * 100 -
-                  kProfileIconSize * 2 -
-                  NavigationToolbar.kMiddleSpacing * 4,
-              color: Colors.grey[200],
-              child: Text(
-                "Search Group",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .apply(color: Palette.textSecondaryBaseColor),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kAppBarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ProfileSideBarButton(
+                userPhotoUrl: userPhotoUrl,
+                onPressed: () => Scaffold.of(context).openDrawer(),
               ),
-            ),
-            Container(
-              width: kProfileIconSize,
-            )
-          ],
+              GestureDetector(
+                onTap: () {
+                  final searchHistory =
+                      BlocProvider.of<SearchBloc>(context).searchHistory;
+                  Navigator.pushNamed(
+                    context,
+                    SearchingScreen.routeName,
+                    arguments: SearchArguments(
+                      searchHistory: searchHistory
+                          .map((q) => q.displayQuery)
+                          .toList()
+                          .reversed
+                          .toList(),
+                    ),
+                  );
+                },
+                child: SearchBar(
+                  height: kAppBarHeight * 0.75,
+                  width: SizeConfig.instance.safeBlockHorizontal * 100 -
+                      kProfileIconSize * 1.5 -
+                      NavigationToolbar.kMiddleSpacing * 4,
+                  color: Colors.grey[200],
+                  child: Text(
+                    "Search Canteen",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .apply(color: Palette.textSecondaryBaseColor),
+                  ),
+                ),
+              ),
+              Container(
+                width: kProfileIconSize * 0.5,
+              )
+            ],
+          ),
+          backgroundColor: Palette.appBarBackgroundColor,
+          elevation: 0,
         ),
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 0,
       ),
       floatingActionButton: BlocBuilder<GroupHomeBloc, GroupHomeState>(
         bloc: _groupHomeBloc,
@@ -116,16 +143,20 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               child: Icon(Icons.add),
               backgroundColor: Palette.primaryColor,
               onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => PostDialogScreen(
-                    groupId: _groupHomeBloc.currentGroup.id,
-                    height: SizeConfig.instance.blockSizeVertical *
-                        kDialogScreenHeightBlocks,
-                  ),
-                );
+                if (authenticated) {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => PostDialogScreen(
+                      groupId: _groupHomeBloc.currentGroup.id,
+                      height: SizeConfig.instance.blockSizeVertical *
+                          kDialogScreenHeightBlocks,
+                    ),
+                  );
+                } else {
+                  UnauthenticatedFunctions.showSignUp(context);
+                }
               },
             ),
           );
@@ -133,7 +164,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
       ),
       body: BlocBuilder<GroupHomeBloc, GroupHomeState>(
         builder: (BuildContext context, GroupHomeState state) {
-          if (state is GroupHomeUninitialized) {
+          if (state is GroupHomeUnauthenticated) {
             return Container();
           }
 
@@ -242,7 +273,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                   group.description ?? '',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .bodyText1,
+                                                      .bodyText2,
                                                 ),
                                               ),
                                               Text(
@@ -257,7 +288,8 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                                     ),
                                               ),
                                               Visibility(
-                                                visible: isNotMember,
+                                                visible: authenticated &&
+                                                    isNotMember,
                                                 child: FlatButton(
                                                   color: Palette.primaryColor,
                                                   child: Text(
@@ -326,7 +358,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               body: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  PostListScreen(),
+                  PostListScreen(
+                    isHome: true,
+                  ),
                   GroupHomeMemberListScreen(),
                 ],
               ),
@@ -344,14 +378,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar _tabBar;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => kTabBarHeight;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => kTabBarHeight;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      height: kTabBarHeight,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(

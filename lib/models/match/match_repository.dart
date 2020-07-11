@@ -58,15 +58,21 @@ class MatchRepository {
     });
   }
 
-  Future<Message> getMessage(String matchId, DateTime dateTime) {
+  Future<Message> getMessage(String matchId, {DateTime dateTime}) {
+    final messagesCollection =
+        matchCollection.document(matchId).collection(messages);
     try {
-      return matchCollection
-          .document(matchId)
-          .collection(messages)
-          .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
-          .limit(1)
-          .getDocuments()
-          .then((doc) {
+      Query query;
+      if (dateTime != null) {
+        query = messagesCollection
+            .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
+            .limit(1);
+      } else {
+        query =
+            messagesCollection.orderBy("timestamp", descending: true).limit(1);
+      }
+
+      return query.getDocuments().then((doc) {
         return Message.fromEntity(MessageEntity.fromSnapshot(
           doc.documents.first,
         ));

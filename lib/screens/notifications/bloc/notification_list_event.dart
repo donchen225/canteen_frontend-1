@@ -43,3 +43,5 @@ class LoadOldNotifications extends NotificationListEvent {
   @override
   String toString() => 'LoadOldNotifications { page: $page }';
 }
+
+class ClearNotifications extends NotificationListEvent {}

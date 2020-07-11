@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/api_response/api_response.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_entity.dart';
 import 'package:canteen_frontend/models/group/group_member.dart';
 import 'package:canteen_frontend/models/group/group_member_entity.dart';
 import 'package:canteen_frontend/models/group/user_group.dart';
 import 'package:canteen_frontend/models/group/user_group_entity.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,12 +21,15 @@ class GroupRepository {
 
   GroupRepository();
 
-  Future<void> joinGroup(String groupId, {String accessCode}) async {
+  Future<ApiResponse> joinGroup(String groupId, {String accessCode}) async {
     return CloudFunctionManager.joinGroup.call({
       "group_id": groupId,
       "access_code": accessCode,
-    }).then((result) {}, onError: (error) {
-      print('ERROR JOINING GROUP: $error');
+    }).then((result) {
+      if (result.data == null) {
+        throw Exception("No data received from server.");
+      }
+      return ApiResponse.fromHttpResult(result);
     });
   }
 
@@ -72,7 +77,7 @@ class GroupRepository {
     return groupCollection.limit(10).getDocuments().then((querySnapshot) {
       final docs = ignoreMainGroup
           ? (querySnapshot.documents
-            ..removeWhere((doc) => doc.documentID == 'HxuOLXcLsIBmTxp0ToiQ'))
+            ..removeWhere((doc) => doc.documentID == AppConfig.defaultGroupId))
           : querySnapshot.documents;
 
       return docs

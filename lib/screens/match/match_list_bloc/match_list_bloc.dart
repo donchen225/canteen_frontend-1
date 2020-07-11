@@ -13,31 +13,32 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   MatchListBloc({@required matchBloc})
       : assert(matchBloc != null),
         _matchBloc = matchBloc {
-    _matchSubscription = matchBloc.listen((state) {
-      if (state is MatchesLoaded) {
-        add(LoadMatchList((matchBloc.state as MatchesLoaded).matches));
+    _matchSubscription = matchBloc.listen((matchState) {
+      if (matchState is MatchesLoaded) {
+        add(LoadMatchList(matchState.matches));
       }
     });
   }
 
   @override
-  MatchListState get initialState {
-    final currentState = _matchBloc.state;
-    return currentState is MatchesLoaded
-        ? MatchListLoaded(currentState.matches)
-        : MatchListLoading();
-  }
+  MatchListState get initialState => MatchListUnauthenticated();
 
   @override
   Stream<MatchListState> mapEventToState(MatchListEvent event) async* {
     if (event is LoadMatchList) {
       yield* _mapLoadMatchListToState(event);
+    } else if (event is ClearMatchList) {
+      yield* _mapClearMatchListToState();
     }
   }
 
   Stream<MatchListState> _mapLoadMatchListToState(LoadMatchList event) async* {
     yield MatchListLoading();
     yield MatchListLoaded(event.matchList);
+  }
+
+  Stream<MatchListState> _mapClearMatchListToState() async* {
+    yield MatchListUnauthenticated();
   }
 
   @override

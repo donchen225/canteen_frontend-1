@@ -1,11 +1,13 @@
 import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
+import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
+import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
-import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -31,6 +33,7 @@ class UserProfileBody extends StatefulWidget {
 
 class _UserProfileBodyState extends State<UserProfileBody>
     with SingleTickerProviderStateMixin {
+  User user;
   TabController _tabController;
 
   final List<String> tabs = [
@@ -41,6 +44,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
   @override
   void initState() {
     super.initState();
+
+    user = widget.user;
     _tabController = TabController(vsync: this, length: tabs.length);
   }
 
@@ -56,23 +61,30 @@ class _UserProfileBodyState extends State<UserProfileBody>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ConfirmationDialogScreen(
-        user: user,
-        skill: skill,
-        height:
-            SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
-        onConfirm: (String comment, DateTime time) {
-          BlocProvider.of<RequestBloc>(context).add(
-            AddRequest(
-              receiverId: user.id,
-              comment: comment,
-              index: index,
-              type: skillType,
-              time: time,
-            ),
-          );
-        },
-      ),
+      builder: (context) {
+        final sendRequetBloc =
+            SendRequestBloc(requestRepository: RequestRepository());
+        return BlocProvider<SendRequestBloc>(
+          create: (dialogContext) => sendRequetBloc,
+          child: ConfirmationDialogScreen(
+            user: user,
+            skill: skill,
+            height: SizeConfig.instance.blockSizeVertical *
+                kDialogScreenHeightBlocks,
+            onConfirm: (String comment, DateTime time) {
+              sendRequetBloc.add(
+                SendRequest(
+                  receiverId: user.id,
+                  comment: comment,
+                  index: index,
+                  type: skillType,
+                  time: time,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -96,7 +108,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
 
                     return SkillItem(
                       verticalPadding:
-                          SizeConfig.instance.safeBlockVertical * 2,
+                          SizeConfig.instance.safeBlockVertical * 1.5,
                       horizontalPadding:
                           SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
@@ -152,7 +164,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
   @override
   Widget build(BuildContext context) {
     final titleTextStyle = Theme.of(context).textTheme.headline6;
-    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return NestedScrollView(
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -174,7 +186,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                     child: Row(
                       children: <Widget>[
                         ProfilePicture(
-                          photoUrl: widget.user.photoUrl,
+                          photoUrl: user.photoUrl,
                           shape: BoxShape.circle,
                           editable: false,
                           size: kProfileSize,
@@ -196,7 +208,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                             0.5,
                                   ),
                                   child: Text(
-                                    widget.user.displayName,
+                                    user.displayName ?? '',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -204,13 +216,9 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                   ),
                                 ),
                                 Text(
-                                  widget.user.title ?? '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .apply(
-                                          color:
-                                              Palette.textSecondaryBaseColor),
+                                  user.title ?? '',
+                                  style: bodyTextStyle.apply(
+                                      color: Palette.textSecondaryBaseColor),
                                 ),
                               ],
                             ),
@@ -224,23 +232,37 @@ class _UserProfileBodyState extends State<UserProfileBody>
                     padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.instance.safeBlockVertical,
                     ),
-                    child: Text(widget.user.about ?? '', style: bodyTextStyle),
+                    child: Text(user.about ?? '', style: bodyTextStyle),
                   ),
                   Visibility(
                     visible: widget.editable,
                     child: Container(
                       width: double.infinity,
                       child: FlatButton(
-                        onPressed: () {
-                          showModalBottomSheet(
+                        onPressed: () async {
+                          final userProfileBloc =
+                              BlocProvider.of<UserProfileBloc>(context);
+                          final userRepository =
+                              BlocProvider.of<UserBloc>(context).userRepository;
+
+                          await showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             builder: (context) => UserProfileScreen(
-                              userRepository: BlocProvider.of<UserBloc>(context)
-                                  .userRepository,
+                              userRepository: userRepository,
                             ),
                           );
+
+                          final state = userProfileBloc.state;
+
+                          setState(() {
+                            if (state is UserProfileLoaded) {
+                              user = state.user;
+                            } else {
+                              user = userRepository.currentUserNow();
+                            }
+                          });
                         },
                         child: Text(
                           'Edit Profile',
@@ -257,7 +279,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Wrap(
-                        children: widget.user.interests
+                        children: user.interests
                                 ?.map((x) => Padding(
                                       padding: EdgeInsets.only(
                                           right: SizeConfig.instance
@@ -306,7 +328,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
             bottom: false,
             child: Builder(
               builder: (BuildContext context) {
-                return _buildItemList(context, name, widget.user);
+                return _buildItemList(context, name, user);
               },
             ),
           );
@@ -322,14 +344,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar _tabBar;
 
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => kTabBarHeight;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => kTabBarHeight;
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      height: kTabBarHeight,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(

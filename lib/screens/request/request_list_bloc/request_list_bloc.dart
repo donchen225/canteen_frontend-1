@@ -24,24 +24,24 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         _requestBloc = requestBloc,
         _userRepository = userRepository,
         _requestRepository = requestRepository {
-    _requestSubscription = _requestBloc.listen((state) {
-      if (state is RequestsLoaded) {
-        print('RECEIVED REQUESTS LOADED');
-        add(UpdateRequestList(
-            (_requestBloc.state as RequestsLoaded).requestList));
+    _requestSubscription = _requestBloc.listen((requestState) {
+      if (requestState is RequestsLoaded) {
+        add(UpdateRequestList(requestState.requestList));
       }
     });
   }
 
   @override
-  RequestListState get initialState => RequestListEmpty();
+  RequestListState get initialState => RequestListUnauthenticated();
 
   @override
   Stream<RequestListState> mapEventToState(RequestListEvent event) async* {
     if (event is UpdateRequestList) {
       yield* _mapUpdateRequestListToState(event);
     } else if (event is LoadRequestList) {
-      yield* _mapLoadRequestListToState(event);
+      yield* _mapLoadRequestListToState();
+    } else if (event is ClearRequestList) {
+      yield* _mapClearRequestListToState();
     }
   }
 
@@ -51,10 +51,13 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         await _getDetailedRequestList(event.requestList));
   }
 
-  Stream<RequestListState> _mapLoadRequestListToState(
-      LoadRequestList event) async* {
+  Stream<RequestListState> _mapLoadRequestListToState() async* {
     yield DetailedRequestListLoaded(
         _requestRepository.currentDetailedRequests());
+  }
+
+  Stream<RequestListState> _mapClearRequestListToState() async* {
+    yield RequestListUnauthenticated();
   }
 
   Future<List<DetailedRequest>> _getDetailedRequestList(

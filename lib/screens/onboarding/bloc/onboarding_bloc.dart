@@ -43,8 +43,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       yield* _mapUpdateSkillToState(event);
     } else if (event is LoadGroups) {
       yield* _mapLoadGroupsToState();
-    } else if (event is JoinGroup) {
-      yield* _mapJoinGroupToState(event);
+    } else if (event is JoinPublicGroup) {
+      yield* _mapJoinPublicGroupToState(event);
+    } else if (event is JoinedPrivateGroup) {
+      yield* _mapJoinedPrivateGroupToState(event);
     } else if (event is CompleteOnboarding) {
       yield* _mapCompleteOnboardingToState();
     }
@@ -114,10 +116,21 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     yield OnboardingGroups(groups: _groups, joined: groupJoined);
   }
 
-  Stream<OnboardingState> _mapJoinGroupToState(JoinGroup event) async* {
-    _groupRepository.joinGroup(event.groupId);
+  Stream<OnboardingState> _mapJoinPublicGroupToState(
+      JoinPublicGroup event) async* {
+    _groupRepository.joinGroup(event.id);
 
-    final index = _groups.indexWhere((group) => group.id == event.groupId);
+    final index = _groups.indexWhere((group) => group.id == event.id);
+    _groupJoined[index] = true;
+
+    final groupJoined = List<bool>.from(_groupJoined);
+
+    yield OnboardingGroups(groups: _groups, joined: groupJoined);
+  }
+
+  Stream<OnboardingState> _mapJoinedPrivateGroupToState(
+      JoinedPrivateGroup event) async* {
+    final index = _groups.indexWhere((group) => group.id == event.id);
     _groupJoined[index] = true;
 
     final groupJoined = List<bool>.from(_groupJoined);

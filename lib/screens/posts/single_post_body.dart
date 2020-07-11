@@ -1,16 +1,20 @@
+import 'dart:async';
+
 import 'package:canteen_frontend/components/dot_spacer.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_button.dart';
 import 'package:canteen_frontend/screens/posts/comment_container.dart';
 import 'package:canteen_frontend/screens/posts/comment_dialog_screen.dart';
+import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/like_button.dart';
 import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -22,7 +26,7 @@ import 'package:intl/intl.dart';
 
 import 'bloc/post_bloc.dart';
 
-class SinglePostBody extends StatelessWidget {
+class SinglePostBody extends StatefulWidget {
   const SinglePostBody({
     Key key,
     @required this.post,
@@ -31,6 +35,67 @@ class SinglePostBody extends StatelessWidget {
 
   final DetailedPost post;
   final String groupId;
+
+  @override
+  _SinglePostBodyState createState() => _SinglePostBodyState();
+}
+
+class _SinglePostBodyState extends State<SinglePostBody> {
+  ScrollController _scrollController;
+  bool _shouldScrollToBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _scrollToBottom() async {
+    if (_shouldScrollToBottom) {
+      // TODO: remove this hack
+      Timer(
+          Duration(milliseconds: 500),
+          () => _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 300),
+              ));
+
+      _shouldScrollToBottom = false;
+    }
+  }
+
+  void _onTapComment(BuildContext context) async {
+    final authenticated =
+        BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
+
+    if (authenticated) {
+      final commented = await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => CommentDialogScreen(
+          post: widget.post,
+          groupId: widget.groupId,
+          height:
+              SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
+        ),
+      );
+
+      if (commented) {
+        _shouldScrollToBottom = true;
+      }
+    } else {
+      UnauthenticatedFunctions.showSignUp(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +107,7 @@ class SinglePostBody extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: CustomScrollView(
+            controller: _scrollController,
             slivers: <Widget>[
               SliverToBoxAdapter(
                 child: Container(
@@ -57,17 +123,21 @@ class SinglePostBody extends StatelessWidget {
                               kHorizontalPaddingBlocks,
                         ),
                         child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            ViewUserProfileScreen.routeName,
-                            arguments: UserArguments(
-                              user: post.user,
-                            ),
-                          ),
+                          onTap: () {
+                            if (widget.post.user != null) {
+                              Navigator.pushNamed(
+                                context,
+                                ViewUserProfileScreen.routeName,
+                                arguments: UserArguments(
+                                  user: widget.post.user,
+                                ),
+                              );
+                            }
+                          },
                           child: Row(
                             children: <Widget>[
                               ProfilePicture(
-                                photoUrl: post.user.photoUrl,
+                                photoUrl: widget.post.user.photoUrl,
                                 editable: false,
                                 size: SizeConfig.instance.safeBlockHorizontal *
                                     12,
@@ -80,9 +150,9 @@ class SinglePostBody extends StatelessWidget {
                                         2,
                                   ),
                                   child: PostNameTemplate(
-                                    name: post.user.displayName,
-                                    title: post.user.title,
-                                    photoUrl: post.user.photoUrl,
+                                    name: widget.post.user.displayName,
+                                    title: widget.post.user.title,
+                                    photoUrl: widget.post.user.photoUrl,
                                     showDate: false,
                                   ),
                                 ),
@@ -93,8 +163,8 @@ class SinglePostBody extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                          top: SizeConfig.instance.safeBlockVertical,
-                          bottom: SizeConfig.instance.safeBlockVertical,
+                          top: SizeConfig.instance.safeBlockVertical * 2,
+                          bottom: SizeConfig.instance.safeBlockVertical * 2,
                           left: SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
                           right: SizeConfig.instance.safeBlockHorizontal *
@@ -102,8 +172,11 @@ class SinglePostBody extends StatelessWidget {
                         ),
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          post.message,
-                          style: Theme.of(context).textTheme.headline6,
+                          widget.post.message,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .apply(fontWeightDelta: -1),
                         ),
                       ),
                       Container(
@@ -112,11 +185,14 @@ class SinglePostBody extends StatelessWidget {
                               kHorizontalPaddingBlocks,
                           right: SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
+                          bottom: SizeConfig.instance.safeBlockVertical * 0.5,
                         ),
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: <Widget>[
-                            Text(DateFormat('yMMMMd').format(post.createdOn),
+                            Text(
+                                DateFormat('yMMMMd')
+                                    .format(widget.post.createdOn),
                                 style: secondaryTextTheme.apply(
                                     color: Palette.textSecondaryBaseColor)),
                             Padding(
@@ -124,7 +200,7 @@ class SinglePostBody extends StatelessWidget {
                                     horizontal: SizeConfig
                                         .instance.safeBlockHorizontal),
                                 child: DotSpacer()),
-                            Text(DateFormat.jm().format(post.createdOn),
+                            Text(DateFormat.jm().format(widget.post.createdOn),
                                 style: secondaryTextTheme.apply(
                                     color: Palette.textSecondaryBaseColor)),
                           ],
@@ -136,8 +212,8 @@ class SinglePostBody extends StatelessWidget {
                         ),
                         child: Container(
                           padding: EdgeInsets.only(
-                            top: SizeConfig.instance.safeBlockVertical * 1.5,
-                            bottom: SizeConfig.instance.safeBlockVertical * 1.5,
+                            top: SizeConfig.instance.safeBlockVertical * 0.5,
+                            bottom: SizeConfig.instance.safeBlockVertical * 0.5,
                           ),
                           decoration: BoxDecoration(
                             border: Border(
@@ -155,45 +231,37 @@ class SinglePostBody extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               LikeButton(
-                                post: post,
+                                liked: widget.post.liked,
+                                likeCount: widget.post.likeCount,
                                 color: Palette.textSecondaryBaseColor,
+                                size: 32,
                                 onTap: () {
-                                  if (!(post.liked)) {
+                                  final postBloc =
+                                      BlocProvider.of<PostBloc>(context);
+
+                                  if (!(widget.post.liked)) {
                                     final like = Like(
                                         from: curentUserId,
                                         createdOn: DateTime.now());
-                                    BlocProvider.of<PostBloc>(context).add(
-                                        AddLike(
-                                            groupId: groupId,
-                                            postId: post.id,
-                                            like: like));
+                                    postBloc.add(AddLike(
+                                        groupId: widget.groupId,
+                                        postId: widget.post.id,
+                                        like: like));
                                   } else {
-                                    BlocProvider.of<PostBloc>(context).add(
-                                        DeleteLike(
-                                            groupId: groupId, postId: post.id));
+                                    postBloc.add(DeleteLike(
+                                        groupId: widget.groupId,
+                                        postId: widget.post.id));
                                   }
                                 },
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) => CommentDialogScreen(
-                                      post: post,
-                                      groupId: groupId,
-                                      height: SizeConfig
-                                              .instance.blockSizeVertical *
-                                          kDialogScreenHeightBlocks,
-                                    ),
-                                  );
-                                },
+                                onTap: () => _onTapComment(context),
                                 child: CommentButton(
-                                    post: post,
-                                    style: secondaryTextTheme,
-                                    sideTextColor:
-                                        Palette.textSecondaryBaseColor),
+                                  post: widget.post,
+                                  style: secondaryTextTheme,
+                                  sideTextColor: Palette.textSecondaryBaseColor,
+                                  size: 32,
+                                ),
                               ),
                               Container(),
                             ],
@@ -205,20 +273,25 @@ class SinglePostBody extends StatelessWidget {
                 ),
               ),
               SliverToBoxAdapter(
-                child: BlocBuilder<CommentBloc, CommentState>(
-                    builder: (BuildContext context, CommentState state) {
-                  if (state is CommentsLoading) {
-                    return CupertinoActivityIndicator();
+                child: BlocBuilder<CommentListBloc, CommentListState>(
+                    builder: (BuildContext context, CommentListState state) {
+                  print('COMMENT LIST STATE: $state');
+
+                  if (state is CommentListLoading) {
+                    return Container(
+                        height: SizeConfig.instance.safeBlockVertical * 40,
+                        child: CupertinoActivityIndicator());
                   }
 
-                  if (state is CommentsLoaded) {
-                    final comments = state.comments;
+                  if (state is CommentListLoaded) {
+                    _scrollToBottom();
+                    final comments = state.commentList;
 
                     return ListView.builder(
                         shrinkWrap: true,
                         reverse: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: state.comments.length,
+                        itemCount: comments.length,
                         itemBuilder: (BuildContext context, int index) {
                           final comment = comments[index];
 
@@ -254,19 +327,7 @@ class SinglePostBody extends StatelessWidget {
                   top: SizeConfig.instance.safeBlockVertical * 2,
                 ),
                 child: GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => CommentDialogScreen(
-                        post: post,
-                        groupId: groupId,
-                        height: SizeConfig.instance.blockSizeVertical *
-                            kDialogScreenHeightBlocks,
-                      ),
-                    );
-                  },
+                  onTap: () => _onTapComment(context),
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
@@ -283,7 +344,7 @@ class SinglePostBody extends StatelessWidget {
                           'Add a comment',
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1
+                              .bodyText2
                               .apply(color: Palette.textSecondaryBaseColor),
                         ),
                       ],

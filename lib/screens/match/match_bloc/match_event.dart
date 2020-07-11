@@ -53,4 +53,7 @@ class MatchesUpdated extends MatchEvent {
   String toString() => 'MatchesUpdated { updates: $updates }';
 }
 
-class ClearMatches extends MatchEvent {}
+class ClearMatches extends MatchEvent {
+  @override
+  String toString() => 'ClearMatches';
+}

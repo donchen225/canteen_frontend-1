@@ -27,15 +27,19 @@ class CommentContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
-              onTap: () => Navigator.pushNamed(
-                context,
-                ViewUserProfileScreen.routeName,
-                arguments: UserArguments(
-                  user: comment.user,
-                ),
-              ),
+              onTap: () {
+                if (comment.user != null) {
+                  Navigator.pushNamed(
+                    context,
+                    ViewUserProfileScreen.routeName,
+                    arguments: UserArguments(
+                      user: comment.user,
+                    ),
+                  );
+                }
+              },
               child: ProfilePicture(
-                photoUrl: comment.user.photoUrl,
+                photoUrl: comment.user?.photoUrl ?? "",
                 editable: false,
                 size: SizeConfig.instance.safeBlockHorizontal * 12,
               ),
@@ -49,17 +53,21 @@ class CommentContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        ViewUserProfileScreen.routeName,
-                        arguments: UserArguments(
-                          user: comment.user,
-                        ),
-                      ),
+                      onTap: () {
+                        if (comment.user != null) {
+                          Navigator.pushNamed(
+                            context,
+                            ViewUserProfileScreen.routeName,
+                            arguments: UserArguments(
+                              user: comment.user,
+                            ),
+                          );
+                        }
+                      },
                       child: PostNameTemplate(
-                        name: comment.user.displayName,
-                        title: comment.user.title,
-                        photoUrl: comment.user.photoUrl,
+                        name: comment.user?.displayName ?? "Canteen User",
+                        title: comment.user?.title ?? "",
+                        photoUrl: comment.user?.photoUrl ?? "",
                         time: comment.createdOn,
                         color: Palette.textSecondaryBaseColor,
                         showDate: true,
@@ -71,7 +79,7 @@ class CommentContainer extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         comment.message,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
                   ],

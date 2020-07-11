@@ -45,7 +45,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     } else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password);
     } else if (event is Submitted) {
-      yield* _mapFormSubmittedToState(event.email, event.password);
+      yield* _mapFormSubmittedToState(event);
     }
   }
 
@@ -61,15 +61,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     );
   }
 
-  Stream<SignUpState> _mapFormSubmittedToState(
-    String email,
-    String password,
-  ) async* {
+  Stream<SignUpState> _mapFormSubmittedToState(Submitted event) async* {
     yield SignUpState.loading();
     try {
       await _userRepository.signUp(
-        email: email,
-        password: password,
+        email: event.email,
+        password: event.password,
+        name: event.name,
       );
       yield SignUpState.success();
     } on PlatformException catch (err) {
