@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
@@ -162,7 +163,9 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
                             ),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
-                              leading: AppLogo(
+                              leading: GroupPicture(
+                                photoUrl: group.photoUrl,
+                                shape: BoxShape.circle,
                                 size: 50,
                               ),
                               title: Text(
