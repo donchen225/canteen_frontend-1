@@ -105,6 +105,8 @@ class _NotificationItemState extends State<NotificationItem> {
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+
     return Material(
       key: widget.key,
       child: GestureDetector(
@@ -163,17 +165,13 @@ class _NotificationItemState extends State<NotificationItem> {
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   text: TextSpan(
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyTextStyle,
                                     children: [
                                       TextSpan(
                                         text: '${widget.name}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .apply(
-                                              fontWeightDelta: 2,
-                                            ),
+                                        style: bodyTextStyle.apply(
+                                          fontWeightDelta: 2,
+                                        ),
                                       ),
                                       TextSpan(
                                           text:
