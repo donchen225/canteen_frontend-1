@@ -23,7 +23,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _authenticationBloc = authenticationBloc {
     _authSubscription = _authenticationBloc.listen((authState) {
       if (!(authState is Authenticated) && !(state is UserEmpty)) {
-        print('AUTH BLOC IS NOT AUTHENTICATED, CANCELLING USER SUBSCRIPTION');
         add(LogOutUser());
       }
     });

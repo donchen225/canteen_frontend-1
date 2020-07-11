@@ -84,10 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
   int _previousIndex;
   int _currentIndex = 0;
-  final RecommendationRepository _recommendationRepository =
-      RecommendationRepository();
+
   final GroupRepository _groupRepository = GroupRepository();
-  final DiscoverRepository _discoverRepository = DiscoverRepository();
 
   @override
   void initState() {
@@ -326,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<NotificationListBloc>(context)
                   .add(LoadNotifications());
 
-              // BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
+              BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
 
               _homeBloc.add(UserHomeLoaded());
             }
@@ -398,14 +396,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<DiscoverBloc>(
-                        create: (context) => DiscoverBloc(
-                            userRepository: widget._userRepository,
-                            discoverRepository: _discoverRepository,
-                            recommendationRepository: _recommendationRepository,
-                            groupRepository: _groupRepository)
-                          ..add(LoadDiscover()),
-                      ),
                       BlocProvider<PostListBloc>(
                         create: (context) => PostListBloc(
                           userRepository: widget._userRepository,
