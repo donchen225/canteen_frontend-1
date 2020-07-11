@@ -38,7 +38,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final userName =
         CachedSharedPreferences.getString(PreferenceConstants.userName);
     final titleStyle = Theme.of(context).textTheme.headline6;
-    final subtitleStyle = Theme.of(context).textTheme.subtitle1.apply(
+    final subtitleStyle = Theme.of(context).textTheme.bodyText2.apply(
           color: Palette.textSecondaryBaseColor,
         );
 
@@ -102,15 +102,19 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   }
                                 }
                               },
-                              child: Text(
-                                  authenticated
-                                      ? userName
-                                      : "Sign up to connect with others, customize your feed, share your interests, and more!",
-                                  textAlign: TextAlign.center,
-                                  style: authenticated
-                                      ? titleStyle.apply(fontWeightDelta: 1)
-                                      : subtitleStyle.apply(
-                                          color: Palette.textColor)),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: constraints.maxWidth * 0.05),
+                                child: Text(
+                                    authenticated
+                                        ? userName
+                                        : "Sign up to connect with others, customize your feed, share your interests, and more!",
+                                    textAlign: TextAlign.center,
+                                    style: authenticated
+                                        ? titleStyle.apply(fontWeightDelta: 1)
+                                        : subtitleStyle.apply(
+                                            color: Palette.textColor)),
+                              ),
                             ),
                           ],
                         ),
@@ -193,7 +197,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                               ),
                                         ),
                                         Text(
-                                            '${currentGroup?.members?.toString() ?? 0} members'),
+                                          '${currentGroup?.members?.toString() ?? 0} members',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        ),
                                       ],
                                     ),
                                   )
