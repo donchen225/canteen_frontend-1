@@ -22,15 +22,17 @@ class RequestScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.sms,
-                  size: 50,
+                const Icon(
+                  IconData(0xf38d,
+                      fontFamily: CupertinoIcons.iconFont,
+                      fontPackage: CupertinoIcons.iconFontPackage),
+                  size: 70,
                   color: Colors.grey,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
                     top: SizeConfig.instance.safeBlockVertical,
-                    bottom: SizeConfig.instance.safeBlockVertical * 3,
+                    bottom: SizeConfig.instance.safeBlockVertical * 2,
                   ),
                   child: Text('Requests will appear here',
                       style: Theme.of(context).textTheme.bodyText1),

@@ -24,8 +24,9 @@ class SmallButton extends StatelessWidget {
             ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.instance.safeBlockHorizontal * 10,
+      padding: EdgeInsets.only(
+        left: SizeConfig.instance.safeBlockHorizontal * 10,
+        right: SizeConfig.instance.safeBlockHorizontal * 10,
       ),
       onPressed: onPressed,
     );

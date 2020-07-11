@@ -67,6 +67,7 @@ class _AccessCodeDialogState extends State<AccessCodeDialog> {
             children: [
               TextField(
                 controller: _controller,
+                autocorrect: false,
                 cursorColor: Palette.primaryColor,
                 style: bodyTextStyle.apply(
                   color: Palette.textColor,

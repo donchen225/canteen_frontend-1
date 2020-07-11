@@ -50,6 +50,7 @@ class _EditAvailabilityScreenState extends State<EditAvailabilityScreen> {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: Palette.borderSeparatorColor),
+        borderRadius: BorderRadius.circular(10),
       ),
       height: SizeConfig.instance.blockSizeVertical * 6,
       width: SizeConfig.instance.blockSizeHorizontal * 30,

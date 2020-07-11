@@ -19,7 +19,7 @@ class ProfileTextCard extends StatelessWidget {
           width: 0.5,
           color: Palette.borderSeparatorColor,
         ),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
       margin: EdgeInsets.all(0),
       padding: EdgeInsets.all(SizeConfig.instance.safeBlockHorizontal * 4),

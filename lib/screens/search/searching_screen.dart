@@ -65,8 +65,8 @@ class _SearchingScreenState extends State<SearchingScreen> {
                             child: TextField(
                               controller: _searchController,
                               autofocus: true,
+                              autocorrect: false,
                               textInputAction: TextInputAction.search,
-                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
