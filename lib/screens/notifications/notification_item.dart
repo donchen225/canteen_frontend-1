@@ -184,12 +184,9 @@ class _NotificationItemState extends State<NotificationItem> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   formatTime(widget.time),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2
-                                      .apply(
-                                        color: Palette.textSecondaryBaseColor,
-                                      ),
+                                  style: bodyTextStyle.apply(
+                                    color: Palette.textSecondaryBaseColor,
+                                  ),
                                 ),
                               )
                             ],

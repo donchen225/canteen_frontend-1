@@ -28,9 +28,6 @@ class PostListScreen extends StatefulWidget {
 }
 
 class _PostListScreenState extends State<PostListScreen> {
-  String userId;
-  TextStyle buttonTextStyle;
-
   @override
   void initState() {
     super.initState();
@@ -38,8 +35,9 @@ class _PostListScreenState extends State<PostListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    userId = CachedSharedPreferences.getString(PreferenceConstants.userId);
-    buttonTextStyle = Theme.of(context).textTheme.bodyText2;
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final buttonTextStyle = Theme.of(context).textTheme.bodyText2;
 
     return BlocBuilder<PostListBloc, PostListState>(
       bloc: BlocProvider.of<PostListBloc>(context),
@@ -154,9 +152,7 @@ class _PostListScreenState extends State<PostListScreen> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             post.message,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2,
+                                            style: buttonTextStyle,
                                           ),
                                         ),
                                       ),

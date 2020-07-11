@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/components/time_confirmation.dart';
 import 'package:canteen_frontend/components/time_list_selector.dart';
-import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/match/match_details_selection/calendar_date_time_selector.dart';
