@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MatchListScreen extends StatelessWidget {
   MatchListScreen({Key key}) : super(key: key);
@@ -21,12 +22,10 @@ class MatchListScreen extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                IconData(0xf38d,
-                    fontFamily: CupertinoIcons.iconFont,
-                    fontPackage: CupertinoIcons.iconFontPackage),
-                size: 70,
+              FaIcon(
+                FontAwesomeIcons.commentDots,
                 color: Colors.grey,
+                size: 80,
               ),
               Padding(
                 padding: EdgeInsets.only(

@@ -16,6 +16,7 @@ import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NotificationScreen extends StatelessWidget {
   static const routeName = '/';
@@ -58,12 +59,10 @@ class NotificationScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    IconData(0xf38d,
-                        fontFamily: CupertinoIcons.iconFont,
-                        fontPackage: CupertinoIcons.iconFontPackage),
-                    size: 70,
+                  FaIcon(
+                    FontAwesomeIcons.commentDots,
                     color: Colors.grey,
+                    size: 80,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
