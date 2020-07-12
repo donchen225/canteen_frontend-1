@@ -51,7 +51,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await initializeDateFormatting();
-  AppConfig.getInstance();
+  await AppConfig.getInstance();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
   final SettingsRepository settingsRepository = SettingsRepository();

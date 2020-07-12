@@ -36,7 +36,6 @@ class _MatchScreenState extends State<MatchScreen>
 
   @override
   void initState() {
-    print('INIT MATCH DETAIL SCREEN');
     super.initState();
     _tabController = TabController(vsync: this, length: tabChoices.length);
     _matchDetailBloc = BlocProvider.of<MatchDetailBloc>(context);

@@ -1,10 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
-    print(event);
+    if (AppConfig.logLevel == 'debug') {
+      print(event);
+    }
   }
 
   @override
@@ -16,6 +19,8 @@ class SimpleBlocDelegate extends BlocDelegate {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    print(transition);
+    if (AppConfig.logLevel == 'debug') {
+      print(transition);
+    }
   }
 }

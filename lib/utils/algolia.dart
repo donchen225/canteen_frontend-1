@@ -23,7 +23,7 @@ class AlgoliaSearch {
         await CloudFunctionManager.getQueryApiKey.call().then((result) {
       return result.data;
     }, onError: (error) {
-      print('ERROR GETTING API KEY: $error');
+      print('Error fetching Algolia API key: $error');
     });
 
     _algolia = Algolia.init(

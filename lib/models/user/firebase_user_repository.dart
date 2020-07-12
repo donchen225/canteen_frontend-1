@@ -218,7 +218,7 @@ class FirebaseUserRepository extends UserRepository {
 
       return getUser(firebaseUser.uid, cache: false);
     } catch (e) {
-      print(e);
+      print('Error loading current user: $e');
     }
   }
 

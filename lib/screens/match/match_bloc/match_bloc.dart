@@ -47,7 +47,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         add(MatchesUpdated(matches));
       });
     } catch (exception) {
-      print(exception.errorMessage());
+      print('Error loading matches: ${exception.errorMessage()}');
     }
   }
 

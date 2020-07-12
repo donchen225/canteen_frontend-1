@@ -275,8 +275,6 @@ class _SinglePostBodyState extends State<SinglePostBody> {
               SliverToBoxAdapter(
                 child: BlocBuilder<CommentListBloc, CommentListState>(
                     builder: (BuildContext context, CommentListState state) {
-                  print('COMMENT LIST STATE: $state');
-
                   if (state is CommentListLoading) {
                     return Container(
                         height: SizeConfig.instance.safeBlockVertical * 40,

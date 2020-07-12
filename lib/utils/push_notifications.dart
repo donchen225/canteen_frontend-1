@@ -41,17 +41,11 @@ class PushNotificationsManager {
     _settingsRepository = settingsRepository;
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("ONMESSAGE: $message");
-      },
+      onMessage: (Map<String, dynamic> message) async {},
       onLaunch: (Map<String, dynamic> message) async {
-        print("ONLAUNCH: $message");
-
         onResumeMessage(message);
       },
       onResume: (Map<String, dynamic> message) async {
-        print("ONRESUME: $message");
-
         onResumeMessage(message);
       },
     );

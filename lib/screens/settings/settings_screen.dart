@@ -39,7 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    print('INIT SETTINGS SCREEN');
 
     _authenticated =
         BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;

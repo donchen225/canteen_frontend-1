@@ -19,7 +19,6 @@ class _GroupSinglePostScreenState extends State<GroupSinglePostScreen> {
     return SinglePostScreen(
       body: BlocListener<SinglePostBloc, SinglePostState>(
         listener: (BuildContext context, SinglePostState state) {
-          print('BLOC LISTENER: $state');
           if (state is SinglePostLoaded) {
             BlocProvider.of<CommentListBloc>(context).add(
                 LoadCommentList(groupId: state.groupId, postId: state.post.id));

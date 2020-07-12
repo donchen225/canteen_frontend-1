@@ -78,7 +78,7 @@ class MatchRepository {
         ));
       });
     } catch (e) {
-      print("ERROR: NO MESSAGE FOUND - $e");
+      print("Error: no message found. $e");
     }
   }
 

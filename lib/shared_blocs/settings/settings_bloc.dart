@@ -63,7 +63,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         await cacheSettings(settings);
       }
     } catch (e) {
-      print('ERROR GETTING SETTINGS: $e');
+      print('Error fetching settings: $e');
     }
 
     PushNotificationsManager().init(_settingsRepository);

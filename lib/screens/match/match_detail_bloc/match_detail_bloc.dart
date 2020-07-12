@@ -62,7 +62,7 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
           break;
       }
     } catch (exception) {
-      print('VIDEO CHAT DETAILS ERROR: $exception');
+      print('Match error: $exception');
       yield MatchError();
     }
   }
@@ -82,7 +82,7 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
 
       yield MatchLoaded(match: detailedMatch);
     } catch (exception) {
-      print('ERROR: $exception');
+      print('Error loading match: $exception');
       yield MatchError();
     }
   }
@@ -103,10 +103,6 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
 
   Stream<MatchDetailState> _mapSelectVideoChatDateToState(
       SelectVideoChatDate event) async* {
-    print('PROPOSING VIDEO CHAT DATES');
-    print('MATCH ID: ${event.matchId}');
-    print('VIDEO CHAT ID: ${event.videoChatId}');
-
     yield MatchPaying(skill: event.skill, date: event.date);
   }
 

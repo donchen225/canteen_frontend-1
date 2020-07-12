@@ -44,7 +44,7 @@ class AuthenticationBloc
         yield Unauthenticated();
       }
     } catch (e) {
-      print('AUTHENTICATION ERROR: $e');
+      print('Authentication Error: $e');
       yield Unauthenticated();
     }
   }
