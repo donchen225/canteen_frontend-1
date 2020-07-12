@@ -230,87 +230,94 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                             ),
                             child: Column(
                               children: <Widget>[
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      GroupPicture(
-                                        photoUrl: group.photoUrl,
-                                        shape: BoxShape.circle,
-                                        size: kProfileSize,
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.topLeft,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.instance
-                                                      .safeBlockHorizontal *
-                                                  kHorizontalPaddingBlocks),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: SizeConfig.instance
-                                                          .safeBlockVertical *
-                                                      0.5,
-                                                ),
-                                                child: Text(
-                                                  group.name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5
-                                                      .apply(
-                                                          fontWeightDelta: 2),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: SizeConfig.instance
-                                                      .safeBlockVertical,
-                                                ),
-                                                child: Text(
-                                                  group.description ?? '',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText2,
-                                                ),
-                                              ),
-                                              Text(
-                                                '${group.members?.toString() ?? "0"} members' ??
-                                                    '',
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Column(
+                                      children: [
+                                        GroupPicture(
+                                          photoUrl: group.photoUrl,
+                                          shape: BoxShape.circle,
+                                          size: kProfileSize,
+                                        ),
+                                        Visibility(
+                                          visible: authenticated && isNotMember,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              top: SizeConfig
+                                                  .instance.safeBlockVertical,
+                                            ),
+                                            child: FlatButton(
+                                              color: Palette.primaryColor,
+                                              child: Text(
+                                                'JOIN',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText2
+                                                    .button
                                                     .apply(
-                                                      color: Palette
-                                                          .textSecondaryBaseColor,
-                                                    ),
+                                                        color:
+                                                            Palette.whiteColor,
+                                                        fontWeightDelta: 1),
                                               ),
-                                              Visibility(
-                                                visible: authenticated &&
-                                                    isNotMember,
-                                                child: FlatButton(
-                                                  color: Palette.primaryColor,
-                                                  child: Text(
-                                                    'JOIN',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .button
-                                                        .apply(
-                                                            color: Palette
-                                                                .whiteColor,
-                                                            fontWeightDelta: 1),
-                                                  ),
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            ],
+                                              onPressed: () {},
+                                            ),
                                           ),
                                         ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.topLeft,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig.instance
+                                                    .safeBlockHorizontal *
+                                                kHorizontalPaddingBlocks),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                bottom: SizeConfig.instance
+                                                        .safeBlockVertical *
+                                                    0.5,
+                                              ),
+                                              child: Text(
+                                                group.name,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5
+                                                    .apply(fontWeightDelta: 2),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig
+                                                    .instance.safeBlockVertical,
+                                              ),
+                                              child: Text(
+                                                group.description ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${group.members?.toString() ?? "0"} members' ??
+                                                  '',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .apply(
+                                                    color: Palette
+                                                        .textSecondaryBaseColor,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 Container(
                                   alignment: Alignment.centerLeft,
