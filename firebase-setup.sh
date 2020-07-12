@@ -47,9 +47,12 @@ gcloud functions call setAlgoliaSearchAttributes
 # Set up firestore entries
 ## Create groups in firestore
 echo "Creating initial groups..."
-for file in groups/*
+for file in groups/$ENVIRONMENT/*
 do
     if [[ -f $file ]]; then
         gcloud functions call createGroup --data '{"data":'"$(cat $file)"'}'
     fi
 done
+
+echo "Generating most popular users..."
+#gcloud functions call generateMostPopularUsers

@@ -1,6 +1,8 @@
+import 'package:canteen_frontend/models/discover/discover_repository.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/notification/notification_repository.dart';
 import 'package:canteen_frontend/models/post/post_repository.dart';
+import 'package:canteen_frontend/models/recommendation/recommendation_repository.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/user/firebase_user_repository.dart';
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
@@ -15,6 +17,7 @@ import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/user_profile_bloc.dart';
 import 'package:canteen_frontend/screens/request/request_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/services/navigation_service.dart';
 import 'package:canteen_frontend/services/service_locator.dart';
@@ -48,7 +51,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await initializeDateFormatting();
-  AppConfig.getInstance();
+  await AppConfig.getInstance();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = FirebaseUserRepository();
   final SettingsRepository settingsRepository = SettingsRepository();
@@ -171,6 +174,9 @@ class App extends StatelessWidget {
   final PostRepository _postRepository;
   final GroupRepository _groupRepository;
   final NotificationRepository _notificationRepository;
+  final RecommendationRepository _recommendationRepository =
+      RecommendationRepository();
+  final DiscoverRepository _discoverRepository = DiscoverRepository();
 
   App({
     Key key,
@@ -237,7 +243,6 @@ class App extends StatelessWidget {
 
                 AlgoliaSearch.getInstance(reset: true);
 
-                print('AUTHENTICATION BLOC LISTENER');
                 BlocProvider.of<HomeBloc>(context).add(CheckOnboardStatus());
               }
 
@@ -296,6 +301,14 @@ class App extends StatelessWidget {
                         notificationListBloc:
                             BlocProvider.of<NotificationListBloc>(context),
                       ),
+                    ),
+                    BlocProvider<DiscoverBloc>(
+                      create: (context) => DiscoverBloc(
+                          userRepository: _userRepository,
+                          discoverRepository: _discoverRepository,
+                          recommendationRepository: _recommendationRepository,
+                          groupRepository: _groupRepository)
+                        ..add(LoadDiscover()),
                     ),
                   ],
                   child: HomeScreen(

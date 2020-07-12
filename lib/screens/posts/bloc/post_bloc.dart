@@ -85,7 +85,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       add(PostsUpdated(groupId: event.groupId, updates: posts));
     } on PlatformException catch (error) {
       if (error.code == 'Error 7') {
-        print('INSUFFICIENT PERMISSIONS');
+        print('In sufficient permission to view group.');
         yield PostsPrivate(groupId: event.groupId);
       }
     }

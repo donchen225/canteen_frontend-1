@@ -45,9 +45,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       _searchResults = results;
 
       yield SearchCompleteShowResults(results);
-    } catch (e) {
-      print(e);
-      print('SEARCH FAILED');
+    } catch (error) {
+      print('Search failed: $error');
       yield SearchError();
     }
   }

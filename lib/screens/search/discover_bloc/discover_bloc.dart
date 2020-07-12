@@ -54,16 +54,20 @@ class DiscoverBloc extends Bloc<DiscoverEvent, DiscoverState> {
 
     List<Future> futureList = [];
     if (_popularUsers.length == 0) {
-      final popularUsers = await _discoverRepository.getPopularUsers();
-      popularUsers.sort((a, b) => a.rank.compareTo(b.rank));
+      try {
+        final popularUsers = await _discoverRepository.getPopularUsers();
+        popularUsers.sort((a, b) => a.rank.compareTo(b.rank));
 
-      futureList.add(Future.wait(
-              popularUsers.map((user) => _userRepository.getUser(user.id)))
-          .then((users) {
-        _popularUsers = zip([popularUsers, users])
-            .map((entry) => Tuple2<PopularUser, User>(entry[0], entry[1]))
-            .toList();
-      }));
+        futureList.add(Future.wait(
+                popularUsers.map((user) => _userRepository.getUser(user.id)))
+            .then((users) {
+          _popularUsers = zip([popularUsers, users])
+              .map((entry) => Tuple2<PopularUser, User>(entry[0], entry[1]))
+              .toList();
+        }));
+      } catch (error) {
+        print('Error loading popular users: $error');
+      }
     }
 
     if (_latestGroups.length == 0) {

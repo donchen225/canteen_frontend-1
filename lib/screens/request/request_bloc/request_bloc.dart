@@ -38,10 +38,6 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
     _requestSubscription?.cancel();
     _requestSubscription =
         _requestRepository.getAllRequests().listen((requests) {
-      print('RECEIVING REQUESTS FROM FIRESTORE');
-      requests.forEach((r) {
-        print(r.createdOn);
-      });
       add(RequestsUpdated(requests));
     });
   }

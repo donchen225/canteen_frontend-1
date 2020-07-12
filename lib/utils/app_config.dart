@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 class AppConfig {
   static String storageUrl;
   static String defaultGroupId;
+  static String logLevel;
 
   AppConfig._();
 
@@ -17,6 +18,7 @@ class AppConfig {
       final config = json.decode(configString) as Map<String, dynamic>;
       _instance = AppConfig._();
       storageUrl = config['STORAGE_URL'];
+      logLevel = config['LOG_LEVEL'];
       defaultGroupId =
           config['DEFAULT_GROUP_ID']; // TODO: move this to cloud config
 

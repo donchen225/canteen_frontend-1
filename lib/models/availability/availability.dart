@@ -25,7 +25,7 @@ class Availability {
       final dayIndex = int.tryParse(day);
 
       if (dayIndex == null) {
-        print('FAILED TO PARSE INT DURING AVAILABILITY CONVERSION');
+        print('Error during availbility parsing. Failed to parse day.');
         return;
       }
 
@@ -74,7 +74,7 @@ class Availability {
           endTime <= daySeconds) {
         addToTimeRange(Tuple2<int, int>(startTime, endTime), entry.key, 0);
       } else {
-        print('ERROR DURING AVAILABILITY CONVERSION');
+        print('Error converting availbility.');
       }
     });
 

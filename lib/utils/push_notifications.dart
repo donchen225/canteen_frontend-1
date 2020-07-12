@@ -41,17 +41,11 @@ class PushNotificationsManager {
     _settingsRepository = settingsRepository;
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("ONMESSAGE: $message");
-      },
+      onMessage: (Map<String, dynamic> message) async {},
       onLaunch: (Map<String, dynamic> message) async {
-        print("ONLAUNCH: $message");
-
         onResumeMessage(message);
       },
       onResume: (Map<String, dynamic> message) async {
-        print("ONRESUME: $message");
-
         onResumeMessage(message);
       },
     );
@@ -63,7 +57,6 @@ class PushNotificationsManager {
 
     _firebaseMessaging.onTokenRefresh.listen((token) {
       // Save token to firestore
-      print('ON TOKEN REFRESH');
       assert(token != null);
 
       saveToken(token);
@@ -71,7 +64,6 @@ class PushNotificationsManager {
 
     _firebaseMessaging.getToken().then((String token) {
       // Save token to firestore
-      print('GET TOKEN');
       assert(token != null);
 
       saveToken(token);
@@ -161,8 +153,6 @@ class PushNotificationsManager {
     _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
       // Save settings to firestore
-      print('ON SETTINGS REGISTERED');
-      print(settings);
       saveSettings(settings);
     });
   }

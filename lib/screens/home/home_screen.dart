@@ -33,7 +33,6 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
@@ -85,16 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeBloc _homeBloc;
   int _previousIndex;
   int _currentIndex = 0;
-  final RecommendationRepository _recommendationRepository =
-      RecommendationRepository();
+
   final GroupRepository _groupRepository = GroupRepository();
-  final DiscoverRepository _discoverRepository = DiscoverRepository();
 
   @override
   void initState() {
     super.initState();
 
-    print('HOME INIT STATE');
     _homeBloc = BlocProvider.of<HomeBloc>(context);
 
     final authenticated =
@@ -312,8 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocListener<HomeBloc, HomeState>(
         listener: (BuildContext context, HomeState state) {
-          print('HOME STATE BLOC LISTENER: $state');
-
           if (state is HomeLoaded) {
             if (state.authenticated && !state.dataLoaded) {
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
@@ -330,6 +324,8 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocProvider.of<NotificationListBloc>(context)
                   .add(LoadNotifications());
 
+              BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
+
               _homeBloc.add(UserHomeLoaded());
             }
           }
@@ -337,8 +333,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BlocBuilder<HomeBloc, HomeState>(
           bloc: _homeBloc,
           builder: (BuildContext context, HomeState state) {
-            print('HOME STATE BLOC BUILDER: $state');
-
             if (state is HomeUninitialized || state is HomeLoading) {
               return SplashScreen();
             }
@@ -402,14 +396,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   MultiBlocProvider(
                     providers: [
-                      BlocProvider<DiscoverBloc>(
-                        create: (context) => DiscoverBloc(
-                            userRepository: widget._userRepository,
-                            discoverRepository: _discoverRepository,
-                            recommendationRepository: _recommendationRepository,
-                            groupRepository: _groupRepository)
-                          ..add(LoadDiscover()),
-                      ),
                       BlocProvider<PostListBloc>(
                         create: (context) => PostListBloc(
                           userRepository: widget._userRepository,

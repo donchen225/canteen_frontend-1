@@ -56,7 +56,7 @@ class NotificationListBloc
         add(NotificationsUpdated(notifications));
       });
     } catch (exception) {
-      print('ERROR: $exception');
+      print('Error fetching latest notifications: $exception');
     }
   }
 

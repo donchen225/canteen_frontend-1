@@ -30,7 +30,6 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
-    print('INITIALIZE CHAT SCREEN');
     _messageBloc = BlocProvider.of<MessageBloc>(context);
     _messageBloc.add(RegisterActiveChatEvent(match.id));
     _messageBloc.add(FetchConversationDetailsEvent(match));

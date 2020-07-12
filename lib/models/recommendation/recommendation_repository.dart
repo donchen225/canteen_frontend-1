@@ -21,7 +21,6 @@ class RecommendationRepository {
     return CloudFunctionManager.declineRecommendation.call({
       "id": id,
     }).then((result) {
-      print(result.data);
       return result.data;
     }, onError: (error) {
       print('Error declining recommendation: $error');
@@ -32,7 +31,6 @@ class RecommendationRepository {
     return CloudFunctionManager.acceptRecommendation.call({
       "id": id,
     }).then((result) {
-      print(result.data);
       return result.data;
     }, onError: (error) {
       print('Error accepting recommendation: $error');
@@ -41,13 +39,11 @@ class RecommendationRepository {
 
   Future<List<Recommendation>> getRecommendations() async {
     return CloudFunctionManager.getRecommendations.call().then((result) {
-      print('GETTING RECOMMENDATIONS');
-      print(result.data);
       return result.data
           .map<Recommendation>((rec) => Recommendation.fromJSON(rec))
           .toList();
     }, onError: (error) {
-      print('ERROR GETTING RECOMMENDATIONS: $error');
+      print('Error getting recommendations: $error');
     });
   }
 }

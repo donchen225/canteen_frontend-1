@@ -38,9 +38,6 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        print(constraints.maxWidth);
-        print(constraints.maxHeight);
-
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

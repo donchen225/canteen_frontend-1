@@ -197,7 +197,8 @@ class MessageItem extends StatelessWidget {
                           fontWeightDelta: 1,
                         ),
                       ),
-                      TextSpan(text: '$formattedTime ${dateTime.timeZoneName}'),
+                      TextSpan(
+                          text: '$formattedTime ${dateTime?.timeZoneName}'),
                     ]),
                   ),
                 ),

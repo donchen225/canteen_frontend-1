@@ -61,7 +61,7 @@ class SettingsRepository {
   Future<void> toggleDevicePushNotification(String deviceId, bool value) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
-    print('DEVICE ID: $deviceId');
+
     final ref =
         userCollection.document(userId).collection('tokens').document(deviceId);
 
@@ -94,7 +94,6 @@ class SettingsRepository {
     final pushNotificationApp = CachedSharedPreferences.getBool(
         PreferenceConstants.pushNotificationsApp);
 
-    print('TOKEN: $token');
     if (token == null || token.isEmpty) {
       return null;
     }

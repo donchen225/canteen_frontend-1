@@ -49,7 +49,6 @@ class NotificationRepository {
         .orderBy("last_updated", descending: true)
         .limit(limit);
 
-    print('START AFTER: ${startAfterDocument.data}');
     if (startAfterDocument != null && startAfterDocument.exists) {
       query = query.startAfterDocument(startAfterDocument);
     }
