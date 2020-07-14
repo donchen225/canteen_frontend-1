@@ -21,7 +21,19 @@ admin.initializeApp();
 const firestore = admin.firestore();
 const fcm = admin.messaging();
 
-// Create request in Firestore
+// addRequest - Creates a user request for another user's services. Checks the existence
+// of an existing request or match between the two users before adding the Request document
+// into Firestore.
+// - Function is called from the mobile client using the Firebase Cloud Functions SDK.
+// - User must be authenticated to call this function.
+// Payload:
+// {
+//      "receiver_id": <STRING>, - REQUIRED - User id of target user
+//      "comment": <STRING>, - OPTIONAL - Comment to add with the request
+//      "type": <STRING>, - REQUIRED - The type of the request, "offering" or "ask"
+//      "index": <INT>, - REQUIRED - The index of the skill on the user profile
+//      "time": <DATETIME>, - OPTIONAL - The time for the service to occur
+// }
 exports.addRequest = functions.https.onCall(async (data, context) => {
 
     // Checking that the user is authenticated.
@@ -152,6 +164,9 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
 
 });
 
+// onRequestReceived - Sends a push notification using Firebase Cloud Messaging with tokens 
+// to the user when a request is received.
+// - Function is triggered when a new request document is created in the "requests" collection in Firestore.
 exports.onRequestReceived = functions.firestore.document('requests/{requestId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
@@ -197,7 +212,11 @@ exports.onRequestReceived = functions.firestore.document('requests/{requestId}')
     return fcm.sendToDevice(tokens, payload);
 });
 
-// Create match in Firestore
+// createMatch - Creates a match after a user has accepted a request. Once the match is
+// created, 2 messages are sent in the conversation. The first message contains the 
+// request details, and the second message notifies each user that the other has
+// accepted the request.
+// - Function is triggered when a request has been accepted (status is 1) in the "requests" collection.
 exports.createMatch = functions.firestore.document('requests/{requestId}').onUpdate(async (change, context) => {
     const newValue = change.after.data();
     const previousValue = change.before.data();
@@ -300,7 +319,11 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 const algoliaClient = algoliasearch(functions.config().algolia.appid, functions.config().algolia.apikey);
 const collectionIndex = algoliaClient.initIndex('users');
 
-// Generate secured API keys for Algolia
+// generateAlgoliaSearchApiKeys - Generates secured Algolia API keys for users and adds
+// them to the "algolia_api_keys" firestore collection. This function should only be run
+// when there are no valid API keys in the "algolia_api_keys" collection, usually when an
+// environment is first created or if all of the API keys have expired.
+// - Function is called mannually by the developer when necessary.
 exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res) => {
 
     const searchOnlyApiKey = functions.config().algolia.searchonlyapikey;
@@ -340,6 +363,12 @@ exports.generateAlgoliaSearchApiKeys = functions.https.onRequest(async (req, res
     });
 });
 
+// getQueryApiKey - Returns an authenticated Algolia API key. Each user can only have one
+// API key at a time. The first time this function is called by a user, the API key is
+// stored in the "queries" collection in Firestore. Every subsequent call will retrieve
+// that API key.
+// - Function is called from the mobile client using the Firebase Cloud Functions SDK.
+// - User must be authenticated to call this function.
 exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
 
     const timestamp = admin.firestore.Timestamp.now();
@@ -431,6 +460,9 @@ exports.getQueryApiKey = functions.https.onCall(async (data, context) => {
     };
 });
 
+// sendCollectionToAlgolia - Sends all of the current users to Algolia for indexing.
+// This function should be called to manually update Algolia when needed.
+// - Function is called mannually by the developer when necessary.
 exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 
     // This array will contain all records to be indexed in Algolia.
@@ -492,6 +524,10 @@ exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => 
 
 })
 
+// setAlgoliaSearchAttributes - Sets the searchable attributes on Algolia. This function should 
+// only be called when an environment is first created or when the searchable attributes need to
+// be updated.
+// - Function is called mannually by the developer when necessary.
 exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) => {
 
     return collectionIndex.setSettings({
@@ -515,7 +551,9 @@ exports.setAlgoliaSearchAttributes = functions.https.onRequest(async (req, res) 
     });
 });
 
-
+// onUserCreated - Indexes a user on Algolia when a User is initially created in the "users"
+// Firestore collection.
+// - Function is triggered when a new user document is created in the "users" collection in Firestore.
 exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate((snapshot, context) => {
 
     const userId = context.params.userId;
@@ -566,6 +604,9 @@ exports.onUserCreated = functions.firestore.document('users/{userId}').onCreate(
     return { 'message': 'Not updated.' };
 });
 
+// onChatUpdated - Sends a push notification to the specified user when a message is sent
+// in a match/chat using Firebase Cloud Messaging with tokens.
+// - Function is triggered when a new message document is created in the "messages" subcollection of any "match" docuent in Firestore.
 exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages/{messageId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
@@ -628,6 +669,9 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
     return fcm.sendToDevice(tokens, payload);
 });
 
+// onNotificationUpdated - Sends a push notifiation to the specific user when a notification is
+// added or updated in the "notifications" collection.
+// - Function is triggered when a new notification document is created or updated in the "notifications" collection in Firestore.
 exports.onNotificationUpdated = functions.firestore.document('notifications/{userId}/notifications/{notificationId}').onWrite(async (change, context) => {
 
     const docBeforeChange = change.before.data();
@@ -719,6 +763,9 @@ exports.onNotificationUpdated = functions.firestore.document('notifications/{use
     return fcm.sendToDevice(tokens, payload);
 });
 
+// onPostCommented - Adds a notification document to the "notifications" collection for a specific user in Firestore
+// when a post is commented.
+// - Function is triggered when a new comment document is created in the "comments" subcollection of a post document in Firestore.
 exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
@@ -790,6 +837,9 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
     });
 });
 
+// onPostLiked - Adds a notification document to the "notifications" collection for a specific user in Firestore
+// when a post is liked.
+// - Function is triggered when a new like document is created in the "likes" subcollection of a post document in Firestore.
 exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{postId}/likes/{likeId}').onCreate(async (snap, context) => {
 
     const data = snap.data();
@@ -858,6 +908,10 @@ exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{post
     });
 });
 
+// countPostComments - Increments the "comment_count" field in a post document, which acts
+// as a counter for the number of comments on the post.
+// TODO: make this idempotent
+// - Function is triggered when a new comment document is created in the "comments" subcollection of a post document in Firestore.
 exports.countPostComments = functions.firestore.document('groups/{groupId}/posts/{postId}/comments/{commentId}').onWrite(async (change, context) => {
 
     const groupId = context.params.groupId;
@@ -872,6 +926,10 @@ exports.countPostComments = functions.firestore.document('groups/{groupId}/posts
     return;
 });
 
+// countPostLikes - Increments the "like_count" field in a post document, which acts
+// as a counter for the number of likes on the post.
+// TODO: make this idempotent
+// - Function is triggered when a new comment document is created in the "likes" subcollection of a post document in Firestore.
 exports.countPostLikes = functions.firestore.document('groups/{groupId}/posts/{postId}/likes/{likeId}').onWrite(async (change, context) => {
 
     const groupId = context.params.groupId;
@@ -886,6 +944,9 @@ exports.countPostLikes = functions.firestore.document('groups/{groupId}/posts/{p
     return;
 });
 
+// onUserUpdated - Indexes a user on Algolia, when a user document is updated in the "users" 
+// collection in Firestore.
+// - Function is triggered when data changes in any of the user documents in the "users" collection in Firestore.
 exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(async (change, context) => {
 
     const userId = context.params.userId;
@@ -1010,6 +1071,9 @@ const algoliaRestrictionSettings = {
 };
 const RECENCY_FILTER = 1000 * 60 * 60 * 24 * 7; // 7 days 
 
+// getRecommendations - Gets the recommendations for a specific user.
+// - Function is called in the mobile client using the Firebase Cloud Functions SDK.
+// - Function must be called while authenticated.
 // 1. Query recommendation profiles by userId and date, if profiles == limit return
 // 2. If less than limit recommendations, query queries collection to check if algolia queries have been made in the same day
 // 3. If queries has all the current queries sent in the same day, return the existing recommendations
@@ -1195,6 +1259,9 @@ exports.getRecommendations = functions.https.onCall(async (data, context) => {
     return allRecs;
 })
 
+// declineRecommendation - Declines a recommendation given to the user.
+// - Function is called from the mobile client using the Firebase Cloud Functions SDk.
+// - Function must be called with the user is authenticated.
 exports.declineRecommendation = functions.https.onCall(async (data, context) => {
 
     if (!context.auth) {
@@ -1229,6 +1296,9 @@ exports.declineRecommendation = functions.https.onCall(async (data, context) => 
     });
 });
 
+// acceptRecommendation - Accepts a recommendation given to the user.
+// - Function is called from the mobile client using the Firebase Cloud Functions SDk.
+// - Function must be called with the user is authenticated.
 exports.acceptRecommendation = functions.https.onCall(async (data, context) => {
 
     if (!context.auth) {
@@ -1263,6 +1333,21 @@ exports.acceptRecommendation = functions.https.onCall(async (data, context) => {
     });
 });
 
+// createGroup - Creates a group by adding a group document to the "groups" collection.
+// This function is meant to be manually called by the developer to create a group. Only
+// developers can create groups right now. Users can not create groups. This functions is
+// usually called when an environment is first created or if new groups need to be added.
+// - Function must be called by the developer when necessary.
+// Payload:
+// {
+//      "name": <STRING>, - REQUIRED - Name of the group
+//      "id": <STRING>, - REQUIRED - The id given to the group (user generated)
+//      "description": <STRING>, - REQUIRED - Description of the GROUP
+//      "tags": <LIST<STRING>>, - OPTIONAL - List of tags describing the group, this is not used yet
+//      "type": <STRING>, - REQUIRED - The grorup type, "public" or "private"
+//      "photo_url": <STRING>, - OPTIONAL - The photo for the group must be a path to an object in Firebase storage
+//      "password": <STRING>, - OPTIONAL - The password for the group, this is only required if the group type is "private"
+// }
 exports.createGroup = functions.https.onCall(async (data, context) => {
 
     const name = data.name;
@@ -1331,6 +1416,15 @@ exports.createGroup = functions.https.onCall(async (data, context) => {
     return doc;
 });
 
+// joinGroup - Allows a user to join a group. If the group is "public", the user can
+// join automatically. If the group is "private", the correct password is required.
+// - Function is called in the mobile client using the Firebase Cloud Functions SDK.
+// - Function must be called with the user is authenticated.
+// Payload:
+// {
+//      "group_id": <STRING>, - REQUIRED - The group ID
+//      "access_code": <STRING>, - OPTIONAL - The access code to join the group, only required if the group is "private"
+// }
 exports.joinGroup = functions.https.onCall(async (data, context) => {
 
     if (!context.auth) {
@@ -1445,9 +1539,11 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
     return { "status": "success", "data": groupMemberDoc };
 });
 
-// Generate Most popular users. Start and end date on not used in the application,
+// generateMostPopularUsers - Generate Most popular users. Start and end date on not used in the application,
 // they are only used for record keeping. The "active" field determines which
-// document will be accessed. TODO: change other documents to inactive.
+// document will be accessed. The popular users are added to the "discover" collection in Firestore.
+// TODO: change other documents to inactive.
+// - Function is called by the developer when necessary.
 exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) => {
 
     const startDate = admin.firestore.Timestamp.now();
