@@ -73,16 +73,33 @@ class _HomeDrawerState extends State<HomeDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Visibility(
-                visible: authenticated,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: constraints.maxWidth * 0.05,
-                  ),
-                  child: Text(
-                    'Current Group',
-                    style: subtitleStyle,
-                  ),
+              DrawerItem(
+                height: itemHeight,
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth * 0.05,
+                ),
+                leading: Icon(
+                  Icons.account_circle,
+                  color: Palette.textSecondaryBaseColor,
+                ),
+                onTap: () {
+                  if (authenticated) {
+                    Navigator.of(context).maybePop();
+                    if (widget.onUserTap != null) {
+                      widget.onUserTap();
+                    }
+                  }
+                },
+                title: Text('Profile',
+                    style: Theme.of(context).textTheme.subtitle1),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth * 0.05,
+                ),
+                child: Text(
+                  'Current Group',
+                  style: subtitleStyle,
                 ),
               ),
               currentGroup != null
@@ -209,11 +226,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  final authenticated =
-                                      BlocProvider.of<AuthenticationBloc>(
-                                              context)
-                                          .state is Authenticated;
-
                                   if (authenticated) {
                                     Navigator.of(context).maybePop();
                                     if (widget.onUserTap != null) {
