@@ -14,6 +14,7 @@ import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserProfileBody extends StatefulWidget {
   final User user;
@@ -220,6 +221,17 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                   style: bodyTextStyle.apply(
                                       color: Palette.textSecondaryBaseColor),
                                 ),
+                                // Row(
+                                //   children: [
+                                //     IconButton(
+                                //       icon: FaIcon(
+                                //         FontAwesomeIcons.envelope,
+                                //         size: 22,
+                                //       ),
+                                //       onPressed: () {},
+                                //     ),
+                                //   ],
+                                // )
                               ],
                             ),
                           ),

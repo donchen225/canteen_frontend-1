@@ -8,7 +8,17 @@ abstract class GroupHomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadUserGroups extends GroupHomeEvent {}
+class LoadUserGroups extends GroupHomeEvent {
+  final bool showLoading;
+
+  const LoadUserGroups({this.showLoading = true});
+
+  @override
+  List<Object> get props => [showLoading];
+
+  @override
+  String toString() => 'LoadGroup { showLoading: $showLoading }';
+}
 
 class LoadHomeGroup extends GroupHomeEvent {
   final Group group;

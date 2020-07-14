@@ -80,15 +80,17 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   HomeBloc _homeBloc;
   int _previousIndex;
   int _currentIndex = 0;
+  DateTime _appPaused;
 
   final GroupRepository _groupRepository = GroupRepository();
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
 
     _homeBloc = BlocProvider.of<HomeBloc>(context);
@@ -97,6 +99,49 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider.of<AuthenticationBloc>(context).state is Authenticated;
     if (!authenticated) {
       _homeBloc.add(CheckOnboardStatus());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        _appPaused = DateTime.now();
+        break;
+      case AppLifecycleState.resumed:
+        if (_appPaused != null) {
+          final appResumed = DateTime.now().difference(_appPaused).inSeconds;
+
+          if (appResumed > 600) {
+            BlocProvider.of<MatchBloc>(context).add(LoadMatches());
+            BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
+
+            BlocProvider.of<RequestBloc>(context).add(LoadRequests());
+            BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
+
+            BlocProvider.of<GroupHomeBloc>(context)
+                .add(LoadUserGroups(showLoading: false));
+
+            BlocProvider.of<SettingBloc>(context)
+                .add(InitializeSettings(hasOnboarded: true));
+
+            BlocProvider.of<NotificationListBloc>(context)
+                .add(LoadNotifications());
+
+            BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
+          }
+        }
+        break;
+      case AppLifecycleState.detached:
+        break;
     }
   }
 
@@ -310,13 +355,16 @@ class _HomeScreenState extends State<HomeScreen> {
         listener: (BuildContext context, HomeState state) {
           if (state is HomeLoaded) {
             if (state.authenticated && !state.dataLoaded) {
+              print('HOME LOADED BLOC LISTENER');
+
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
               BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
               BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
 
-              BlocProvider.of<GroupHomeBloc>(context).add(LoadUserGroups());
+              BlocProvider.of<GroupHomeBloc>(context)
+                  .add(LoadUserGroups(showLoading: true));
 
               BlocProvider.of<SettingBloc>(context)
                   .add(InitializeSettings(hasOnboarded: true));
