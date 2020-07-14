@@ -12,11 +12,12 @@ class GroupHomeUnauthenticated extends GroupHomeState {}
 
 class GroupHomeLoaded extends GroupHomeState {
   final Group group;
+  final DateTime lastUpdated;
 
-  GroupHomeLoaded({this.group});
+  GroupHomeLoaded({this.group, this.lastUpdated});
 
   @override
-  List<Object> get props => [group];
+  List<Object> get props => [group, lastUpdated];
 
   @override
   String toString() => 'GroupLoaded';

@@ -1,4 +1,6 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
+import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
@@ -29,6 +31,159 @@ class _HomeDrawerState extends State<HomeDrawer> {
     super.initState();
 
     _groupHomeBloc = BlocProvider.of<GroupHomeBloc>(context);
+  }
+
+  Widget _buildDrawerBody(
+      {bool authenticated,
+      BoxConstraints constraints,
+      TextStyle subtitleStyle,
+      Group currentGroup,
+      BuildContext context,
+      List<Group> userGroups}) {
+    if (!authenticated) {
+      return Column(
+        children: [
+          DrawerItem(
+            height: itemHeight,
+            padding: EdgeInsets.symmetric(
+              horizontal: constraints.maxWidth * 0.05,
+            ),
+            leading: Icon(
+              Icons.account_circle,
+              color: Palette.textSecondaryBaseColor,
+            ),
+            onTap: () {
+              Navigator.of(context)
+                  .maybePop()
+                  .then((_) => UnauthenticatedFunctions.showSignUp(context));
+            },
+            title: Text('Sign up / Log in',
+                style: Theme.of(context).textTheme.subtitle1),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(top: SizeConfig.instance.safeBlockVertical),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              DrawerItem(
+                height: itemHeight,
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth * 0.05,
+                ),
+                leading: Icon(
+                  Icons.account_circle,
+                  color: Palette.textSecondaryBaseColor,
+                ),
+                onTap: () {
+                  if (authenticated) {
+                    Navigator.of(context).maybePop();
+                    if (widget.onUserTap != null) {
+                      widget.onUserTap();
+                    }
+                  }
+                },
+                title: Text('Profile',
+                    style: Theme.of(context).textTheme.subtitle1),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth * 0.05,
+                ),
+                child: Text(
+                  'Current Group',
+                  style: subtitleStyle,
+                ),
+              ),
+              currentGroup != null
+                  ? DrawerItem(
+                      leading: GroupPicture(
+                        photoUrl: currentGroup.photoUrl,
+                        shape: BoxShape.circle,
+                        size: 30,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth * 0.05,
+                      ),
+                      height: itemHeight,
+                      onTap: () {
+                        Navigator.of(context).maybePop();
+                      },
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            currentGroup?.name ?? '',
+                            style: Theme.of(context).textTheme.subtitle1.apply(
+                                  fontWeightDelta: 2,
+                                ),
+                          ),
+                          Text(
+                            '${currentGroup?.members?.toString() ?? 0} members',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: constraints.maxWidth * 0.05,
+          ),
+          child: Text("Groups you're in", style: subtitleStyle),
+        ),
+        Expanded(
+          child: ListView.builder(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            itemCount: userGroups.length,
+            itemBuilder: (BuildContext context, int index) {
+              final group = userGroups[index];
+              return DrawerItem(
+                leading: GroupPicture(
+                  photoUrl: group.photoUrl,
+                  shape: BoxShape.circle,
+                  size: 30,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth * 0.05,
+                ),
+                height: itemHeight,
+                onTap: () {
+                  BlocProvider.of<GroupHomeBloc>(context)
+                      .add(LoadHomeGroup(group));
+                  Navigator.of(context).maybePop();
+                },
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      group.name,
+                      style: Theme.of(context).textTheme.subtitle1.apply(
+                            fontWeightDelta: 2,
+                          ),
+                    ),
+                    Text('${group.members.toString()} members'),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -71,11 +226,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  final authenticated =
-                                      BlocProvider.of<AuthenticationBloc>(
-                                              context)
-                                          .state is Authenticated;
-
                                   if (authenticated) {
                                     Navigator.of(context).maybePop();
                                     if (widget.onUserTap != null) {
@@ -119,153 +269,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ],
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(
-                            top: SizeConfig.instance.safeBlockVertical),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            // Padding(
-                            //   padding: EdgeInsets.only(
-                            //     left: constraints.maxWidth * 0.05,
-                            //     right: constraints.maxWidth * 0.05,
-                            //     top: 10,
-                            //     bottom: 10,
-                            //   ),
-                            //   child: Row(
-                            //     mainAxisAlignment:
-                            //         MainAxisAlignment.spaceBetween,
-                            //     children: <Widget>[
-                            //       Text(
-                            //         '\$ 10.00 in Canteen',
-                            //         style:
-                            //             Theme.of(context).textTheme.bodyText1,
-                            //       ),
-                            //       FlatButton(
-                            //         color: Palette.primaryColor,
-                            //         child: Text(
-                            //           'Transfer',
-                            //           style: Theme.of(context)
-                            //               .textTheme
-                            //               .button
-                            //               .apply(
-                            //                   fontWeightDelta: 1,
-                            //                   color: Palette.whiteColor),
-                            //         ),
-                            //         onPressed: () {},
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: constraints.maxWidth * 0.05,
-                              ),
-                              child: Text(
-                                'Current Group',
-                                style: subtitleStyle,
-                              ),
-                            ),
-                            currentGroup != null
-                                ? DrawerItem(
-                                    leading: GroupPicture(
-                                      photoUrl: currentGroup.photoUrl,
-                                      shape: BoxShape.circle,
-                                      size: 30,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: constraints.maxWidth * 0.05,
-                                    ),
-                                    height: itemHeight,
-                                    onTap: () {
-                                      Navigator.of(context).maybePop();
-                                    },
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          currentGroup?.name ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle1
-                                              .apply(
-                                                fontWeightDelta: 2,
-                                              ),
-                                        ),
-                                        Text(
-                                          '${currentGroup?.members?.toString() ?? 0} members',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: constraints.maxWidth * 0.05,
-                        ),
-                        child: Text("Groups you're in", style: subtitleStyle),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          // Important: Remove any padding from the ListView.
-                          padding: EdgeInsets.zero,
-                          itemCount: userGroups.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final group = userGroups[index];
-                            return DrawerItem(
-                              leading: GroupPicture(
-                                photoUrl: group.photoUrl,
-                                shape: BoxShape.circle,
-                                size: 30,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: constraints.maxWidth * 0.05,
-                              ),
-                              height: itemHeight,
-                              onTap: () {
-                                BlocProvider.of<GroupHomeBloc>(context)
-                                    .add(LoadHomeGroup(group));
-                                Navigator.of(context).maybePop();
-                              },
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    group.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .apply(
-                                          fontWeightDelta: 2,
-                                        ),
-                                  ),
-                                  Text('${group.members.toString()} members'),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: _buildDrawerBody(
+                      authenticated: authenticated,
+                      constraints: constraints,
+                      subtitleStyle: subtitleStyle,
+                      currentGroup: currentGroup,
+                      context: context,
+                      userGroups: userGroups),
                 ),
                 DrawerItem(
                   height: itemHeight,

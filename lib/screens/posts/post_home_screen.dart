@@ -169,7 +169,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
           }
 
           if (state is GroupHomeLoading) {
-            return Center(child: CupertinoActivityIndicator());
+            return Center(
+              child: CupertinoActivityIndicator(),
+            );
           }
 
           if (state is GroupHomeEmpty) {
@@ -206,10 +208,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
           if (state is GroupHomeLoaded) {
             final group = state.group;
-            final isNotMember = BlocProvider.of<GroupHomeBloc>(context)
-                .currentUserGroups
-                .where((g) => g.id == group.id)
-                .isEmpty;
 
             return NestedScrollView(
               headerSliverBuilder:
@@ -239,29 +237,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                           photoUrl: group.photoUrl,
                                           shape: BoxShape.circle,
                                           size: kProfileSize,
-                                        ),
-                                        Visibility(
-                                          visible: authenticated && isNotMember,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                              top: SizeConfig
-                                                  .instance.safeBlockVertical,
-                                            ),
-                                            child: FlatButton(
-                                              color: Palette.primaryColor,
-                                              child: Text(
-                                                'JOIN',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .button
-                                                    .apply(
-                                                        color:
-                                                            Palette.whiteColor,
-                                                        fontWeightDelta: 1),
-                                              ),
-                                              onPressed: () {},
-                                            ),
-                                          ),
                                         ),
                                       ],
                                     ),

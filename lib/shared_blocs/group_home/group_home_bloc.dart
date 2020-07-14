@@ -16,6 +16,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
   Group currentGroup;
   List<UserGroup> currentUserGroups = [];
   List<Group> currentGroups = [];
+  DateTime _lastUpdated;
 
   GroupHomeBloc(
       {@required GroupRepository groupRepository,
@@ -34,7 +35,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     GroupHomeEvent event,
   ) async* {
     if (event is LoadUserGroups) {
-      yield* _mapLoadUserGroupsToState();
+      yield* _mapLoadUserGroupsToState(event);
     } else if (event is LoadHomeGroup) {
       yield* _mapLoadHomeGroupToState(event);
     } else if (event is LoadHomeGroupMembers) {
@@ -46,8 +47,11 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     }
   }
 
-  Stream<GroupHomeState> _mapLoadUserGroupsToState() async* {
-    yield GroupHomeLoading();
+  Stream<GroupHomeState> _mapLoadUserGroupsToState(
+      LoadUserGroups event) async* {
+    if (event.showLoading) {
+      yield GroupHomeLoading();
+    }
 
     final userGroups = await _groupRepository.getUserGroups();
 
@@ -61,7 +65,10 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
       currentGroup = groups[0];
       currentGroups = groups;
 
-      yield GroupHomeLoaded(group: currentGroup);
+      final time = DateTime.now();
+      _lastUpdated = time;
+
+      yield GroupHomeLoaded(group: currentGroup, lastUpdated: time);
     } else {
       yield GroupHomeEmpty();
     }
@@ -69,13 +76,17 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
 
   Stream<GroupHomeState> _mapLoadHomeGroupToState(LoadHomeGroup event) async* {
     currentGroup = event.group;
-    yield GroupHomeLoaded(group: event.group);
+
+    final time = DateTime.now();
+    _lastUpdated = time;
+
+    yield GroupHomeLoaded(group: event.group, lastUpdated: time);
   }
 
   Stream<GroupHomeState> _mapLoadHomeGroupMembersToState() async* {
     if (currentGroup != null) {
       if (currentGroup is DetailedGroup) {
-        yield GroupHomeLoaded(group: currentGroup);
+        yield GroupHomeLoaded(group: currentGroup, lastUpdated: _lastUpdated);
       } else {
         final members = await _groupRepository.getGroupMembers(currentGroup.id);
         final detailedGroup = DetailedGroup.fromGroup(currentGroup, members);
@@ -85,7 +96,7 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
         currentGroup = detailedGroup;
         currentGroups[index] = detailedGroup;
 
-        yield GroupHomeLoaded(group: detailedGroup);
+        yield GroupHomeLoaded(group: detailedGroup, lastUpdated: _lastUpdated);
       }
     }
   }
@@ -99,7 +110,10 @@ class GroupHomeBloc extends Bloc<GroupHomeEvent, GroupHomeState> {
     currentGroup = detailedGroup;
     currentGroups = [detailedGroup];
 
-    yield GroupHomeLoaded(group: detailedGroup);
+    final time = DateTime.now();
+    _lastUpdated = time;
+
+    yield GroupHomeLoaded(group: detailedGroup, lastUpdated: time);
   }
 
   Stream<GroupHomeState> _mapClearHomeGroupToState() async* {
