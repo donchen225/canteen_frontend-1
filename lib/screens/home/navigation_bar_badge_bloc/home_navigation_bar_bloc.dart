@@ -98,6 +98,10 @@ class HomeNavigationBarBadgeBloc
   }
 
   Stream<HomeNavigationBarBadgeState> _mapClearBadgeCountsToState() async* {
+    requestCount = 0;
+    notificationCount = 0;
+    _lastOpenedNotification = null;
+
     yield HomeNavigationBarLoaded(
       numRequests: 0,
       numNotifications: 0,

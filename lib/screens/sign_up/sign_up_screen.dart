@@ -43,6 +43,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
               color: Palette.primaryColor,
             ),
           ),
+          title: Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: Image.asset('assets/loading-icon.png',
+                  color: Palette.primaryColor),
+            ),
+          ),
         ),
         body: SignUpForm(),
       ),

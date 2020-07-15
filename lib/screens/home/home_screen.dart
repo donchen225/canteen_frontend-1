@@ -20,6 +20,7 @@ import 'package:canteen_frontend/screens/notifications/notification_view_bloc/no
 import 'package:canteen_frontend/screens/notifications/routes.dart';
 import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/onboarding/onboarding_group_screen.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_skill_screen.dart';
 import 'package:canteen_frontend/screens/onboarding/routes.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_bloc/comment_bloc.dart';
@@ -395,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ),
                 ],
                 child: Navigator(
-                  initialRoute: OnboardingGroupScreen.routeName,
+                  initialRoute: OnboardingSkillScreen.routeName,
                   onGenerateRoute: (RouteSettings settings) {
                     return buildOnboardingScreenRoutes(settings);
                   },

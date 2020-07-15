@@ -75,7 +75,7 @@ class _SignUpFormState extends State<SignUpForm> {
                         'Sign Up for Canteen',
                         style: Theme.of(context).textTheme.headline4.apply(
                               color: Palette.titleColor,
-                              fontWeightDelta: 3,
+                              fontWeightDelta: 4,
                             ),
                       ),
                     ),
@@ -190,7 +190,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                                   .userRepository,
                                         ))),
                             child: Text(
-                              'Log In',
+                              'Log in',
                               style: bodyTextStyle.apply(
                                 color: Palette.textClickableColor,
                               ),
