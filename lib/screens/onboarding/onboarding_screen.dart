@@ -10,6 +10,7 @@ class OnboardingScreen extends StatefulWidget {
   final Widget next;
   final Function onSkip;
   final List<FocusNode> nodes;
+  final bool skipEnabled;
   final bool horizontalPadding;
 
   OnboardingScreen(
@@ -17,6 +18,7 @@ class OnboardingScreen extends StatefulWidget {
       this.next,
       this.onSkip,
       this.nodes,
+      this.skipEnabled = true,
       this.horizontalPadding = true});
 
   @override
@@ -55,8 +57,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           title: Container(
-            height: kAppBarHeight - 10,
-            width: kAppBarHeight - 10,
+            height: kAppBarHeight,
+            width: kAppBarHeight,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/loading-icon.png'),
@@ -105,16 +107,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (widget.onSkip != null) {
-                            widget.onSkip();
-                          }
-                        },
-                        child: Text(
-                          'Skip for now',
-                          style: buttonTextStyle.apply(
-                            color: Palette.primaryColor,
+                      Visibility(
+                        visible: widget.skipEnabled,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.onSkip != null) {
+                              widget.onSkip();
+                            }
+                          },
+                          child: Text(
+                            'Skip for now',
+                            style: buttonTextStyle.apply(
+                              color: Palette.primaryColor,
+                            ),
                           ),
                         ),
                       ),

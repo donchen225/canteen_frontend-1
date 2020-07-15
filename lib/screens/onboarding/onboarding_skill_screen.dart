@@ -28,9 +28,9 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
   FocusNode _nameFocusNode;
   FocusNode _priceFocusNode;
   FocusNode _descriptionFocusNode;
-  final int _nameTextFieldMaxChars = 40;
+  final int _nameTextFieldMaxChars = 50;
   final int _priceTextFieldMaxChars = 6;
-  final int _descriptionTextFieldMaxChars = 300;
+  final int _descriptionTextFieldMaxChars = 400;
   bool _offeringSelected;
   bool _requestSelected;
   int _selectedDurationIndex;
@@ -122,7 +122,7 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
         child: Text(
           _selectedDurationIndex != null
               ? '${durationOptions[_selectedDurationIndex]} minutes'
-              : 'Duration',
+              : '30 minutes',
           style: _selectedDurationIndex != null
               ? hintTextStyle.apply(color: Palette.textColor)
               : hintTextStyle,
@@ -148,6 +148,7 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
     };
 
     return OnboardingScreen(
+      skipEnabled: false,
       next: NextButton(
           onTap: _nextEnabled
               ? () {
@@ -240,67 +241,99 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
               padding: EdgeInsets.symmetric(
                 vertical: SizeConfig.instance.safeBlockVertical * 2,
               ),
-              child: TextField(
-                controller: _nameController,
-                focusNode: _nameFocusNode,
-                textCapitalization: TextCapitalization.sentences,
-                cursorColor: Palette.primaryColor,
-                style: bodyTextStyle.apply(
-                  color: Palette.textColor,
-                  fontWeightDelta: 2,
-                ),
-                decoration: InputDecoration(
-                  counterText:
-                      (_nameTextFieldMaxChars - _nameController.text.length)
-                              ?.toString() ??
-                          "",
-                  hintText: "Name of offering/request",
-                  contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  isDense: true,
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+              child: Stack(
+                children: [
+                  Text(
+                    'Name of offering/request',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .apply(fontSizeDelta: -2, fontWeightDelta: 2),
                   ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: TextField(
+                      controller: _nameController,
+                      focusNode: _nameFocusNode,
+                      textCapitalization: TextCapitalization.sentences,
+                      cursorColor: Palette.primaryColor,
+                      style: bodyTextStyle.apply(
+                        color: Palette.textColor,
+                        fontWeightDelta: 2,
+                      ),
+                      decoration: InputDecoration(
+                        counterText: (_nameTextFieldMaxChars -
+                                    _nameController.text.length)
+                                ?.toString() ??
+                            "",
+                        hintText: "Casual conversations",
+                        contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        isDense: true,
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      maxLength: _nameTextFieldMaxChars,
+                      maxLines: null,
+                      minLines: 1,
+                    ),
                   ),
-                ),
-                maxLength: _nameTextFieldMaxChars,
-                maxLines: null,
-                minLines: 1,
+                ],
               ),
             ),
             Container(
-              // color: Colors.red,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(
                         right: SizeConfig.instance.safeBlockHorizontal * 15,
                       ),
-                      child: TextField(
-                        controller: _priceController,
-                        focusNode: _priceFocusNode,
-                        textCapitalization: TextCapitalization.sentences,
-                        cursorColor: Palette.primaryColor,
-                        style: bodyTextStyle.apply(
-                          color: Palette.textColor,
-                          fontWeightDelta: 2,
-                        ),
-                        decoration: InputDecoration(
-                          counterText: "",
-                          hintText: "Price",
-                          prefixText: '\$',
-                          contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          isDense: true,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Price',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .apply(fontSizeDelta: -2, fontWeightDelta: 2),
+                            ),
                           ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        maxLength: _priceTextFieldMaxChars,
-                        maxLines: null,
-                        minLines: 1,
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                            child: TextField(
+                              controller: _priceController,
+                              focusNode: _priceFocusNode,
+                              textCapitalization: TextCapitalization.sentences,
+                              cursorColor: Palette.primaryColor,
+                              style: bodyTextStyle.apply(
+                                color: Palette.textColor,
+                                fontWeightDelta: 2,
+                              ),
+                              decoration: InputDecoration(
+                                counterText: "",
+                                hintText: "0",
+                                prefixText: '\$',
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                isDense: true,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+                              maxLength: _priceTextFieldMaxChars,
+                              maxLines: null,
+                              minLines: 1,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -309,16 +342,32 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                       padding: EdgeInsets.only(
                         right: SizeConfig.instance.safeBlockHorizontal * 15,
                       ),
-                      child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          // color: Colors.red,
-                          border: Border(
-                            bottom:
-                                BorderSide(width: 1, color: Color(0x5a000000)),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Duration',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .apply(fontSizeDelta: -2, fontWeightDelta: 2),
+                            ),
                           ),
-                        ),
-                        child: _buildDurationPicker(context),
+                          Container(
+                            padding: EdgeInsets.only(
+                              top: 5,
+                              bottom: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    width: 1, color: Color(0x5a000000)),
+                              ),
+                            ),
+                            child: _buildDurationPicker(context),
+                          ),
+                        ],
                       ),
                       // child: TextField(
                       //   textCapitalization: TextCapitalization.sentences,
@@ -353,30 +402,44 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                 top: SizeConfig.instance.safeBlockVertical * 4,
                 bottom: SizeConfig.instance.safeBlockVertical * 5,
               ),
-              child: TextField(
-                controller: _descriptionController,
-                focusNode: _descriptionFocusNode,
-                textCapitalization: TextCapitalization.sentences,
-                cursorColor: Palette.primaryColor,
-                style: bodyTextStyle.apply(
-                  color: Palette.textColor,
-                  fontWeightDelta: 2,
-                ),
-                decoration: InputDecoration(
-                  counterText: (_descriptionTextFieldMaxChars -
-                              _descriptionController.text.length)
-                          ?.toString() ??
-                      "",
-                  hintText: "Description of offering/request",
-                  contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  isDense: true,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+              child: Stack(
+                children: [
+                  Text(
+                    'Description of offering/request',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .apply(fontSizeDelta: -2, fontWeightDelta: 2),
                   ),
-                ),
-                maxLength: _descriptionTextFieldMaxChars,
-                maxLines: null,
-                minLines: 1,
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: TextField(
+                      controller: _descriptionController,
+                      focusNode: _descriptionFocusNode,
+                      textCapitalization: TextCapitalization.sentences,
+                      cursorColor: Palette.primaryColor,
+                      style: bodyTextStyle.apply(
+                        color: Palette.textColor,
+                        fontWeightDelta: 2,
+                      ),
+                      decoration: InputDecoration(
+                        counterText: (_descriptionTextFieldMaxChars -
+                                    _descriptionController.text.length)
+                                ?.toString() ??
+                            "",
+                        hintText: "I enjoy traveling and yoga. Let's connect!",
+                        contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        isDense: true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      maxLength: _descriptionTextFieldMaxChars,
+                      maxLines: null,
+                      minLines: 1,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
