@@ -66,7 +66,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     final headerTextStyle = Theme.of(context).textTheme.headline4.apply(
           color: Palette.titleColor,
-          fontWeightDelta: 3,
+          fontWeightDelta: 4,
         );
 
     return BlocListener<LoginBloc, LoginState>(
@@ -161,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
                             (100 - (2 * kLandingHorizontalPaddingBlocks)) /
                             kButtonAspectRatio,
                         color: Palette.primaryColor,
-                        text: 'Log In',
+                        text: 'Log in',
                         onPressed: isLoginButtonEnabled(state)
                             ? () => _onFormSubmitted(context)
                             : null,

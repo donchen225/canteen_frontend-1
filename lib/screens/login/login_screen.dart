@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/app_logo.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,15 @@ class LoginScreen extends StatelessWidget {
         leading: BackButton(
           onPressed: () => Navigator.maybePop(context),
           color: Palette.primaryColor,
+        ),
+        title: Container(
+          height: 45,
+          width: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Image.asset('assets/loading-icon.png',
+              color: Palette.primaryColor),
         ),
       ),
       body: BlocProvider<LoginBloc>(
