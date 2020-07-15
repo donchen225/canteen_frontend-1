@@ -115,7 +115,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
-              hintText: 'Your text post (optional)',
+              hintText: 'Your text post',
             ),
           ),
         ],
