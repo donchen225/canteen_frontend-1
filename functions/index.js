@@ -965,6 +965,9 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
         const photoBefore = docBeforeChange.photo_url;
         const photoAfter = docAfterChange.photo_url;
 
+        const interestsBefore = docBeforeChange.interests;
+        const interestsAfter = docAfterChange.interests;
+
         const learnSkillBefore = Object.values(docBeforeChange.learn_skill);
         const teachSkillBefore = Object.values(docBeforeChange.teach_skill);
         const learnSkillAfter = Object.values(docAfterChange.learn_skill);
@@ -985,6 +988,17 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 }, { merge: true });
             });
 
+            updated = true;
+        }
+
+        if (interestsBefore.length === interestsAfter.length) {
+            interestsBefore.forEach((interestBefore, idx) => {
+                var interestAfter = interestsAfter[idx];
+                if (interestBefore !== interestAfter) {
+                    updated = true;
+                }
+            });
+        } else {
             updated = true;
         }
 
