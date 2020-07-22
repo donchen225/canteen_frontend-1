@@ -123,10 +123,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
           if (appResumed > 600) {
             BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-            BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
 
             BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-            BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
 
             BlocProvider.of<GroupHomeBloc>(context)
                 .add(LoadUserGroups(showLoading: false));
@@ -359,10 +357,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               print('HOME LOADED BLOC LISTENER');
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
-              BlocProvider.of<MatchListBloc>(context).add(LoadMatchList([]));
 
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
-              BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
 
               BlocProvider.of<GroupHomeBloc>(context)
                   .add(LoadUserGroups(showLoading: true));
