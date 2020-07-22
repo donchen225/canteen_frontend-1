@@ -43,10 +43,10 @@ class TextMessage extends Message {
     this.id,
     @required this.senderId,
     @required this.text,
-    @required this.data,
     @required this.isSelf,
-    @required this.isItalics,
     @required this.timestamp,
+    this.data,
+    this.isItalics = false,
   });
 
   factory TextMessage.fromEntity(TextMessageEntity entity) {
