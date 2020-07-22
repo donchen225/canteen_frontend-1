@@ -133,7 +133,7 @@ class MessageItem extends StatelessWidget {
                   bottom: 5,
                 ),
                 child: Text(
-                  message.data['title'],
+                  title,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1

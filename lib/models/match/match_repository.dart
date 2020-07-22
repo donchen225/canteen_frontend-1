@@ -24,20 +24,24 @@ class MatchRepository {
     _detailedMatches = [];
   }
 
-  void saveDetailedMatch(DetailedMatch match) {
-    var idx = 0;
-    while (idx < _detailedMatches.length) {
-      if (match.lastUpdated.isAfter(_detailedMatches[idx].lastUpdated)) {
-        break;
-      }
-
-      idx++;
-    }
-    _detailedMatches.insert(idx, match);
-  }
-
   void updateDetailedMatch(DocumentChangeType type, Match match) {
-    if (type == DocumentChangeType.modified) {
+    if (type == DocumentChangeType.added) {
+      var currentIdx = _detailedMatches.indexWhere((m) => m.id == match.id);
+
+      if (currentIdx != -1) {
+        _detailedMatches[currentIdx] = match;
+      } else {
+        var idx = 0;
+        while (idx < _detailedMatches.length) {
+          if (match.lastUpdated.isAfter(_detailedMatches[idx].lastUpdated)) {
+            break;
+          }
+
+          idx++;
+        }
+        _detailedMatches.insert(idx, match);
+      }
+    } else if (type == DocumentChangeType.modified) {
       _detailedMatches.removeWhere((m) => m.id == match.id);
       _detailedMatches.insert(0, match);
     } else if (type == DocumentChangeType.removed) {

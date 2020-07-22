@@ -13,7 +13,7 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
   MatchListBloc({@required matchBloc})
       : assert(matchBloc != null),
         _matchBloc = matchBloc {
-    _matchSubscription = matchBloc.listen((matchState) {
+    _matchSubscription = _matchBloc.listen((matchState) {
       if (matchState is MatchesLoaded) {
         add(LoadMatchList(matchState.matches));
       }
