@@ -2,15 +2,17 @@ import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/models/match/match_entity.dart';
 import 'package:canteen_frontend/models/match/status.dart';
 import 'package:canteen_frontend/models/user/user.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-@immutable
-class Match {
+class Match extends Equatable {
   final String id;
   final List<String> userId;
   final String senderId;
   final MatchStatus status;
-  final String activeVideoChat;
+  final String payer;
+  final DateTime time;
+  final Map<String, bool> read;
   final DateTime createdOn;
   final DateTime lastUpdated;
 
@@ -19,37 +21,33 @@ class Match {
     this.senderId,
     this.id,
     this.status,
-    this.activeVideoChat,
+    this.payer,
+    this.time,
+    this.read,
     this.createdOn,
     this.lastUpdated,
   });
 
-  static Match fromEntity(MatchEntity entity, {Message lastMessage}) {
+  @override
+  List<Object> get props =>
+      [id, userId, senderId, status, payer, time, read, createdOn, lastUpdated];
+
+  static Match fromEntity(MatchEntity entity) {
     return Match(
       id: entity.id,
       userId: entity.userId,
       senderId: entity.senderId,
       status: MatchStatus.values[entity.status],
-      activeVideoChat: entity.activeVideoChat,
+      payer: entity.payer,
+      time: entity.time,
+      read: entity.read,
       createdOn: entity.createdOn,
       lastUpdated: entity.lastUpdated,
     );
   }
-
-  MatchEntity toEntity() {
-    return MatchEntity(
-      id: id,
-      userId: userId,
-      senderId: senderId,
-      status: status.index,
-      activeVideoChat: activeVideoChat,
-      lastUpdated: lastUpdated,
-      createdOn: createdOn,
-    );
-  }
 }
 
-class DetailedMatch extends Match {
+class DetailedMatch extends Match with EquatableMixin {
   final List<User> userList;
   final Message lastMessage;
 
@@ -58,7 +56,9 @@ class DetailedMatch extends Match {
       @required senderId,
       @required id,
       @required status,
-      @required activeVideoChat,
+      @required payer,
+      @required time,
+      @required read,
       @required createdOn,
       @required lastUpdated,
       @required this.userList,
@@ -68,9 +68,26 @@ class DetailedMatch extends Match {
             senderId: senderId,
             id: id,
             status: status,
-            activeVideoChat: activeVideoChat,
+            payer: payer,
+            time: time,
+            read: read,
             lastUpdated: lastUpdated,
             createdOn: createdOn);
+
+  @override
+  List<Object> get props => [
+        id,
+        userId,
+        senderId,
+        status,
+        payer,
+        time,
+        read,
+        createdOn,
+        lastUpdated,
+        userList,
+        lastMessage
+      ];
 
   static DetailedMatch fromMatch(Match match, List<User> userList,
       {Message lastMessage}) {
@@ -79,7 +96,9 @@ class DetailedMatch extends Match {
         senderId: match.senderId,
         id: match.id,
         status: match.status,
-        activeVideoChat: match.activeVideoChat,
+        payer: match.payer,
+        time: match.time,
+        read: match.read,
         createdOn: match.createdOn,
         userList: userList,
         lastUpdated: match.lastUpdated,

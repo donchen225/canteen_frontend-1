@@ -158,6 +158,7 @@ void main() async {
       child: App(
         userRepository: userRepository,
         requestRepository: requestRepository,
+        matchRepository: matchRepository,
         settingsRepository: settingsRepository,
         postRepository: postRepository,
         groupRepository: groupRepository,
@@ -170,6 +171,7 @@ void main() async {
 class App extends StatelessWidget {
   final UserRepository _userRepository;
   final RequestRepository _requestRepository;
+  final MatchRepository _matchRepository;
   final SettingsRepository _settingsRepository;
   final PostRepository _postRepository;
   final GroupRepository _groupRepository;
@@ -182,18 +184,21 @@ class App extends StatelessWidget {
     Key key,
     @required UserRepository userRepository,
     @required RequestRepository requestRepository,
+    @required MatchRepository matchRepository,
     @required SettingsRepository settingsRepository,
     @required PostRepository postRepository,
     @required GroupRepository groupRepository,
     @required NotificationRepository notificationRepository,
   })  : assert(userRepository != null),
         assert(requestRepository != null),
+        assert(matchRepository != null),
         assert(settingsRepository != null),
         assert(postRepository != null),
         assert(groupRepository != null),
         assert(notificationRepository != null),
         _userRepository = userRepository,
         _requestRepository = requestRepository,
+        _matchRepository = matchRepository,
         _settingsRepository = settingsRepository,
         _postRepository = postRepository,
         _groupRepository = groupRepository,
@@ -281,8 +286,8 @@ class App extends StatelessWidget {
                     ),
                     BlocProvider<MatchListBloc>(
                       create: (context) => MatchListBloc(
-                        matchBloc: BlocProvider.of<MatchBloc>(context),
-                      ),
+                          matchBloc: BlocProvider.of<MatchBloc>(context),
+                          matchRepository: _matchRepository),
                     ),
                     BlocProvider<RequestListBloc>(
                       create: (context) => RequestListBloc(
