@@ -267,6 +267,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final bottomAppBarHeight =
+        kAppBarHeight + SizeConfig.instance.paddingBottom;
+    final iconHeight = SizeConfig.instance.paddingBottom == 0
+        ? bottomAppBarHeight
+        : bottomAppBarHeight * 0.7;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
@@ -296,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
                 return SizedBox(
-                  height: kAppBarHeight + SizeConfig.instance.paddingBottom,
+                  height: bottomAppBarHeight,
                   child: BottomNavigationBar(
                     key: getIt<NavigationBarService>().homeNavigationBarKey,
                     currentIndex: _currentIndex,
@@ -310,14 +316,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       BottomNavigationBarItem(
                         icon: FaIcon(
                           FontAwesomeIcons.home,
-                          size: 24,
+                          size: iconHeight * 0.38,
                         ),
                         title: Text(''),
                       ),
                       BottomNavigationBarItem(
                         icon: FaIcon(
                           FontAwesomeIcons.search,
-                          size: 22,
+                          size: iconHeight * 0.38,
                         ),
                         title: Text(''),
                       ),
@@ -326,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           navBarState.numRequests,
                           FaIcon(
                             FontAwesomeIcons.envelope,
-                            size: 24,
+                            size: iconHeight * 0.4,
                           ),
                         ),
                         title: Text(''),
@@ -336,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           navBarState.numNotifications,
                           FaIcon(
                             FontAwesomeIcons.bell,
-                            size: 24,
+                            size: iconHeight * 0.4,
                           ),
                         ),
                         title: Text(''),

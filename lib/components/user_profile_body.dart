@@ -70,8 +70,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
           child: ConfirmationDialogScreen(
             user: user,
             skill: skill,
-            height: SizeConfig.instance.blockSizeVertical *
-                kDialogScreenHeightBlocks,
             onConfirm: (String comment, DateTime time) {
               sendRequetBloc.add(
                 SendRequest(
