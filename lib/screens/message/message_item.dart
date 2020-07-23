@@ -6,36 +6,46 @@ import 'package:intl/intl.dart';
 
 class MessageItem extends StatelessWidget {
   final Message message;
+  final bool showTime;
 
-  const MessageItem(this.message);
+  const MessageItem(this.message, {this.showTime = false});
 
   @override
   Widget build(BuildContext context) {
     final isSelf = message.isSelf;
     if (message is TextMessage) {
-      return Container(
-        child: Column(
+      if (showTime) {
+        return Column(
           children: <Widget>[
+            buildTimeStamp(context, message),
             buildMessageContainer(isSelf, message, context),
-            buildTimeStamp(context, isSelf, message)
           ],
-        ),
-      );
+        );
+      }
+
+      return buildMessageContainer(isSelf, message, context);
     } else if (message is SystemMessage) {
-      return Container(
-        child: buildSystemMessage(isSelf, message, context),
+      return Column(
+        children: <Widget>[
+          buildTimeStamp(context, message),
+          buildSystemMessage(isSelf, message, context),
+        ],
       );
     }
+
+    return Container();
   }
 
   Row buildMessageContainer(
       bool isSelf, Message message, BuildContext context) {
     double lrEdgeInsets = 1.0;
     double tbEdgeInsets = 1.0;
+
     if (message is TextMessage) {
       lrEdgeInsets = 15.0;
       tbEdgeInsets = 10.0;
     }
+
     return Row(
       children: <Widget>[
         Container(
@@ -47,14 +57,17 @@ class MessageItem extends StatelessWidget {
               color: isSelf
                   ? Palette.selfMessageBackgroundColor
                   : Palette.otherMessageBackgroundColor,
-              borderRadius: BorderRadius.circular(8.0)),
+              borderRadius: BorderRadius.circular(20.0)),
           margin: EdgeInsets.only(
-              right: isSelf ? 10.0 : 0, left: isSelf ? 0 : 10.0),
+            top: 3,
+            bottom: 3,
+            right: isSelf ? 10.0 : 0,
+            left: isSelf ? 0 : 10.0,
+          ),
         )
       ],
-      mainAxisAlignment: isSelf
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start, // aligns the chatitem to right end
+      mainAxisAlignment:
+          isSelf ? MainAxisAlignment.end : MainAxisAlignment.start,
     );
   }
 
@@ -79,8 +92,9 @@ class MessageItem extends StatelessWidget {
           constraints: BoxConstraints(
               maxWidth: SizeConfig.instance.safeBlockHorizontal * 70),
           decoration: BoxDecoration(
-              color: Colors.purple[100],
-              borderRadius: BorderRadius.circular(8.0)),
+            color: Colors.purple[100],
+            borderRadius: BorderRadius.circular(20.0),
+          ),
           margin: EdgeInsets.only(top: 10, bottom: 10),
         )
       ],
@@ -211,22 +225,18 @@ class MessageItem extends StatelessWidget {
     return null;
   }
 
-  Row buildTimeStamp(BuildContext context, bool isSelf, Message message) {
+  Widget buildTimeStamp(BuildContext context, Message message) {
     return Row(
-        mainAxisAlignment:
-            isSelf ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: Text(
-              DateFormat('dd MMM kk:mm').format(message.timestamp),
-              style: Theme.of(context).textTheme.caption,
-            ),
-            margin: EdgeInsets.only(
-                left: isSelf ? 5.0 : 0.0,
-                right: isSelf ? 0.0 : 5.0,
-                top: 5.0,
-                bottom: 5.0),
-          )
-        ]);
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          child: Text(
+            DateFormat('MMM d,').add_jm().format(message.timestamp),
+            style: Theme.of(context).textTheme.caption,
+          ),
+          margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+        )
+      ],
+    );
   }
 }
