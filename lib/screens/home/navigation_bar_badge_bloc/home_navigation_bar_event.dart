@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/notification/notification.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
@@ -22,6 +23,18 @@ class UpdateRequestCount extends HomeNavigationBarBadgeEvent {
 
   @override
   String toString() => 'UpdateRequestCount { numRequests: $numRequests }';
+}
+
+class UpdateMessageCount extends HomeNavigationBarBadgeEvent {
+  final List<Match> matches;
+
+  const UpdateMessageCount({this.matches});
+
+  @override
+  List<Object> get props => [matches];
+
+  @override
+  String toString() => 'UpdateRequestCount { matches: $matches }';
 }
 
 class UpdateNotificationCount extends HomeNavigationBarBadgeEvent {

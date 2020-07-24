@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
+import 'package:canteen_frontend/screens/home/navigation_bar_badge_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_list_screen.dart';
 import 'package:canteen_frontend/screens/request/request_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
@@ -8,6 +9,7 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageScreen extends StatefulWidget {
   static const routeName = '/';
@@ -97,28 +99,46 @@ class _MessageScreenState extends State<MessageScreen>
           elevation: 1,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kTabBarHeight),
-            child: Container(
-              height: kTabBarHeight,
-              child: TabBar(
-                key: getIt<NavigationBarService>().messageTabBarKey,
-                indicatorSize: TabBarIndicatorSize.label,
-                controller: _tabController,
-                labelColor: Palette.primaryColor,
-                unselectedLabelColor: Palette.appBarTextColor,
-                labelStyle: Theme.of(context).textTheme.headline6,
-                tabs: tabChoices.map((text) {
-                  return _buildBadge(
-                      0,
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: kTabBarTextPadding,
+            child: BlocBuilder<HomeNavigationBarBadgeBloc,
+                HomeNavigationBarBadgeState>(
+              builder:
+                  (BuildContext context, HomeNavigationBarBadgeState state) {
+                return Container(
+                  height: kTabBarHeight,
+                  child: TabBar(
+                    key: getIt<NavigationBarService>().messageTabBarKey,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    controller: _tabController,
+                    labelColor: Palette.primaryColor,
+                    unselectedLabelColor: Palette.appBarTextColor,
+                    labelStyle: Theme.of(context).textTheme.headline6,
+                    tabs: <Widget>[
+                      _buildBadge(
+                        state.numMessages,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: kTabBarTextPadding,
+                          ),
+                          child: Tab(
+                            text: tabChoices[0],
+                          ),
                         ),
-                        child: Tab(
-                          text: text,
+                      ),
+                      _buildBadge(
+                        state.numRequests,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: kTabBarTextPadding,
+                          ),
+                          child: Tab(
+                            text: tabChoices[1],
+                          ),
                         ),
-                      ));
-                }).toList(),
-              ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

@@ -122,6 +122,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           final appResumed = DateTime.now().difference(_appPaused).inSeconds;
 
           if (appResumed > 600) {
+            BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                .add(LoadBadgeCounts());
+
             BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
             BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -329,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       ),
                       BottomNavigationBarItem(
                         icon: _buildBadge(
-                          navBarState.numRequests,
+                          navBarState.numRequests + navBarState.numMessages,
                           FaIcon(
                             FontAwesomeIcons.envelope,
                             size: iconHeight * 0.4,
@@ -360,7 +363,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         listener: (BuildContext context, HomeState state) {
           if (state is HomeLoaded) {
             if (state.authenticated && !state.dataLoaded) {
-              print('HOME LOADED BLOC LISTENER');
+              BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                  .add(LoadBadgeCounts());
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 

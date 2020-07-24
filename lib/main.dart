@@ -302,6 +302,7 @@ class App extends StatelessWidget {
                     BlocProvider<HomeNavigationBarBadgeBloc>(
                       create: (BuildContext context) =>
                           HomeNavigationBarBadgeBloc(
+                        matchBloc: BlocProvider.of<MatchBloc>(context),
                         requestBloc: BlocProvider.of<RequestBloc>(context),
                         notificationListBloc:
                             BlocProvider.of<NotificationListBloc>(context),
