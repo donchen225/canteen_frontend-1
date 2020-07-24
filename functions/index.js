@@ -237,12 +237,17 @@ exports.createMatch = functions.firestore.document('requests/{requestId}').onUpd
 
     const matchId = (utils.hashCode(senderId) < utils.hashCode(receiverId)) ? senderId + receiverId : receiverId + senderId;
 
+    var read = {};
+    read[senderId] = false;
+    read[receiverId] = false;
+
     const match = {
         "user_id": [senderId, receiverId],
         "sender_id": senderId,
         "payer": newValue.payer,
         "status": 0,
         "time": newValue.time,
+        "read": read,
         "created_on": time,
         "last_updated": time,
     };
@@ -622,6 +627,27 @@ exports.onChatUpdated = functions.firestore.document('matches/{matchId}/messages
 
     const receiverId = matchId.replace(senderId, '');
 
+    // Set chat to unread
+    firestore.collection(MATCH_COLLECTION).doc(matchId).get().then((documentSnapshot) => {
+        const data = documentSnapshot.data();
+
+        if (data.read !== undefined) {
+            if (data.read[receiverId]) {
+                const fieldName = `read.${receiverId}`;
+                var update = {};
+                update[fieldName] = false;
+
+                return firestore.collection(MATCH_COLLECTION).doc(matchId).update(update).catch((error) => {
+                    console.log(error)
+                });
+            }
+        }
+        return null;
+    }).catch((error) => {
+        console.log(error)
+    });
+
+    // Get FCM device token to send push notifications
     const querySnapshot = await firestore
         .collection(USER_COLLECTION)
         .doc(receiverId)
@@ -965,6 +991,9 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
         const photoBefore = docBeforeChange.photo_url;
         const photoAfter = docAfterChange.photo_url;
 
+        const interestsBefore = docBeforeChange.interests;
+        const interestsAfter = docAfterChange.interests;
+
         const learnSkillBefore = Object.values(docBeforeChange.learn_skill);
         const teachSkillBefore = Object.values(docBeforeChange.teach_skill);
         const learnSkillAfter = Object.values(docAfterChange.learn_skill);
@@ -985,6 +1014,17 @@ exports.onUserUpdated = functions.firestore.document('users/{userId}').onUpdate(
                 }, { merge: true });
             });
 
+            updated = true;
+        }
+
+        if (interestsBefore.length === interestsAfter.length) {
+            interestsBefore.forEach((interestBefore, idx) => {
+                var interestAfter = interestsAfter[idx];
+                if (interestBefore !== interestAfter) {
+                    updated = true;
+                }
+            });
+        } else {
             updated = true;
         }
 

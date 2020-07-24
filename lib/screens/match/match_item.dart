@@ -9,6 +9,7 @@ class MatchItem extends StatelessWidget {
   final String photoUrl;
   final String message;
   final DateTime time;
+  final bool read;
   final GestureTapCallback onTap;
 
   MatchItem({
@@ -16,6 +17,7 @@ class MatchItem extends StatelessWidget {
     this.displayName = '',
     this.photoUrl = '',
     this.message = '',
+    this.read = true,
     @required this.time,
     @required this.onTap,
   }) : super(key: key);
@@ -40,8 +42,8 @@ class MatchItem extends StatelessWidget {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.15,
-              bottom: constraints.maxHeight * 0.15,
+              top: constraints.maxHeight * 0.1,
+              bottom: constraints.maxHeight * 0.1,
               left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
@@ -59,7 +61,7 @@ class MatchItem extends StatelessWidget {
                     ProfilePicture(
                       photoUrl: photoUrl,
                       editable: false,
-                      size: constraints.maxHeight * 0.7,
+                      size: constraints.maxHeight * 0.75,
                     ),
                     Expanded(
                       child: Container(
@@ -72,6 +74,7 @@ class MatchItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Expanded(
+                              flex: 2,
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 child: Row(
@@ -81,13 +84,31 @@ class MatchItem extends StatelessWidget {
                                     Text(
                                       displayName,
                                       textAlign: TextAlign.start,
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .apply(fontWeightDelta: 2),
                                     ),
                                     Text(
                                       formatTime(
                                         time,
                                       ),
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(fontSizeDelta: -1)
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(
+                                                fontSizeDelta: -1,
+                                                fontWeightDelta: 2,
+                                              ),
                                     ),
                                   ],
                                 ),
@@ -95,16 +116,46 @@ class MatchItem extends StatelessWidget {
                             ),
                             Expanded(
                               flex: 3,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: constraints.maxHeight * 0.07,
-                                ),
-                                child: Text(
-                                  message,
-                                  textAlign: TextAlign.start,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      message,
+                                      textAlign: TextAlign.start,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(fontWeightDelta: 2),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Visibility(
+                                      visible: !read,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 3,
+                                        ),
+                                        alignment: Alignment.topRight,
+                                        child: Container(
+                                          width: 12,
+                                          height: 12,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ],

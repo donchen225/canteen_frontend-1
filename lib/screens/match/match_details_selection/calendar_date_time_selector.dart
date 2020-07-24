@@ -11,13 +11,11 @@ import 'package:tuple/tuple.dart';
 class CalendarDateTimeSelector extends StatefulWidget {
   final User user;
   final Skill skill;
-  final double height;
   final Function onDaySelected;
 
   CalendarDateTimeSelector({
     @required this.user,
     @required this.skill,
-    this.height = 400,
     this.onDaySelected,
   });
 
@@ -91,8 +89,8 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
     }
   }
 
-  Widget _buildDay(DateTime day) {
-    markerSize = widget.height * 0.11;
+  Widget _buildDay(DateTime day, double height) {
+    markerSize = height * 0.11;
 
     return Align(
       alignment: Alignment.center,
@@ -183,7 +181,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
     );
   }
 
-  Widget _buildTableCalendar() {
+  Widget _buildTableCalendar(double height) {
     return TableCalendar(
       calendarController: _calendarController,
       events: _events,
@@ -191,7 +189,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
       startDay: now,
       initialSelectedDay: null,
       endDay: endDate,
-      rowHeight: widget.height * 0.12,
+      rowHeight: height * 0.12,
       calendarStyle: CalendarStyle(
         selectedColor: Colors.deepOrange[400],
         markersColor: Colors.brown[700],
@@ -210,7 +208,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
           return _buildSelectedDay(date);
         },
         dayBuilder: (context, date, events) {
-          return _buildDay(date);
+          return _buildDay(date, height);
         },
         dowWeekendBuilder: (context, day) {
           return _buildDow(day);
@@ -245,44 +243,49 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Palette.containerColor,
-      height: widget.height,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            child: Text('Select a Day',
-                style: Theme.of(context).textTheme.headline6),
-          ),
-          Container(
-            child: _buildTableCalendar(),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
-            alignment: Alignment.center,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.safeBlockVertical),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '*${now.timeZoneName} Timezone (${DateFormat.jm().format(now)})',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final height = constraints.maxHeight;
+
+      return Container(
+        color: Palette.containerColor,
+        height: height,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              child: Text('Select a Day',
+                  style: Theme.of(context).textTheme.headline6),
             ),
-          ),
-        ],
-      ),
-    );
+            Container(
+              child: _buildTableCalendar(height),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.safeBlockVertical),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          '*${now.timeZoneName} Timezone (${DateFormat.jm().format(now)})',
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

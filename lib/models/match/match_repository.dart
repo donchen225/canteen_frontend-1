@@ -49,6 +49,17 @@ class MatchRepository {
     }
   }
 
+  Future<void> readMatch(String matchId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    return matchCollection
+        .document(matchId)
+        .updateData({"read.$userId": true}).catchError((error) {
+      print('Error setting message to read: $error');
+    });
+  }
+
   Future<void> sendMessage(String matchId, Message message) {
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(

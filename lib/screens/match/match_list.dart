@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/match/arguments.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_item.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MatchList extends StatelessWidget {
         final match = matches[index];
         final partner =
             match.userList.where((u) => u.id != userId).toList().first;
+        final read = match.read[userId] ?? true;
 
         return MatchItem(
             displayName: partner.displayName,
@@ -37,9 +39,11 @@ class MatchList extends StatelessWidget {
                 ? (match.lastMessage as TextMessage).text
                 : '',
             time: match.lastUpdated,
+            read: read,
             onTap: () {
               BlocProvider.of<MatchDetailBloc>(context)
                   .add(LoadMatch(match: match));
+              BlocProvider.of<MatchListBloc>(context).add(ReadMatch(match.id));
               Navigator.of(context).pushNamed(MatchScreen.routeName,
                   arguments: MatchArguments(match: match));
             });

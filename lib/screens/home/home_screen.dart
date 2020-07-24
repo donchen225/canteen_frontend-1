@@ -122,6 +122,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           final appResumed = DateTime.now().difference(_appPaused).inSeconds;
 
           if (appResumed > 600) {
+            BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                .add(LoadBadgeCounts());
+
             BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
             BlocProvider.of<RequestBloc>(context).add(LoadRequests());
@@ -267,6 +270,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final bottomAppBarHeight =
+        kAppBarHeight + SizeConfig.instance.paddingBottom;
+    final iconHeight = SizeConfig.instance.paddingBottom == 0
+        ? bottomAppBarHeight
+        : bottomAppBarHeight * 0.7;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
@@ -296,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   builder: (BuildContext context,
                       HomeNavigationBarBadgeState navBarState) {
                 return SizedBox(
-                  height: kAppBarHeight + SizeConfig.instance.paddingBottom,
+                  height: bottomAppBarHeight,
                   child: BottomNavigationBar(
                     key: getIt<NavigationBarService>().homeNavigationBarKey,
                     currentIndex: _currentIndex,
@@ -310,23 +319,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       BottomNavigationBarItem(
                         icon: FaIcon(
                           FontAwesomeIcons.home,
-                          size: 24,
+                          size: iconHeight * 0.38,
                         ),
                         title: Text(''),
                       ),
                       BottomNavigationBarItem(
                         icon: FaIcon(
                           FontAwesomeIcons.search,
-                          size: 22,
+                          size: iconHeight * 0.38,
                         ),
                         title: Text(''),
                       ),
                       BottomNavigationBarItem(
                         icon: _buildBadge(
-                          navBarState.numRequests,
+                          navBarState.numRequests + navBarState.numMessages,
                           FaIcon(
                             FontAwesomeIcons.envelope,
-                            size: 24,
+                            size: iconHeight * 0.4,
                           ),
                         ),
                         title: Text(''),
@@ -336,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           navBarState.numNotifications,
                           FaIcon(
                             FontAwesomeIcons.bell,
-                            size: 24,
+                            size: iconHeight * 0.4,
                           ),
                         ),
                         title: Text(''),
@@ -354,7 +363,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         listener: (BuildContext context, HomeState state) {
           if (state is HomeLoaded) {
             if (state.authenticated && !state.dataLoaded) {
-              print('HOME LOADED BLOC LISTENER');
+              BlocProvider.of<HomeNavigationBarBadgeBloc>(context)
+                  .add(LoadBadgeCounts());
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 

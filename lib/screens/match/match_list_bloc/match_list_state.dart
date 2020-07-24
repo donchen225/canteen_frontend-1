@@ -18,7 +18,7 @@ class MatchListLoaded extends MatchListState {
   const MatchListLoaded(this.matchList);
 
   @override
-  List<Object> get props => [matchList];
+  List<Object> get props => []..addAll(matchList);
 
   @override
   String toString() {

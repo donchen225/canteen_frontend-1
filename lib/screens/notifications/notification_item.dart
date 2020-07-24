@@ -118,7 +118,7 @@ class _NotificationItemState extends State<NotificationItem> {
           });
         },
         child: AspectRatio(
-          aspectRatio: kMatchItemAspectRatio,
+          aspectRatio: kNotificationItemAspectRatio,
           child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
             return Container(
@@ -154,7 +154,7 @@ class _NotificationItemState extends State<NotificationItem> {
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
@@ -186,6 +186,7 @@ class _NotificationItemState extends State<NotificationItem> {
                                   formatTime(widget.time),
                                   style: bodyTextStyle.apply(
                                     color: Palette.textSecondaryBaseColor,
+                                    fontSizeDelta: -2,
                                   ),
                                 ),
                               )

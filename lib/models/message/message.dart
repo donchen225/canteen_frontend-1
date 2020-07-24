@@ -1,9 +1,9 @@
 import 'package:canteen_frontend/models/message/message_entity.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-@immutable
-abstract class Message {
+abstract class Message extends Equatable {
   final String id;
   final String senderId;
   final bool isSelf;
@@ -29,7 +29,6 @@ abstract class Message {
   MessageEntity toEntity() {}
 }
 
-@immutable
 class TextMessage extends Message {
   final String id;
   final String senderId;
@@ -48,6 +47,10 @@ class TextMessage extends Message {
     this.data,
     this.isItalics = false,
   });
+
+  @override
+  List<Object> get props =>
+      [id, senderId, text, data, isSelf, isItalics, timestamp];
 
   factory TextMessage.fromEntity(TextMessageEntity entity) {
     final userId =
@@ -87,7 +90,6 @@ class TextMessage extends Message {
   }
 }
 
-@immutable
 class SystemMessage extends Message {
   final String id;
   final String senderId;
@@ -106,6 +108,9 @@ class SystemMessage extends Message {
     @required this.isSelf,
     @required this.timestamp,
   });
+
+  @override
+  List<Object> get props => [id, senderId, text, data, isSelf, timestamp];
 
   factory SystemMessage.fromEntity(SystemMessageEntity entity) {
     return SystemMessage(

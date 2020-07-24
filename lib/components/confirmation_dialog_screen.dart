@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/send_request_dialog/send_request_dialog.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +17,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ConfirmationDialogScreen extends StatefulWidget {
   final User user;
   final Skill skill;
-  final double height;
   final Function onConfirm;
 
   ConfirmationDialogScreen(
-      {@required this.user,
-      @required this.skill,
-      this.height = 500,
-      @required this.onConfirm});
+      {@required this.user, @required this.skill, @required this.onConfirm});
 
   @override
   _ConfirmationDialogScreenState createState() =>
@@ -154,10 +151,12 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
     final titleStyle = Theme.of(context).textTheme.headline6;
     final subTitleStyle = Theme.of(context).textTheme.subtitle1;
     final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+    final height =
+        SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks;
 
     return TextDialogScreen(
       title: 'Request Time',
-      height: widget.height,
+      height: height,
       sendWidget: ActionButton(
           text: 'Send',
           enabled: _selectedTime != null ||
@@ -211,13 +210,13 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            height: widget.height * 0.1,
+            height: height * 0.1,
             child: Row(
               children: <Widget>[
                 ProfilePicture(
                   photoUrl: widget.user.photoUrl,
                   editable: false,
-                  size: widget.height * 0.1,
+                  size: height * 0.1,
                 ),
                 Expanded(
                   child: Padding(
@@ -282,7 +281,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: widget.height * 0.01),
+              padding: EdgeInsets.symmetric(vertical: height * 0.01),
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
