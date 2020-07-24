@@ -59,8 +59,8 @@ class MessageItem extends StatelessWidget {
                   : Palette.otherMessageBackgroundColor,
               borderRadius: BorderRadius.circular(20.0)),
           margin: EdgeInsets.only(
-            top: 3,
-            bottom: 3,
+            top: 4,
+            bottom: 4,
             right: isSelf ? 10.0 : 0,
             left: isSelf ? 0 : 10.0,
           ),
@@ -95,7 +95,7 @@ class MessageItem extends StatelessWidget {
             color: Colors.purple[100],
             borderRadius: BorderRadius.circular(20.0),
           ),
-          margin: EdgeInsets.only(top: 10, bottom: 10),
+          margin: EdgeInsets.only(top: 4, bottom: 4),
         )
       ],
     );
@@ -234,7 +234,7 @@ class MessageItem extends StatelessWidget {
             DateFormat('MMM d,').add_jm().format(message.timestamp),
             style: Theme.of(context).textTheme.caption,
           ),
-          margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+          margin: EdgeInsets.only(top: 8, bottom: 8),
         )
       ],
     );
