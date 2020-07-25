@@ -29,6 +29,7 @@ import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/algolia.dart';
 import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/push_notifications.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,8 @@ void main() async {
   setupServiceLocator();
   AlgoliaSearch.getInstance();
   await CachedSharedPreferences.getInstance();
+  await PushNotificationsManager().init(settingsRepository);
+
   final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 

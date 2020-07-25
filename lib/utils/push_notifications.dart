@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:canteen_frontend/models/user_settings/settings_repository.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
+import 'package:canteen_frontend/screens/match/match_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/match/match_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_single_post_screen.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
@@ -50,11 +51,6 @@ class PushNotificationsManager {
       },
     );
 
-    if (Platform.isIOS) {
-      getSettings();
-      registerSettings();
-    }
-
     _firebaseMessaging.onTokenRefresh.listen((token) {
       // Save token to firestore
       assert(token != null);
@@ -62,12 +58,7 @@ class PushNotificationsManager {
       saveToken(token);
     });
 
-    _firebaseMessaging.getToken().then((String token) {
-      // Save token to firestore
-      assert(token != null);
-
-      saveToken(token);
-    });
+    await saveDeviceId();
   }
 
   void onResumeMessage(Map<String, dynamic> message) {
@@ -101,7 +92,7 @@ class PushNotificationsManager {
           navigationBar.onTap(3);
 
           notificationNavigatorKey.currentState
-              .popUntil((Route<dynamic> route) => route is PageRoute);
+              .popUntil((Route<dynamic> route) => route.isFirst);
           notificationNavigatorKey.currentState.push(MaterialPageRoute<void>(
             settings: RouteSettings(name: routeName),
             builder: (BuildContext context) => NotificationSinglePostScreen(),
@@ -123,8 +114,10 @@ class PushNotificationsManager {
 
           navigationBar.onTap(2);
 
+          BlocProvider.of<MatchListBloc>(context).add(ReadMatch(matchId));
+
           messageNavigatorKey.currentState
-              .popUntil((Route<dynamic> route) => route is PageRoute);
+              .popUntil((Route<dynamic> route) => route.isFirst);
           messageNavigatorKey.currentState.pushNamed(MatchScreen.routeName);
         }
       } else if (screen == 'request') {
@@ -142,24 +135,24 @@ class PushNotificationsManager {
           tabBar.onTap(1);
 
           messageNavigatorKey.currentState
-              .popUntil((Route<dynamic> route) => route is PageRoute);
+              .popUntil((Route<dynamic> route) => route.isFirst);
         }
       }
     }
   }
 
-  void getSettings() {
-    _iosSubscription?.cancel();
-    _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      // Save settings to firestore
-      saveSettings(settings);
-    });
-  }
-
   void registerSettings() {
-    _firebaseMessaging
-        .requestNotificationPermissions(const IosNotificationSettings());
+    if (Platform.isIOS) {
+      _iosSubscription?.cancel();
+      _iosSubscription = _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        // Save settings to firestore
+        saveSettings(settings);
+      });
+
+      _firebaseMessaging
+          .requestNotificationPermissions(const IosNotificationSettings());
+    }
   }
 
   Future<void> saveSettings(IosNotificationSettings settings) async {
@@ -175,6 +168,10 @@ class PushNotificationsManager {
   }
 
   Future<void> saveToken(String token) async {
+    CachedSharedPreferences.setString(PreferenceConstants.fcmToken, token);
+  }
+
+  Future<void> saveDeviceId() async {
     String identifier = "";
     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
@@ -187,7 +184,5 @@ class PushNotificationsManager {
     }
 
     CachedSharedPreferences.setString(PreferenceConstants.deviceId, identifier);
-
-    return _settingsRepository.saveToken(token, identifier);
   }
 }

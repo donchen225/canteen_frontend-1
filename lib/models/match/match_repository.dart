@@ -88,6 +88,10 @@ class MatchRepository {
       }
 
       return query.getDocuments().then((doc) {
+        if (doc.documents.isEmpty) {
+          return null;
+        }
+
         return Message.fromEntity(MessageEntity.fromSnapshot(
           doc.documents.first,
         ));

@@ -57,9 +57,12 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
     if (idx >= 0) {
       final userId =
           CachedSharedPreferences.getString(PreferenceConstants.userId);
-      _matchList[idx].read[userId] = true;
+      final match = _matchList[idx];
 
-      _matchRepository.readMatch(event.matchId);
+      if (!match.read[userId]) {
+        match.read[userId] = true;
+        _matchRepository.readMatch(event.matchId);
+      }
 
       yield MatchListLoaded(_matchList);
     }

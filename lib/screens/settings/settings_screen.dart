@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:canteen_frontend/components/custom_tile.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
@@ -45,10 +43,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (_authenticated) {
       _settings['push_notifications_app'] = CachedSharedPreferences.getBool(
           PreferenceConstants.pushNotificationsApp);
-      PushNotificationsManager().getSettings();
+
       final pushNotificationSystem = CachedSharedPreferences.getString(
           PreferenceConstants.pushNotificationsSystem,
           defValue: '');
+
       if (pushNotificationSystem.isNotEmpty) {
         _settings['push_notifications_system'] =
             jsonDecode(pushNotificationSystem);
