@@ -43,7 +43,6 @@ class MatchList extends StatelessWidget {
             onTap: () {
               BlocProvider.of<MatchDetailBloc>(context)
                   .add(LoadMatch(match: match));
-              BlocProvider.of<MatchListBloc>(context).add(ReadMatch(match.id));
               Navigator.of(context).pushNamed(MatchScreen.routeName,
                   arguments: MatchArguments(match: match));
             });

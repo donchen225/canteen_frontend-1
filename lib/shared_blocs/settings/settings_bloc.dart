@@ -50,7 +50,6 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   }
 
   // Load settings from online only once per app start
-
   Stream<SettingState> _mapInitializeSettingsToState(
       InitializeSettings event) async* {
     UserSettings settings;
@@ -66,7 +65,14 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       print('Error fetching settings: $e');
     }
 
-    PushNotificationsManager().init(_settingsRepository);
+    PushNotificationsManager().registerSettings();
+
+    final token =
+        CachedSharedPreferences.getString(PreferenceConstants.fcmToken);
+    final deviceId =
+        CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+
+    await _settingsRepository.saveToken(token, deviceId);
 
     yield SettingsLoaded(settings);
   }
@@ -106,6 +112,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
 
     final deviceId =
         CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+
     await _settingsRepository.toggleDevicePushNotification(deviceId, false);
 
     CachedSharedPreferences.clear();

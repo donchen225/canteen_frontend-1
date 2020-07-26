@@ -132,8 +132,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             BlocProvider.of<GroupHomeBloc>(context)
                 .add(LoadUserGroups(showLoading: false));
 
-            BlocProvider.of<SettingBloc>(context)
-                .add(InitializeSettings(hasOnboarded: true));
+            BlocProvider.of<SettingBloc>(context).add(InitializeSettings());
 
             BlocProvider.of<NotificationListBloc>(context)
                 .add(LoadNotifications());
@@ -373,8 +372,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               BlocProvider.of<GroupHomeBloc>(context)
                   .add(LoadUserGroups(showLoading: true));
 
-              BlocProvider.of<SettingBloc>(context)
-                  .add(InitializeSettings(hasOnboarded: true));
+              BlocProvider.of<SettingBloc>(context).add(InitializeSettings());
 
               BlocProvider.of<NotificationListBloc>(context)
                   .add(LoadNotifications());

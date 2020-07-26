@@ -17,7 +17,7 @@ class LoadMatchList extends MatchListEvent {
   List<Object> get props => []..addAll(matchList);
 
   @override
-  String toString() => 'LoadMatchList { matchList: $matchList }';
+  String toString() => 'LoadMatchList';
 }
 
 class ReadMatch extends MatchListEvent {

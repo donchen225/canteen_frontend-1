@@ -69,8 +69,11 @@ class SettingsRepository {
       if (documentSnapshot.exists) {
         ref.setData({
           "active": value,
+          "last_updated": FieldValue.serverTimestamp(),
         }, merge: true);
       }
+    }).catchError((error) {
+      print('Error setting device push notifications: $error');
     });
   }
 
@@ -95,6 +98,7 @@ class SettingsRepository {
         PreferenceConstants.pushNotificationsApp);
 
     if (token == null || token.isEmpty) {
+      print('Error saving push notifications token: Token is empty.');
       return null;
     }
 
@@ -114,6 +118,8 @@ class SettingsRepository {
       }
 
       return ref.setData(data, merge: true);
+    }).catchError((error) {
+      print('Error saving token: $error');
     });
   }
 }

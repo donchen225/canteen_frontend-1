@@ -5,6 +5,7 @@ class PreferenceConstants {
   static const userPhotoUrl = "user_photo_url";
   static const userName = "user_name";
   static const deviceId = "device_id";
+  static const fcmToken = "fcm_token";
   static const pushNotificationsSystem = "push_notifications_system";
   static const pushNotificationsApp = "push_notifications_app";
   static const timeZone = "time_zone";
@@ -113,6 +114,13 @@ class CachedSharedPreferences {
   }
 
   static Future clear() async {
-    await _preferences.clear();
+    final removeKeys = _preferences.getKeys().map((key) {
+      return (key != PreferenceConstants.deviceId &&
+              key != PreferenceConstants.fcmToken)
+          ? _preferences.remove(key)
+          : Future.value(null);
+    });
+
+    await Future.wait(removeKeys);
   }
 }
