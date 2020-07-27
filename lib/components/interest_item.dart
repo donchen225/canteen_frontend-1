@@ -9,7 +9,7 @@ class InterestItem extends StatelessWidget {
 
   InterestItem({@required this.text, this.onTap});
 
-  Widget _buildItem(BuildContext context, {bool clickable}) {
+  Widget _buildItem(BuildContext context, {bool clickable = false}) {
     return Container(
       padding: EdgeInsets.only(
         left: SizeConfig.instance.blockSizeHorizontal * 2,

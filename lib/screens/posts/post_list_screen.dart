@@ -19,9 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostListScreen extends StatefulWidget {
-  final bool isHome;
-
-  PostListScreen({@required this.isHome});
+  PostListScreen();
 
   @override
   _PostListScreenState createState() => _PostListScreenState();

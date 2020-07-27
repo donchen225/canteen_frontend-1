@@ -58,6 +58,8 @@ class PushNotificationsManager {
       saveToken(token);
     });
 
+    final token = await _firebaseMessaging.getToken();
+    await saveToken(token);
     await saveDeviceId();
   }
 

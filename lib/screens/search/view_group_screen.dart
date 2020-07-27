@@ -405,9 +405,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                PostListScreen(
-                  isHome: false,
-                ),
+                PostListScreen(),
                 GroupMemberListScreen(),
               ],
             ),
