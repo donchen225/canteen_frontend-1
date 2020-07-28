@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/dialog_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -6,12 +7,12 @@ import 'dart:math' as math;
 
 class TextDialogScreen extends StatelessWidget {
   final String title;
-  final double height;
   final Widget sendWidget;
+  final bool canUnfocus;
   final Widget child;
 
   TextDialogScreen(
-      {this.title, this.sendWidget, this.height = 500, this.child});
+      {this.title, this.sendWidget, this.canUnfocus = true, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,11 @@ class TextDialogScreen extends StatelessWidget {
 
     return DialogScreen(
       sendWidget: sendWidget,
+      canUnfocus: canUnfocus,
       child: SingleChildScrollView(
         child: Container(
-          height: height -
+          height: SizeConfig.instance.blockSizeVertical *
+                  kDialogScreenHeightBlocks -
               kToolbarHeight -
               additionalTopPadding -
               kBottomNavigationBarHeight -

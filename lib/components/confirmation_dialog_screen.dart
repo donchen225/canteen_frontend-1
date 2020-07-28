@@ -98,7 +98,7 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
     } else if (_timeList == null || _timeList.length == 0) {
       return CalendarDateTimeSelector(
         user: widget.user,
-        skill: widget.skill,
+        duration: widget.skill.duration,
         onDaySelected: (List<DateTime> times, DateTime selectedDay) {
           setState(() {
             if (times.length > 0) {
@@ -156,7 +156,6 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
 
     return TextDialogScreen(
       title: 'Request Time',
-      height: height,
       sendWidget: ActionButton(
           text: 'Send',
           enabled: _selectedTime != null ||
@@ -226,9 +225,15 @@ class _ConfirmationDialogScreenState extends State<ConfirmationDialogScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          '${widget.user.displayName ?? ''}',
-                          style: titleStyle,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom:
+                                SizeConfig.instance.safeBlockVertical * 0.25,
+                          ),
+                          child: Text(
+                            '${widget.user.displayName ?? ''}',
+                            style: titleStyle,
+                          ),
                         ),
                         Text(
                           '${widget.user.title ?? ''}',

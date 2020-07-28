@@ -230,7 +230,7 @@ class App extends StatelessWidget {
           bodyText2: TextStyle(
               fontSize: 15, fontWeight: FontWeight.normal, letterSpacing: -0.1),
           button: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.normal, letterSpacing: -0.1),
+              fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: -0.1),
         ),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(brightness: Brightness.light),

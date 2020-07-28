@@ -10,6 +10,7 @@ class DialogScreen extends StatelessWidget {
   final double height;
   final Widget sendWidget;
   final Widget child;
+  final bool canUnfocus;
   final Function onCancel;
 
   DialogScreen(
@@ -17,6 +18,7 @@ class DialogScreen extends StatelessWidget {
       this.sendWidget,
       this.height = 500,
       this.onCancel,
+      this.canUnfocus = true,
       this.child});
 
   @override
@@ -73,10 +75,12 @@ class DialogScreen extends StatelessWidget {
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (canUnfocus) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
           }
         },
         child: child ?? Container(),

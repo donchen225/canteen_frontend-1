@@ -149,8 +149,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     backgroundColor: Colors.transparent,
                     builder: (context) => PostDialogScreen(
                       groupId: _groupHomeBloc.currentGroup.id,
-                      height: SizeConfig.instance.blockSizeVertical *
-                          kDialogScreenHeightBlocks,
                     ),
                   );
                 } else {

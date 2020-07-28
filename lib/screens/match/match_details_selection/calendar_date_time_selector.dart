@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/availability/day.dart';
-import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
@@ -10,12 +9,12 @@ import 'package:tuple/tuple.dart';
 
 class CalendarDateTimeSelector extends StatefulWidget {
   final User user;
-  final Skill skill;
+  final int duration;
   final Function onDaySelected;
 
   CalendarDateTimeSelector({
     @required this.user,
-    @required this.skill,
+    @required this.duration,
     this.onDaySelected,
   });
 
@@ -45,7 +44,7 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
     endDate = startDate.add(Duration(days: availableDateRange));
 
     localTimeRanges = widget.user.availability?.timeRangesLocal ?? {};
-    eventDuration = widget.skill.duration;
+    eventDuration = widget.duration;
     initializeEvents();
 
     _calendarController = CalendarController();

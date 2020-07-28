@@ -112,8 +112,6 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               backgroundColor: Colors.transparent,
               builder: (context) => PostDialogScreen(
                 groupId: widget.group.id,
-                height: SizeConfig.instance.blockSizeVertical *
-                    kDialogScreenHeightBlocks,
               ),
             );
           },
