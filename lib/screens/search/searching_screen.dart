@@ -60,7 +60,6 @@ class _SearchingScreenState extends State<SearchingScreen> {
     if (_previousQuery != null &&
         _previousQuery.isNotEmpty &&
         _searchController.text.isEmpty) {
-      print('RESET SEARCH FROM CONTROLLER');
       _searchBloc.add(ResetSearch());
       _previousQuery = '';
     } else {

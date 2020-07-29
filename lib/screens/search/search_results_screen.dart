@@ -94,7 +94,6 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                               searchResultState.fromPreviousSearch) {
                             searchBloc.add(ResetSearch());
                           } else {
-                            print('RESULTS: ${widget.results}');
                             if (widget.results != null) {
                               searchBloc.add(
                                 ShowSearchResults(
