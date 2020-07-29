@@ -5,7 +5,6 @@ import 'package:canteen_frontend/screens/search/search_result_item.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
-import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,25 +66,28 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                           minHeight: height,
                           minWidth: height,
                         ),
-                        onPressed: () => Navigator.of(context).maybePop(),
+                        onPressed: () {
+                          final searchBloc =
+                              BlocProvider.of<SearchBloc>(context);
+                          final searchResultState = searchBloc.state;
+
+                          if (searchResultState is SearchCompleteShowResults &&
+                              searchResultState.fromPreviousSearch) {
+                            searchBloc.add(ResetSearch());
+                          }
+
+                          Navigator.of(context).maybePop();
+                        },
                       ),
                       Flexible(
                         child: GestureDetector(
                           onTap: () {
-                            final searchHistory =
-                                BlocProvider.of<SearchBloc>(context)
-                                    .searchHistory;
                             // TODO: change to fade transition
                             Navigator.pushNamed(
                               context,
                               SearchingScreen.routeName,
                               arguments: SearchArguments(
                                 initialQuery: widget.query,
-                                searchHistory: searchHistory
-                                    .map((q) => q.displayQuery)
-                                    .toList()
-                                    .reversed
-                                    .toList(),
                               ),
                             );
                           },
@@ -127,7 +129,6 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                   visible: user.displayName != null,
                   child: SearchResultItem(
                     user: user,
-                    height: SizeConfig.instance.safeBlockVertical * 14,
                   ),
                 );
               },

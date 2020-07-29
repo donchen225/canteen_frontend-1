@@ -17,11 +17,13 @@ class SearchLoading extends SearchState {}
 
 class SearchCompleteShowResults extends SearchState {
   final List<User> results;
+  final bool fromPreviousSearch;
 
-  const SearchCompleteShowResults(this.results);
+  const SearchCompleteShowResults(
+      {this.results, this.fromPreviousSearch = false});
 
   @override
-  List<Object> get props => [results];
+  List<Object> get props => [results, fromPreviousSearch];
 
   @override
   String toString() => 'SearchCompleteShowResults';

@@ -93,18 +93,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               ),
               GestureDetector(
                 onTap: () {
-                  final searchHistory =
-                      BlocProvider.of<SearchBloc>(context).searchHistory;
                   Navigator.pushNamed(
                     context,
                     SearchingScreen.routeName,
-                    arguments: SearchArguments(
-                      searchHistory: searchHistory
-                          .map((q) => q.displayQuery)
-                          .toList()
-                          .reversed
-                          .toList(),
-                    ),
                   );
                 },
                 child: SearchBar(

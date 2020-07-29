@@ -34,6 +34,7 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
@@ -161,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .homeNavigatorKey
               .currentState
               .popUntil((route) => route.isFirst);
+          BlocProvider.of<SearchBloc>(context).add(ResetSearch());
           break;
         case 1:
           getIt<NavigationService>()

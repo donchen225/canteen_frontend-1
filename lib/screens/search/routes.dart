@@ -19,9 +19,7 @@ MaterialPageRoute buildSearchScreenRoutes(
             return DiscoverScreen();
           case SearchingScreen.routeName:
             final SearchArguments args = settings.arguments;
-            return SearchingScreen(
-                initialQuery: args.initialQuery,
-                searchHistory: args.searchHistory);
+            return SearchingScreen(initialQuery: args?.initialQuery ?? '');
           case SearchResultScreen.routeName:
             final SearchResultsArguments args = settings.arguments;
             return SearchResultScreen(query: args.query);
