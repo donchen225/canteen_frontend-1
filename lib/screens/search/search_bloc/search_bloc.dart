@@ -19,6 +19,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   ) async* {
     if (event is SearchStarted) {
       yield* _mapSearchStartedToState(event);
+    } else if (event is AddQuery) {
+      yield* _mapAddQueryToState(event);
+    } else if (event is ShowSearchResults) {
+      yield* _mapShowSearchResultsToState(event);
     } else if (event is ResetSearch) {
       yield* _mapResetSearchToState();
     } else if (event is ClearSearch) {
@@ -50,12 +54,31 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       yield SearchCompleteShowResults(
         results: results,
+        query: event.query,
         fromPreviousSearch: event.fromPreviousSearch,
       );
     } catch (error) {
       print('Search failed: $error');
       yield SearchError();
     }
+  }
+
+  Stream<SearchState> _mapAddQueryToState(AddQuery event) async* {
+    final query = SearchQuery(
+      query: event.query.toLowerCase(),
+      displayQuery: event.query,
+    );
+
+    searchHistory.remove(query);
+    searchHistory.add(query);
+  }
+
+  Stream<SearchState> _mapShowSearchResultsToState(
+      ShowSearchResults event) async* {
+    yield SearchCompleteShowResults(
+      results: event.results,
+      query: event.query,
+    );
   }
 
   Stream<SearchState> _mapResetSearchToState() async* {

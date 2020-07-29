@@ -19,10 +19,13 @@ MaterialPageRoute buildSearchScreenRoutes(
             return DiscoverScreen();
           case SearchingScreen.routeName:
             final SearchArguments args = settings.arguments;
-            return SearchingScreen(initialQuery: args?.initialQuery ?? '');
+            return SearchingScreen(
+              initialQuery: args?.initialQuery ?? '',
+              isInitialSearch: args?.isInitialSearch ?? true,
+            );
           case SearchResultScreen.routeName:
             final SearchResultsArguments args = settings.arguments;
-            return SearchResultScreen(query: args.query);
+            return SearchResultScreen(query: args.query, results: args.results);
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(

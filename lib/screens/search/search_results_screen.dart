@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
 import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
@@ -11,9 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final String query;
+  final List<User> results;
   static const routeName = '/results';
 
-  SearchResultScreen({this.query}) : assert(query != null);
+  SearchResultScreen({this.query, this.results}) : assert(query != null);
 
   @override
   _SearchResultScreenState createState() => _SearchResultScreenState();
@@ -21,14 +23,30 @@ class SearchResultScreen extends StatefulWidget {
 
 class _SearchResultScreenState extends State<SearchResultScreen>
     with SingleTickerProviderStateMixin {
+  List<User> _results;
   TabController _tabController;
+  Key _key;
 
   final List<String> tabChoices = ['People', 'Groups'];
 
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(vsync: this, length: tabChoices.length);
+    _key = UniqueKey();
+
+    _results = widget.results;
+
+    if (_results == null) {
+      BlocProvider.of<SearchBloc>(context).add(
+        SearchStarted(
+          query: widget.query,
+          saveQuery: true,
+          fromPreviousSearch: true,
+        ),
+      );
+    }
   }
 
   @override
@@ -40,6 +58,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kAppBarHeight),
         child: AppBar(
@@ -74,6 +93,18 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                           if (searchResultState is SearchCompleteShowResults &&
                               searchResultState.fromPreviousSearch) {
                             searchBloc.add(ResetSearch());
+                          } else {
+                            print('RESULTS: ${widget.results}');
+                            if (widget.results != null) {
+                              searchBloc.add(
+                                ShowSearchResults(
+                                  query: widget.query,
+                                  results: widget.results,
+                                ),
+                              );
+                            } else {
+                              searchBloc.add(ResetSearch());
+                            }
                           }
 
                           Navigator.of(context).maybePop();
@@ -88,6 +119,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                               SearchingScreen.routeName,
                               arguments: SearchArguments(
                                 initialQuery: widget.query,
+                                isInitialSearch: false,
                               ),
                             );
                           },
@@ -116,30 +148,41 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           ),
         ),
       ),
-      body: BlocBuilder<SearchBloc, SearchState>(
-        builder: (BuildContext context, SearchState state) {
-          if (state is SearchCompleteShowResults) {
-            final results = state.results;
+      body: _buildSearchResults(),
+    );
+  }
 
-            return ListView.builder(
-              itemCount: results.length,
-              itemBuilder: (BuildContext context, int index) {
-                final user = results[index];
-                return Visibility(
-                  visible: user.displayName != null,
-                  child: SearchResultItem(
-                    user: user,
-                  ),
-                );
-              },
-            );
-          }
+  Widget _buildSearchResults() {
+    if (_results != null) {
+      return _buildSearchResultsList(_results);
+    }
 
-          return Center(
-            child: CupertinoActivityIndicator(),
-          );
-        },
-      ),
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (BuildContext context, SearchState state) {
+        if (state is SearchCompleteShowResults) {
+          final results = state.results;
+          _results = results;
+
+          return _buildSearchResultsList(results);
+        }
+
+        return Center(child: CupertinoActivityIndicator());
+      },
+    );
+  }
+
+  ListView _buildSearchResultsList(List<User> results) {
+    return ListView.builder(
+      itemCount: results.length,
+      itemBuilder: (BuildContext context, int index) {
+        final user = results[index];
+        return Visibility(
+          visible: user.displayName != null,
+          child: SearchResultItem(
+            user: user,
+          ),
+        );
+      },
     );
   }
 }
