@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
@@ -179,6 +181,15 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           visible: user.displayName != null,
           child: SearchResultItem(
             user: user,
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                ViewUserProfileScreen.routeName,
+                arguments: UserArguments(
+                  user: user,
+                ),
+              );
+            },
           ),
         );
       },

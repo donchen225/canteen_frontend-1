@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/components/view_user_profile_screen.dart';
+import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/search/arguments.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
@@ -320,6 +322,15 @@ class _SearchingScreenState extends State<SearchingScreen> {
             child: SearchResultItem(
               user: user,
               showFullResult: false,
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  ViewUserProfileScreen.routeName,
+                  arguments: UserArguments(
+                    user: user,
+                  ),
+                );
+              },
             ),
           );
         },

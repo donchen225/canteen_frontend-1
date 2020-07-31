@@ -1,5 +1,3 @@
-import 'package:canteen_frontend/components/view_user_profile_screen.dart';
-import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -9,8 +7,9 @@ import 'package:flutter/material.dart';
 class SearchResultItem extends StatelessWidget {
   final User user;
   final bool showFullResult;
+  final Function onTap;
 
-  SearchResultItem({this.user, this.showFullResult = true})
+  SearchResultItem({this.user, this.onTap, this.showFullResult = true})
       : assert(user != null);
 
   @override
@@ -23,18 +22,16 @@ class SearchResultItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (user != null) {
-          Navigator.pushNamed(
-            context,
-            ViewUserProfileScreen.routeName,
-            arguments: UserArguments(
-              user: user,
-            ),
-          );
+        if (onTap != null) {
+          if (user != null) {
+            onTap();
+          }
         }
       },
       child: Container(
-        height: height,
+        constraints: BoxConstraints(
+          minHeight: height,
+        ),
         decoration: BoxDecoration(
             color: Palette.containerColor,
             border: Border(
@@ -76,7 +73,7 @@ class SearchResultItem extends StatelessWidget {
                     Text(
                       user.displayName,
                       style: nameStyle.apply(fontWeightDelta: 2),
-                      maxLines: 1,
+                      maxLines: showFullResult ? null : 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Visibility(
@@ -85,7 +82,7 @@ class SearchResultItem extends StatelessWidget {
                         user.title ?? '',
                         style: nameStyle.apply(
                             color: Palette.textSecondaryBaseColor),
-                        maxLines: 1,
+                        maxLines: showFullResult ? null : 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
