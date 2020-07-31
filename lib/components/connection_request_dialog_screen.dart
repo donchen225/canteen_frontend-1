@@ -38,6 +38,7 @@ class _ConnectionRequestDialogScreenState
   List<DateTime> _timeList;
   DateTime _selectedDay;
   DateTime _selectedTime;
+  bool _selectedTimeComplete = false;
   Skill _selectedPurpose;
   int _selectedPurposeIndex;
   String _selectedPurposeButton;
@@ -69,6 +70,8 @@ class _ConnectionRequestDialogScreenState
         Container(
           width: double.infinity,
           alignment: Alignment.center,
+          padding:
+              EdgeInsets.only(top: SizeConfig.instance.safeBlockVertical * 3),
           child: Text(
             '${widget.user.displayName} has not set their availability.',
             textAlign: TextAlign.center,
@@ -82,31 +85,31 @@ class _ConnectionRequestDialogScreenState
           ),
           alignment: Alignment.centerLeft,
           child: Text(
-              'However, you can still send ${widget.user.displayName} a request. Requests sent with messages have higher response rates.'),
+              'However, you can still send ${widget.user.displayName} a request without a specific time.'),
         ),
         Padding(
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.instance.safeBlockVertical,
           ),
-          child: TextField(
-            controller: _messageController,
-            textCapitalization: TextCapitalization.sentences,
-            autofocus: false,
-            maxLines: null,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[500], width: 1.0),
-              ),
-              hintText: 'Add a message',
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
             ),
+            color: Palette.primaryColor,
+            child: Text(
+              'Continue',
+              style: Theme.of(context).textTheme.button.apply(
+                    fontWeightDelta: 1,
+                    color: Palette.buttonDarkTextColor,
+                  ),
+            ),
+            onPressed: () {
+              setState(() {
+                _selectedTimeComplete = true;
+              });
+            },
           ),
-        ),
+        )
       ];
     } else if (_timeList == null || _timeList.length == 0) {
       return [
@@ -135,6 +138,7 @@ class _ConnectionRequestDialogScreenState
           onTap: (DateTime time) {
             setState(() {
               _selectedTime = time;
+              _selectedTimeComplete = true;
             });
           },
         )
@@ -382,8 +386,7 @@ class _ConnectionRequestDialogScreenState
           ),
         )
       ];
-    } else if (_selectedPurpose != null &&
-        (_timeList == null || _selectedDay == null || _selectedTime == null)) {
+    } else if (_selectedPurpose != null && !_selectedTimeComplete) {
       return <Widget>[
             Padding(
               padding: EdgeInsets.only(
@@ -453,8 +456,9 @@ class _ConnectionRequestDialogScreenState
           _buildTimeSelectorWidget();
     } else if (_selectedPurpose != null &&
         ((_timeList != null && _selectedDay != null && _selectedTime != null) ||
-            (widget.user.availability == null ||
-                widget.user.availability.timeRangeRaw.isEmpty)) &&
+            ((widget.user.availability == null ||
+                    widget.user.availability.timeRangeRaw.isEmpty) &&
+                _selectedTimeComplete)) &&
         !_referralComplete) {
       return <Widget>[
         Row(
@@ -465,7 +469,7 @@ class _ConnectionRequestDialogScreenState
                 if (_selectedPurpose != null &&
                     (_timeList == null || _selectedDay == null)) {
                   setState(() {
-                    _selectedPurpose = null;
+                    _selectedTimeComplete = false;
                   });
                 } else if (_selectedPurpose != null &&
                     _timeList != null &&
@@ -473,11 +477,13 @@ class _ConnectionRequestDialogScreenState
                     _selectedTime != null) {
                   setState(() {
                     _selectedTime = null;
+                    _selectedTimeComplete = false;
                   });
                 } else {
                   setState(() {
                     _timeList = null;
                     _selectedDay = null;
+                    _selectedTimeComplete = false;
                   });
                 }
               },
@@ -868,14 +874,16 @@ class _ConnectionRequestDialogScreenState
                           FontAwesomeIcons.comments,
                           size: 20,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal:
-                                SizeConfig.instance.safeBlockHorizontal * 3,
-                          ),
-                          child: Text(
-                            '${_selectedPurpose.name}',
-                            style: bodyTextStyle,
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  SizeConfig.instance.safeBlockHorizontal * 3,
+                            ),
+                            child: Text(
+                              '${_selectedPurpose.name}',
+                              style: bodyTextStyle,
+                            ),
                           ),
                         ),
                       ],
@@ -914,32 +922,39 @@ class _ConnectionRequestDialogScreenState
                         ],
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        const FaIcon(
-                          FontAwesomeIcons.calendar,
-                          size: 20,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal:
-                                SizeConfig.instance.safeBlockHorizontal * 3,
+                    Visibility(
+                      visible: _selectedTime != null,
+                      child: Row(
+                        children: <Widget>[
+                          const FaIcon(
+                            FontAwesomeIcons.calendar,
+                            size: 20,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                DateFormat('yMMMMEEEEd').format(_selectedTime),
-                                style: timeTextStyle,
-                              ),
-                              Text(
-                                '${timeFormat.format(_selectedTime)} - ${timeFormat.format(_selectedTime.add(Duration(minutes: _selectedPurpose?.duration ?? 30)))} ${_selectedTime.timeZoneName}',
-                                style: timeTextStyle,
-                              ),
-                            ],
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  SizeConfig.instance.safeBlockHorizontal * 3,
+                            ),
+                            child: _selectedTime != null
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        DateFormat('yMMMMEEEEd')
+                                            .format(_selectedTime),
+                                        style: timeTextStyle,
+                                      ),
+                                      Text(
+                                        '${timeFormat.format(_selectedTime)} - ${timeFormat.format(_selectedTime.add(Duration(minutes: _selectedPurpose?.duration ?? 30)))} ${_selectedTime.timeZoneName}',
+                                        style: timeTextStyle,
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
@@ -1138,6 +1153,7 @@ class _ConnectionRequestDialogScreenState
       },
       child: Container(
         width: double.infinity,
+        margin: EdgeInsets.only(bottom: 5),
         child: FlatButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -1145,6 +1161,12 @@ class _ConnectionRequestDialogScreenState
               width: _selectedPurposeButton == skill.name ? 2.5 : 1,
               color: Palette.primaryColor,
             ),
+          ),
+          padding: EdgeInsets.only(
+            left: SizeConfig.instance.safeBlockHorizontal * 8,
+            right: SizeConfig.instance.safeBlockHorizontal * 8,
+            top: 10,
+            bottom: 10,
           ),
           child: Text(
             skill.name,
