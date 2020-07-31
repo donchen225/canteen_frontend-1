@@ -381,6 +381,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
               BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
 
+              BlocProvider.of<SearchBloc>(context).add(ResetSearch());
+
               _homeBloc.add(UserHomeLoaded());
             }
           }
