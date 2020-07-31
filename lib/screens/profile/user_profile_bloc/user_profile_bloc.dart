@@ -154,7 +154,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   }
 
   Stream<UserProfileState> _mapUpdateSkillToState(UpdateSkill event) async* {
-    event.skillType == SkillType.teach
+    event.skillType == SkillType.offer
         ? await _userRepository.updateTeachSkill(event.skill, event.skillIndex)
         : await _userRepository.updateLearnSkill(event.skill, event.skillIndex);
   }
@@ -162,7 +162,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _mapDeleteSkillToState(DeleteSkill event) async* {
     final user = _userRepository.currentUserNow();
 
-    if (event.skillType == SkillType.teach) {
+    if (event.skillType == SkillType.offer) {
       if (user.teachSkill.length > 0 &&
           event.skillIndex >= 0 &&
           event.skillIndex <= user.teachSkill.length) {

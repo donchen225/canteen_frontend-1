@@ -30,7 +30,6 @@ MaterialPageRoute buildHomeScreenRoutes(
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
               user: args?.user ?? null,
-              editable: args?.editable ?? false,
             );
           case GroupSinglePostScreen.routeName:
             return GroupSinglePostScreen();

@@ -242,7 +242,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ViewUserProfileScreen.routeName,
       arguments: UserArguments(
         user: widget._userRepository.currentUserNow(),
-        editable: true,
       ),
     );
   }

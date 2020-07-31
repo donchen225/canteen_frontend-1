@@ -1,1 +1,1 @@
-enum SkillType { learn, teach }
+enum SkillType { request, offer }

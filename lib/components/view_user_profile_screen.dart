@@ -10,16 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewUserProfileScreen extends StatefulWidget {
   final User user;
-  final bool editable;
   final bool showAppBar;
   final bool canConnect;
   static const routeName = '/user';
 
   ViewUserProfileScreen(
-      {this.user,
-      this.editable = false,
-      this.showAppBar = true,
-      this.canConnect = true});
+      {this.user, this.showAppBar = true, this.canConnect = true});
 
   @override
   _ViewUserProfileScreenState createState() => _ViewUserProfileScreenState();
@@ -30,7 +26,6 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
     return user != null
         ? UserProfileBody(
             user: user,
-            editable: widget.editable,
             canConnect: widget.canConnect,
             headerWidget: widget.showAppBar
                 ? null

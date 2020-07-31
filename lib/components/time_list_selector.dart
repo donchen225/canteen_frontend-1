@@ -7,19 +7,16 @@ class TimeListSelector extends StatefulWidget {
   final DateTime day;
   final List<DateTime> times;
   final int duration;
-  final Function onTapBack;
   final Function onTap;
 
   TimeListSelector(
       {@required this.day,
       @required this.times,
       @required this.duration,
-      @required this.onTapBack,
       @required this.onTap})
       : assert(day != null),
         assert(times != null),
         assert(duration != null),
-        assert(onTapBack != null),
         assert(onTap != null);
 
   @override
@@ -31,7 +28,6 @@ class _TimeListSelectorState extends State<TimeListSelector> {
   final dateFormat = DateFormat('yMMMMd');
   final weekdayFormat = DateFormat('EEEE');
   List<DateTime> times;
-  Color mainColor = Palette.primaryColor;
   DateTime selectedTime;
 
   @override
@@ -45,6 +41,8 @@ class _TimeListSelectorState extends State<TimeListSelector> {
     final titleStyle = Theme.of(context).textTheme.headline6;
 
     return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
             Container(
               padding: EdgeInsets.only(
@@ -77,11 +75,11 @@ class _TimeListSelectorState extends State<TimeListSelector> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: event == selectedTime
-                              ? mainColor
-                              : Palette.containerColor,
+                          color: Palette.containerColor,
                           border: Border.all(
-                              width: 0.8, color: mainColor.withOpacity(0.7)),
+                            width: event == selectedTime ? 2.5 : 1,
+                            color: Palette.primaryColor,
+                          ),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Align(
@@ -89,9 +87,7 @@ class _TimeListSelectorState extends State<TimeListSelector> {
                           child: Text(
                             DateFormat.jm().format(event),
                             style: TextStyle(
-                                color: event == selectedTime
-                                    ? Palette.containerColor
-                                    : mainColor,
+                                color: Palette.primaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -112,13 +108,6 @@ class _TimeListSelectorState extends State<TimeListSelector> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-              onTap: () => widget.onTapBack(),
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 24,
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(right: 24),
@@ -166,11 +155,8 @@ class _TimeListSelectorState extends State<TimeListSelector> {
             ),
           ],
         ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            child: _buildTimeList(context),
-          ),
+        Container(
+          child: _buildTimeList(context),
         ),
       ],
     );

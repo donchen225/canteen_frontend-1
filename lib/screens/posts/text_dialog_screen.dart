@@ -9,54 +9,28 @@ class TextDialogScreen extends StatelessWidget {
   final String title;
   final Widget sendWidget;
   final bool canUnfocus;
+  final bool hasPadding;
   final Widget child;
 
   TextDialogScreen(
-      {this.title, this.sendWidget, this.canUnfocus = true, this.child});
+      {this.title,
+      this.sendWidget,
+      this.canUnfocus = true,
+      this.hasPadding = true,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
-    final double additionalTopPadding =
-        math.max(SizeConfig.instance.paddingTop, 0.0);
-    final double additionalBottomPadding =
-        math.max(SizeConfig.instance.paddingBottom, 0.0);
-
     return DialogScreen(
       sendWidget: sendWidget,
       canUnfocus: canUnfocus,
-      child: SingleChildScrollView(
-        child: Container(
-          height: SizeConfig.instance.blockSizeVertical *
-                  kDialogScreenHeightBlocks -
-              kToolbarHeight -
-              additionalTopPadding -
-              kBottomNavigationBarHeight -
-              additionalBottomPadding,
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical * 2,
-                      left: SizeConfig.instance.blockSizeHorizontal * 6,
-                      right: SizeConfig.instance.blockSizeHorizontal * 6,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          width: 1,
-                          color: const Color(0xFFDEE0D1),
-                        ),
-                      ),
-                    ),
-                    child: child ?? Container(),
-                  ),
-                ),
-              ],
-            ),
-          ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.instance.safeBlockVertical * (hasPadding ? 2 : 0),
+          left: SizeConfig.instance.blockSizeHorizontal * 6,
+          right: SizeConfig.instance.blockSizeHorizontal * 6,
         ),
+        child: child ?? Container(),
       ),
     );
   }

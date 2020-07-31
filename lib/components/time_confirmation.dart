@@ -6,17 +6,14 @@ import 'package:intl/intl.dart';
 class TimeConfirmation extends StatefulWidget {
   final DateTime time;
   final int duration;
-  final Function onTapBack;
   final Function onMessageUpdated;
 
   TimeConfirmation({
     @required this.time,
     @required this.duration,
-    @required this.onTapBack,
     this.onMessageUpdated,
   })  : assert(time != null),
-        assert(duration != null),
-        assert(onTapBack != null);
+        assert(duration != null);
 
   @override
   _TimeConfirmationState createState() => _TimeConfirmationState();
@@ -56,13 +53,6 @@ class _TimeConfirmationState extends State<TimeConfirmation> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-              onTap: () => widget.onTapBack(),
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 24,
-              ),
-            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(right: 24),

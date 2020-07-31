@@ -1,16 +1,20 @@
-import 'package:canteen_frontend/components/confirmation_dialog_screen.dart';
+import 'package:canteen_frontend/components/connection_request_dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
+import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/request/request_repository.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/skill/skill_type.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/screens/profile/skill_item.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/user_profile_screen.dart';
 import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,14 +22,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class UserProfileBody extends StatefulWidget {
   final User user;
   final bool canConnect;
-  final bool editable;
   final Widget headerWidget;
 
-  UserProfileBody(
-      {this.user,
-      this.canConnect = true,
-      this.editable = false,
-      this.headerWidget});
+  UserProfileBody({this.user, this.canConnect = true, this.headerWidget});
 
   @override
   _UserProfileBodyState createState() => _UserProfileBodyState();
@@ -38,7 +37,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
 
   final List<String> tabs = [
     'Offerings',
-    'Asks',
+    'Requests',
   ];
 
   @override
@@ -55,40 +54,10 @@ class _UserProfileBodyState extends State<UserProfileBody>
     super.dispose();
   }
 
-  void _onTapSkillFunction(BuildContext context, User user, Skill skill,
-      String skillType, int index) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        final sendRequetBloc =
-            SendRequestBloc(requestRepository: RequestRepository());
-        return BlocProvider<SendRequestBloc>(
-          create: (dialogContext) => sendRequetBloc,
-          child: ConfirmationDialogScreen(
-            user: user,
-            skill: skill,
-            onConfirm: (String comment, DateTime time) {
-              sendRequetBloc.add(
-                SendRequest(
-                  receiverId: user.id,
-                  comment: comment,
-                  index: index,
-                  type: skillType,
-                  time: time,
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildItemList(BuildContext context, String name, User user) {
-    final skillType = name == 'Offerings' ? 'offer' : 'request';
-    final skills = skillType == 'offer' ? user.teachSkill : user.learnSkill;
+    final skillType = name == 'Offerings' ? SkillType.offer : SkillType.request;
+    final skills =
+        skillType == SkillType.offer ? user.teachSkill : user.learnSkill;
 
     return CustomScrollView(
       key: PageStorageKey<String>(name),
@@ -101,8 +70,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     final skill = skills[index];
-                    final tapEnabled =
-                        skill.duration != null && skill.name != null;
 
                     return SkillItem(
                       verticalPadding:
@@ -112,9 +79,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
                               kHorizontalPaddingBlocks,
                       skill: skill,
                       showButton: widget.canConnect,
-                      tapEnabled: tapEnabled && !widget.editable,
-                      onTap: () => _onTapSkillFunction(
-                          context, user, skill, skillType, index),
                     );
                   },
                   childCount: skills.length,
@@ -157,6 +121,106 @@ class _UserProfileBodyState extends State<UserProfileBody>
               ),
       ],
     );
+  }
+
+  Widget _buildMainWidget() {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    if (widget.user.id == userId) {
+      return Container(
+        width: double.infinity,
+        child: FlatButton(
+          onPressed: () async {
+            final userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
+            final userRepository =
+                BlocProvider.of<UserBloc>(context).userRepository;
+
+            await showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => UserProfileScreen(
+                userRepository: userRepository,
+              ),
+            );
+
+            final state = userProfileBloc.state;
+
+            setState(() {
+              if (state is UserProfileLoaded) {
+                user = state.user;
+              } else {
+                user = userRepository.currentUserNow();
+              }
+            });
+          },
+          child: Text(
+            'Edit Profile',
+            style: Theme.of(context)
+                .textTheme
+                .button
+                .apply(fontWeightDelta: 1, color: Palette.primaryColor),
+          ),
+          shape: RoundedRectangleBorder(
+              side: BorderSide(width: 1, color: Palette.primaryColor),
+              borderRadius: BorderRadius.circular(10.0)),
+        ),
+      );
+    } else {
+      return Container(
+        width: double.infinity,
+        child: FlatButton(
+          color: Palette.primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Text(
+            'Connect',
+            style: Theme.of(context).textTheme.button.apply(
+                  fontWeightDelta: 1,
+                  color: Palette.buttonDarkTextColor,
+                ),
+          ),
+          onPressed: () {
+            final authenticated = BlocProvider.of<AuthenticationBloc>(context)
+                .state is Authenticated;
+
+            if (authenticated) {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) {
+                  final sendRequetBloc =
+                      SendRequestBloc(requestRepository: RequestRepository());
+                  return BlocProvider<SendRequestBloc>(
+                    create: (dialogContext) => sendRequetBloc,
+                    child: ConnectionRequestDialogScreen(
+                      user: user,
+                      onConfirm: (String comment, DateTime time, Skill skill,
+                          int index) {
+                        sendRequetBloc.add(
+                          SendRequest(
+                            receiverId: user.id,
+                            comment: comment,
+                            index: index,
+                            type: skill.type.toString().split('.').last,
+                            time: time,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            } else {
+              UnauthenticatedFunctions.showSignUp(context);
+            }
+          },
+        ),
+      );
+    }
   }
 
   @override
@@ -218,17 +282,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                   style: bodyTextStyle.apply(
                                       color: Palette.textSecondaryBaseColor),
                                 ),
-                                // Row(
-                                //   children: [
-                                //     IconButton(
-                                //       icon: FaIcon(
-                                //         FontAwesomeIcons.envelope,
-                                //         size: 22,
-                                //       ),
-                                //       onPressed: () {},
-                                //     ),
-                                //   ],
-                                // )
                               ],
                             ),
                           ),
@@ -242,48 +295,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
                       vertical: SizeConfig.instance.safeBlockVertical,
                     ),
                     child: Text(user.about ?? '', style: bodyTextStyle),
-                  ),
-                  Visibility(
-                    visible: widget.editable,
-                    child: Container(
-                      width: double.infinity,
-                      child: FlatButton(
-                        onPressed: () async {
-                          final userProfileBloc =
-                              BlocProvider.of<UserProfileBloc>(context);
-                          final userRepository =
-                              BlocProvider.of<UserBloc>(context).userRepository;
-
-                          await showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => UserProfileScreen(
-                              userRepository: userRepository,
-                            ),
-                          );
-
-                          final state = userProfileBloc.state;
-
-                          setState(() {
-                            if (state is UserProfileLoaded) {
-                              user = state.user;
-                            } else {
-                              user = userRepository.currentUserNow();
-                            }
-                          });
-                        },
-                        child: Text(
-                          'Edit Profile',
-                          style: Theme.of(context).textTheme.button.apply(
-                              fontWeightDelta: 1, color: Palette.primaryColor),
-                        ),
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                width: 1, color: Palette.primaryColor),
-                            borderRadius: BorderRadius.circular(10.0)),
-                      ),
-                    ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
@@ -299,6 +310,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                 ?.toList() ??
                             []),
                   ),
+                  _buildMainWidget(),
                 ],
               ),
             ),

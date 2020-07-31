@@ -93,7 +93,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
         description: event.description,
         price: event.price,
         duration: event.duration,
-        type: event.isOffering ? SkillType.teach : SkillType.learn);
+        type: event.isOffering ? SkillType.offer : SkillType.request);
 
     if (event.isOffering) {
       _userRepository.updateTeachSkill(skill, 0);

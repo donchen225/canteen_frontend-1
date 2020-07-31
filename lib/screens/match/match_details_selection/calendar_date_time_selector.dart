@@ -11,11 +11,13 @@ class CalendarDateTimeSelector extends StatefulWidget {
   final User user;
   final int duration;
   final Function onDaySelected;
+  final double height;
 
   CalendarDateTimeSelector({
     @required this.user,
     @required this.duration,
     this.onDaySelected,
+    this.height = 400,
   });
 
   @override
@@ -242,49 +244,26 @@ class _CalendarDateTimeSelectorState extends State<CalendarDateTimeSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final height = constraints.maxHeight;
-
-      return Container(
-        color: Palette.containerColor,
-        height: height,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              child: Text('Select a Day',
-                  style: Theme.of(context).textTheme.headline6),
+    return Container(
+      color: Palette.containerColor,
+      height: widget.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            child: _buildTableCalendar(widget.height),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '*${now.timeZoneName} Timezone (${DateFormat.jm().format(now)})',
             ),
-            Container(
-              child: _buildTableCalendar(height),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
-              alignment: Alignment.center,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.instance.safeBlockVertical),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          '*${now.timeZoneName} Timezone (${DateFormat.jm().format(now)})',
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -220,7 +220,7 @@ class App extends StatelessWidget {
           headline5: TextStyle(
               fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: -0.25),
           headline6: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: -0.1),
+              fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: 0.1),
           subtitle1: TextStyle(
               fontSize: 16, fontWeight: FontWeight.normal, letterSpacing: -0.2),
           subtitle2: TextStyle(
