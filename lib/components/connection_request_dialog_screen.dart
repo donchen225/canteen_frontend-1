@@ -516,7 +516,11 @@ class _ConnectionRequestDialogScreenState
                   bottom: SizeConfig.instance.safeBlockVertical,
                 ),
                 child: Text(
-                  'Referral',
+                  'Referral' +
+                      (_selectedPurpose.name != 'Personal' &&
+                              _selectedPurpose.name != 'Business'
+                          ? ' (optional)'
+                          : ''),
                   style: titleStyle,
                 ),
               ),
@@ -527,7 +531,7 @@ class _ConnectionRequestDialogScreenState
                 child: Text(
                   _selectedPurpose.name != 'Personal' &&
                           _selectedPurpose.name != 'Business'
-                      ? 'Add a mutual connection to introduce you to ${widget.user.displayName} (optional):'
+                      ? 'Add a mutual connection to introduce you to ${widget.user.displayName}:'
                       : 'For all connections outside of ${widget.user.displayName}\'s offerings and asks, you must list a mutual connection to introduce you:',
                   style: bodyTextStyle,
                 ),
