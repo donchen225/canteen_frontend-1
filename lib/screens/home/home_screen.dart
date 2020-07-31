@@ -271,8 +271,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final bottomAppBarHeight =
-        kAppBarHeight + SizeConfig.instance.paddingBottom;
+    final bottomAppBarHeight = (SizeConfig.instance.paddingBottom == 0
+            ? kBottomNavBarHeightNoNotch
+            : kBottomNavBarHeightWithNotch) +
+        SizeConfig.instance.paddingBottom;
     final iconHeight = SizeConfig.instance.paddingBottom == 0
         ? bottomAppBarHeight
         : bottomAppBarHeight * 0.7;

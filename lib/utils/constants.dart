@@ -15,6 +15,8 @@ const double kDisabledOpacity = 0.5;
 const double kProfileIconSize = 35;
 const double kAppBarHeight = 44;
 const double kTabBarHeight = 44;
+const double kBottomNavBarHeightWithNotch = 44;
+const double kBottomNavBarHeightNoNotch = 50;
 
 // Profile constants
 const double kProfileSize = 120;
