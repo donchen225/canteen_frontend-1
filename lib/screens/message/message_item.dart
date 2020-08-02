@@ -104,7 +104,7 @@ class MessageItem extends StatelessWidget {
   Widget buildMessageContent(
       bool isSelf, Message message, BuildContext context) {
     if (message is TextMessage) {
-      return Text(
+      return SelectableText(
         message.text,
         style: TextStyle(
           color: isSelf ? Palette.selfMessageColor : Palette.otherMessageColor,
@@ -146,7 +146,7 @@ class MessageItem extends StatelessWidget {
                 padding: EdgeInsets.only(
                   bottom: 5,
                 ),
-                child: Text(
+                child: SelectableText(
                   title,
                   style: Theme.of(context)
                       .textTheme
