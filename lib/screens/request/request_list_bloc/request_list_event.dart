@@ -21,7 +21,7 @@ class UpdateRequestList extends RequestListEvent {
   const UpdateRequestList(this.requestList);
 
   @override
-  List<Object> get props => [requestList];
+  List<Object> get props => requestList;
 
   @override
   String toString() => 'UpdateRequestList { requestList: $requestList }';
