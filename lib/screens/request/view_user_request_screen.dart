@@ -23,11 +23,13 @@ class ViewUserRequestScreen extends StatefulWidget {
 }
 
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
-  String _buildRequestText(Request request) {
-    if (request.referralId != null && request.referralId.isNotEmpty) {
-      return "Asked you for a referral to ${widget.request} for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}";
+  String _buildRequestText(DetailedRequest request) {
+    if (request is Referral) {
+      return "Asked you for a referral to ${request.receiver.displayName} for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+    } else if (request is ReferredRequest) {
+      return "Referring ${request.sender.displayName} to you for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
     } else {
-      return "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}";
+      return "Sent you a request for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
     }
   }
 
@@ -57,7 +59,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}",
+                      _buildRequestText(widget.request),
                       style: bodyTextStyle.apply(
                         fontWeightDelta: 1,
                       ),

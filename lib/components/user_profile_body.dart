@@ -16,7 +16,6 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,7 +78,6 @@ class _UserProfileBodyState extends State<UserProfileBody>
                           SizeConfig.instance.safeBlockHorizontal *
                               kHorizontalPaddingBlocks,
                       skill: skill,
-                      showButton: widget.canConnect,
                     );
                   },
                   childCount: skills.length,
@@ -168,7 +166,7 @@ class _UserProfileBodyState extends State<UserProfileBody>
               borderRadius: BorderRadius.circular(10.0)),
         ),
       );
-    } else {
+    } else if (widget.canConnect) {
       return Container(
         width: double.infinity,
         child: FlatButton(
@@ -228,6 +226,8 @@ class _UserProfileBodyState extends State<UserProfileBody>
         ),
       );
     }
+
+    return Container();
   }
 
   @override

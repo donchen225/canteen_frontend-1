@@ -67,7 +67,6 @@ class HomeNavigationBarBadgeBloc
     });
     _requestSubscription = _requestBloc.listen((state) {
       if (state is RequestsLoaded) {
-        print(state.requestList.length);
         add(UpdateRequestCount(numRequests: state.requestList.length));
       }
     });

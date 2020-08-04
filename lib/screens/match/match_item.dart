@@ -7,6 +7,8 @@ import 'package:timeago/timeago.dart' as timeago;
 class MatchItem extends StatelessWidget {
   final String displayName;
   final String photoUrl;
+  final String additionalDisplayName;
+  final String additionalPhotoUrl;
   final String message;
   final DateTime time;
   final bool read;
@@ -16,6 +18,8 @@ class MatchItem extends StatelessWidget {
     Key key,
     this.displayName = '',
     this.photoUrl = '',
+    this.additionalDisplayName = '',
+    this.additionalPhotoUrl,
     this.message = '',
     this.read = true,
     @required this.time,
@@ -30,6 +34,14 @@ class MatchItem extends StatelessWidget {
         .replaceFirst('min', 'm');
 
     return t == 'now' ? t : '$t ago';
+  }
+
+  String _buildTitle() {
+    if (additionalDisplayName != null && additionalDisplayName.isNotEmpty) {
+      return '$displayName ($additionalDisplayName)';
+    } else {
+      return displayName;
+    }
   }
 
   @override
@@ -60,6 +72,7 @@ class MatchItem extends StatelessWidget {
                   children: <Widget>[
                     ProfilePicture(
                       photoUrl: photoUrl,
+                      additionalPhotoUrl: additionalPhotoUrl,
                       editable: false,
                       size: constraints.maxHeight * 0.75,
                     ),
@@ -82,7 +95,7 @@ class MatchItem extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      displayName,
+                                      _buildTitle(),
                                       textAlign: TextAlign.start,
                                       style: read
                                           ? Theme.of(context)
