@@ -23,6 +23,14 @@ class ViewUserRequestScreen extends StatefulWidget {
 }
 
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
+  String _buildRequestText(Request request) {
+    if (request.referralId != null && request.referralId.isNotEmpty) {
+      return "Asked you for a referral to ${widget.request} for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}";
+    } else {
+      return "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}";
+    }
+  }
+
   Widget _buildProfileWidget(BuildContext context, User user) {
     final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 

@@ -108,6 +108,7 @@ void main() async {
           create: (context) {
             return RequestBloc(
               requestRepository: requestRepository,
+              userRepository: userRepository,
             );
           },
         ),

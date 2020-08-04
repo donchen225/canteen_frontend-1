@@ -35,7 +35,9 @@ class SendRequestBloc extends Bloc<SendRequestEvent, SendRequestState> {
     try {
       final payload = CreateRequestPayload(
         receiverId: event.receiverId,
+        referralId: event.referralId,
         comment: event.comment,
+        referralComment: event.referralComment,
         index: event.index,
         type: event.type,
         time: event.time != null ? event.time.toUtc() : event.time,

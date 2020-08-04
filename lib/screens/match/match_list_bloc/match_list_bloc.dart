@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/match/match_repository.dart';
-import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';

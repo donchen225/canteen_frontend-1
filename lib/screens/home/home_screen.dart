@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
             BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-            BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
+            // BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
             BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
             BlocProvider.of<GroupHomeBloc>(context)
@@ -371,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-              BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
+              // BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
               BlocProvider.of<GroupHomeBloc>(context)

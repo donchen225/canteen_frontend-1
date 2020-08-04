@@ -16,6 +16,7 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -198,14 +199,20 @@ class _UserProfileBodyState extends State<UserProfileBody>
                     create: (dialogContext) => sendRequetBloc,
                     child: ConnectionRequestDialogScreen(
                       user: user,
-                      onConfirm: (String comment, DateTime time, Skill skill,
-                          int index) {
+                      onConfirm: (String comment,
+                          DateTime time,
+                          Skill skill,
+                          int index,
+                          String referralId,
+                          String refferalComment) {
                         sendRequetBloc.add(
                           SendRequest(
                             receiverId: user.id,
+                            referralId: referralId,
                             comment: comment,
+                            referralComment: refferalComment,
                             index: index,
-                            type: skill.type.toString().split('.').last,
+                            type: skill.type.name,
                             time: time,
                           ),
                         );

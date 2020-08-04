@@ -46,7 +46,6 @@ class _ConnectionRequestDialogScreenState
   User _confirmedReferral;
   String _referralError = '';
   bool _referralComplete = false;
-  String _message = '';
   TextEditingController _messageController;
   final DateFormat timeFormat = DateFormat.jm();
 
@@ -183,10 +182,12 @@ class _ConnectionRequestDialogScreenState
                         _selectedPurpose.name != 'Business'))) {
               if (widget.onConfirm != null) {
                 widget.onConfirm(
-                  _message,
+                  _selectedReferral == null ? _messageController.text : null,
                   _selectedTime,
                   _selectedPurpose,
                   _selectedPurposeIndex,
+                  _selectedReferral.id,
+                  _selectedReferral != null ? _messageController.text : null,
                 );
                 await showDialog(
                   context: context,

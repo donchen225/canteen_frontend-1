@@ -1,5 +1,7 @@
 import 'package:canteen_frontend/models/request/request.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tuple/tuple.dart';
 
 abstract class RequestEvent extends Equatable {
   const RequestEvent();
@@ -16,7 +18,7 @@ class LoadRequests extends RequestEvent {
 }
 
 class RequestsUpdated extends RequestEvent {
-  final List<Request> requests;
+  final List<Tuple2<DocumentChangeType, Request>> requests;
 
   const RequestsUpdated(this.requests);
 
@@ -25,24 +27,6 @@ class RequestsUpdated extends RequestEvent {
 
   @override
   String toString() => 'RequestsUpdated { requests: $requests }';
-}
-
-class AddRequest extends RequestEvent {
-  final String receiverId;
-  final String comment;
-  final int index;
-  final String type;
-  final DateTime time;
-
-  const AddRequest(
-      {this.receiverId, this.comment, this.index, this.type, this.time});
-
-  @override
-  List<Object> get props => [receiverId, comment, index, type, time];
-
-  @override
-  String toString() =>
-      'AddRequest { receiverId: $receiverId, comment: $comment, index: $index, type: $type, time: $time }';
 }
 
 class UpdateRequest extends RequestEvent {

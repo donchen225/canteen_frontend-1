@@ -9,10 +9,15 @@ abstract class RequestListEvent extends Equatable {
 }
 
 class LoadRequestList extends RequestListEvent {
-  const LoadRequestList();
+  final List<DetailedRequest> requestList;
+
+  const LoadRequestList(this.requestList);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => requestList;
+
+  @override
+  String toString() => 'LoadRequestList { requestList: $requestList }';
 }
 
 class UpdateRequestList extends RequestListEvent {
