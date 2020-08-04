@@ -29,6 +29,7 @@ assets/app_config.json
 .pub-cache/
 .pub/
 /build/
+ios/Flutter/.last_build_id
 
 # Web related
 lib/generated_plugin_registrant.dart
