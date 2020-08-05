@@ -34,7 +34,9 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   int _initialDurationIndex = 0;
   final double _kPickerSheetHeight = 216.0;
   final List<int> durationOptions = <int>[
+    15,
     30,
+    45,
     60,
     90,
     120,
@@ -61,7 +63,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   }
 
   void _setSkill() {
-    final skillList = widget.skillType == SkillType.teach
+    final skillList = widget.skillType == SkillType.offer
         ? widget.user.teachSkill
         : widget.user.learnSkill;
 
@@ -133,7 +135,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   @override
   Widget build(BuildContext context) {
     return DialogScreen(
-      title: 'Edit ${widget.skillType == SkillType.teach ? "Offering" : "Ask"}',
+      title: 'Edit ${widget.skillType == SkillType.offer ? "Offering" : "Ask"}',
       onCancel: () => _userProfileBloc.add(LoadUserProfile(widget.user)),
       sendWidget: ConfirmButton(
         onTap: (_) {

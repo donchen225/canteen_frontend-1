@@ -16,7 +16,6 @@ MaterialPageRoute buildNotificationScreenRoutes(RouteSettings settings) {
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
               user: args.user,
-              editable: args.editable ?? false,
             );
           case SettingsScreen.routeName:
             return SettingsScreen();

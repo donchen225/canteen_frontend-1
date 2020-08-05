@@ -29,8 +29,17 @@ class Match extends Equatable {
   });
 
   @override
-  List<Object> get props =>
-      [id, userId, senderId, status, payer, time, read, createdOn, lastUpdated];
+  List<Object> get props => [
+        id,
+        userId,
+        senderId,
+        status,
+        payer,
+        time,
+        read,
+        createdOn,
+        lastUpdated,
+      ];
 
   static Match fromEntity(MatchEntity entity) {
     return Match(

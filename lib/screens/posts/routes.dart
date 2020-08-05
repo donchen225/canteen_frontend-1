@@ -20,16 +20,16 @@ MaterialPageRoute buildHomeScreenRoutes(
           case SearchingScreen.routeName:
             final SearchArguments args = settings.arguments;
             return SearchingScreen(
-                initialQuery: args.initialQuery,
-                searchHistory: args.searchHistory);
+              initialQuery: args?.initialQuery ?? '',
+              isInitialSearch: args?.isInitialSearch ?? true,
+            );
           case SearchResultScreen.routeName:
             final SearchResultsArguments args = settings.arguments;
-            return SearchResultScreen(query: args.query);
+            return SearchResultScreen(query: args.query, results: args.results);
           case ViewUserProfileScreen.routeName:
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
               user: args?.user ?? null,
-              editable: args?.editable ?? false,
             );
           case GroupSinglePostScreen.routeName:
             return GroupSinglePostScreen();

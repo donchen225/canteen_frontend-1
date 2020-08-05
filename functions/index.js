@@ -1,9 +1,9 @@
 'use strict';
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const algoliasearch = require('algoliasearch');
 const dates = require('./date');
+
 const utils = require('./utils');
 
 const REQUEST_COLLECTION = 'requests';
@@ -44,7 +44,9 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     }
 
     const receiverId = data.receiver_id;
-    const comment = data.comment;
+    const referralId = data.referral_id;
+    const comment = data.comment ? data.comment : "";
+    const referralComment = data.referral_comment ? data.referral_comment : "";
     const skillType = data.type;
     const skillIndex = data.index;
     const requestTime = data.time ? new Date(data.time) : data.time;
@@ -65,13 +67,13 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             'valid type.');
     }
 
-    if (comment && !(typeof comment === 'string')) {
+    if ((comment && !(typeof comment === 'string')) || (referralComment && !(typeof referralComment === 'string'))) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'valid comment.');
     }
 
-    if (skillIndex === null || !(typeof skillIndex === 'number') || !(skillIndex >= 0 && skillIndex <= 2)) {
+    if (!skillIndex || !(typeof skillIndex === 'number') || !((skillIndex >= 0 && skillIndex <= 2) || skillIndex === 100 || skillIndex === 200)) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'valid index.');
@@ -80,19 +82,45 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     const uid = context.auth.uid;
 
     if (receiverId === uid) {
-        throw new functions.https.HttpsError('invalid-argument', 'The user ID cannot be same as sender ID.');
+        throw new functions.https.HttpsError('invalid-argument', 'The target user id cannot be the same as the sender id.');
+    }
+
+    if (referralId && (referralId === uid || referralId === receiverId)) {
+        throw new functions.https.HttpsError('invalid-argument', 'The referral user id cannot be the same as the sender id or the target user id.');
     }
 
     const user = await firestore.collection('users').doc(receiverId).get().then((doc) => {
         if (!doc.exists) {
-            throw new functions.https.HttpsError('not-found', 'The user ID does not exist.');
+            throw new functions.https.HttpsError('not-found', 'The target user id does not exist.');
         }
         return doc.data();
     }).catch((error) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    if (referralId) {
+        await firestore.collection('users').doc(referralId).get().then((doc) => {
+            if (!doc.exists) {
+                throw new functions.https.HttpsError('not-found', 'The user referral id does not exist.');
+            }
+            return doc.data();
+        }).catch((error) => {
+            throw new functions.https.HttpsError('unknown', error.message, error);
+        });
+    }
+
+
     await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 0).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'failure', 'message': 'Request has already been sent.' };
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 10).get().then((querySnapshot) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
             output = { 'status': 'failure', 'message': 'Request has already been sent.' };
@@ -110,6 +138,16 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
             output = { 'status': 'failure', 'message': 'Request has already been received. Check your requests.' };
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 10).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'failure', 'message': `${user.display_name} is currently being referred to you. Please wait for the referral.` };
         }
         return;
     }).catch((error) => {
@@ -137,21 +175,38 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         return output;
     }
 
+    var skill;
+    if (skillIndex === 100) {
+        skill = {
+            "name": "Personal",
+            "price": 0,
+            "duration": 30,
+        };
+    } else if (skillIndex === 200) {
+        skill = {
+            "name": "Business",
+            "price": 0,
+            "duration": 30,
+        };
+    } else {
+        skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
+    }
 
-    const skill = skillType === "offer" ? user.teach_skill[skillIndex] : user.learn_skill[skillIndex];
     const payer = skillType === "offer" ? uid : receiverId;
 
     // Create document
     const doc = {
         "sender_id": uid,
         "receiver_id": receiverId,
+        "referral_id": referralId ? referralId : "",
         "payer": payer,
         "skill": skill["name"],
         "price": skill["price"],
         "duration": skill["duration"],
-        "status": 0,
+        "status": referralId ? 10 : 0,
         "type": skillType,
         "comment": comment,
+        "referral_comment": referralComment,
         "time": requestTime,
         "created_on": admin.firestore.Timestamp.now(),
     };

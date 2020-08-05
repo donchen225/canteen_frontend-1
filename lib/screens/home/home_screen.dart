@@ -34,6 +34,7 @@ import 'package:canteen_frontend/screens/request/request_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/request/request_list_bloc/request_list_bloc.dart';
 import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/routes.dart';
+import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/settings/settings_screen.dart';
 import 'package:canteen_frontend/screens/splash/splash_screen.dart';
 import 'package:canteen_frontend/services/home_navigation_bar_service.dart';
@@ -161,12 +162,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .homeNavigatorKey
               .currentState
               .popUntil((route) => route.isFirst);
+          BlocProvider.of<SearchBloc>(context).add(ResetSearch());
           break;
         case 1:
           getIt<NavigationService>()
               .searchNavigatorKey
               .currentState
               .popUntil((route) => route.isFirst);
+          BlocProvider.of<SearchBloc>(context).add(ResetSearch());
           break;
         case 2:
           getIt<NavigationService>()
@@ -240,7 +243,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ViewUserProfileScreen.routeName,
       arguments: UserArguments(
         user: widget._userRepository.currentUserNow(),
-        editable: true,
       ),
     );
   }
@@ -269,8 +271,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final bottomAppBarHeight =
-        kAppBarHeight + SizeConfig.instance.paddingBottom;
+    final bottomAppBarHeight = (SizeConfig.instance.paddingBottom == 0
+            ? kBottomNavBarHeightNoNotch
+            : kBottomNavBarHeightWithNotch) +
+        SizeConfig.instance.paddingBottom;
     final iconHeight = SizeConfig.instance.paddingBottom == 0
         ? bottomAppBarHeight
         : bottomAppBarHeight * 0.7;
@@ -378,6 +382,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   .add(LoadNotifications());
 
               BlocProvider.of<DiscoverBloc>(context).add(LoadDiscover());
+
+              BlocProvider.of<SearchBloc>(context).add(ResetSearch());
 
               _homeBloc.add(UserHomeLoaded());
             }

@@ -22,7 +22,6 @@ MaterialPageRoute buildMessageScreenRoutes(RouteSettings settings) {
             final UserArguments args = settings.arguments;
             return ViewUserProfileScreen(
               user: args.user,
-              editable: args.editable ?? false,
             );
           case ViewUserRequestScreen.routeName:
             final RequestArguments args = settings.arguments;

@@ -61,11 +61,11 @@ class Recommendation extends Equatable {
           json['interests']?.map<String>((x) => x.toString())?.toList() ?? [],
       learnSkill: json['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.request))
           .toList(),
       teachSkill: json['teach_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.offer))
           .toList(),
       status: json['status'],
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(

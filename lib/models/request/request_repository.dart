@@ -5,10 +5,10 @@ import 'package:canteen_frontend/models/request/request_entity.dart';
 import 'package:canteen_frontend/utils/cloud_functions.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tuple/tuple.dart';
 
 class RequestRepository {
   final requestCollection = Firestore.instance.collection('requests');
-  List<Request> _requests = [];
   List<DetailedRequest> _detailedRequests = [];
 
   RequestRepository();
@@ -30,26 +30,29 @@ class RequestRepository {
     });
   }
 
-  Future<void> acceptRequest(String requestId) {
-    _requests.removeWhere((r) => r.id == requestId);
+  Future<void> acceptRequest(String requestId,
+      {bool isReferral = false, String comment = ''}) {
     _detailedRequests.removeWhere((r) => r.id == requestId);
 
+    final status = isReferral ? 0 : 1;
+
     return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(requestCollection.document(requestId), {"status": 1});
+      await tx.update(requestCollection.document(requestId), {
+        "status": status,
+        "comment": comment,
+      });
     });
   }
 
-  Future<void> declineRequest(String requestId) {
-    _requests.removeWhere((r) => r.id == requestId);
+  Future<void> declineRequest(String requestId, {bool isReferral = false}) {
     _detailedRequests.removeWhere((r) => r.id == requestId);
 
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(requestCollection.document(requestId), {"status": 2});
-    });
-  }
+    final status = isReferral ? 2 : 12;
 
-  List<Request> currentRequests() {
-    return _requests;
+    return Firestore.instance.runTransaction((Transaction tx) async {
+      await tx
+          .update(requestCollection.document(requestId), {"status": status});
+    });
   }
 
   List<DetailedRequest> currentDetailedRequests() {
@@ -61,11 +64,10 @@ class RequestRepository {
   }
 
   void clearRequests() {
-    _requests = [];
     _detailedRequests = [];
   }
 
-  Stream<List<Request>> getAllRequests() {
+  Stream<List<Tuple2<DocumentChangeType, Request>>> getAllRequests() {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
@@ -75,28 +77,52 @@ class RequestRepository {
         .orderBy("created_on", descending: true)
         .snapshots()
         .map((snapshot) {
-      snapshot.documentChanges.forEach((doc) => _processRequests(doc.type,
-          Request.fromEntity(RequestEntity.fromSnapshot(doc.document))));
-      return _requests;
+      return snapshot.documentChanges
+          .map((doc) => Tuple2<DocumentChangeType, Request>(doc.type,
+              Request.fromEntity(RequestEntity.fromSnapshot(doc.document))))
+          .toList();
     });
   }
 
-  void _processRequests(DocumentChangeType type, Request newRequest) {
-    if (type == DocumentChangeType.added) {
-      var idx = 0;
-      while (idx < _requests.length) {
-        if (newRequest.createdOn.isAfter(_requests[idx].createdOn)) {
-          break;
-        }
+  Stream<List<Tuple2<DocumentChangeType, Request>>> getAllReferralRequests() {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-        idx++;
+    return requestCollection
+        .where('referral_id', isEqualTo: userId)
+        .where('status', isEqualTo: 10)
+        .orderBy("created_on", descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.documentChanges
+          .map((doc) => Tuple2<DocumentChangeType, Request>(doc.type,
+              Request.fromEntity(RequestEntity.fromSnapshot(doc.document))))
+          .toList();
+    });
+  }
+
+  void updateDetailedRequest(DocumentChangeType type, Request request) {
+    if (type == DocumentChangeType.added) {
+      var currentIdx = _detailedRequests.indexWhere((r) => r.id == request.id);
+
+      if (currentIdx != -1) {
+        _detailedRequests[currentIdx] = request;
+      } else {
+        var idx = 0;
+        while (idx < _detailedRequests.length) {
+          if (request.createdOn.isAfter(_detailedRequests[idx].createdOn)) {
+            break;
+          }
+
+          idx++;
+        }
+        _detailedRequests.insert(idx, request);
       }
-      _requests.insert(idx, newRequest);
     } else if (type == DocumentChangeType.modified) {
-      _requests.removeWhere((request) => request.id == newRequest.id);
-      _requests.insert(0, newRequest);
+      _detailedRequests.removeWhere((r) => r.id == request.id);
+      _detailedRequests.insert(0, request);
     } else if (type == DocumentChangeType.removed) {
-      _requests.removeWhere((request) => request.id == newRequest.id);
+      _detailedRequests.removeWhere((r) => r.id == request.id);
     }
   }
 }

@@ -112,8 +112,6 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               backgroundColor: Colors.transparent,
               builder: (context) => PostDialogScreen(
                 groupId: widget.group.id,
-                height: SizeConfig.instance.blockSizeVertical *
-                    kDialogScreenHeightBlocks,
               ),
             );
           },
@@ -405,9 +403,7 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
             body: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                PostListScreen(
-                  isHome: false,
-                ),
+                PostListScreen(),
                 GroupMemberListScreen(),
               ],
             ),

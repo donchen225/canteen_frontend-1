@@ -84,8 +84,6 @@ class _SinglePostBodyState extends State<SinglePostBody> {
         builder: (context) => CommentDialogScreen(
           post: widget.post,
           groupId: widget.groupId,
-          height:
-              SizeConfig.instance.blockSizeVertical * kDialogScreenHeightBlocks,
         ),
       );
 

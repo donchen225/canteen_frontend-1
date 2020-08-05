@@ -26,7 +26,7 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         _requestRepository = requestRepository {
     _requestSubscription = _requestBloc.listen((requestState) {
       if (requestState is RequestsLoaded) {
-        add(UpdateRequestList(requestState.requestList));
+        add(LoadRequestList(requestState.requestList));
       }
     });
   }
@@ -39,7 +39,7 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
     if (event is UpdateRequestList) {
       yield* _mapUpdateRequestListToState(event);
     } else if (event is LoadRequestList) {
-      yield* _mapLoadRequestListToState();
+      yield* _mapLoadRequestListToState(event);
     } else if (event is ClearRequestList) {
       yield* _mapClearRequestListToState();
     }
@@ -51,9 +51,11 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         await _getDetailedRequestList(event.requestList));
   }
 
-  Stream<RequestListState> _mapLoadRequestListToState() async* {
-    yield DetailedRequestListLoaded(
-        _requestRepository.currentDetailedRequests());
+  Stream<RequestListState> _mapLoadRequestListToState(
+      LoadRequestList event) async* {
+    final updatedList = List.of(event.requestList);
+
+    yield DetailedRequestListLoaded(updatedList);
   }
 
   Stream<RequestListState> _mapClearRequestListToState() async* {
@@ -62,13 +64,7 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
 
   Future<List<DetailedRequest>> _getDetailedRequestList(
       List<Request> requestList) async {
-    return Future.wait(requestList.map((request) async {
-      return _userRepository.getUser(request.senderId).then((user) {
-        final detailedRequest = DetailedRequest.fromRequest(request, user);
-        _requestRepository.saveDetailedRequest(detailedRequest);
-        return detailedRequest;
-      });
-    }));
+    return _requestRepository.currentDetailedRequests();
   }
 
   @override

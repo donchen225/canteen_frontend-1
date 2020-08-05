@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/match/match_repository.dart';
-import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -59,7 +58,9 @@ class MatchListBloc extends Bloc<MatchListEvent, MatchListState> {
           CachedSharedPreferences.getString(PreferenceConstants.userId);
       final match = _matchList[idx];
 
-      if (!match.read[userId]) {
+      if (match.read.isEmpty ||
+          match.read[userId] == null ||
+          !match.read[userId]) {
         match.read[userId] = true;
         _matchRepository.readMatch(event.matchId);
       }

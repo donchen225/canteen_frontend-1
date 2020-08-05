@@ -233,7 +233,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: SkillList(
                       user.teachSkill,
                       onTap: (int index) => _userProfileBloc
-                          .add(EditSkill(user, SkillType.teach, index)),
+                          .add(EditSkill(user, SkillType.offer, index)),
                     ),
                   ),
                   user.teachSkill.length < 3
@@ -243,7 +243,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             160,
                             onTap: () {
                               _userProfileBloc.add(EditSkill(user,
-                                  SkillType.teach, user.teachSkill.length));
+                                  SkillType.offer, user.teachSkill.length));
                             },
                           ),
                         )
@@ -268,7 +268,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: SkillList(
                       user.learnSkill,
                       onTap: (int index) => _userProfileBloc
-                          .add(EditSkill(user, SkillType.learn, index)),
+                          .add(EditSkill(user, SkillType.request, index)),
                     ),
                   ),
                   user.learnSkill.length < 3
@@ -280,7 +280,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               160,
                               onTap: () {
                                 _userProfileBloc.add(EditSkill(user,
-                                    SkillType.learn, user.learnSkill.length));
+                                    SkillType.request, user.learnSkill.length));
                               },
                             ),
                           ),

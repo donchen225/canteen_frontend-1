@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
 
-class DialogScreen extends StatelessWidget {
+class SearchingDialogScreen extends StatelessWidget {
   final String title;
   final double height;
   final Widget sendWidget;
@@ -13,7 +13,7 @@ class DialogScreen extends StatelessWidget {
   final bool canUnfocus;
   final Function onCancel;
 
-  DialogScreen(
+  SearchingDialogScreen(
       {this.title = '',
       this.sendWidget,
       this.height = 500,
@@ -48,7 +48,7 @@ class DialogScreen extends StatelessWidget {
                       if (onCancel != null) {
                         onCancel();
                       } else {
-                        Navigator.of(context).maybePop(false);
+                        Navigator.of(context).maybePop();
                       }
                     },
                   ),
@@ -64,7 +64,7 @@ class DialogScreen extends StatelessWidget {
                 ],
               ),
             ),
-            elevation: 1,
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(15),

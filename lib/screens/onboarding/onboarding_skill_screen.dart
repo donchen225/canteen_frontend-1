@@ -35,7 +35,9 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
   bool _requestSelected;
   int _selectedDurationIndex;
   final List<int> durationOptions = <int>[
+    15,
     30,
+    45,
     60,
     90,
     120,

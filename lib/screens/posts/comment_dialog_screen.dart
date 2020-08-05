@@ -12,11 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentDialogScreen extends StatefulWidget {
   final DetailedPost post;
-  final double height;
   final String groupId;
 
-  CommentDialogScreen(
-      {@required this.post, @required this.groupId, this.height = 500});
+  CommentDialogScreen({@required this.post, @required this.groupId});
 
   @override
   _CommentDialogScreenState createState() => _CommentDialogScreenState();
@@ -57,7 +55,7 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
 
     return TextDialogScreen(
       title: 'Add Comment',
-      height: widget.height,
+      canUnfocus: false,
       sendWidget: ActionButton(
           text: 'Send',
           enabled: isMember && _messageController.text.isNotEmpty,

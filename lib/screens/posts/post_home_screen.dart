@@ -2,7 +2,6 @@ import 'package:canteen_frontend/components/group_picture.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
-import 'package:canteen_frontend/screens/posts/bloc/post_bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
@@ -94,18 +93,9 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               ),
               GestureDetector(
                 onTap: () {
-                  final searchHistory =
-                      BlocProvider.of<SearchBloc>(context).searchHistory;
                   Navigator.pushNamed(
                     context,
                     SearchingScreen.routeName,
-                    arguments: SearchArguments(
-                      searchHistory: searchHistory
-                          .map((q) => q.displayQuery)
-                          .toList()
-                          .reversed
-                          .toList(),
-                    ),
                   );
                 },
                 child: SearchBar(
@@ -150,8 +140,6 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     backgroundColor: Colors.transparent,
                     builder: (context) => PostDialogScreen(
                       groupId: _groupHomeBloc.currentGroup.id,
-                      height: SizeConfig.instance.blockSizeVertical *
-                          kDialogScreenHeightBlocks,
                     ),
                   );
                 } else {
@@ -340,9 +328,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
               body: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  PostListScreen(
-                    isHome: true,
-                  ),
+                  PostListScreen(),
                   GroupHomeMemberListScreen(),
                 ],
               ),

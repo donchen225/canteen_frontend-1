@@ -23,6 +23,44 @@ class ViewUserRequestScreen extends StatefulWidget {
 }
 
 class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
+  String _buildRequestText(DetailedRequest request) {
+    if (request is Referral) {
+      return "${request.sender.displayName} asked you for a referral to connect with ${request.receiver.displayName} for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+    } else if (request is ReferredRequest) {
+      return "${request.referral.displayName} referred ${request.sender.displayName} to you for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+    } else {
+      return "Sent you a request for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+    }
+  }
+
+  Widget _buildCommentText(BuildContext context, DetailedRequest request) {
+    String comment = "";
+    if (request is Referral) {
+      if (request.referralComment != null &&
+          request.referralComment.isNotEmpty) {
+        comment = "\"${request.referralComment}\"";
+      }
+    } else {
+      if (request.comment != null && request.comment.isNotEmpty) {
+        comment = "\"${request.comment}\"";
+      }
+    }
+
+    if (comment.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.only(top: 5),
+        child: Text(
+          comment,
+          style: Theme.of(context).textTheme.bodyText2.apply(
+                fontStyle: FontStyle.italic,
+              ),
+        ),
+      );
+    }
+
+    return Container();
+  }
+
   Widget _buildProfileWidget(BuildContext context, User user) {
     final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
 
@@ -49,24 +87,12 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sent you a request for ${widget.request.skill} - \$${widget.request.price.toStringAsFixed(2)}",
+                      _buildRequestText(widget.request),
                       style: bodyTextStyle.apply(
                         fontWeightDelta: 1,
                       ),
                     ),
-                    Visibility(
-                      visible: widget.request.comment != null &&
-                          widget.request.comment.isNotEmpty,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Text(
-                          "\"${widget.request.comment}\"",
-                          style: bodyTextStyle.apply(
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildCommentText(context, widget.request),
                   ],
                 ),
               ),
@@ -103,6 +129,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kAppBarHeight),
         child: AppBar(
@@ -124,8 +151,10 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
               heroTag: null,
               backgroundColor: Colors.white,
               onPressed: () {
-                BlocProvider.of<RequestBloc>(context)
-                    .add(DeclineRequest(requestId: widget.request.id));
+                BlocProvider.of<RequestBloc>(context).add(DeclineRequest(
+                  requestId: widget.request.id,
+                  isReferral: widget.request is Referral,
+                ));
                 Navigator.maybePop(context);
               },
               child: Icon(
@@ -143,9 +172,13 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
                     builder: (BuildContext context) => ConfirmRequestDialog(
                         user: widget.user,
                         request: widget.request,
-                        onTap: () {
+                        onTap: (String comment) {
                           BlocProvider.of<RequestBloc>(context)
-                              .add(AcceptRequest(requestId: widget.request.id));
+                              .add(AcceptRequest(
+                            requestId: widget.request.id,
+                            isReferral: widget.request is Referral,
+                            comment: comment,
+                          ));
                         }));
                 if (val != null && val) {
                   Navigator.maybePop(context);

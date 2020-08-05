@@ -1,5 +1,3 @@
-import 'package:canteen_frontend/components/view_user_profile_screen.dart';
-import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -8,29 +6,32 @@ import 'package:flutter/material.dart';
 
 class SearchResultItem extends StatelessWidget {
   final User user;
-  final double height;
+  final bool showFullResult;
+  final Function onTap;
 
-  SearchResultItem({this.user, this.height = 100}) : assert(user != null);
+  SearchResultItem({this.user, this.onTap, this.showFullResult = true})
+      : assert(user != null);
 
   @override
   Widget build(BuildContext context) {
     final nameStyle = Theme.of(context).textTheme.subtitle1;
     final bodyTextStyle = Theme.of(context).textTheme.bodyText2;
+    final height = showFullResult
+        ? SizeConfig.instance.safeBlockVertical * 14
+        : SizeConfig.instance.safeBlockVertical * 8;
 
     return GestureDetector(
       onTap: () {
-        if (user != null) {
-          Navigator.pushNamed(
-            context,
-            ViewUserProfileScreen.routeName,
-            arguments: UserArguments(
-              user: user,
-            ),
-          );
+        if (onTap != null) {
+          if (user != null) {
+            onTap();
+          }
         }
       },
       child: Container(
-        height: height,
+        constraints: BoxConstraints(
+          minHeight: height,
+        ),
         decoration: BoxDecoration(
             color: Palette.containerColor,
             border: Border(
@@ -50,7 +51,9 @@ class SearchResultItem extends StatelessWidget {
           bottom: height * 0.1,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: showFullResult
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: <Widget>[
             ProfilePicture(
               photoUrl: user.photoUrl,
@@ -63,10 +66,15 @@ class SearchResultItem extends StatelessWidget {
                     horizontal: SizeConfig.instance.safeBlockHorizontal * 3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: showFullResult
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       user.displayName,
                       style: nameStyle.apply(fontWeightDelta: 2),
+                      maxLines: showFullResult ? null : 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Visibility(
                       visible: user.title?.isNotEmpty ?? false,
@@ -74,11 +82,13 @@ class SearchResultItem extends StatelessWidget {
                         user.title ?? '',
                         style: nameStyle.apply(
                             color: Palette.textSecondaryBaseColor),
-                        maxLines: 1,
+                        maxLines: showFullResult ? null : 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Visibility(
-                      visible: user.about?.isNotEmpty ?? false,
+                      visible:
+                          showFullResult && (user.about?.isNotEmpty ?? false),
                       child: Text(
                         user.about ?? '',
                         style: bodyTextStyle,

@@ -113,11 +113,11 @@ class User {
           [],
       learnSkill: snapshot.data['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.request))
           .toList(),
       teachSkill: snapshot.data['teach_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.offer))
           .toList(),
       availability: Availability.fromMap(availability,
           offset: snapshot.data['time_zone'] as int ?? 0),

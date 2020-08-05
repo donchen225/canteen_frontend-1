@@ -10,9 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
   final String groupId;
-  final double height;
 
-  PostDialogScreen({@required this.groupId, this.height = 500});
+  PostDialogScreen({@required this.groupId});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
@@ -44,7 +43,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
   Widget build(BuildContext context) {
     return TextDialogScreen(
       title: 'New Post',
-      height: widget.height,
+      canUnfocus: false,
       sendWidget: ActionButton(
           enabled: _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
@@ -76,7 +75,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                           horizontal:
                               SizeConfig.instance.blockSizeHorizontal * 3),
                       child: Text(
-                        'Please enter a question',
+                        'Please enter your post',
                         style: TextStyle(
                           color: Colors.black,
                         ),
@@ -99,23 +98,25 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal),
+                    horizontal: SizeConfig.instance.blockSizeHorizontal * 2),
                 child: Text('${userName ?? ''}'),
               ),
             ],
           ),
-          TextField(
-            controller: _messageController,
-            textCapitalization: TextCapitalization.sentences,
-            autofocus: true,
-            maxLines: null,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              hintText: 'Your text post',
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              textCapitalization: TextCapitalization.sentences,
+              autofocus: true,
+              maxLines: null,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintText: 'Your text post',
+              ),
             ),
           ),
         ],

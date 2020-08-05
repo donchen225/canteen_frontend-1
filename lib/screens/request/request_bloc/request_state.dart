@@ -13,9 +13,9 @@ class RequestsUnauthenticated extends RequestState {}
 class RequestsLoading extends RequestState {}
 
 class RequestsLoaded extends RequestState {
-  final List<Request> requestList;
+  final List<DetailedRequest> requestList;
 
-  const RequestsLoaded(this.requestList);
+  const RequestsLoaded([this.requestList = const []]);
 
   @override
   List<Object> get props => [requestList];

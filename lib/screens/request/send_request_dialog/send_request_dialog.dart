@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/screens/request/send_request_dialog/bloc/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,7 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
       return Column(
         children: [
           Expanded(
-            flex: 3,
+            flex: 6,
             child: Icon(
               Icons.check_circle_outline,
               size: dialogIconSize,
@@ -27,6 +28,7 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
             ),
           ),
           Expanded(
+            flex: 3,
             child: Text(_message,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline6),
@@ -37,7 +39,7 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
       return Column(
         children: [
           Expanded(
-            flex: 3,
+            flex: 6,
             child: Icon(
               Icons.send,
               size: dialogIconSize,
@@ -45,6 +47,7 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
             ),
           ),
           Expanded(
+            flex: 3,
             child: Text('Sending request...',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline6),
@@ -55,14 +58,20 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
       return Column(
         children: [
           Expanded(
-            flex: 3,
-            child: Icon(
-              Icons.error_outline,
-              size: dialogIconSize,
-              color: Palette.primaryColor.withOpacity(0.8),
+            flex: 6,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.safeBlockVertical * 3,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                size: dialogIconSize,
+                color: Palette.primaryColor.withOpacity(0.8),
+              ),
             ),
           ),
           Expanded(
+            flex: 3,
             child: Text(_message,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline6),
@@ -86,12 +95,18 @@ class _SendRequestDialogState extends State<SendRequestDialog> {
       }
 
       return AlertDialog(
+        contentPadding: EdgeInsets.only(
+          top: 0,
+          left: 24,
+          right: 24,
+          bottom: 0,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         content: Container(
-          height: 140,
-          width: 200,
+          height: SizeConfig.instance.safeBlockVertical * 28,
+          width: SizeConfig.instance.safeBlockHorizontal * 60,
           child: _buildDialogContent(context, state),
         ),
       );

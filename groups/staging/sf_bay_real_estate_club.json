@@ -1,0 +1,13 @@
+{
+    "id": "c1408bb8-e7c7-42f8-8b24-2d9527c3f7f9",
+    "name": "SF Bay Real Estate Club",
+    "description": "An exclusive group of top tier real estate investors and professionals. This is a place to build your knowledge base, discuss strategies and partner up!",
+    "tags": [
+        "San Francisco",
+        "Real Estate",
+        "SF"
+    ],
+    "type": "private",
+    "password": "realestateSF",
+    "photo_url": "https://firebasestorage.googleapis.com/v0/b/get-canteen-staging.appspot.com/o/groups%2Fc1408bb8-e7c7-42f8-8b24-2d9527c3f7f9%2Flogo.png?alt=media&token=6967159e-02c0-4f7e-a7db-c1963dc0cbee"
+}
