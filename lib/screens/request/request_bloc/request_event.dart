@@ -43,26 +43,38 @@ class UpdateRequest extends RequestEvent {
 
 class AcceptRequest extends RequestEvent {
   final String requestId;
+  final bool isReferral;
+  final String comment;
 
-  const AcceptRequest({this.requestId});
+  const AcceptRequest({
+    this.requestId,
+    this.isReferral = false,
+    this.comment,
+  });
 
   @override
-  List<Object> get props => [requestId];
+  List<Object> get props => [requestId, isReferral, comment];
 
   @override
-  String toString() => 'AcceptRequest { requestId: $requestId }';
+  String toString() =>
+      'AcceptRequest { requestId: $requestId, isReferral: $isReferral, comment: $comment }';
 }
 
 class DeclineRequest extends RequestEvent {
   final String requestId;
+  final bool isReferral;
 
-  const DeclineRequest({this.requestId});
+  const DeclineRequest({
+    this.requestId,
+    this.isReferral = false,
+  });
 
   @override
-  List<Object> get props => [requestId];
+  List<Object> get props => [requestId, isReferral];
 
   @override
-  String toString() => 'DeclineRequest { requestId: $requestId }';
+  String toString() =>
+      'DeclineRequest { requestId: $requestId, isReferral: $isReferral }';
 }
 
 class ClearRequests extends RequestEvent {

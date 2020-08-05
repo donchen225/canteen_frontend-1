@@ -139,12 +139,17 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   }
 
   Stream<RequestState> _mapAcceptRequestToState(AcceptRequest event) async* {
-    await _requestRepository.acceptRequest(event.requestId);
+    await _requestRepository.acceptRequest(
+      event.requestId,
+      isReferral: event.isReferral,
+      comment: event.comment,
+    );
     yield RequestsLoaded(_requestRepository.currentDetailedRequests());
   }
 
   Stream<RequestState> _mapDeclineRequestToState(DeclineRequest event) async* {
-    await _requestRepository.declineRequest(event.requestId);
+    await _requestRepository.declineRequest(event.requestId,
+        isReferral: event.isReferral);
     yield RequestsLoaded(_requestRepository.currentDetailedRequests());
   }
 

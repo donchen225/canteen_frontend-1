@@ -13,9 +13,9 @@ class RequestList extends StatelessWidget {
 
   String _buildRequestText(DetailedRequest request) {
     if (request is Referral) {
-      return "Asked you for a referral to ${request.receiver.displayName} for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+      return "${request.sender.displayName} asked you for a referral to connect with ${request.receiver.displayName} for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
     } else if (request is ReferredRequest) {
-      return "Referring ${request.sender.displayName} to you for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
+      return "${request.referral.displayName} referred ${request.sender.displayName} to you for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
     } else {
       return "Sent you a request for ${request.skill} - \$${request.price.toStringAsFixed(2)}";
     }

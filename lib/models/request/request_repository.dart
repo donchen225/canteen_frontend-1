@@ -30,21 +30,28 @@ class RequestRepository {
     });
   }
 
-  Future<void> acceptRequest(String requestId) {
-    _detailedRequests.removeWhere((r) => r.id == requestId);
+  Future<void> acceptRequest(String requestId,
+      {bool isReferral = false, String comment = ''}) {
     _detailedRequests.removeWhere((r) => r.id == requestId);
 
+    final status = isReferral ? 0 : 1;
+
     return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(requestCollection.document(requestId), {"status": 1});
+      await tx.update(requestCollection.document(requestId), {
+        "status": status,
+        "comment": comment,
+      });
     });
   }
 
-  Future<void> declineRequest(String requestId) {
-    _detailedRequests.removeWhere((r) => r.id == requestId);
+  Future<void> declineRequest(String requestId, {bool isReferral = false}) {
     _detailedRequests.removeWhere((r) => r.id == requestId);
 
+    final status = isReferral ? 2 : 12;
+
     return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.update(requestCollection.document(requestId), {"status": 2});
+      await tx
+          .update(requestCollection.document(requestId), {"status": status});
     });
   }
 

@@ -73,7 +73,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             'valid comment.');
     }
 
-    if (skillIndex === null || !(typeof skillIndex === 'number') || !((skillIndex >= 0 && skillIndex <= 2) || skillIndex === 100 || skillIndex === 200)) {
+    if (!skillIndex || !(typeof skillIndex === 'number') || !((skillIndex >= 0 && skillIndex <= 2) || skillIndex === 100 || skillIndex === 200)) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'valid index.');
@@ -120,6 +120,16 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('unknown', error.message, error);
     });
 
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', uid).where('receiver_id', '==', receiverId).where('status', '==', 10).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'failure', 'message': 'Request has already been sent.' };
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
     if (terminate) {
         return output;
     }
@@ -128,6 +138,16 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
         if (querySnapshot.docs.length > 0) {
             terminate = true;
             output = { 'status': 'failure', 'message': 'Request has already been received. Check your requests.' };
+        }
+        return;
+    }).catch((error) => {
+        throw new functions.https.HttpsError('unknown', error.message, error);
+    });
+
+    await firestore.collection(REQUEST_COLLECTION).where('sender_id', '==', receiverId).where('receiver_id', '==', uid).where('status', '==', 10).get().then((querySnapshot) => {
+        if (querySnapshot.docs.length > 0) {
+            terminate = true;
+            output = { 'status': 'failure', 'message': `${user.display_name} is currently being referred to you. Please wait for the referral.` };
         }
         return;
     }).catch((error) => {
@@ -158,13 +178,13 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
     var skill;
     if (skillIndex === 100) {
         skill = {
-            "name": "personal",
+            "name": "Personal",
             "price": 0,
             "duration": 30,
         };
     } else if (skillIndex === 200) {
         skill = {
-            "name": "business",
+            "name": "Business",
             "price": 0,
             "duration": 30,
         };

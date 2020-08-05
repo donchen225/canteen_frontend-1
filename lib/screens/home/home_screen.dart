@@ -128,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
             BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-            // BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
             BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
             BlocProvider.of<GroupHomeBloc>(context)
@@ -170,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               .searchNavigatorKey
               .currentState
               .popUntil((route) => route.isFirst);
+          BlocProvider.of<SearchBloc>(context).add(ResetSearch());
           break;
         case 2:
           getIt<NavigationService>()
@@ -371,7 +371,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
               BlocProvider.of<MatchBloc>(context).add(LoadMatches());
 
-              // BlocProvider.of<RequestListBloc>(context).add(LoadRequestList());
               BlocProvider.of<RequestBloc>(context).add(LoadRequests());
 
               BlocProvider.of<GroupHomeBloc>(context)

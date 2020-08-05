@@ -36,7 +36,6 @@ class _SearchingScreenState extends State<SearchingScreen> {
 
   @override
   void initState() {
-    print('SEARCHING SCREEN INIT STATE');
     super.initState();
 
     _searchBloc = BlocProvider.of<SearchBloc>(context);
@@ -136,8 +135,6 @@ class _SearchingScreenState extends State<SearchingScreen> {
                               ),
                             ),
                             onSubmitted: (String query) {
-                              print('SEARCH STARTED FROM SEARCH SUBMISSION');
-
                               final state = _searchBloc.state;
                               if (state is SearchCompleteShowResults) {
                                 final results = state.results;

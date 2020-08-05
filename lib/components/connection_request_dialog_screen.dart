@@ -182,12 +182,12 @@ class _ConnectionRequestDialogScreenState
                         _selectedPurpose.name != 'Business'))) {
               if (widget.onConfirm != null) {
                 widget.onConfirm(
-                  _selectedReferral == null ? _messageController.text : null,
+                  _selectedReferral == null ? _messageController.text : '',
                   _selectedTime,
                   _selectedPurpose,
                   _selectedPurposeIndex,
-                  _selectedReferral.id,
-                  _selectedReferral != null ? _messageController.text : null,
+                  _selectedReferral?.id ?? '',
+                  _selectedReferral != null ? _messageController.text : '',
                 );
                 await showDialog(
                   context: context,
@@ -353,9 +353,16 @@ class _ConnectionRequestDialogScreenState
                   child: _buildTitle(text: 'Requests', style: titleStyle)),
               Container(
                 child: Column(
-                  children: widget.user.learnSkill.map((skill) {
-                    return _buildPurposeButton(context, skill: skill);
-                  }).toList(),
+                  children: widget.user.learnSkill
+                      .asMap()
+                      .map((i, skill) {
+                        return MapEntry(
+                            i,
+                            _buildPurposeButton(context,
+                                skill: skill, index: i));
+                      })
+                      .values
+                      .toList(),
                 ),
               ),
               _buildTitle(text: 'Other', style: titleStyle),

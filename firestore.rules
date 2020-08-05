@@ -62,8 +62,7 @@ service cloud.firestore {
 
     match /requests/{requestId} {
       allow read: if resource.data.receiver_id == request.auth.uid || resource.data.referral_id == request.auth.uid;
-      allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/users/$(request.resource.data.receiver_id));
-      allow update: if request.resource.data.receiver_id == request.auth.uid;
+      allow update: if (request.resource.data.receiver_id == request.auth.uid && resource.data.status == 0) || (request.resource.data.referral_id == request.auth.uid && resource.data.status == 10);
     }
 
     match /recommendations/{userId} {
