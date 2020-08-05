@@ -34,7 +34,9 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   int _initialDurationIndex = 0;
   final double _kPickerSheetHeight = 216.0;
   final List<int> durationOptions = <int>[
+    15,
     30,
+    45,
     60,
     90,
     120,
