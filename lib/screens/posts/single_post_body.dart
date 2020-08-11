@@ -169,7 +169,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               kHorizontalPaddingBlocks,
                         ),
                         alignment: Alignment.centerLeft,
-                        child: Text(
+                        child: SelectableText(
                           widget.post.message,
                           style: Theme.of(context)
                               .textTheme

@@ -77,7 +77,7 @@ class CommentContainer extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.instance.safeBlockVertical),
                       alignment: Alignment.centerLeft,
-                      child: Text(
+                      child: SelectableText(
                         comment.message,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
