@@ -13,6 +13,7 @@ import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/push_notifications.dart';
@@ -211,7 +212,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       }
                     },
                   ),
-                )
+                ),
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Canteen ${AppConfig.appVersion ?? ''}',
+                    style: Theme.of(context).textTheme.bodyText2.apply(
+                          color: Palette.textSecondaryBaseColor,
+                        ),
+                  ),
+                ),
               ],
             ),
           );

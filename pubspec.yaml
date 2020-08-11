@@ -27,6 +27,7 @@ dependencies:
 
   # Device
   device_info: '>=0.4.2+4 <2.0.0'
+  package_info: '>=0.4.1 <2.0.0'
 
   # Formatting
   intl: ^0.16.1
