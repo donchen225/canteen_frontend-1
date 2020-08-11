@@ -54,7 +54,9 @@ class MessageItem extends StatelessWidget {
           child: buildMessageContent(isSelf, message, context),
           padding: EdgeInsets.fromLTRB(
               lrEdgeInsets, tbEdgeInsets, lrEdgeInsets, tbEdgeInsets),
-          constraints: BoxConstraints(maxWidth: 200.0),
+          constraints: BoxConstraints(
+            maxWidth: SizeConfig.instance.safeBlockHorizontal * 67,
+          ),
           decoration: BoxDecoration(
               color: isSelf
                   ? Palette.selfMessageBackgroundColor
