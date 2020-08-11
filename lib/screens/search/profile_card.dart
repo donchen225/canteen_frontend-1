@@ -117,7 +117,7 @@ class ProfileCard extends StatelessWidget {
                                       : '',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .headline5
                                       .apply(
                                         color: Palette.titleColor,
                                         fontWeightDelta: 2,

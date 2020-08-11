@@ -46,12 +46,18 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
   void initState() {
     super.initState();
 
-    _nextEnabled = false;
-    _offeringSelected = false;
+    _nextEnabled = true;
+    _offeringSelected = true;
     _requestSelected = false;
     _nameController = TextEditingController();
     _descriptionController = TextEditingController();
     _priceController = TextEditingController();
+
+    _nameController.text = "Casual conversations";
+    _priceController.text = "0";
+    _descriptionController.text =
+        "Message me about your interests, let's connect!";
+    _selectedDurationIndex = 0;
 
     _nameFocusNode = FocusNode();
     _descriptionFocusNode = FocusNode();
@@ -124,7 +130,7 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
         child: Text(
           _selectedDurationIndex != null
               ? '${durationOptions[_selectedDurationIndex]} minutes'
-              : '30 minutes',
+              : '15 minutes',
           style: _selectedDurationIndex != null
               ? hintTextStyle.apply(color: Palette.textColor)
               : hintTextStyle,
@@ -268,7 +274,6 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                                     _nameController.text.length)
                                 ?.toString() ??
                             "",
-                        hintText: "Casual conversations",
                         contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         isDense: true,
                         border: UnderlineInputBorder(
@@ -320,7 +325,6 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                               ),
                               decoration: InputDecoration(
                                 counterText: "",
-                                hintText: "0",
                                 prefixText: '\$',
                                 contentPadding:
                                     EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -371,29 +375,6 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                           ),
                         ],
                       ),
-                      // child: TextField(
-                      //   textCapitalization: TextCapitalization.sentences,
-                      //   cursorColor: Palette.primaryColor,
-                      //   style: bodyTextStyle.apply(
-                      //     color: Palette.primaryColor,
-                      //     fontWeightDelta: 2,
-                      //   ),
-                      //   decoration: InputDecoration(
-                      //     counterText: "",
-                      //     hintText: "Duration",
-                      //     contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      //     isDense: true,
-                      //     border: UnderlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.black),
-                      //     ),
-                      //     focusedBorder: UnderlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.black),
-                      //     ),
-                      //   ),
-                      //   maxLength: _nameTextFieldMaxChars,
-                      //   maxLines: null,
-                      //   minLines: 1,
-                      // ),
                     ),
                   ),
                 ],
@@ -429,7 +410,6 @@ class _OnboardingSkillScreenState extends State<OnboardingSkillScreen> {
                                     _descriptionController.text.length)
                                 ?.toString() ??
                             "",
-                        hintText: "I enjoy traveling and yoga. Let's connect!",
                         contentPadding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         isDense: true,
                         focusedBorder: UnderlineInputBorder(

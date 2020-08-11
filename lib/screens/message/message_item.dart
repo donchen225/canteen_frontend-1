@@ -1,7 +1,9 @@
 import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:canteen_frontend/utils/url_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
 
 class MessageItem extends StatelessWidget {
@@ -52,7 +54,9 @@ class MessageItem extends StatelessWidget {
           child: buildMessageContent(isSelf, message, context),
           padding: EdgeInsets.fromLTRB(
               lrEdgeInsets, tbEdgeInsets, lrEdgeInsets, tbEdgeInsets),
-          constraints: BoxConstraints(maxWidth: 200.0),
+          constraints: BoxConstraints(
+            maxWidth: SizeConfig.instance.safeBlockHorizontal * 67,
+          ),
           decoration: BoxDecoration(
               color: isSelf
                   ? Palette.selfMessageBackgroundColor
@@ -104,8 +108,10 @@ class MessageItem extends StatelessWidget {
   Widget buildMessageContent(
       bool isSelf, Message message, BuildContext context) {
     if (message is TextMessage) {
-      return SelectableText(
-        message.text,
+      return SelectableLinkify(
+        text: message.text,
+        onOpen: UrlUtils.onOpen,
+        options: LinkifyOptions(humanize: false),
         style: TextStyle(
           color: isSelf ? Palette.selfMessageColor : Palette.otherMessageColor,
           fontStyle: message.isItalics ? FontStyle.italic : FontStyle.normal,

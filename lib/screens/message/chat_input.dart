@@ -56,10 +56,13 @@ class _ChatInputState extends State<ChatInput> {
                   child: Material(
                       color: Palette.containerColor,
                       child: Container(
-                        padding: EdgeInsets.only(left: 20, right: 20),
+                        padding: EdgeInsets.only(
+                            top: 10, left: 20, right: 20, bottom: 10),
                         child: TextField(
                           controller: textEditingController,
                           textCapitalization: TextCapitalization.sentences,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
                           autofocus: false,
                           decoration: InputDecoration.collapsed(
                             hintText: 'Send a message...',
