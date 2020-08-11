@@ -73,7 +73,7 @@ exports.addRequest = functions.https.onCall(async (data, context) => {
             'valid comment.');
     }
 
-    if (!skillIndex || !(typeof skillIndex === 'number') || !((skillIndex >= 0 && skillIndex <= 2) || skillIndex === 100 || skillIndex === 200)) {
+    if (!(typeof skillIndex === 'number') || !((skillIndex >= 0 && skillIndex <= 2) || skillIndex === 100 || skillIndex === 200)) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'valid index.');
