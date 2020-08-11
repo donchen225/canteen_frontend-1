@@ -19,9 +19,11 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:canteen_frontend/utils/url_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
 
 import 'bloc/post_bloc.dart';
@@ -169,8 +171,10 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               kHorizontalPaddingBlocks,
                         ),
                         alignment: Alignment.centerLeft,
-                        child: SelectableText(
-                          widget.post.message,
+                        child: SelectableLinkify(
+                          text: widget.post.message,
+                          onOpen: UrlUtils.onOpen,
+                          options: LinkifyOptions(humanize: false),
                           style: Theme.of(context)
                               .textTheme
                               .headline5

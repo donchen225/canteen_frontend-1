@@ -6,7 +6,9 @@ import 'package:canteen_frontend/screens/posts/post_name_template.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:canteen_frontend/utils/url_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 
 class CommentContainer extends StatelessWidget {
   final DetailedComment comment;
@@ -77,8 +79,10 @@ class CommentContainer extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.instance.safeBlockVertical),
                       alignment: Alignment.centerLeft,
-                      child: SelectableText(
-                        comment.message,
+                      child: SelectableLinkify(
+                        text: comment.message,
+                        onOpen: UrlUtils.onOpen,
+                        options: LinkifyOptions(humanize: false),
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
