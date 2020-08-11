@@ -89,7 +89,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
         ),
       );
 
-      if (commented) {
+      if (commented != null && commented) {
         _shouldScrollToBottom = true;
       }
     } else {
