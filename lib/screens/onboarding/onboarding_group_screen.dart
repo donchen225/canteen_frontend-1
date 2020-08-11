@@ -68,6 +68,7 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
 
     return OnboardingScreen(
       horizontalPadding: false,
+      skipEnabled: false,
       next: NextButton(onTap: () => _nextFunction(context)),
       nodes: [_focusNode],
       onSkip: () => _nextFunction(context),
