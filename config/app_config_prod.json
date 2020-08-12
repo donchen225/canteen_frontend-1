@@ -1,5 +1,5 @@
 {
     "STORAGE_URL": "gs://get-canteen-prod.appspot.com",
-    "DEFAULT_GROUP_ID": "fd0a865c-42ce-4077-a050-30aeede69f3a",
+    "DEFAULT_GROUP_ID": "cae6275e-e17b-41e6-b0b1-347af8fbd2a0",
     "LOG_LEVEL": "error"
 }
