@@ -79,17 +79,17 @@ class UserEntity extends Equatable {
           snap.data["interests"]?.map<String>((x) => x.toString())?.toList() ??
               [],
       learnSkills: snap.data["learn_skill"]?.map<String, Skill>((k, v) =>
-              MapEntry(k as String, Skill.fromMap(v, SkillType.learn))) ??
+              MapEntry(k as String, Skill.fromMap(v, SkillType.request))) ??
           {},
       teachSkills: snap.data["teach_skill"]?.map<String, Skill>((k, v) =>
-              MapEntry(k as String, Skill.fromMap(v, SkillType.teach))) ??
+              MapEntry(k as String, Skill.fromMap(v, SkillType.offer))) ??
           {},
       email: snap.data["email"],
       phoneNumber: snap.data["phone_number"],
       onBoarded: snap.data["onboarded"],
       availability: snap.data["availability"]?.map<String, Map<String, int>>(
-              (String k, dynamic v) => MapEntry<String, Map<String, int>>(
-                  k,
+              (dynamic k, dynamic v) => MapEntry<String, Map<String, int>>(
+                  k as String,
                   v.map<String, int>(
                       (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
           {},

@@ -9,61 +9,33 @@ abstract class SearchState extends Equatable {
 }
 
 class SearchUninitialized extends SearchState {
-  final List<User> allUsers;
-
-  const SearchUninitialized(this.allUsers);
-
-  @override
-  List<Object> get props => [allUsers];
-
   @override
   String toString() => 'SearchUninitialized';
 }
 
 class SearchLoading extends SearchState {}
 
-class SearchCompleteWithResults extends SearchState {
-  final List<User> userList;
+class SearchCompleteShowResults extends SearchState {
+  final List<User> results;
+  final String query;
+  final bool fromPreviousSearch;
 
-  const SearchCompleteWithResults(this.userList);
+  const SearchCompleteShowResults(
+      {this.results, this.query, this.fromPreviousSearch = false});
 
   @override
-  List<Object> get props => [userList];
+  List<Object> get props => [results, query, fromPreviousSearch];
 
   @override
-  String toString() => 'SearchCompleteWithResults';
+  String toString() => 'SearchCompleteShowResults';
 }
 
-class SearchCompleteNoResults extends SearchState {
-  const SearchCompleteNoResults();
+class SearchError extends SearchState {
+  const SearchError();
 
   @override
   List<Object> get props => [];
 
   @override
-  String toString() => 'SearchCompleteNoResults { }';
-}
-
-class SearchShowProfile extends SearchState {
-  final User user;
-  final bool isSearchResult;
-
-  const SearchShowProfile(this.user, this.isSearchResult);
-
-  @override
-  List<Object> get props => [user, isSearchResult];
-
-  @override
-  String toString() =>
-      'SearchShowProfile { user: ${user.id}, ${user.displayName} isSearchResult: $isSearchResult }';
-}
-
-class SearchResultsEnd extends SearchState {
-  const SearchResultsEnd();
-
-  @override
-  List<Object> get props => [];
-
-  @override
-  String toString() => 'SearchResultsEnd { }';
+  String toString() => 'SearchError';
 }

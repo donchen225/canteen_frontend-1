@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>490048478501-3vreh8iqour9fg11dsmic0jq3se2m5r1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.490048478501-3vreh8iqour9fg11dsmic0jq3se2m5r1</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAq3Tgfa5KBpM6-j3bVwseX9Ciu2IKOhog</string>
+	<key>GCM_SENDER_ID</key>
+	<string>490048478501</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.getcanteen.canteenprod</string>
+	<key>PROJECT_ID</key>
+	<string>get-canteen-prod</string>
+	<key>STORAGE_BUCKET</key>
+	<string>get-canteen-prod.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:490048478501:ios:2e81f7d98dc5341b2a4ecc</string>
+	<key>DATABASE_URL</key>
+	<string>https://get-canteen-prod.firebaseio.com</string>
+</dict>
+</plist>

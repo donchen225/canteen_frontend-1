@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow create: if isAuthenticated();
       allow update: if isOwner(userId);
-      allow read: if isAuthenticated();
+      allow read: if true; // TODO: add public parameter
     }
 
     match /users/{userId}/settings/{document=**} {
@@ -15,26 +15,54 @@ service cloud.firestore {
       allow create, update, read: if isOwner(userId);
     }
 
+    match /users/{userId}/groups/{document=**} {
+      allow read: if isAuthenticated();
+    }
+
+    match /discover/{discoverId} {
+      allow read: if true;
+    }
+
+    match /discover/{discoverId}/users/{document=**} {
+      allow read: if true;
+    }
+
     match /matches/{document=**} {
       allow read, write: if isAuthenticated();
     }
 
-    match /posts/{postId} {
-      allow read, write: if isAuthenticated();
+    match /notifications/{userId}/notifications/{document=**} {
+      allow read, write: if isOwner(userId);
     }
 
-    match /posts/{postId}/comments/{commentId} {
-      allow read, write: if isAuthenticated();
+    match /groups/{groupId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
-    match /posts/{postId}/likes/{likeId} {
-      allow read,write: if isAuthenticated();
+    match /groups/{groupId}/posts/{postId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+    }
+
+    match /groups/{groupId}/members/{memberId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+    }
+
+    match /groups/{groupId}/posts/{postId}/comments/{commentId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
+    }
+
+    match /groups/{groupId}/posts/{postId}/likes/{likeId} {
+      allow read, write: if isAuthenticated() && exists(/databases/$(database)/documents/groups/$(groupId)/members/$(request.auth.uid));
+      allow read: if get(/databases/$(database)/documents/groups/$(groupId)).data.type == 'public';
     }
 
     match /requests/{requestId} {
-      allow read: if resource.data.receiver_id == request.auth.uid;
-      allow create: if request.resource.data.sender_id == request.auth.uid && exists(/databases/$(database)/documents/user/$(request.resource.data.receiver_id));
-      allow update: if request.resource.data.receiver_id == request.auth.uid;
+      allow read: if resource.data.receiver_id == request.auth.uid || resource.data.referral_id == request.auth.uid;
+      allow update: if (request.resource.data.receiver_id == request.auth.uid && resource.data.status == 0) || (request.resource.data.referral_id == request.auth.uid && resource.data.status == 10);
     }
 
     match /recommendations/{userId} {

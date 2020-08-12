@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/match/match_repository.dart';
 import 'package:canteen_frontend/models/match/status.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_repository.dart';
+import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/match_detail_event.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/match_detail_state.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
@@ -11,21 +12,23 @@ import 'package:meta/meta.dart';
 
 class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
   final MatchRepository _matchRepository;
-  final VideoChatRepository _videoChatRepository;
+  final UserRepository _userRepository;
   Map<String, StreamSubscription> matchDetailsSubscriptionMap = Map();
 
-  MatchDetailBloc({@required matchRepository, @required videoChatRepository})
-      : assert(videoChatRepository != null),
+  MatchDetailBloc({@required matchRepository, @required userRepository})
+      : assert(userRepository != null),
         assert(matchRepository != null),
-        _videoChatRepository = videoChatRepository,
+        _userRepository = userRepository,
         _matchRepository = matchRepository;
 
   MatchDetailState get initialState => MatchUninitialized();
 
   @override
   Stream<MatchDetailState> mapEventToState(MatchDetailEvent event) async* {
-    if (event is LoadMatchDetails) {
+    if (event is LoadMatch) {
       yield* _mapLoadMatchDetailsToState(event);
+    } else if (event is LoadMatchFromId) {
+      yield* _mapLoadMatchFromIdToState(event);
     } else if (event is SelectVideoChatDate) {
       yield* _mapSelectVideoChatDateToState(event);
     } else if (event is SelectEvent) {
@@ -37,8 +40,7 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
     }
   }
 
-  Stream<MatchDetailState> _mapLoadMatchDetailsToState(
-      LoadMatchDetails event) async* {
+  Stream<MatchDetailState> _mapLoadMatchDetailsToState(LoadMatch event) async* {
     try {
       final userId =
           CachedSharedPreferences.getString(PreferenceConstants.userId);
@@ -60,7 +62,27 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
           break;
       }
     } catch (exception) {
-      print('VIDEO CHAT DETAILS ERROR: $exception');
+      print('Match error: $exception');
+      yield MatchError();
+    }
+  }
+
+  Stream<MatchDetailState> _mapLoadMatchFromIdToState(
+      LoadMatchFromId event) async* {
+    yield MatchLoading();
+    try {
+      final match = await _matchRepository.getMatch(event.matchId);
+
+      final userList = await Future.wait(match.userId.map((id) async {
+        var u = await _userRepository.getUser(id);
+        return u;
+      }));
+
+      final detailedMatch = DetailedMatch.fromMatch(match, userList);
+
+      yield MatchLoaded(match: detailedMatch);
+    } catch (exception) {
+      print('Error loading match: $exception');
       yield MatchError();
     }
   }
@@ -81,11 +103,6 @@ class MatchDetailBloc extends Bloc<MatchDetailEvent, MatchDetailState> {
 
   Stream<MatchDetailState> _mapSelectVideoChatDateToState(
       SelectVideoChatDate event) async* {
-    print('PROPOSING VIDEO CHAT DATES');
-    print('MATCH ID: ${event.matchId}');
-    print('VIDEO CHAT ID: ${event.videoChatId}');
-    // await _videoChatRepository.addVideoChatDates(
-    //     event.dates, event.matchId, event.videoChatId);
     yield MatchPaying(skill: event.skill, date: event.date);
   }
 

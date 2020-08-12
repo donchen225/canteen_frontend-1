@@ -1,18 +1,30 @@
-import 'package:canteen_frontend/models/message/message.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen_frontend/models/match/match.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MatchItem extends StatelessWidget {
+  final String displayName;
+  final String photoUrl;
+  final String additionalDisplayName;
+  final String additionalPhotoUrl;
+  final String message;
+  final DateTime time;
+  final bool read;
   final GestureTapCallback onTap;
-  final DetailedMatch match;
 
-  MatchItem({Key key, @required this.onTap, @required this.match})
-      : super(key: key);
+  MatchItem({
+    Key key,
+    this.displayName = '',
+    this.photoUrl = '',
+    this.additionalDisplayName = '',
+    this.additionalPhotoUrl,
+    this.message = '',
+    this.read = true,
+    @required this.time,
+    @required this.onTap,
+  }) : super(key: key);
 
   String formatTime(DateTime time) {
     String t = timeago
@@ -24,13 +36,16 @@ class MatchItem extends StatelessWidget {
     return t == 'now' ? t : '$t ago';
   }
 
+  String _buildTitle() {
+    if (additionalDisplayName != null && additionalDisplayName.isNotEmpty) {
+      return '$displayName ($additionalDisplayName)';
+    } else {
+      return displayName;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user =
-        (BlocProvider.of<AuthenticationBloc>(context).state as Authenticated)
-            .user;
-    final opponentList = match.userList.where((u) => u.id != user.uid).toList();
-
     return GestureDetector(
       onTap: onTap,
       child: AspectRatio(
@@ -39,29 +54,31 @@ class MatchItem extends StatelessWidget {
             builder: (BuildContext context, BoxConstraints constraints) {
           return Container(
             padding: EdgeInsets.only(
-              top: constraints.maxHeight * 0.05,
-              bottom: constraints.maxHeight * 0.05,
+              top: constraints.maxHeight * 0.1,
+              bottom: constraints.maxHeight * 0.1,
               left: constraints.maxWidth * 0.05,
               right: constraints.maxWidth * 0.03,
             ),
             decoration: BoxDecoration(
-              color: Color(0xFFF0F0F0),
-              border: Border.all(width: 0.2, color: Colors.grey[400]),
+              color: Palette.containerColor,
+              border: Border(
+                top:
+                    BorderSide(width: 0.5, color: Palette.borderSeparatorColor),
+              ),
             ),
             child: Stack(
               children: <Widget>[
                 Row(
                   children: <Widget>[
                     ProfilePicture(
-                      photoUrl: opponentList[0].photoUrl,
+                      photoUrl: photoUrl,
+                      additionalPhotoUrl: additionalPhotoUrl,
                       editable: false,
                       size: constraints.maxHeight * 0.75,
                     ),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.only(
-                            top: constraints.maxHeight * 0.15,
-                            bottom: constraints.maxHeight * 0.15,
                             left: constraints.maxWidth * 0.04,
                             right: constraints.maxWidth * 0.02),
                         child: Column(
@@ -70,30 +87,88 @@ class MatchItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Expanded(
-                              flex: 3,
-                              child: Align(
+                              flex: 2,
+                              child: Container(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  opponentList[0].displayName ?? '',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: constraints.maxHeight * 0.18),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      _buildTitle(),
+                                      textAlign: TextAlign.start,
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .apply(fontWeightDelta: 2),
+                                    ),
+                                    Text(
+                                      formatTime(
+                                        time,
+                                      ),
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(fontSizeDelta: -1)
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(
+                                                fontSizeDelta: -1,
+                                                fontWeightDelta: 2,
+                                              ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                             Expanded(
                               flex: 3,
-                              child: Text(
-                                match.lastMessage != null
-                                    ? (match.lastMessage as TextMessage).text
-                                    : '',
-                                style: Theme.of(context).textTheme.bodyText1,
-                                // style: TextStyle(
-                                //     color: Colors.grey[600],
-                                //     fontSize: constraints.maxHeight * 0.14),
-                                textAlign: TextAlign.start,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      message,
+                                      textAlign: TextAlign.start,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: read
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(fontWeightDelta: 2),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Visibility(
+                                      visible: !read,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 3,
+                                        ),
+                                        alignment: Alignment.topRight,
+                                        child: Container(
+                                          width: 12,
+                                          height: 12,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ],
@@ -102,18 +177,6 @@ class MatchItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: constraints.maxHeight * 0.1,
-                    horizontal: constraints.maxWidth * 0.05,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      formatTime(match.lastUpdated),
-                    ),
-                  ),
-                )
               ],
             ),
           );

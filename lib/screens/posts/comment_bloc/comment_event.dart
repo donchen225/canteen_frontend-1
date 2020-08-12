@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
-import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tuple/tuple.dart';
@@ -13,25 +12,13 @@ abstract class CommentEvent extends Equatable {
 }
 
 class LoadComments extends CommentEvent {
+  final String groupId;
   final String postId;
 
-  const LoadComments({@required this.postId});
+  const LoadComments({@required this.groupId, @required this.postId});
 
   @override
   String toString() => 'LoadComments';
-}
-
-class AddComment extends CommentEvent {
-  final String postId;
-  final Comment comment;
-
-  const AddComment({@required this.postId, @required this.comment});
-
-  @override
-  List<Object> get props => [postId, comment];
-
-  @override
-  String toString() => 'AddComment { postId: $postId comment: $comment }';
 }
 
 class UpdateComment extends CommentEvent {
@@ -68,7 +55,7 @@ class CommentsUpdated extends CommentEvent {
   List<Object> get props => [postId, updates];
 
   @override
-  String toString() => 'CommentsUpdated { postId: $postId updates: $updates }';
+  String toString() => 'CommentsUpdated { postId: $postId}';
 }
 
 class ClearComments extends CommentEvent {}

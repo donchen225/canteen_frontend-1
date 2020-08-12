@@ -36,7 +36,6 @@ class LikeEntity extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
-      'id': id,
       'from': from,
       'created_on': createdOn,
     };

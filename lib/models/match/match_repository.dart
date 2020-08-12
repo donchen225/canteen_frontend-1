@@ -24,25 +24,40 @@ class MatchRepository {
     _detailedMatches = [];
   }
 
-  void saveDetailedMatch(DetailedMatch match) {
-    var idx = 0;
-    while (idx < _detailedMatches.length) {
-      if (match.lastUpdated.isAfter(_detailedMatches[idx].lastUpdated)) {
-        break;
-      }
-
-      idx++;
-    }
-    _detailedMatches.insert(idx, match);
-  }
-
   void updateDetailedMatch(DocumentChangeType type, Match match) {
-    if (type == DocumentChangeType.modified) {
+    if (type == DocumentChangeType.added) {
+      var currentIdx = _detailedMatches.indexWhere((m) => m.id == match.id);
+
+      if (currentIdx != -1) {
+        _detailedMatches[currentIdx] = match;
+      } else {
+        var idx = 0;
+        while (idx < _detailedMatches.length) {
+          if (match.lastUpdated.isAfter(_detailedMatches[idx].lastUpdated)) {
+            break;
+          }
+
+          idx++;
+        }
+        _detailedMatches.insert(idx, match);
+      }
+    } else if (type == DocumentChangeType.modified) {
       _detailedMatches.removeWhere((m) => m.id == match.id);
       _detailedMatches.insert(0, match);
     } else if (type == DocumentChangeType.removed) {
       _detailedMatches.removeWhere((match) => match.id == match.id);
     }
+  }
+
+  Future<void> readMatch(String matchId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    return matchCollection
+        .document(matchId)
+        .updateData({"read.$userId": true}).catchError((error) {
+      print('Error setting message to read: $error');
+    });
   }
 
   Future<void> sendMessage(String matchId, Message message) {
@@ -58,21 +73,31 @@ class MatchRepository {
     });
   }
 
-  Future<Message> getMessage(String matchId, DateTime dateTime) {
+  Future<Message> getMessage(String matchId, {DateTime dateTime}) {
+    final messagesCollection =
+        matchCollection.document(matchId).collection(messages);
     try {
-      return matchCollection
-          .document(matchId)
-          .collection(messages)
-          .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
-          .limit(1)
-          .getDocuments()
-          .then((doc) {
+      Query query;
+      if (dateTime != null) {
+        query = messagesCollection
+            .where("timestamp", isEqualTo: Timestamp.fromDate(dateTime))
+            .limit(1);
+      } else {
+        query =
+            messagesCollection.orderBy("timestamp", descending: true).limit(1);
+      }
+
+      return query.getDocuments().then((doc) {
+        if (doc.documents.isEmpty) {
+          return null;
+        }
+
         return Message.fromEntity(MessageEntity.fromSnapshot(
           doc.documents.first,
         ));
       });
     } catch (e) {
-      print("ERROR: NO MESSAGE FOUND - $e");
+      print("Error: no message found. $e");
     }
   }
 
@@ -88,6 +113,12 @@ class MatchRepository {
           .map((doc) => Tuple2<DocumentChangeType, Match>(doc.type,
               Match.fromEntity(MatchEntity.fromSnapshot(doc.document))))
           .toList();
+    });
+  }
+
+  Future<Match> getMatch(String matchId) {
+    return matchCollection.document(matchId).get().then((documentSnapshot) {
+      return Match.fromEntity(MatchEntity.fromSnapshot(documentSnapshot));
     });
   }
 

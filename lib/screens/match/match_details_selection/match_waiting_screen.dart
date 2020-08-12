@@ -26,7 +26,7 @@ class MatchWaitingScreen extends StatelessWidget {
                   Icon(
                     Icons.schedule,
                     size: SizeConfig.instance.blockSizeHorizontal * 33,
-                    color: Palette.orangeColor,
+                    color: Palette.primaryColor,
                   ),
                   Text(
                       "In order to ensure the quality of each connection, we don't allow any interactions until a payment is made."),

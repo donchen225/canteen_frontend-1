@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:canteen_frontend/models/availability/availability.dart';
+import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/recommendation/recommendation.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_entity.dart';
@@ -27,6 +28,7 @@ class User {
   final DateTime lastSignInTimestamp;
   final bool isAnonymous;
   final bool isEmailVerified;
+  final List<Group> groups;
 
   User({
     this.providerId,
@@ -47,11 +49,12 @@ class User {
     this.lastSignInTimestamp,
     this.isAnonymous,
     this.isEmailVerified,
+    this.groups,
   });
 
   @override
   String toString() {
-    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded, availability: $availability, timeZone: $timeZone }';
+    return 'User { providerId: $providerId, id: $id, displayName: $displayName, title: $title, about: $about, photoUrl: $photoUrl, interests: $interests, learnSkill: $learnSkill, teachSkill: $teachSkill, email: $email, phoneNumber: $phoneNumber, onBoarded: $onBoarded, availability: $availability, timeZone: $timeZone, groups: $groups }';
   }
 
   static User fromEntity(UserEntity entity) {
@@ -89,21 +92,35 @@ class User {
   }
 
   static User fromAlgoliaSnapshot(AlgoliaObjectSnapshot snapshot) {
+    final Map<String, Map<String, int>> availability =
+        snapshot.data['availability']?.map<String, Map<String, int>>(
+                (dynamic k, dynamic v) => MapEntry<String, Map<String, int>>(
+                    k as String,
+                    v.map<String, int>(
+                        (k1, v1) => MapEntry(k1 as String, v1 as int)))) ??
+            {};
+
     return User(
       id: snapshot.objectID,
       displayName: snapshot.data['display_name'],
       photoUrl: snapshot.data['photo_url'],
       title: snapshot.data['title'],
       about: snapshot.data['about'],
-      interests: snapshot.data['interests'],
+      timeZone: snapshot.data['time_zone'],
+      interests: snapshot.data['interests']
+              ?.map<String>((x) => x.toString())
+              ?.toList() ??
+          [],
       learnSkill: snapshot.data['learn_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.learn))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.request))
           .toList(),
       teachSkill: snapshot.data['teach_skill']
           .map<Skill>((skill) => Skill.fromEntity(
-              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.teach))
+              SkillEntity.fromAlgoliaSnapshot(skill), SkillType.offer))
           .toList(),
+      availability: Availability.fromMap(availability,
+          offset: snapshot.data['time_zone'] as int ?? 0),
     );
   }
 

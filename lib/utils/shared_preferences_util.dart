@@ -2,7 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceConstants {
   static const userId = "user_id";
-  static const pushNotifications = "push_notifications";
+  static const userPhotoUrl = "user_photo_url";
+  static const userName = "user_name";
+  static const deviceId = "device_id";
+  static const fcmToken = "fcm_token";
+  static const pushNotificationsSystem = "push_notifications_system";
+  static const pushNotificationsApp = "push_notifications_app";
   static const timeZone = "time_zone";
   static const timeZoneName = "time_zone_name";
   static const settingsInitialized = "settings_initialized";
@@ -109,6 +114,13 @@ class CachedSharedPreferences {
   }
 
   static Future clear() async {
-    await _preferences.clear();
+    final removeKeys = _preferences.getKeys().map((key) {
+      return (key != PreferenceConstants.deviceId &&
+              key != PreferenceConstants.fcmToken)
+          ? _preferences.remove(key)
+          : Future.value(null);
+    });
+
+    await Future.wait(removeKeys);
   }
 }

@@ -8,6 +8,8 @@ abstract class MatchListState extends Equatable {
   List<Object> get props => [];
 }
 
+class MatchListUnauthenticated extends MatchListState {}
+
 class MatchListLoading extends MatchListState {}
 
 class MatchListLoaded extends MatchListState {
@@ -16,7 +18,7 @@ class MatchListLoaded extends MatchListState {
   const MatchListLoaded(this.matchList);
 
   @override
-  List<Object> get props => [matchList];
+  List<Object> get props => []..addAll(matchList);
 
   @override
   String toString() {

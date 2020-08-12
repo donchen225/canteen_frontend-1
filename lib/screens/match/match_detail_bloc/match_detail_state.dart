@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
+import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,6 +14,18 @@ abstract class MatchDetailState extends Equatable {
 class MatchUninitialized extends MatchDetailState {}
 
 class MatchLoading extends MatchDetailState {}
+
+class MatchLoaded extends MatchDetailState {
+  final Match match;
+
+  MatchLoaded({this.match});
+
+  @override
+  List<Object> get props => [match];
+
+  @override
+  String toString() => 'MatchLoaded { match: $match }';
+}
 
 // Waiting for other user to select time and pay
 class MatchWaiting extends MatchDetailState {}

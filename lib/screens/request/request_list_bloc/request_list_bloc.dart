@@ -24,26 +24,24 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         _requestBloc = requestBloc,
         _userRepository = userRepository,
         _requestRepository = requestRepository {
-    _requestSubscription = _requestBloc.listen((state) {
-      if (state is RequestsLoaded) {
-        print('RECEIVED REQUESTS LOADED');
-        add(UpdateRequestList(
-            (_requestBloc.state as RequestsLoaded).requestList));
+    _requestSubscription = _requestBloc.listen((requestState) {
+      if (requestState is RequestsLoaded) {
+        add(LoadRequestList(requestState.requestList));
       }
     });
   }
 
   @override
-  RequestListState get initialState => RequestListLoading();
+  RequestListState get initialState => RequestListUnauthenticated();
 
   @override
   Stream<RequestListState> mapEventToState(RequestListEvent event) async* {
     if (event is UpdateRequestList) {
       yield* _mapUpdateRequestListToState(event);
-    } else if (event is InspectDetailedRequest) {
-      yield* _mapInspectDetailedRequestToState(event);
     } else if (event is LoadRequestList) {
       yield* _mapLoadRequestListToState(event);
+    } else if (event is ClearRequestList) {
+      yield* _mapClearRequestListToState();
     }
   }
 
@@ -53,26 +51,20 @@ class RequestListBloc extends Bloc<RequestListEvent, RequestListState> {
         await _getDetailedRequestList(event.requestList));
   }
 
-  Stream<RequestListState> _mapInspectDetailedRequestToState(
-      InspectDetailedRequest event) async* {
-    yield IndividualDetailedRequestLoaded(event.request);
-  }
-
   Stream<RequestListState> _mapLoadRequestListToState(
       LoadRequestList event) async* {
-    yield DetailedRequestListLoaded(
-        _requestRepository.currentDetailedRequests());
+    final updatedList = List.of(event.requestList);
+
+    yield DetailedRequestListLoaded(updatedList);
+  }
+
+  Stream<RequestListState> _mapClearRequestListToState() async* {
+    yield RequestListUnauthenticated();
   }
 
   Future<List<DetailedRequest>> _getDetailedRequestList(
       List<Request> requestList) async {
-    return Future.wait(requestList.map((request) async {
-      return _userRepository.getUser(request.senderId).then((user) {
-        final detailedRequest = DetailedRequest.fromRequest(request, user);
-        _requestRepository.saveDetailedRequest(detailedRequest);
-        return detailedRequest;
-      });
-    }));
+    return _requestRepository.currentDetailedRequests();
   }
 
   @override

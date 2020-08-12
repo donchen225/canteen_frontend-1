@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'constants.dart';
 
 class SizeConfig {
   MediaQueryData _mediaQueryData;
@@ -12,6 +15,10 @@ class SizeConfig {
   double safeBlockHorizontal;
   double safeBlockVertical;
 
+  double safeScreenHeight;
+  double scaffoldBodyHeight;
+
+  double paddingTop;
   double paddingBottom;
 
   static final SizeConfig instance = SizeConfig._();
@@ -19,12 +26,18 @@ class SizeConfig {
   SizeConfig._();
 
   void init(BuildContext context) {
+    if (_mediaQueryData != null) {
+      return;
+    }
+
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
+
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
+    paddingTop = _mediaQueryData.padding.top;
     paddingBottom = _mediaQueryData.padding.bottom;
 
     _safeAreaHorizontal =
@@ -33,5 +46,12 @@ class SizeConfig {
         _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
+
+    safeScreenHeight = screenHeight - _safeAreaVertical;
+    scaffoldBodyHeight = screenHeight -
+        _safeAreaVertical -
+        kToolbarHeight -
+        kBottomNavigationBarHeight +
+        (kBottomNavigationBarFontSize / 2);
   }
 }

@@ -11,8 +11,8 @@ class SettingsRepository {
   SettingsRepository();
 
   UserSettings getCurrentSettings() {
-    final pushNotifications =
-        CachedSharedPreferences.getBool(PreferenceConstants.pushNotifications);
+    final pushNotifications = CachedSharedPreferences.getBool(
+        PreferenceConstants.pushNotificationsApp);
     final timeZone =
         CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
     final timeZoneName =
@@ -58,28 +58,68 @@ class SettingsRepository {
     });
   }
 
-  Future<void> saveToken(String token) {
+  Future<void> toggleDevicePushNotification(String deviceId, bool value) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    print('TOKEN: $token');
+    final ref =
+        userCollection.document(userId).collection('tokens').document(deviceId);
+
+    return ref.get().then((documentSnapshot) {
+      if (documentSnapshot.exists) {
+        ref.setData({
+          "active": value,
+          "last_updated": FieldValue.serverTimestamp(),
+        }, merge: true);
+      }
+    }).catchError((error) {
+      print('Error setting device push notifications: $error');
+    });
+  }
+
+  Future<void> toggleSettingPushNotification(bool value) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    CachedSharedPreferences.setBool(
+        PreferenceConstants.pushNotificationsApp, value);
+
+    return userCollection
+        .document(userId)
+        .collection('settings')
+        .document('$userId-settings')
+        .setData({"push_notifications": value}, merge: true);
+  }
+
+  Future<void> saveToken(String token, String deviceId) {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final pushNotificationApp = CachedSharedPreferences.getBool(
+        PreferenceConstants.pushNotificationsApp);
+
     if (token == null || token.isEmpty) {
+      print('Error saving push notifications token: Token is empty.');
       return null;
     }
 
     final ref =
-        userCollection.document(userId).collection('tokens').document(token);
+        userCollection.document(userId).collection('tokens').document(deviceId);
 
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      final doc = await tx.get(ref);
+    return ref.get().then((documentSnapshot) {
+      var data = {
+        "token": token,
+        "last_updated": FieldValue.serverTimestamp(),
+        "platform": Platform.operatingSystem,
+        "active": pushNotificationApp,
+      };
 
-      if (!(doc.exists)) {
-        await tx.set(ref, {
-          "token": token,
-          "created_on": FieldValue.serverTimestamp(),
-          "platform": Platform.operatingSystem,
-        });
+      if (!documentSnapshot.exists) {
+        data["created_on"] = FieldValue.serverTimestamp();
       }
+
+      return ref.setData(data, merge: true);
+    }).catchError((error) {
+      print('Error saving token: $error');
     });
   }
 }

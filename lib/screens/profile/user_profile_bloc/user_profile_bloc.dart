@@ -54,9 +54,11 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     } else if (event is UpdateAboutSection) {
       yield* _mapUpdateAboutSectionToState(event);
     } else if (event is EditSkill) {
-      yield* _mapEditTeachSkillToState(event);
+      yield* _mapEditSkillToState(event);
     } else if (event is UpdateSkill) {
-      yield* _mapUpdateTeachSkillToState(event);
+      yield* _mapUpdateSkillToState(event);
+    } else if (event is DeleteSkill) {
+      yield* _mapDeleteSkillToState(event);
     } else if (event is EditName) {
       yield* _mapEditNameToState(event);
     } else if (event is UpdateName) {
@@ -75,22 +77,20 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       yield* _mapUpdateAvailabilityToState(event);
     } else if (event is ShowSettings) {
       yield* _mapShowSettingsToState();
-    } else if (event is ShowUserProfile) {
-      yield* _mapShowUserProfileToState();
     }
   }
 
   Stream<UserProfileState> _mapLoadUserProfileToState(
       LoadUserProfile event) async* {
     // Load settings from cache here
-    final pushNotifications =
-        CachedSharedPreferences.getBool(PreferenceConstants.pushNotifications);
+    // final pushNotifications = CachedSharedPreferences.getBool(
+    //     PreferenceConstants.pushNotificationsSystem);
     final timeZone =
         CachedSharedPreferences.getInt(PreferenceConstants.timeZone);
     final timeZoneName =
         CachedSharedPreferences.getString(PreferenceConstants.timeZoneName);
     final settings = UserSettings(
-        pushNotifications: pushNotifications,
+        // pushNotifications: pushNotifications,
         timeZone: timeZone,
         timeZoneName: timeZoneName);
 
@@ -148,32 +148,41 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         event.day.index, event.startTimeSeconds, event.endTimeSeconds);
   }
 
-  Stream<UserProfileState> _mapEditTeachSkillToState(EditSkill event) async* {
+  Stream<UserProfileState> _mapEditSkillToState(EditSkill event) async* {
     yield UserProfileEditingSkill(
         event.user, event.skillType, event.skillIndex);
   }
 
-  Stream<UserProfileState> _mapUpdateTeachSkillToState(
-      UpdateSkill event) async* {
-    event.skillType == SkillType.teach
+  Stream<UserProfileState> _mapUpdateSkillToState(UpdateSkill event) async* {
+    event.skillType == SkillType.offer
         ? await _userRepository.updateTeachSkill(event.skill, event.skillIndex)
         : await _userRepository.updateLearnSkill(event.skill, event.skillIndex);
   }
 
-  Stream<UserProfileState> _mapShowSettingsToState() async* {
-    yield SettingsMenu();
+  Stream<UserProfileState> _mapDeleteSkillToState(DeleteSkill event) async* {
+    final user = _userRepository.currentUserNow();
+
+    if (event.skillType == SkillType.offer) {
+      if (user.teachSkill.length > 0 &&
+          event.skillIndex >= 0 &&
+          event.skillIndex <= user.teachSkill.length) {
+        _userRepository.deleteTeachSkill(event.skillIndex);
+        user.teachSkill.removeAt(event.skillIndex);
+      }
+    } else {
+      if (user.learnSkill.length > 0 &&
+          event.skillIndex >= 0 &&
+          event.skillIndex <= user.learnSkill.length) {
+        _userRepository.deleteLearnSkill(event.skillIndex);
+        user.learnSkill.removeAt(event.skillIndex);
+      }
+    }
+
+    yield UserProfileLoaded(user, _settingsRepository.getCurrentSettings());
   }
 
-  Stream<UserProfileState> _mapShowUserProfileToState() async* {
-    final userState = _userBloc.state;
-    final settings = _settingsRepository.getCurrentSettings();
-    if (userState is UserLoaded && settings != null) {
-      yield UserProfileLoaded(userState.user, settings);
-    } else {
-      yield UserProfileLoading();
-      yield UserProfileLoaded(await _userRepository.currentUser(),
-          settings ?? await _settingsRepository.getSettings());
-    }
+  Stream<UserProfileState> _mapShowSettingsToState() async* {
+    yield SettingsMenu();
   }
 
   @override

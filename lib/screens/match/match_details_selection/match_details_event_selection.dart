@@ -1,7 +1,6 @@
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/models/match/match.dart';
-import 'package:canteen_frontend/models/video_chat_date/video_chat_date.dart';
 import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
 import 'package:canteen_frontend/utils/palette.dart';
@@ -73,7 +72,8 @@ class _MatchDetailEventSelectionScreenState
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 2,
-                        color: selected[i] ? Palette.orangeColor : Colors.black,
+                        color:
+                            selected[i] ? Palette.primaryColor : Colors.black,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -175,8 +175,8 @@ class _MatchDetailEventSelectionScreenState
                       left: SizeConfig.instance.blockSizeHorizontal * 6,
                       right: SizeConfig.instance.blockSizeHorizontal * 6,
                     ),
-                    color: Palette.orangeColor,
-                    disabledColor: Palette.disabledButtonColor,
+                    color: Palette.primaryColor,
+                    disabledColor: Palette.disabledButtonPrimaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

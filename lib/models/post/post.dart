@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 class Post extends Equatable {
   final String id;
   final String from;
-  final String title;
   final String message;
   final List<String> tags;
   final int commentCount;
@@ -17,7 +16,6 @@ class Post extends Equatable {
   const Post(
       {this.id,
       @required this.from,
-      @required this.title,
       this.message,
       this.tags,
       this.commentCount = 0,
@@ -29,7 +27,6 @@ class Post extends Equatable {
   List<Object> get props => [
         id,
         from,
-        title,
         message,
         tags,
         commentCount,
@@ -40,14 +37,13 @@ class Post extends Equatable {
 
   @override
   String toString() {
-    return 'Post { id: $id, from: $from, title: $title, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'Post { id: $id, from: $from, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Post fromEntity(PostEntity entity) {
     return Post(
       id: entity.id,
       from: entity.from,
-      title: entity.title,
       message: entity.message,
       tags: entity.tags,
       commentCount: entity.commentCount,
@@ -61,13 +57,38 @@ class Post extends Equatable {
     return PostEntity(
       id: id,
       from: from,
-      title: title,
       message: message,
       tags: tags,
       commentCount: commentCount,
       likeCount: likeCount,
       lastUpdated: lastUpdated,
       createdOn: createdOn,
+    );
+  }
+
+  Post incrementLikeCount() {
+    return Post(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount + 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+    );
+  }
+
+  Post decrementLikeCount() {
+    return Post(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount - 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
     );
   }
 }
@@ -79,7 +100,6 @@ class DetailedPost extends Post {
   DetailedPost({
     @required id,
     @required from,
-    @required title,
     @required message,
     @required tags,
     @required commentCount,
@@ -91,13 +111,26 @@ class DetailedPost extends Post {
   }) : super(
             id: id,
             from: from,
-            title: title,
             message: message,
             tags: tags,
             commentCount: commentCount,
             likeCount: likeCount,
             lastUpdated: lastUpdated,
             createdOn: createdOn);
+
+  @override
+  List<Object> get props => [
+        id,
+        from,
+        message,
+        tags,
+        commentCount,
+        likeCount,
+        lastUpdated,
+        createdOn,
+        user,
+        liked,
+      ];
 
   static DetailedPost fromPost(
     Post post,
@@ -107,13 +140,72 @@ class DetailedPost extends Post {
     return DetailedPost(
       id: post.id,
       from: post.from,
-      title: post.title,
       message: post.message,
       tags: post.tags,
       commentCount: post.commentCount,
       likeCount: post.likeCount,
       createdOn: post.createdOn,
       lastUpdated: post.lastUpdated,
+      user: user,
+      liked: liked,
+    );
+  }
+
+  DetailedPost incrementLikeCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount + 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: true,
+    );
+  }
+
+  DetailedPost incrementCommentCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount + 1,
+      likeCount: likeCount,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: liked,
+    );
+  }
+
+  DetailedPost decrementLikeCount() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount - 1,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
+      user: user,
+      liked: false,
+    );
+  }
+
+  DetailedPost copy() {
+    return DetailedPost(
+      id: id,
+      from: from,
+      message: message,
+      tags: tags,
+      commentCount: commentCount,
+      likeCount: likeCount,
+      createdOn: createdOn,
+      lastUpdated: lastUpdated,
       user: user,
       liked: liked,
     );

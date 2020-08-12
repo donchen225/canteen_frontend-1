@@ -1,22 +1,42 @@
-import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class OnboardingState extends Equatable {
-  const OnboardingState();
-
   @override
-  List<Object> get props => [];
+  List<Object> get props => null;
 }
 
-class WelcomeScreenLoaded extends OnboardingState {}
+class OnboardingUninitialized extends OnboardingState {}
 
-class OnboardingSignUpScreensLoaded extends OnboardingState {
-  final User user;
+class OnboardingLoading extends OnboardingState {}
 
-  const OnboardingSignUpScreensLoaded(this.user);
+class OnboardingInProgress extends OnboardingState {
+  final String name;
+  final String photoUrl;
+  final String about;
+  final Skill skill;
+
+  OnboardingInProgress(
+      {this.name = '', this.photoUrl = '', this.about = '', this.skill});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [name, photoUrl, about, skill];
+
+  @override
+  String toString() =>
+      'OnboardingInProgress { name: $name, photoUrl: $photoUrl, about: $about, skill: $skill }';
 }
 
-class OnboardingCompleteScreenLoaded extends OnboardingState {}
+class OnboardingGroups extends OnboardingState {
+  final List<Group> groups;
+  final List<bool> joined;
+
+  OnboardingGroups({this.groups, this.joined});
+
+  @override
+  List<Object> get props => [groups, joined];
+
+  @override
+  String toString() => 'OnboardingGroups { groups: $groups, joined: $joined }';
+}

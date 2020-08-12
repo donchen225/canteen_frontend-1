@@ -1,25 +1,33 @@
-import 'package:canteen_frontend/screens/onboarding/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/onboarding/bloc/onboarding_event.dart';
+import 'package:canteen_frontend/components/main_button.dart';
+import 'package:canteen_frontend/screens/onboarding/onboarding_name_screen.dart';
+import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  static const routeName = '/';
+
   @override
   Widget build(BuildContext context) {
+    final titleTextStyle = Theme.of(context).textTheme.headline3.apply(
+          color: Palette.textColor,
+          fontWeightDelta: 2,
+        );
+
     return Scaffold(
-        body: Container(
-      color: Palette.backgroundColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal * 6),
-                child: Column(
+        backgroundColor: Palette.scaffoldBackgroundLightColor,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.instance.safeBlockHorizontal *
+                  kLandingHorizontalPaddingBlocks),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                    child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
@@ -27,50 +35,45 @@ class WelcomeScreen extends StatelessWidget {
                           vertical: SizeConfig.instance.safeBlockVertical * 9),
                       child: Text(
                         'Welcome to Canteen.',
-                        style: TextStyle(
-                            fontSize: 33, fontWeight: FontWeight.w800),
+                        style: titleTextStyle,
                       ),
                     ),
                     Container(
                       child: Text(
                         'The app where you can connect, learn, and earn money.',
-                        style: TextStyle(
-                            fontSize: 33, fontWeight: FontWeight.w800),
+                        style: titleTextStyle,
                       ),
                     )
                   ],
                 )),
-          ),
-          Flexible(
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: SizeConfig.instance.safeBlockVertical * 9,
-                    width: SizeConfig.instance.safeBlockHorizontal * 42,
-                    child: RaisedButton(
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      onPressed: () {
-                        BlocProvider.of<OnboardingBloc>(context)
-                            .add(LoadOnboarding());
-                      },
-                      color: Palette.orangeColor,
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
               ),
-            ),
-          )
-        ],
-      ),
-    ));
+              Expanded(
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: MainButton(
+                              height: SizeConfig.instance.safeBlockHorizontal *
+                                  (100 -
+                                      (2 * kLandingHorizontalPaddingBlocks)) /
+                                  kButtonAspectRatio,
+                              onPressed: () => Navigator.pushNamed(
+                                  context, OnboardingNameScreen.routeName),
+                              color: Palette.primaryColor,
+                              text: 'Continue',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }

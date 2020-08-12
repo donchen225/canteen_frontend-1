@@ -79,7 +79,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
       messagesSubscriptionMap[event.match.id] = messagesSubscription;
     } catch (exception) {
-      print(exception.errorMessage());
+      print('Error fetching messages: ${exception.errorMessage()}');
       yield ErrorState(exception);
     }
   }
@@ -96,14 +96,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               CachedSharedPreferences.getString(PreferenceConstants.userId)),
           isPrevious: true);
     } catch (exception) {
-      print(exception.errorMessage());
+      print('Error fetching messages: ${exception.errorMessage()}');
       yield ErrorState(exception);
     }
   }
 
   Stream<MessageState> mapFetchConversationDetailsEventToState(
       FetchConversationDetailsEvent event) async* {
-    print('fetching details for ${event.match.id}');
     final userId = event.match.userId.firstWhere((id) =>
         id != CachedSharedPreferences.getString(PreferenceConstants.userId));
     User user = await _userRepository.getUser(userId);

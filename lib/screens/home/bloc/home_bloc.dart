@@ -1,96 +1,88 @@
+import 'package:canteen_frontend/models/api_response/api_response_status.dart';
+import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_event.dart';
 import 'package:canteen_frontend/screens/home/bloc/home_state.dart';
-import 'package:canteen_frontend/shared_blocs/settings/bloc.dart';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UserRepository _userRepository;
-  final SettingBloc _settingBloc;
-  int _previousIndex = 0;
-  int currentIndex = 0;
+  final GroupRepository _groupRepository;
+  DateTime _lastRequested;
 
   HomeBloc(
       {@required UserRepository userRepository,
-      @required SettingBloc settingBloc})
+      @required GroupRepository groupRepository})
       : assert(userRepository != null),
-        assert(settingBloc != null),
+        assert(groupRepository != null),
         _userRepository = userRepository,
-        _settingBloc = settingBloc;
+        _groupRepository = groupRepository;
 
   @override
   HomeState get initialState => HomeUninitialized();
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    if (event is PageTapped) {
-      yield* _mapPageTappedToState(event);
-    } else if (event is CheckOnboardStatus) {
+    if (event is CheckOnboardStatus) {
       yield* _mapCheckOnboardStatusToState();
     } else if (event is InitializeHome) {
       yield* _mapInitializeHomeToState();
+    } else if (event is UserHomeLoaded) {
+      yield* _mapUserHomeLoadedToState();
+    } else if (event is LoadHome) {
+      yield* _mapLoadHomeToState();
     } else if (event is ClearHome) {
       yield* _mapClearHomeToState();
-    }
-  }
-
-  Stream<HomeState> _mapPageTappedToState(PageTapped event) async* {
-    _previousIndex = currentIndex;
-    currentIndex = event.index;
-    yield CurrentIndexChanged(currentIndex: currentIndex);
-    yield PageLoading();
-
-    final reset = _previousIndex != currentIndex ? false : true;
-
-    switch (this.currentIndex) {
-      case 0:
-        // yield RecommendedScreenLoaded(reset: reset);
-        yield PostScreenLoaded(reset: reset);
-        break;
-      case 1:
-        yield SearchScreenLoaded(reset: reset);
-        break;
-      case 2:
-        yield RequestScreenLoaded(reset: reset);
-        break;
-      case 3:
-        yield MatchScreenLoaded(reset: reset);
-        break;
-      case 4:
-        yield UserProfileScreenLoaded(reset: reset);
-        break;
     }
   }
 
   Stream<HomeState> _mapCheckOnboardStatusToState() async* {
     final user = await _userRepository.currentUser();
 
-    if (user.onBoarded != null && user.onBoarded == 1) {
-      yield HomeInitializing();
-
-      // Load user settings
-      _settingBloc.add(InitializeSettings(hasOnboarded: true));
-
-      yield PostScreenLoaded();
-      // yield RecommendedScreenLoaded();
-    } else {
+    if (user == null) {
+      yield HomeLoaded(authenticated: false);
+    } else if (user.onBoarded == null || user.onBoarded != 1) {
       yield OnboardScreenLoaded();
+    } else {
+      final time = DateTime.now();
+      _lastRequested = time;
+      yield HomeLoaded(authenticated: true, lastRequested: time);
     }
   }
 
   Stream<HomeState> _mapInitializeHomeToState() async* {
-    yield HomeInitializing();
+    yield HomeLoading();
 
-    // Upload user settings here
+    try {
+      final response =
+          await _groupRepository.joinGroup(AppConfig.defaultGroupId);
 
-    yield PostScreenLoaded();
-    // yield RecommendedScreenLoaded();
+      if (response.status != ApiResponseStatus.success) {
+        throw Exception(response.message);
+      }
+    } catch (e) {
+      print('Error joining Canteen group: $e');
+    }
+
+    yield HomeLoaded(authenticated: true);
+  }
+
+  Stream<HomeState> _mapUserHomeLoadedToState() async* {
+    yield HomeLoaded(
+        authenticated: true, dataLoaded: true, lastRequested: _lastRequested);
+  }
+
+  Stream<HomeState> _mapLoadHomeToState() async* {
+    final time = DateTime.now();
+    _lastRequested = time;
+
+    yield HomeLoaded(
+        authenticated: true, dataLoaded: false, lastRequested: time);
   }
 
   Stream<HomeState> _mapClearHomeToState() async* {
-    _previousIndex = 0;
-    currentIndex = 0;
-    yield HomeUninitialized();
+    yield HomeLoaded(authenticated: false);
   }
 }

@@ -11,16 +11,28 @@ abstract class MatchDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadMatchDetails extends MatchDetailEvent {
+class LoadMatch extends MatchDetailEvent {
   final Match match;
 
-  const LoadMatchDetails({this.match});
+  const LoadMatch({this.match});
 
   @override
   List<Object> get props => [];
 
   @override
-  String toString() => 'LoadMatchDetails { match: ${match.id} }';
+  String toString() => 'LoadMatch { match: ${match.id} }';
+}
+
+class LoadMatchFromId extends MatchDetailEvent {
+  final String matchId;
+
+  const LoadMatchFromId({this.matchId});
+
+  @override
+  List<Object> get props => [matchId];
+
+  @override
+  String toString() => 'LoadMatchFromId { matchId: $matchId }';
 }
 
 class SelectEvent extends MatchDetailEvent {

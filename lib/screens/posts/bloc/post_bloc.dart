@@ -5,38 +5,54 @@ import 'package:canteen_frontend/models/post/post_repository.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_event.dart';
 import 'package:canteen_frontend/screens/posts/bloc/post_state.dart';
-import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group/group_bloc.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:tuple/tuple.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository _postRepository;
   final UserRepository _userRepository;
-  UserBloc _userBloc;
-  User _self;
-  StreamSubscription _postSubscription;
-  StreamSubscription _userSubscription;
+  GroupBloc _groupBloc;
+  GroupHomeBloc _groupHomeBloc;
+  CommentBloc _commentBloc;
+  StreamSubscription _groupSubscription;
+  StreamSubscription _groupHomeSubscription;
+  Map<String, List<Post>> postList = {};
 
-  PostBloc(
-      {@required PostRepository postRepository,
-      @required UserRepository userRepository,
-      @required UserBloc userBloc})
-      : assert(postRepository != null),
+  PostBloc({
+    @required PostRepository postRepository,
+    @required UserRepository userRepository,
+    GroupBloc groupBloc,
+    CommentBloc commentBloc,
+    GroupHomeBloc groupHomeBloc,
+  })  : assert(postRepository != null),
         assert(userRepository != null),
-        assert(userBloc != null),
         _postRepository = postRepository,
         _userRepository = userRepository,
-        _userBloc = userBloc {
-    _userSubscription = _userBloc.listen((state) {
-      print('POST BLOC USER SUBSCRIPTION RECEIVED EVENT');
-      if (state is UserLoaded) {
-        _self = state.user;
-      }
-    });
+        _groupBloc = groupBloc,
+        _commentBloc = commentBloc,
+        _groupHomeBloc = groupHomeBloc {
+    if (_groupBloc != null) {
+      _groupSubscription = _groupBloc.listen((state) {
+        if (state is GroupLoaded) {
+          add(LoadPosts(groupId: state.group.id));
+        }
+      });
+    }
+
+    if (_groupHomeBloc != null) {
+      _groupHomeSubscription = _groupHomeBloc.listen((state) {
+        if (state is GroupHomeLoaded) {
+          add(LoadPosts(groupId: state.group.id));
+        }
+      });
+    }
   }
 
   @override
@@ -45,13 +61,15 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
     if (event is LoadPosts) {
-      yield* _mapLoadPostsToState();
+      yield* _mapLoadPostsToState(event);
     } else if (event is PostsUpdated) {
       yield* _mapPostsUpdateToState(event);
     } else if (event is AddPost) {
       yield* _mapAddPostToState(event);
     } else if (event is AddLike) {
       yield* _mapAddLikeToState(event);
+    } else if (event is AddComment) {
+      yield* _mapAddCommentToState(event);
     } else if (event is DeleteLike) {
       yield* _mapDeleteLikeToState(event);
     } else if (event is ClearPosts) {
@@ -59,93 +77,137 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     }
   }
 
-  Stream<PostState> _mapLoadPostsToState() async* {
-    try {
-      _postSubscription?.cancel();
-      _postSubscription = _postRepository.getPosts().listen((posts) {
-        add(PostsUpdated(posts));
-      });
+  Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
+    yield PostsLoading();
 
-      if (_self == null) {
-        print('USER IS NULL!!!!');
-        _self = await _userRepository.currentUser();
-        print('USER IS STILL NULL!!!!');
+    try {
+      final posts = await _postRepository.getPosts(event.groupId);
+      add(PostsUpdated(groupId: event.groupId, updates: posts));
+    } on PlatformException catch (error) {
+      if (error.code == 'Error 7') {
+        print('In sufficient permission to view group.');
+        yield PostsPrivate(groupId: event.groupId);
       }
-    } catch (exception) {
-      print(exception.errorMessage());
     }
   }
 
   Stream<PostState> _mapPostsUpdateToState(PostsUpdated event) async* {
-    yield PostsLoading();
-    final updatedPosts = event.updates;
+    final updatedPosts = event.updates.item1;
 
     final userListFuture = Future.wait(updatedPosts.map((update) async {
-      if (update.item1 == DocumentChangeType.modified ||
-          update.item1 == DocumentChangeType.added) {
-        return _userRepository.getUser(update.item2.from);
-      }
-      return Future<User>.value(null);
+      return _userRepository.getUser(update.from);
     }));
 
     final userLikedFuture = Future.wait(updatedPosts.map((update) async {
-      if (update.item1 == DocumentChangeType.modified ||
-          update.item1 == DocumentChangeType.added) {
-        return _postRepository.checkLike(update.item2.id);
-      }
-      return Future<bool>.value(false);
+      return _postRepository.checkLike(event.groupId, update.id);
     }));
 
     final userList = await userListFuture;
     final userLiked = await userLikedFuture;
 
+    List<DetailedPost> posts = [];
     for (int i = 0; i < updatedPosts.length; i++) {
       User user = userList[i];
       bool liked = userLiked[i];
-      Tuple2<DocumentChangeType, Post> update = updatedPosts[i];
+      Post update = updatedPosts[i];
 
-      if (update.item1 == DocumentChangeType.added ||
-          update.item1 == DocumentChangeType.modified) {
-        final detailedPost = DetailedPost.fromPost(update.item2, user, liked);
-
-        if (update.item1 == DocumentChangeType.added) {
-          _postRepository.saveDetailedPost(detailedPost);
-        } else {
-          _postRepository.updateDetailedPost(update.item1, detailedPost);
-        }
-      } else if (update.item1 == DocumentChangeType.removed) {
-        _postRepository.updateDetailedPost(update.item1, update.item2);
-      }
+      posts.add(DetailedPost.fromPost(update, user, liked));
     }
 
-    yield PostsLoaded(
-        posts: _postRepository.currentDetailedPosts(), user: _self);
+    postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
-    _postRepository.addPost(event.post);
+    await _postRepository.addPost(event.groupId, event.post);
+    add(LoadPosts(groupId: event.groupId));
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {
-    _postRepository.addLike(event.postId, event.like);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.addLike(event.groupId, event.postId, event.like);
+    }
+
+    var posts = postList[event.groupId]
+        .map((post) => (post as DetailedPost).copy())
+        .toList();
+
+    final postIdx = posts.indexWhere((post) => post.id == event.postId);
+    posts[postIdx] = posts[postIdx].incrementLikeCount();
+    postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
+  }
+
+  Stream<PostState> _mapAddCommentToState(AddComment event) async* {
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.addComment(event.groupId, event.postId, event.comment);
+
+      var posts = postList[event.groupId]
+          .map((post) => (post as DetailedPost).copy())
+          .toList();
+
+      final postIdx = posts.indexWhere((post) => post.id == event.postId);
+      posts[postIdx] = posts[postIdx].incrementCommentCount();
+      postList[event.groupId] = posts;
+
+      yield PostsLoaded(groupId: event.groupId, posts: posts);
+    }
   }
 
   Stream<PostState> _mapDeleteLikeToState(DeleteLike event) async* {
-    _postRepository.deleteLike(event.postId);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((group) => group.id == event.groupId);
+
+    if (isMember) {
+      _postRepository.deleteLike(event.groupId, event.postId);
+    }
+
+    var posts = postList[event.groupId]
+        .map((post) => (post as DetailedPost).copy())
+        .toList();
+
+    final postIdx = posts.indexWhere((post) => post.id == event.postId);
+    posts[postIdx] = posts[postIdx].decrementLikeCount();
+    postList[event.groupId] = posts;
+
+    yield PostsLoaded(groupId: event.groupId, posts: posts);
   }
 
   Stream<PostState> _mapClearPostsToState() async* {
-    _self = null;
-    _postRepository.clearPosts();
-    _postSubscription?.cancel();
     yield PostsEmpty();
   }
 
   @override
   Future<void> close() {
-    _postRepository.clearPosts();
-    _postSubscription?.cancel();
-    _userSubscription?.cancel();
     return super.close();
   }
+
+  // void saveDetailedPost(DetailedPost post) {
+  //   var idx = 0;
+  //   while (idx < _detailedPosts.length) {
+  //     if (post.lastUpdated.isAfter(_detailedPosts[idx].lastUpdated)) {
+  //       break;
+  //     }
+
+  //     idx++;
+  //   }
+  //   _detailedPosts.insert(idx, post);
+  // }
+
+  // void updateDetailedPost(DocumentChangeType type, Post post) {
+  //   if (type == DocumentChangeType.modified) {
+  //     _detailedPosts.removeWhere((p) => p.id == post.id);
+  //     _detailedPosts.insert(0, post);
+  //   } else if (type == DocumentChangeType.removed) {
+  //     _detailedPosts.removeWhere((p) => p.id == post.id);
+  //   }
+  // }
 }

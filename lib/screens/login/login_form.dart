@@ -1,6 +1,10 @@
+import 'package:canteen_frontend/components/main_button.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
-import 'package:canteen_frontend/screens/login/create_account_button.dart';
+import 'package:canteen_frontend/services/navigation_service.dart';
+import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +12,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/bloc.dart';
-import 'login_button.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -24,7 +27,6 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final Color _textColor = Colors.white;
   LoginBloc _loginBloc;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -46,7 +48,9 @@ class _LoginFormState extends State<LoginForm> {
 
   String getErrorMessage(PlatformException error) {
     if (error == null) {
-      return '';
+      return '''
+
+      ''';
     }
 
     if (error.code == 'ERROR_WRONG_PASSWORD') {
@@ -60,25 +64,17 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final headerTextStyle = Theme.of(context).textTheme.headline4.apply(
+          color: Palette.titleColor,
+          fontWeightDelta: 4,
+        );
+
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        // if (state.isSubmitting) {
-        //   Scaffold.of(context)
-        //     ..hideCurrentSnackBar()
-        //     ..showSnackBar(
-        //       SnackBar(
-        //         content: Row(
-        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //           children: [
-        //             Text('Logging In...'),
-        //             CupertinoActivityIndicator(),
-        //           ],
-        //         ),
-        //       ),
-        //     );
-        // }
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
+
+          getIt<NavigationService>().resetAllNavigators();
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -86,37 +82,43 @@ class _LoginFormState extends State<LoginForm> {
           return Form(
             child: ListView(
               padding: EdgeInsets.only(
-                  top: SizeConfig.instance.blockSizeVertical * 9,
-                  left: SizeConfig.instance.blockSizeHorizontal * 9,
-                  right: SizeConfig.instance.blockSizeHorizontal * 9),
+                // top: SizeConfig.instance.safeBlockVertical * 20,
+                bottom: SizeConfig.instance.safeBlockVertical * 20,
+                left: SizeConfig.instance.safeBlockHorizontal *
+                    kLandingHorizontalPaddingBlocks,
+                right: SizeConfig.instance.safeBlockHorizontal *
+                    kLandingHorizontalPaddingBlocks,
+              ),
               children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 3,
-                        bottom: SizeConfig.instance.blockSizeVertical * 3),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical * 3,
+                      bottom: SizeConfig.instance.safeBlockVertical * 3),
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
-                      'Canteen',
-                      style: TextStyle(
-                        color: _textColor,
-                        fontSize: 40,
-                      ),
+                      'Log in to Canteen',
+                      style: headerTextStyle,
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
                     controller: _emailController,
-                    style: TextStyle(color: _textColor),
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: _textColor),
-                      fillColor: Colors.white.withOpacity(0.1),
-                      filled: true,
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Email',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
@@ -124,44 +126,46 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
+                      top: SizeConfig.instance.safeBlockVertical,
+                      bottom: SizeConfig.instance.safeBlockVertical),
                   child: TextFormField(
-                    style: TextStyle(color: _textColor),
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: _textColor),
-                      fillColor: Colors.white.withOpacity(0.1),
-                      filled: true,
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Password',
                     ),
                     obscureText: true,
                     autocorrect: false,
                   ),
                 ),
-                // TODO: change this error to a pop up
-                Visibility(
-                  visible: state.isFailure,
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        getErrorMessage(state.error),
-                        style: TextStyle(color: Colors.red),
-                      )),
+                Text(
+                  getErrorMessage(state.error),
+                  style: TextStyle(color: Colors.red),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.blockSizeVertical * 3),
+                      vertical: SizeConfig.instance.safeBlockVertical),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      LoginButton(
+                      MainButton(
+                        height: SizeConfig.instance.safeBlockHorizontal *
+                            (100 - (2 * kLandingHorizontalPaddingBlocks)) /
+                            kButtonAspectRatio,
+                        color: Palette.primaryColor,
+                        text: 'Log in',
                         onPressed: isLoginButtonEnabled(state)
-                            ? _onFormSubmitted
+                            ? () => _onFormSubmitted(context)
                             : null,
                       ),
-                      CreateAccountButton(userRepository: _userRepository),
                     ],
                   ),
                 ),
@@ -192,7 +196,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _onFormSubmitted() {
+  void _onFormSubmitted(BuildContext context) {
     _loginBloc.add(
       LoginWithCredentialsPressed(
         email: _emailController.text,

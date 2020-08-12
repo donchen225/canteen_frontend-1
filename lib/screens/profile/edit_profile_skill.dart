@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/duration_picker.dart';
 import 'package:canteen_frontend/models/skill/skill.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
@@ -32,7 +34,9 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
   int _initialDurationIndex = 0;
   final double _kPickerSheetHeight = 216.0;
   final List<int> durationOptions = <int>[
+    15,
     30,
+    45,
     60,
     90,
     120,
@@ -47,7 +51,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController = TextEditingController();
     _skillDescriptionController = TextEditingController();
 
-    skill = Skill('', '', 0, 30, widget.skillType);
+    _setSkill();
   }
 
   @override
@@ -56,6 +60,30 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
     _skillPriceController.dispose();
     _skillDescriptionController.dispose();
     super.dispose();
+  }
+
+  void _setSkill() {
+    final skillList = widget.skillType == SkillType.offer
+        ? widget.user.teachSkill
+        : widget.user.learnSkill;
+
+    if (widget.skillIndex < skillList.length) {
+      skill = skillList[widget.skillIndex];
+    } else {
+      skill = Skill(
+          name: '',
+          description: '',
+          price: 0,
+          duration: 30,
+          type: widget.skillType);
+    }
+
+    _skillNameController.text = skill.name;
+    _skillPriceController.text = skill.price.toString();
+    _skillDescriptionController.text = skill.description;
+    _initialDurationIndex = durationOptions.indexOf(skill.duration);
+    _initialDurationIndex =
+        _initialDurationIndex != -1 ? _initialDurationIndex : 0;
   }
 
   Widget _buildDurationPicker(BuildContext context) {
@@ -88,7 +116,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
       width: SizeConfig.instance.blockSizeHorizontal * 33,
       height: SizeConfig.instance.safeBlockVertical * 7,
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.grey[400]),
+        border: Border.all(width: 1, color: Palette.borderSeparatorColor),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -106,86 +134,35 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
 
   @override
   Widget build(BuildContext context) {
-    final skillList = widget.skillType == SkillType.teach
-        ? widget.user.teachSkill
-        : widget.user.learnSkill;
+    return DialogScreen(
+      title: 'Edit ${widget.skillType == SkillType.offer ? "Offering" : "Ask"}',
+      onCancel: () => _userProfileBloc.add(LoadUserProfile(widget.user)),
+      sendWidget: ConfirmButton(
+        onTap: (_) {
+          final price = int.parse(_skillPriceController.text);
+          final duration =
+              durationOptions[_selectedDurationIndex ?? _initialDurationIndex];
 
-    if (widget.skillIndex < skillList.length) {
-      skill = skillList[widget.skillIndex];
-    }
-
-    _skillNameController.text = skill.name;
-    _skillPriceController.text = skill.price.toString();
-    _skillDescriptionController.text = skill.description;
-    _initialDurationIndex = durationOptions.indexOf(skill.duration);
-    _initialDurationIndex =
-        _initialDurationIndex != -1 ? _initialDurationIndex : 0;
-
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                _userProfileBloc.add(LoadUserProfile(widget.user));
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.orangeColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text(widget.skillType == SkillType.teach
-                ? 'Edit Teach Skill'
-                : 'Edit Learn Skill'),
-            GestureDetector(
-              onTap: () {
-                final price = int.parse(_skillPriceController.text);
-                final duration = durationOptions[
-                    _selectedDurationIndex ?? _initialDurationIndex];
-
-                if (skill.name != _skillNameController.text ||
-                    skill.price != price ||
-                    skill.description != _skillDescriptionController.text ||
-                    skill.duration != duration) {
-                  print('UPDATING SKILL');
-                  _userProfileBloc.add(UpdateSkill(
-                      widget.user,
-                      Skill(
-                          _skillNameController.text,
-                          _skillDescriptionController.text,
-                          price,
-                          duration,
-                          widget.skillType),
-                      widget.skillType,
-                      widget.skillIndex ?? 0));
-                } else {
-                  print('NOT UPDATING SKILL');
-                  _userProfileBloc.add(LoadUserProfile(widget.user));
-                }
-              },
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.orangeColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
+          if (skill.name != _skillNameController.text ||
+              skill.price != price ||
+              skill.description != _skillDescriptionController.text ||
+              skill.duration != duration) {
+            _userProfileBloc.add(UpdateSkill(
+                widget.user,
+                Skill(
+                    name: _skillNameController.text,
+                    description: _skillDescriptionController.text,
+                    price: price,
+                    duration: duration,
+                    type: widget.skillType),
+                widget.skillType,
+                widget.skillIndex ?? 0));
+          } else {
+            _userProfileBloc.add(LoadUserProfile(widget.user));
+          }
+        },
       ),
-      body: ListView(
+      child: ListView(
         padding: EdgeInsets.only(
           left: SizeConfig.instance.blockSizeHorizontal * 6,
           right: SizeConfig.instance.blockSizeHorizontal * 6,
@@ -208,7 +185,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             margin: EdgeInsets.only(
                 bottom: SizeConfig.instance.blockSizeVertical * 3),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey[400]),
+              border: Border.all(width: 1, color: Palette.borderSeparatorColor),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
@@ -229,77 +206,90 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
           Container(
             margin: EdgeInsets.only(
                 bottom: SizeConfig.instance.blockSizeVertical * 3),
-            child: Row(
+            child: Column(
               children: <Widget>[
-                Expanded(
-                  child: Container(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal,
-                            right: SizeConfig.instance.safeBlockHorizontal,
-                            bottom: SizeConfig.instance.safeBlockVertical),
-                        child: Text(
-                          'Price',
-                          style: TextStyle(fontSize: _titleFontSize),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        height: SizeConfig.instance.safeBlockVertical * 7,
-                        width: SizeConfig.instance.safeBlockHorizontal * 20,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey[400]),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            controller: _skillPriceController,
-                            textCapitalization: TextCapitalization.sentences,
-                            autofocus: true,
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                decoration: TextDecoration.none),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              counterText: "",
-                              contentPadding: EdgeInsets.all(0),
-                              isDense: true,
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.instance.safeBlockHorizontal,
+                                right: SizeConfig.instance.safeBlockHorizontal,
+                                bottom: SizeConfig.instance.safeBlockVertical),
+                            child: Text(
+                              'Price',
+                              style: TextStyle(fontSize: _titleFontSize),
                             ),
-                            keyboardType: TextInputType.number,
-                            maxLines: 1,
-                            minLines: 1,
-                            maxLength: 5,
                           ),
-                        ),
-                      ),
-                    ],
-                  )),
+                          Container(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            height: SizeConfig.instance.safeBlockVertical * 7,
+                            width: SizeConfig.instance.safeBlockHorizontal * 20,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1,
+                                  color: Palette.borderSeparatorColor),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                controller: _skillPriceController,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                autofocus: true,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    decoration: TextDecoration.none),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  counterText: "",
+                                  contentPadding: EdgeInsets.all(0),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.number,
+                                maxLines: 1,
+                                minLines: 1,
+                                maxLength: 5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: SizeConfig.instance.safeBlockHorizontal,
+                                right: SizeConfig.instance.safeBlockHorizontal,
+                                bottom: SizeConfig.instance.safeBlockVertical),
+                            child: Text(
+                              'Duration',
+                              style: TextStyle(fontSize: _titleFontSize),
+                            ),
+                          ),
+                          _buildDurationPicker(context),
+                        ],
+                      )),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.instance.safeBlockHorizontal,
-                            right: SizeConfig.instance.safeBlockHorizontal,
-                            bottom: SizeConfig.instance.safeBlockVertical),
-                        child: Text(
-                          'Duration',
-                          style: TextStyle(fontSize: _titleFontSize),
-                        ),
-                      ),
-                      _buildDurationPicker(context),
-                    ],
-                  )),
-                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.instance.safeBlockVertical),
+                  child: Text(
+                      'Note: Setting the price to \$0 will enable others to connect with you without paying.'),
+                )
               ],
             ),
           ),
@@ -315,7 +305,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
             height: MediaQuery.of(context).size.height * 0.25,
             padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey[400]),
+              border: Border.all(width: 1, color: Palette.borderSeparatorColor),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
@@ -328,7 +318,7 @@ class _EditProfileSkillState extends State<EditProfileSkill> {
               decoration: InputDecoration(border: InputBorder.none),
               keyboardType: TextInputType.multiline,
               maxLength:
-                  150, // TODO: move character counter to bottom right corner of container
+                  300, // TODO: move character counter to bottom right corner of container
               maxLines: null,
             ),
           ),

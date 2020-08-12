@@ -38,16 +38,4 @@ class DetailedRequestListLoaded extends RequestListState {
   }
 }
 
-class IndividualDetailedRequestLoaded extends RequestListState {
-  final DetailedRequest request;
-
-  const IndividualDetailedRequestLoaded(this.request);
-
-  @override
-  List<Object> get props => [request];
-
-  @override
-  String toString() {
-    return 'IndividualDetailedRequestLoaded { request: $request }';
-  }
-}
+class RequestListUnauthenticated extends RequestListState {}

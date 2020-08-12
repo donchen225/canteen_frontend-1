@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:canteen_frontend/utils/app_config.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:mime/mime.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorage {
   final FirebaseStorage _storage =
-      FirebaseStorage(storageBucket: firebaseStorageUrl);
+      FirebaseStorage(storageBucket: AppConfig.storageUrl);
 
   // TODO: create a thumbnail from the image
   Future<StorageUploadTask> upload(File file, String userId) async {

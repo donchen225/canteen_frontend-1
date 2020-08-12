@@ -7,7 +7,9 @@ class MatchEntity extends Equatable {
   final List<String> userId;
   final String senderId;
   final int status;
-  final String activeVideoChat;
+  final String payer;
+  final DateTime time;
+  final Map<String, bool> read;
   final DateTime lastUpdated;
   final DateTime createdOn;
 
@@ -16,7 +18,9 @@ class MatchEntity extends Equatable {
       @required this.userId,
       @required this.senderId,
       @required this.status,
-      @required this.activeVideoChat,
+      @required this.payer,
+      @required this.time,
+      @required this.read,
       @required this.lastUpdated,
       @required this.createdOn});
 
@@ -26,7 +30,9 @@ class MatchEntity extends Equatable {
       'user_id': userId,
       'sender_id': senderId,
       'status': status,
-      'active_video_chat': activeVideoChat,
+      'payer': payer,
+      'time': time,
+      'read': read,
       'created_on': createdOn,
       'last_updated': lastUpdated,
     };
@@ -34,23 +40,11 @@ class MatchEntity extends Equatable {
 
   @override
   List<Object> get props =>
-      [id, userId, senderId, status, activeVideoChat, createdOn, lastUpdated];
+      [id, userId, senderId, status, payer, time, read, createdOn, lastUpdated];
 
   @override
   String toString() {
-    return 'MatchEntity { id: $id, userId: $userId, senderId: $senderId, status: $status, activeVideoChat: $activeVideoChat, createdOn: $createdOn, lastUpdated $lastUpdated }';
-  }
-
-  static MatchEntity fromJson(Map<String, Object> json) {
-    return MatchEntity(
-      id: json['id'] as String,
-      userId: json['user_id'] as List<String>,
-      senderId: json['sender_id'] as String,
-      status: json['status'] as int,
-      activeVideoChat: json['active_video_chat'] as String,
-      createdOn: DateTime.parse(json['created_on']),
-      lastUpdated: DateTime.parse(json['last_updated']),
-    );
+    return 'MatchEntity { id: $id, userId: $userId, senderId: $senderId, status: $status, payer: $payer, time: $time, read: $read, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static MatchEntity fromSnapshot(DocumentSnapshot snapshot) {
@@ -59,20 +53,13 @@ class MatchEntity extends Equatable {
       userId: snapshot.data['user_id'].map<String>((x) => x as String).toList(),
       senderId: snapshot.data['sender_id'],
       status: snapshot.data['status'],
-      activeVideoChat: snapshot.data['active_video_chat'],
-      createdOn: snapshot.data["created_on"].toDate(),
+      payer: snapshot.data['payer'],
+      time: snapshot.data['time']?.toDate() ?? null,
+      read: snapshot.data['read']
+              ?.map<String, bool>((k, v) => MapEntry(k as String, v as bool)) ??
+          {},
+      createdOn: snapshot.data['created_on'].toDate(),
       lastUpdated: snapshot.data['last_updated'].toDate(),
     );
-  }
-
-  Map<String, Object> toDocument() {
-    return {
-      'user_id': userId,
-      'sender_id': senderId,
-      'status': status,
-      'active_video_chat': activeVideoChat,
-      'created_on': createdOn,
-      'last_updated': lastUpdated,
-    };
   }
 }

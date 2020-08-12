@@ -11,95 +11,24 @@ abstract class HomeState extends Equatable {
 
 class HomeUninitialized extends HomeState {}
 
-class HomeInitializing extends HomeState {}
+class HomeLoading extends HomeState {}
 
-class CurrentIndexChanged extends HomeState {
-  final int currentIndex;
+class HomeLoaded extends HomeState {
+  final bool authenticated;
+  final bool dataLoaded; // only matters if authenticated is true
+  final DateTime lastRequested;
 
-  CurrentIndexChanged({@required this.currentIndex});
-
-  @override
-  List<Object> get props => [currentIndex];
-
-  @override
-  String toString() => 'CurrentIndexChanged to $currentIndex';
-}
-
-class PageLoading extends HomeState {
-  @override
-  String toString() => 'PageLoading';
-}
-
-class PostScreenLoaded extends HomeState {
-  final bool reset;
-
-  PostScreenLoaded({this.reset});
+  HomeLoaded(
+      {this.authenticated = false,
+      this.dataLoaded = false,
+      this.lastRequested});
 
   @override
-  List<Object> get props => [reset];
+  List<Object> get props => [authenticated, dataLoaded, lastRequested];
 
   @override
-  String toString() => 'PostScreenLoaded { reset: $reset }';
-}
-
-class RecommendedScreenLoaded extends HomeState {
-  final bool reset;
-
-  RecommendedScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'RecommendedScreenLoaded { reset: $reset }';
-}
-
-class SearchScreenLoaded extends HomeState {
-  final bool reset;
-
-  SearchScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'SearchScreenLoaded { reset: $reset }';
-}
-
-class RequestScreenLoaded extends HomeState {
-  final bool reset;
-
-  RequestScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'RequestScreenLoaded { reset: $reset }';
-}
-
-class MatchScreenLoaded extends HomeState {
-  final bool reset;
-
-  MatchScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'MatchScreenLoaded { reset: $reset }';
-}
-
-class UserProfileScreenLoaded extends HomeState {
-  final bool reset;
-
-  UserProfileScreenLoaded({this.reset});
-
-  @override
-  List<Object> get props => [reset];
-
-  @override
-  String toString() => 'UserProfileScreenLoaded { reset: $reset }';
+  String toString() =>
+      'HomeLoaded { authenticated: $authenticated, dataLoaded: $dataLoaded, lastRequested: $lastRequested }';
 }
 
 class OnboardScreenLoaded extends HomeState {

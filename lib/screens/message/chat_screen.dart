@@ -3,6 +3,7 @@ import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/screens/message/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/message/chat_input.dart';
 import 'package:canteen_frontend/screens/message/message_list.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +30,6 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
-    print('INITIALIZE CHAT SCREEN');
     _messageBloc = BlocProvider.of<MessageBloc>(context);
     _messageBloc.add(RegisterActiveChatEvent(match.id));
     _messageBloc.add(FetchConversationDetailsEvent(match));
@@ -38,39 +38,27 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: GestureDetector(
-        onTapDown: (_) {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+    return GestureDetector(
+      onTapDown: (_) {
+        FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: Stack(
-              children: <Widget>[
-                Container(
-                  color: Colors.white,
-                  child: MessageList(match),
-                ),
-              ],
-            )),
-            ChatInput(),
-            // BlocBuilder<ConfigBloc, ConfigState>(builder: (context, state) {
-            //   if (state is UnConfigState)
-            //     configMessagePeek =
-            //         SharedObjects.prefs.getBool(Constants.configMessagePeek);
-            //   if (state is ConfigChangeState) if (state.key ==
-            //       Constants.configMessagePeek) configMessagePeek = state.value;
-            //   return GestureDetector(
-            //     child: ChatInput(),
-            //   );
-            // })
-          ],
-        ),
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Column(
+        children: <Widget>[
+          Expanded(
+              child: Stack(
+            children: <Widget>[
+              Container(
+                color: Palette.containerColor,
+                child: MessageList(match),
+              ),
+            ],
+          )),
+          ChatInput(),
+        ],
       ),
     );
   }

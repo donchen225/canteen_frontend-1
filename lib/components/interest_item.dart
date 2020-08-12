@@ -5,23 +5,24 @@ import 'package:flutter/material.dart';
 class InterestItem extends StatelessWidget {
   final String text;
   final Function onTap;
+  final double verticalPadding = 6;
 
   InterestItem({@required this.text, this.onTap});
 
-  Widget _buildItem({bool clickable}) {
+  Widget _buildItem(BuildContext context, {bool clickable = false}) {
     return Container(
       padding: EdgeInsets.only(
         left: SizeConfig.instance.blockSizeHorizontal * 2,
         right: SizeConfig.instance.blockSizeHorizontal * 2,
-        top: SizeConfig.instance.blockSizeHorizontal * 1.5,
-        bottom: SizeConfig.instance.blockSizeHorizontal * 1.5,
+        top: verticalPadding,
+        bottom: verticalPadding,
       ),
       margin: EdgeInsets.only(
-        top: SizeConfig.instance.blockSizeVertical,
-        bottom: SizeConfig.instance.blockSizeVertical,
+        top: SizeConfig.instance.safeBlockVertical * 0.5,
+        bottom: SizeConfig.instance.safeBlockVertical * 0.5,
       ),
       decoration: BoxDecoration(
-        color: Palette.orangeColor,
+        color: Colors.blue[50],
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -29,9 +30,10 @@ class InterestItem extends StatelessWidget {
         children: <Widget>[
           Text(
             '#' + text,
-            style: TextStyle(
-              color: Colors.white,
-            ),
+            style: Theme.of(context).textTheme.bodyText2.apply(
+                  color: Palette.textClickableColor,
+                  fontSizeFactor: 0.9,
+                ),
           ),
           Visibility(
             visible: clickable,
@@ -41,7 +43,7 @@ class InterestItem extends StatelessWidget {
               ),
               child: Icon(
                 Icons.cancel,
-                color: Colors.white,
+                color: Palette.textClickableColor,
               ),
             ),
           )
@@ -61,9 +63,9 @@ class InterestItem extends StatelessWidget {
                   onTap(text);
                 }
               },
-              child: _buildItem(clickable: true));
+              child: _buildItem(context, clickable: true));
         } else {
-          return _buildItem(clickable: false);
+          return _buildItem(context, clickable: false);
         }
       },
     );

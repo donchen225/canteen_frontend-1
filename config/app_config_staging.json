@@ -1,0 +1,5 @@
+{
+    "STORAGE_URL": "gs://get-canteen-staging.appspot.com",
+    "DEFAULT_GROUP_ID": "fd0a865c-42ce-4077-a050-30aeede69f3a",
+    "LOG_LEVEL": "error"
+}

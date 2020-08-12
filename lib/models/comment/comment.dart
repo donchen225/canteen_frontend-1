@@ -1,6 +1,5 @@
 import 'package:canteen_frontend/models/comment/comment_entity.dart';
 import 'package:canteen_frontend/models/user/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -17,16 +16,6 @@ class Comment extends Equatable {
       @required this.message,
       @required this.lastUpdated,
       @required this.createdOn});
-
-  Map<String, Object> toJson() {
-    return {
-      'id': id,
-      'from': from,
-      'message': message,
-      'last_updated': lastUpdated,
-      'created_on': createdOn,
-    };
-  }
 
   @override
   List<Object> get props => [

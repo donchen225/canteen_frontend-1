@@ -1,21 +1,50 @@
 import 'package:flutter/material.dart';
 
 class Palette {
+  // Messages
   static Color selfMessageBackgroundColor = const Color(0xff4fc3f7);
   static Color otherMessageBackgroundColor = const Color(0xFFEEEEEE);
-
   static Color selfMessageColor = const Color(0xFFFFFFFF);
   static Color otherMessageColor = const Color(0xFF3F3F3F);
 
+  // Base colors
   static Color whiteColor = const Color(0xFFFFFFFF);
-  static Color orangeColor = const Color(0xFFEE8442);
+  static Color primaryColor =
+      const Color(0xFF1877F2); // orange: 0xFFEE8442, twitter blue: 0xFF1DA1F2
 
+  // Button colors
+  static Color buttonDarkTextColor = const Color(0xFFFFFFFF);
   static Color buttonInvalidBackgroundColor = const Color(0xFFEDEDED);
   static Color buttonInvalidTextColor = const Color(0xFFCDCDCD);
+  static Color disabledButtonPrimaryColor = const Color(0x661877F2);
 
+  // Settings colors
+  static Color tabSelectedColor = const Color(0xFFE0E0E0);
+
+  // AppBar colors
   static Color appBarBackgroundColor = const Color(0xFFFFFFFF);
-  static Color backgroundColor = const Color(0xFFF8F8F8);
   static Color appBarTextColor = const Color(0xFF303030);
 
-  static Color disabledButtonColor = const Color(0xFF9E9E9E);
+  // Body colors
+  static Color scaffoldBackgroundDarkColor = const Color(0xFFEDEFF1);
+  static Color scaffoldBackgroundLightColor = const Color(0xFFFFFFFF);
+  static Color containerColor = const Color(0xFFFFFFFF);
+
+  static Color titleColor = const Color(0xFF000000);
+
+  // TextField colors
+  static Color textFieldLightBackgroundColor = const Color(0xFFF5F5F5);
+
+  // Text colors
+  static Color textColor = const Color(0xFF000000);
+  static Color textClickableColor = const Color(0xFF2196F3);
+  static Color textSecondaryBaseColor = const Color(0xFF9E9E9E);
+  static Color textErrorColor = const Color(0xFFF44336);
+
+  // Border colors
+  static Color borderSeparatorColor = const Color(0xFFE0E0E0);
+
+  // Notification colors
+  static Color unreadNotificationColor = const Color(0xFFE7F3FF);
+  static Color badgeColor = const Color(0xFFF02648);
 }

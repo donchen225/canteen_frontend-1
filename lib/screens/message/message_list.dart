@@ -54,9 +54,27 @@ class _MessageListState extends State<MessageList> {
             messages = state.messages;
         }
       }
+
       return ListView.builder(
         padding: EdgeInsets.all(10.0),
-        itemBuilder: (context, index) => MessageItem(messages[index]),
+        physics: AlwaysScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final message = messages[index];
+
+          if (index == (messages.length - 1)) {
+            return MessageItem(
+              message,
+              showTime: true,
+            );
+          }
+
+          final nextMessage = messages[index + 1];
+          final nextTime = nextMessage.timestamp;
+          final showTime =
+              message.timestamp.difference(nextTime).inMinutes >= 30;
+
+          return MessageItem(message, showTime: showTime);
+        },
         itemCount: messages.length,
         reverse: true,
         controller: listScrollController,

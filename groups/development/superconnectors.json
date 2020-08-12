@@ -1,0 +1,11 @@
+{
+    "id": "a1a795fe-d682-4157-986c-aded87256c35",
+    "name": "Superconnectors",
+    "description": "A group for superconnectors to help each other.",
+    "tags": [
+        "networking",
+        "connectors"
+    ],
+    "type": "private",
+    "password": "connect"
+}

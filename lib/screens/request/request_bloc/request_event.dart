@@ -1,5 +1,7 @@
 import 'package:canteen_frontend/models/request/request.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tuple/tuple.dart';
 
 abstract class RequestEvent extends Equatable {
   const RequestEvent();
@@ -16,7 +18,7 @@ class LoadRequests extends RequestEvent {
 }
 
 class RequestsUpdated extends RequestEvent {
-  final List<Request> requests;
+  final List<Tuple2<DocumentChangeType, Request>> requests;
 
   const RequestsUpdated(this.requests);
 
@@ -25,18 +27,6 @@ class RequestsUpdated extends RequestEvent {
 
   @override
   String toString() => 'RequestsUpdated { requests: $requests }';
-}
-
-class AddRequest extends RequestEvent {
-  final Request request;
-
-  const AddRequest(this.request);
-
-  @override
-  List<Object> get props => [request];
-
-  @override
-  String toString() => 'AddRequest { request: $request }';
 }
 
 class UpdateRequest extends RequestEvent {
@@ -52,27 +42,39 @@ class UpdateRequest extends RequestEvent {
 }
 
 class AcceptRequest extends RequestEvent {
-  final Request request;
+  final String requestId;
+  final bool isReferral;
+  final String comment;
 
-  const AcceptRequest(this.request);
+  const AcceptRequest({
+    this.requestId,
+    this.isReferral = false,
+    this.comment,
+  });
 
   @override
-  List<Object> get props => [request];
+  List<Object> get props => [requestId, isReferral, comment];
 
   @override
-  String toString() => 'AcceptRequest { request: $request }';
+  String toString() =>
+      'AcceptRequest { requestId: $requestId, isReferral: $isReferral, comment: $comment }';
 }
 
 class DeclineRequest extends RequestEvent {
-  final Request request;
+  final String requestId;
+  final bool isReferral;
 
-  const DeclineRequest(this.request);
+  const DeclineRequest({
+    this.requestId,
+    this.isReferral = false,
+  });
 
   @override
-  List<Object> get props => [request];
+  List<Object> get props => [requestId, isReferral];
 
   @override
-  String toString() => 'DeclineRequest { request: $request }';
+  String toString() =>
+      'DeclineRequest { requestId: $requestId, isReferral: $isReferral }';
 }
 
 class ClearRequests extends RequestEvent {

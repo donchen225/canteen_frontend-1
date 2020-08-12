@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,16 +14,19 @@ abstract class PostEvent extends Equatable {
 }
 
 class LoadPosts extends PostEvent {
-  const LoadPosts();
+  final String groupId;
+
+  const LoadPosts({this.groupId});
 
   @override
-  String toString() => 'LoadPosts';
+  String toString() => 'LoadPosts { groupId: $groupId }';
 }
 
 class AddPost extends PostEvent {
+  final String groupId;
   final Post post;
 
-  const AddPost(this.post);
+  const AddPost({this.groupId, this.post});
 
   @override
   List<Object> get props => [post];
@@ -32,28 +36,47 @@ class AddPost extends PostEvent {
 }
 
 class AddLike extends PostEvent {
+  final String groupId;
   final String postId;
   final Like like;
 
-  const AddLike(this.postId, this.like);
+  const AddLike({this.groupId, this.postId, this.like});
 
   @override
-  List<Object> get props => [postId, like];
+  List<Object> get props => [groupId, postId, like];
 
   @override
-  String toString() => 'AddLike { postId: $postId, like: $like }';
+  String toString() =>
+      'AddLike { groupId: $groupId, postId: $postId, like: $like }';
+}
+
+class AddComment extends PostEvent {
+  final String groupId;
+  final String postId;
+  final Comment comment;
+
+  const AddComment(
+      {@required this.groupId, @required this.postId, @required this.comment});
+
+  @override
+  List<Object> get props => [groupId, postId, comment];
+
+  @override
+  String toString() =>
+      'AddComment { groupId: $groupId, postId: $postId comment: $comment }';
 }
 
 class DeleteLike extends PostEvent {
+  final String groupId;
   final String postId;
 
-  const DeleteLike(this.postId);
+  const DeleteLike({this.groupId, this.postId});
 
   @override
-  List<Object> get props => [postId];
+  List<Object> get props => [groupId, postId];
 
   @override
-  String toString() => 'DeleteLike { postId: $postId }';
+  String toString() => 'DeleteLike { groupId: $groupId, postId: $postId }';
 }
 
 class UpdatePost extends PostEvent {
@@ -81,15 +104,16 @@ class DeletePost extends PostEvent {
 }
 
 class PostsUpdated extends PostEvent {
-  final List<Tuple2<DocumentChangeType, Post>> updates;
+  final String groupId;
+  final Tuple2<List<Post>, DocumentSnapshot> updates;
 
-  const PostsUpdated(this.updates);
-
-  @override
-  List<Object> get props => [updates];
+  const PostsUpdated({this.groupId, this.updates});
 
   @override
-  String toString() => 'PostsUpdated { updates: $updates }';
+  List<Object> get props => [groupId, updates];
+
+  @override
+  String toString() => 'PostsUpdated { groupId: $groupId, updates: $updates }';
 }
 
 class ClearPosts extends PostEvent {}

@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 class PostEntity extends Equatable {
   final String id;
   final String from;
-  final String title;
   final String message;
   final List<String> tags;
   final int commentCount;
@@ -16,7 +15,6 @@ class PostEntity extends Equatable {
   const PostEntity(
       {@required this.id,
       @required this.from,
-      @required this.title,
       @required this.message,
       @required this.tags,
       @required this.commentCount,
@@ -28,7 +26,6 @@ class PostEntity extends Equatable {
     return {
       'id': id,
       'from': from,
-      'title': title,
       'message': message,
       'tags': tags,
       'comment_count': commentCount,
@@ -42,7 +39,6 @@ class PostEntity extends Equatable {
   List<Object> get props => [
         id,
         from,
-        title,
         message,
         tags,
         commentCount,
@@ -53,14 +49,13 @@ class PostEntity extends Equatable {
 
   @override
   String toString() {
-    return 'PostEntity { id: $id, from: $from, title: $title, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'PostEntity { id: $id, from: $from, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static PostEntity fromJson(Map<String, Object> json) {
     return PostEntity(
       id: json['id'] as String,
       from: json['from'] as String,
-      title: json['title'] as String,
       message: json['message'] as String,
       tags: json['tags'] as List<String>,
       commentCount: json['comment_count'] as int,
@@ -74,7 +69,6 @@ class PostEntity extends Equatable {
     return PostEntity(
       id: snapshot.documentID,
       from: snapshot.data['from'],
-      title: snapshot.data['title'],
       message: snapshot.data['message'],
       tags: snapshot.data['tags']?.map<String>((x) => x as String)?.toList() ??
           [],
@@ -87,9 +81,7 @@ class PostEntity extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
-      'id': id,
       'from': from,
-      'title': title,
       'message': message,
       'tags': tags,
       'comment_count': commentCount,

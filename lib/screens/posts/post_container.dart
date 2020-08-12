@@ -20,8 +20,8 @@ class PostContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(width: 1, color: Colors.grey[200]),
-          top: BorderSide(width: 1, color: Colors.grey[200]),
+          bottom: BorderSide(width: 0.5, color: Colors.grey[200]),
+          top: BorderSide(width: 0.5, color: Colors.grey[200]),
         ),
       ),
       child: child,

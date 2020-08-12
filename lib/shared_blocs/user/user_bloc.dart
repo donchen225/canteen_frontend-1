@@ -11,27 +11,25 @@ import 'package:canteen_frontend/shared_blocs/user/user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final AuthenticationBloc _authenticationBloc;
-  final UserRepository _userRepository;
+  final UserRepository userRepository;
   StreamSubscription _userSubscription;
   StreamSubscription _authSubscription;
 
   UserBloc(
-      {@required UserRepository userRepository,
+      {@required this.userRepository,
       @required AuthenticationBloc authenticationBloc})
       : assert(userRepository != null),
         assert(authenticationBloc != null),
-        _userRepository = userRepository,
         _authenticationBloc = authenticationBloc {
-    _authSubscription = _authenticationBloc.listen((state) {
-      if (!(state is Authenticated)) {
-        print('AUTH BLOC IS NOT AUTHENTICATED, CANCELLING USER SUBSCRIPTION');
+    _authSubscription = _authenticationBloc.listen((authState) {
+      if (!(authState is Authenticated) && !(state is UserEmpty)) {
         add(LogOutUser());
       }
     });
   }
 
   @override
-  UserState get initialState => UserLoading();
+  UserState get initialState => UserEmpty();
 
   @override
   Stream<UserState> mapEventToState(
@@ -50,8 +48,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       FirebaseUser firebaseUser) async* {
     _userSubscription?.cancel();
     _userSubscription =
-        _userRepository.getCurrentUser(firebaseUser.uid).listen((user) {
-      print('DETECTED USER CHANGE');
+        userRepository.getCurrentUser(firebaseUser.uid).listen((user) {
       add(LoadUser(user));
     });
   }

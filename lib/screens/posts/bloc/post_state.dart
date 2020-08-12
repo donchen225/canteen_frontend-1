@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class PostState extends Equatable {
@@ -12,17 +11,28 @@ abstract class PostState extends Equatable {
 class PostsLoading extends PostState {}
 
 class PostsLoaded extends PostState {
+  final String groupId;
   final List<DetailedPost> posts;
-  final User user;
 
-  const PostsLoaded({this.posts = const [], this.user});
-
-  @override
-  List<Object> get props => [posts, user];
+  const PostsLoaded({this.groupId, this.posts});
 
   @override
-  String toString() =>
-      'PostsLoaded { posts: $posts user: ${user.displayName} }';
+  List<Object> get props => [groupId, posts];
+
+  @override
+  String toString() => 'PostsLoaded';
+}
+
+class PostsPrivate extends PostState {
+  final String groupId;
+
+  const PostsPrivate({this.groupId});
+
+  @override
+  List<Object> get props => [groupId];
+
+  @override
+  String toString() => 'PostsPrivate';
 }
 
 class PostsEmpty extends PostState {}

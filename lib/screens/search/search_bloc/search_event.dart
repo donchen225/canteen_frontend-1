@@ -8,42 +8,52 @@ abstract class SearchEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchHome extends SearchEvent {}
-
 class SearchStarted extends SearchEvent {
   final String query;
+  final bool saveQuery;
+  final bool fromPreviousSearch;
 
-  const SearchStarted(this.query);
+  const SearchStarted(
+      {this.query, this.saveQuery = true, this.fromPreviousSearch = false});
+
+  @override
+  List<Object> get props => [query, saveQuery, fromPreviousSearch];
+
+  @override
+  String toString() {
+    return 'SearchStarted { query: $query, saveQuery: $saveQuery, fromPreviousSearch: $fromPreviousSearch }';
+  }
+}
+
+class AddQuery extends SearchEvent {
+  final String query;
+
+  const AddQuery({this.query});
 
   @override
   List<Object> get props => [query];
 
   @override
   String toString() {
-    return 'SearchStarted { query: $query }';
+    return 'AddQuery';
   }
 }
 
-class SearchInspectUser extends SearchEvent {
-  final User user;
+class ShowSearchResults extends SearchEvent {
+  final List<User> results;
+  final String query;
 
-  const SearchInspectUser(this.user);
+  const ShowSearchResults({this.results, this.query});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [results, query];
 
   @override
   String toString() {
-    return 'SearchInspectUser { user: ${user.id}, ${user.displayName} }';
+    return 'ShowSearchResults';
   }
 }
 
-class SearchNextUser extends SearchEvent {
-  const SearchNextUser();
+class ResetSearch extends SearchEvent {}
 
-  @override
-  List<Object> get props => [];
-
-  @override
-  String toString() => 'SearchNextUser';
-}
+class ClearSearch extends SearchEvent {}

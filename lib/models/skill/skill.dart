@@ -10,13 +10,13 @@ class Skill {
   final int duration;
   final SkillType type;
 
-  const Skill(
+  const Skill({
     this.name,
     this.description,
     this.price,
     this.duration,
     this.type,
-  );
+  });
 
   Skill.fromMap(Map<dynamic, dynamic> data, SkillType type)
       : name = data['name'],
@@ -32,11 +32,11 @@ class Skill {
 
   static Skill fromEntity(SkillEntity skill, SkillType type) {
     return Skill(
-      skill.name,
-      skill.description,
-      skill.price,
-      skill.duration,
-      type,
+      name: skill.name,
+      description: skill.description,
+      price: skill.price,
+      duration: skill.duration,
+      type: type,
     );
   }
 

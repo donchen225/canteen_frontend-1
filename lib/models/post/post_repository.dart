@@ -11,170 +11,101 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tuple/tuple.dart';
 
 class PostRepository {
-  final postCollection = Firestore.instance.collection('posts');
+  final groupCollection = Firestore.instance.collection('groups');
+  final postsCollection = 'posts';
   final commentsCollection = 'comments';
   final likesCollection = 'likes';
-  List<DetailedPost> _detailedPosts = [];
-  Map<String, List<DetailedComment>> _detailedComments = {};
 
   PostRepository();
 
-  List<DetailedPost> currentDetailedPosts() {
-    return _detailedPosts;
-  }
-
-  List<DetailedComment> currentDetailedComments(String postId) {
-    return _detailedComments[postId] ?? [];
-  }
-
-  void clearPosts() {
-    _detailedPosts = [];
-  }
-
-  void clearComments() {
-    _detailedComments = {};
-  }
-
-  void saveDetailedPost(DetailedPost post) {
-    var idx = 0;
-    while (idx < _detailedPosts.length) {
-      if (post.lastUpdated.isAfter(_detailedPosts[idx].lastUpdated)) {
-        break;
-      }
-
-      idx++;
-    }
-    _detailedPosts.insert(idx, post);
-  }
-
-  void saveDetailedComment(String postId, DetailedComment comment) {
-    var idx = 0;
-
-    if (_detailedComments[postId] == null) {
-      _detailedComments[postId] = [];
-    }
-
-    final comments = _detailedComments[postId];
-    while (idx < comments.length) {
-      if (comment.lastUpdated.isAfter(comments[idx].lastUpdated)) {
-        break;
-      }
-
-      idx++;
-    }
-    comments.insert(idx, comment);
-  }
-
-  void updateDetailedPost(DocumentChangeType type, Post post) {
-    if (type == DocumentChangeType.modified) {
-      _detailedPosts.removeWhere((p) => p.id == post.id);
-      _detailedPosts.insert(0, post);
-    } else if (type == DocumentChangeType.removed) {
-      _detailedPosts.removeWhere((p) => p.id == post.id);
-    }
-  }
-
-  void updateDetailedComment(
-      String postId, DocumentChangeType type, Comment comment) {
-    final comments = _detailedComments[postId];
-    if (type == DocumentChangeType.modified) {
-      comments.removeWhere((c) => c.id == comment.id);
-      comments.insert(0, comment);
-    } else if (type == DocumentChangeType.removed) {
-      comments.removeWhere((c) => c.id == comment.id);
-    }
-  }
-
-  Future<void> addPost(Post post) async {
-    print('ADD POST');
+  Future<void> addPost(String groupId, Post post) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
-        postCollection.document(),
+        groupCollection
+            .document(groupId)
+            .collection(postsCollection)
+            .document(),
         post.toEntity().toDocument(),
       );
     });
   }
 
-  Future<void> addComment(String postId, Comment comment) async {
-    print('ADD COMMENT');
+  Future<void> addComment(
+      String groupId, String postId, Comment comment) async {
     return Firestore.instance.runTransaction((Transaction tx) async {
       await tx.set(
-        postCollection
+        groupCollection
+            .document(groupId)
+            .collection(postsCollection)
             .document(postId)
             .collection(commentsCollection)
             .document(),
         comment.toEntity().toDocument(),
       );
-
-      await tx.update(postCollection.document(postId),
-          {"comment_count": FieldValue.increment(1)});
     });
   }
 
-  Future<void> addLike(String postId, Like like) async {
-    print('ADD LIKE');
-    return Firestore.instance.runTransaction((Transaction tx) async {
-      await tx.set(
-        postCollection.document(postId).collection(likesCollection).document(),
-        like.toEntity().toDocument(),
-      );
-
-      await tx.update(postCollection.document(postId),
-          {"like_count": FieldValue.increment(1)});
-    });
-  }
-
-  Future<void> deleteLike(String postId) async {
-    print('DELETE LIKE');
+  Future<void> addLike(String groupId, String postId, Like like) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    final id = await postCollection
+    final likeRef = groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .document(postId)
         .collection(likesCollection)
-        .where('from', isEqualTo: userId)
-        .getDocuments()
-        .then((snapshot) {
-      if (snapshot.documents.isNotEmpty) {
-        return snapshot.documents.first.documentID;
+        .document(userId);
+
+    return likeRef.get().then((docSnapshot) {
+      if (!docSnapshot.exists) {
+        likeRef.setData(like.toEntity().toDocument());
       }
+    }).catchError((error) {
+      print('Error adding like: $error');
     });
-
-    if (id != null && id.isNotEmpty) {
-      return Firestore.instance.runTransaction((Transaction tx) async {
-        await tx.delete(postCollection
-            .document(postId)
-            .collection(likesCollection)
-            .document(id));
-
-        await tx.update(postCollection.document(postId),
-            {"like_count": FieldValue.increment(-1)});
-      });
-    }
   }
 
-  Future<bool> checkLike(String postId) async {
-    print('CHECK LIKE');
-    print('POST ID: $postId');
+  Future<void> deleteLike(String groupId, String postId) async {
     final userId =
         CachedSharedPreferences.getString(PreferenceConstants.userId);
 
-    return postCollection
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .document(postId)
         .collection(likesCollection)
-        .where('from', isEqualTo: userId)
-        .getDocuments()
+        .document(userId)
+        .delete()
+        .catchError((error) {
+      print('Error deleting like: $error');
+    });
+    ;
+  }
+
+  Future<bool> checkLike(String groupId, String postId) async {
+    final userId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId)
+        .collection(likesCollection)
+        .document(userId)
+        .get()
         .then((snapshot) {
-      return snapshot.documents.isNotEmpty;
+      return snapshot.exists;
     });
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(String postId) {
-    final lastFetch = _detailedComments[postId]?.first?.lastUpdated ?? null;
-    print('LAST FETCH: $lastFetch');
-    print('GET COMMENTS: $postId');
-    final collection =
-        postCollection.document(postId).collection(commentsCollection);
+  Stream<List<Tuple2<DocumentChangeType, Comment>>> getComments(
+      String groupId, String postId,
+      {DateTime lastFetch}) {
+    final collection = groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId)
+        .collection(commentsCollection);
 
     // Only query comments since last fetch
     final query = lastFetch == null
@@ -194,16 +125,43 @@ class PostRepository {
     });
   }
 
-  Stream<List<Tuple2<DocumentChangeType, Post>>> getPosts() {
-    print('GET POSTS');
-    return postCollection
+  Future<Tuple2<List<Post>, DocumentSnapshot>> getPosts(String groupId,
+      {DocumentSnapshot startAfterDocument}) {
+    Query query = groupCollection
+        .document(groupId)
+        .collection(postsCollection)
         .orderBy("last_updated", descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.documentChanges
-          .map((doc) => Tuple2<DocumentChangeType, Post>(
-              doc.type, Post.fromEntity(PostEntity.fromSnapshot(doc.document))))
-          .toList();
+        .limit(25);
+
+    if (startAfterDocument != null && startAfterDocument.exists) {
+      query = query.startAfterDocument(startAfterDocument);
+    }
+
+    return query.getDocuments().then((querySnapshot) {
+      return Tuple2<List<Post>, DocumentSnapshot>(
+          querySnapshot.documents
+              .map((doc) => Post.fromEntity(PostEntity.fromSnapshot(doc)))
+              .toList(),
+          querySnapshot.documents.isNotEmpty
+              ? querySnapshot.documents.last
+              : null);
+    }).catchError((error) {
+      print('Error fetching posts: $error');
+      throw error;
+    });
+  }
+
+  Future<Post> getPost(String postId, String groupId) {
+    return groupCollection
+        .document(groupId)
+        .collection(postsCollection)
+        .document(postId)
+        .get()
+        .then((docSnapshot) {
+      return Post.fromEntity(PostEntity.fromSnapshot(docSnapshot));
+    }).catchError((error) {
+      print('Error fetching posts: $error');
+      throw error;
     });
   }
 }

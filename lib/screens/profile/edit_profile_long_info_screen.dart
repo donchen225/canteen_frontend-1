@@ -1,3 +1,5 @@
+import 'package:canteen_frontend/components/confirm_button.dart';
+import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 
@@ -39,57 +41,25 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.appBarBackgroundColor,
-        elevation: 1,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                widget.onCancelNavigation();
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.orangeColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Text('Edit ' + widget.fieldName),
-            GestureDetector(
-              onTap: () {
-                if (widget.initialText != _textController.text) {
-                  widget.onComplete(_textController.text);
-                } else {
-                  widget.onCompleteNavigation();
-                }
-              },
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Palette.orangeColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return DialogScreen(
+      title: 'Edit ${widget.fieldName}',
+      onCancel: () => widget.onCancelNavigation(),
+      sendWidget: ConfirmButton(
+        onTap: (BuildContext context) {
+          if (widget.initialText != _textController.text) {
+            widget.onComplete(_textController.text);
+          } else {
+            widget.onCompleteNavigation();
+          }
+        },
       ),
-      body: Padding(
+      child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.25,
           padding: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey[400]),
+            border: Border.all(width: 1, color: Palette.borderSeparatorColor),
             borderRadius: BorderRadius.circular(10),
           ),
           child: TextField(
@@ -103,7 +73,7 @@ class _EditProfileLongInfoScreenState extends State<EditProfileLongInfoScreen> {
             decoration: InputDecoration(border: InputBorder.none),
             keyboardType: TextInputType.multiline,
             maxLength:
-                150, // TODO: move character counter to bottom right corner of container
+                400, // TODO: move character counter to bottom right corner of container
             maxLines: null,
           ),
         ),

@@ -8,6 +8,7 @@ class DurationPicker extends StatefulWidget {
   final double magnification;
   final double pickerHeight;
   final Color backgroundColor;
+  final int initialItem;
 
   DurationPicker({
     @required this.durationOptions,
@@ -16,23 +17,31 @@ class DurationPicker extends StatefulWidget {
     this.onChanged,
     this.itemHeight = 32,
     this.pickerHeight = 216.0,
+    this.initialItem = 0,
   });
 
   _DurationPickerState createState() => _DurationPickerState();
 }
 
 class _DurationPickerState extends State<DurationPicker> {
-  final FixedExtentScrollController _scrollController =
-      FixedExtentScrollController();
-  int _selectedDurationIndex = 0;
+  FixedExtentScrollController _scrollController;
+  int _selectedDurationIndex;
 
   _DurationPickerState();
+
+  void initState() {
+    super.initState();
+
+    _selectedDurationIndex = widget.initialItem ?? 0;
+    _scrollController =
+        FixedExtentScrollController(initialItem: _selectedDurationIndex);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: widget.pickerHeight,
-      color: Colors.transparent,
+      color: widget.backgroundColor,
       child: GestureDetector(
         // Blocks taps from propagating to the modal sheet and popping.
         onTap: () {},

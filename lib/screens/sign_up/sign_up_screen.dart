@@ -1,26 +1,62 @@
-import 'package:canteen_frontend/models/user/user_repository.dart';
 import 'package:canteen_frontend/screens/sign_up/sign_up_form.dart';
+import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
+class SignUpScreen extends StatefulWidget {
+  static const routeName = '/signup';
 
-class SignUpScreen extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  SignUpScreen({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
+  SignUpScreen({Key key}) : super(key: key);
 
   @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: BlocProvider<SignUpBloc>(
-          create: (context) => SignUpBloc(userRepository: _userRepository),
-          child: SignUpForm(),
+    return Container(
+      height: SizeConfig.instance.blockSizeVertical * 100 - kToolbarHeight,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(40.0),
+          topRight: const Radius.circular(40.0),
         ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(40.0),
+              topRight: const Radius.circular(40.0),
+            ),
+          ),
+          leading: Padding(
+            padding: EdgeInsets.only(top: 15, left: 10),
+            child: CloseButton(
+              onPressed: () => Navigator.maybePop(context),
+              color: Palette.primaryColor,
+            ),
+          ),
+          title: Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: Image.asset('assets/loading-icon.png',
+                  color: Palette.primaryColor),
+            ),
+          ),
+        ),
+        body: SignUpForm(),
       ),
     );
   }

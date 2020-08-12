@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
@@ -13,9 +14,7 @@ class AuthenticationBloc
 
   AuthenticationBloc({@required UserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository {
-    print('IN AUTH BLOC CONSTRUCTOR');
-  }
+        _userRepository = userRepository {}
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -38,7 +37,6 @@ class AuthenticationBloc
       final user = await _userRepository.getFirebaseUser();
       if (user != null) {
         _userRepository.updateUserSignInTime(user);
-        print('APP STARTED WITH USER ID: ${user.uid}');
         await CachedSharedPreferences.setString(
             PreferenceConstants.userId, user.uid);
         yield Authenticated(user);
@@ -46,7 +44,7 @@ class AuthenticationBloc
         yield Unauthenticated();
       }
     } catch (e) {
-      print('AUTHENTICATION ERROR: $e');
+      print('Authentication Error: $e');
       yield Unauthenticated();
     }
   }
@@ -60,6 +58,8 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
+    // final settingBloc = BlocProvider.of<SettingBloc>(context);
+    // StreamSubscription settingsSubscription;
     _userRepository.signOut();
     yield Unauthenticated();
   }

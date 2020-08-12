@@ -1,20 +1,20 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
 import 'package:canteen_frontend/models/post/post.dart';
-import 'package:canteen_frontend/models/user/user.dart';
+import 'package:canteen_frontend/screens/posts/action_button.dart';
 import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/comment_bloc/bloc.dart';
-import 'package:canteen_frontend/screens/posts/post_button.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
+import 'package:canteen_frontend/shared_blocs/group_home/group_home_bloc.dart';
+import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentDialogScreen extends StatefulWidget {
-  final User user;
   final DetailedPost post;
+  final String groupId;
 
-  CommentDialogScreen({@required this.user, @required this.post});
+  CommentDialogScreen({@required this.post, @required this.groupId});
 
   @override
   _CommentDialogScreenState createState() => _CommentDialogScreenState();
@@ -29,26 +29,50 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
   void initState() {
     super.initState();
     _messageController = TextEditingController();
+
+    _messageController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId =
+        CachedSharedPreferences.getString(PreferenceConstants.userId);
+    final userPhotoUrl =
+        CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
+    final userName =
+        CachedSharedPreferences.getString(PreferenceConstants.userName);
+    final userGroups =
+        BlocProvider.of<GroupHomeBloc>(context).currentUserGroups;
+    final isMember = userGroups.any((group) => group.id == widget.groupId);
+
     return TextDialogScreen(
       title: 'Add Comment',
-      sendWidget: PostButton(
-          text: 'SEND',
+      canUnfocus: false,
+      sendWidget: ActionButton(
+          text: 'Send',
+          enabled: isMember && _messageController.text.isNotEmpty,
           onTap: (BuildContext context) {
             if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
               final comment = Comment(
                 message: _messageController.text,
-                from: widget.user.id,
+                from: currentUserId,
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<CommentBloc>(context)
-                  .add(AddComment(postId: widget.post.id, comment: comment));
-              Navigator.maybePop(context);
+              BlocProvider.of<PostBloc>(context).add(AddComment(
+                  groupId: widget.groupId,
+                  postId: widget.post.id,
+                  comment: comment));
+              Navigator.maybePop(context, true);
             } else {
               final snackBar = SnackBar(
                 behavior: SnackBarBehavior.floating,
@@ -108,11 +132,8 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
               ),
             ),
             child: Text(
-              widget.post.title,
-              style: TextStyle(
-                fontSize: SizeConfig.instance.blockSizeVertical * 2.4 * 1.2,
-                fontWeight: FontWeight.bold,
-              ),
+              widget.post.message,
+              style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
           Padding(
@@ -121,14 +142,14 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
             child: Row(
               children: <Widget>[
                 ProfilePicture(
-                  photoUrl: widget.user.photoUrl,
+                  photoUrl: userPhotoUrl,
                   editable: false,
                   size: SizeConfig.instance.blockSizeHorizontal * 6,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.blockSizeHorizontal),
-                  child: Text('${widget.user.displayName ?? ''}'),
+                  child: Text('${userName ?? ''}'),
                 ),
               ],
             ),

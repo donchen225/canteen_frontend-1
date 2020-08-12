@@ -42,49 +42,57 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       yield* _mapInitializeSettingsToState(event);
     } else if (event is UpdateSettings) {
       yield* _mapUpdateSettingsToState();
+    } else if (event is ToggleAppPushNotifications) {
+      yield* _mapToggleAppPushNotificationsToState(event);
     } else if (event is ClearSettings) {
       yield* _mapClearSettingsToState();
     }
   }
 
   // Load settings from online only once per app start
-
   Stream<SettingState> _mapInitializeSettingsToState(
       InitializeSettings event) async* {
-    yield SettingsLoading();
-    PushNotificationsManager().init(_settingsRepository);
     UserSettings settings;
 
-    if (event.hasOnboarded) {
-      try {
-        settings = await _settingsRepository.getSettings();
-        if (settings == null) {
-          settings = _initializeUserSettings();
-        } else {
-          cacheSettings(settings);
-        }
-      } catch (e) {
-        print('ERROR GETTING SETTINGS: $e');
+    try {
+      settings = await _settingsRepository.getSettings();
+      if (settings == null) {
+        settings = await _initializeUserSettings();
+      } else {
+        await cacheSettings(settings);
       }
-
-      yield SettingsLoaded(settings);
-    } else {
-      settings = _initializeUserSettings();
-      yield SettingsLoaded(settings);
+    } catch (e) {
+      print('Error fetching settings: $e');
     }
+
+    PushNotificationsManager().registerSettings();
+
+    final token =
+        CachedSharedPreferences.getString(PreferenceConstants.fcmToken);
+    final deviceId =
+        CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+
+    await _settingsRepository.saveToken(token, deviceId);
+
+    yield SettingsLoaded(settings);
   }
 
   Stream<SettingState> _mapUpdateSettingsToState() async* {}
 
-  Stream<SettingState> _mapClearSettingsToState() async* {
-    CachedSharedPreferences.clear();
-    yield SettingsUninitialized();
+  Stream<SettingState> _mapToggleAppPushNotificationsToState(
+      ToggleAppPushNotifications event) async* {
+    final deviceId =
+        CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+
+    _settingsRepository.toggleSettingPushNotification(event.notifications);
+
+    await _settingsRepository.toggleDevicePushNotification(
+        deviceId, event.notifications);
   }
 
-  UserSettings _initializeUserSettings() {
+  Future<UserSettings> _initializeUserSettings() async {
     final currentTime = DateTime.now();
     final settings = UserSettings(
-        // TODO: Upload all values of push notifications
         pushNotifications: true,
         timeZone: currentTime.timeZoneOffset.inSeconds,
         timeZoneName: currentTime.timeZoneName,
@@ -94,14 +102,27 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
     _userRepository.updateTimeZone(currentTime.timeZoneOffset.inSeconds);
 
     // Save settings in shared preferences
-    cacheSettings(settings);
+    await cacheSettings(settings);
 
     return settings;
   }
 
-  void cacheSettings(UserSettings settings) {
-    CachedSharedPreferences.setBool(
-        PreferenceConstants.pushNotifications, settings.pushNotifications);
+  Stream<SettingState> _mapClearSettingsToState() async* {
+    yield SettingsClearing();
+
+    final deviceId =
+        CachedSharedPreferences.getString(PreferenceConstants.deviceId);
+
+    await _settingsRepository.toggleDevicePushNotification(deviceId, false);
+
+    CachedSharedPreferences.clear();
+
+    yield SettingsUninitialized();
+  }
+
+  Future<void> cacheSettings(UserSettings settings) async {
+    await CachedSharedPreferences.setBool(
+        PreferenceConstants.pushNotificationsApp, settings.pushNotifications);
     CachedSharedPreferences.setInt(
         PreferenceConstants.timeZone, settings.timeZone);
     CachedSharedPreferences.setString(

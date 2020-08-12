@@ -1,6 +1,10 @@
+import 'package:canteen_frontend/components/main_button.dart';
+import 'package:canteen_frontend/screens/login/login_screen.dart';
 import 'package:canteen_frontend/screens/sign_up/bloc/bloc.dart';
-import 'package:canteen_frontend/screens/sign_up/sign_up_button.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
+import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +17,14 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   SignUpBloc _registerBloc;
 
   bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _nameController.text.isNotEmpty;
 
   bool isRegisterButtonEnabled(SignUpState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -29,10 +36,13 @@ class _SignUpFormState extends State<SignUpForm> {
     _registerBloc = BlocProvider.of<SignUpBloc>(context);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
+    _nameController.addListener(_onNameChanged);
   }
 
   @override
   Widget build(BuildContext context) {
+    final bodyTextStyle = Theme.of(context).textTheme.bodyText1;
+
     return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if (state.isSuccess) {
@@ -42,90 +52,154 @@ class _SignUpFormState extends State<SignUpForm> {
       },
       child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
-          return Form(
-            child: ListView(
-              padding: EdgeInsets.only(
-                  top: SizeConfig.instance.blockSizeVertical * 9,
-                  left: SizeConfig.instance.blockSizeHorizontal * 9,
-                  right: SizeConfig.instance.blockSizeHorizontal * 9),
-              children: <Widget>[
-                Center(
-                  child: Padding(
+          return Material(
+            color: Colors.white,
+            child: Form(
+              child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.only(
+                  bottom: SizeConfig.instance.safeBlockVertical * 20,
+                  left: SizeConfig.instance.safeBlockHorizontal *
+                      kLandingHorizontalPaddingBlocks,
+                  right: SizeConfig.instance.safeBlockHorizontal *
+                      kLandingHorizontalPaddingBlocks,
+                ),
+                children: <Widget>[
+                  Padding(
                     padding: EdgeInsets.only(
-                        top: SizeConfig.instance.blockSizeVertical * 3,
-                        bottom: SizeConfig.instance.blockSizeVertical * 3),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 40,
+                        top: SizeConfig.instance.safeBlockVertical * 3,
+                        bottom: SizeConfig.instance.safeBlockVertical * 3),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Sign Up for Canteen',
+                        style: Theme.of(context).textTheme.headline4.apply(
+                              color: Palette.titleColor,
+                              fontWeightDelta: 4,
+                            ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: SizeConfig.instance.blockSizeVertical,
-                      bottom: SizeConfig.instance.blockSizeVertical),
-                  child: TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Password',
+                      ),
+                      obscureText: true,
+                      autocorrect: false,
                     ),
-                    obscureText: true,
-                    autocorrect: false,
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.instance.blockSizeVertical * 3),
-                  child: SignUpButton(
-                    onPressed: isRegisterButtonEnabled(state)
-                        ? _onFormSubmitted
-                        : null,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.instance.safeBlockVertical,
+                        bottom: SizeConfig.instance.safeBlockVertical),
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        border: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Name',
+                      ),
+                      autocorrect: false,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: Text(
-                    state.isFailure ? state.error.message : '',
+                  Text(
+                    state.isFailure
+                        ? state.error.message
+                        : '''
+                    
+                    ''',
                     style: TextStyle(color: Colors.red),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Already have an account? ',
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.instance.safeBlockVertical),
+                    child: MainButton(
+                      height: SizeConfig.instance.safeBlockHorizontal *
+                          (100 - (2 * kLandingHorizontalPaddingBlocks)) /
+                          kButtonAspectRatio,
+                      color: Palette.primaryColor,
+                      text: 'Next',
+                      onPressed: isRegisterButtonEnabled(state)
+                          ? _onFormSubmitted
+                          : null,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.maybePop(context);
-                        },
-                        child: Text(
-                          'Sign in.',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ))
-                  ],
-                ),
-              ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.instance.safeBlockVertical * 4,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Already have an account? ',
+                          style: bodyTextStyle.apply(
+                              color: Palette.textSecondaryBaseColor),
+                        ),
+                        GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        LoginScreen(
+                                          userRepository:
+                                              BlocProvider.of<UserBloc>(context)
+                                                  .userRepository,
+                                        ))),
+                            child: Text(
+                              'Log in',
+                              style: bodyTextStyle.apply(
+                                color: Palette.textClickableColor,
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -152,11 +226,16 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
+  void _onNameChanged() {
+    setState(() {});
+  }
+
   void _onFormSubmitted() {
     _registerBloc.add(
       Submitted(
         email: _emailController.text,
         password: _passwordController.text,
+        name: _nameController.text,
       ),
     );
   }

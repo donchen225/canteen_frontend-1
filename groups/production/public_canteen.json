@@ -1,0 +1,15 @@
+{
+    "id": "cae6275e-e17b-41e6-b0b1-347af8fbd2a0",
+    "name": "Public Canteen",
+    "description": "A supportive community where people can offer services and find what they need outside of their private groups.",
+    "tags": [
+        "public",
+        "services",
+        "support",
+        "needs",
+        "offerings",
+        "general",
+        "community"
+    ],
+    "type": "public"
+}

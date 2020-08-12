@@ -3,13 +3,21 @@ import 'package:equatable/equatable.dart';
 
 abstract class RequestListEvent extends Equatable {
   const RequestListEvent();
-}
-
-class LoadRequestList extends RequestListEvent {
-  const LoadRequestList();
 
   @override
   List<Object> get props => [];
+}
+
+class LoadRequestList extends RequestListEvent {
+  final List<DetailedRequest> requestList;
+
+  const LoadRequestList(this.requestList);
+
+  @override
+  List<Object> get props => requestList;
+
+  @override
+  String toString() => 'LoadRequestList { requestList: $requestList }';
 }
 
 class UpdateRequestList extends RequestListEvent {
@@ -18,20 +26,10 @@ class UpdateRequestList extends RequestListEvent {
   const UpdateRequestList(this.requestList);
 
   @override
-  List<Object> get props => [requestList];
+  List<Object> get props => requestList;
 
   @override
   String toString() => 'UpdateRequestList { requestList: $requestList }';
 }
 
-class InspectDetailedRequest extends RequestListEvent {
-  final DetailedRequest request;
-
-  const InspectDetailedRequest(this.request);
-
-  @override
-  List<Object> get props => [request];
-
-  @override
-  String toString() => 'InspectDetailedRequest { request: $request }';
-}
+class ClearRequestList extends RequestListEvent {}

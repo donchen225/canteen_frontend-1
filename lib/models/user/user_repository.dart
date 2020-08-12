@@ -7,12 +7,12 @@ abstract class UserRepository {
   Future<void> signInWithCredentials(String email, String password) async {}
 
   /// Sign up a new user
-  Future<void> signUp({String email, String password}) async {}
+  Future<void> signUp({String email, String password, String name}) async {}
 
   Future<void> signOut() async {}
 
   // Gets the User from the "user" Firestore collection using id
-  Future<User> getUser(String id) async {}
+  Future<User> getUser(String id, {bool cache}) async {}
 
   Future<User> currentUser() async {}
 
@@ -20,8 +20,6 @@ abstract class UserRepository {
 
   // Get the User and listen to all future changes
   Stream<User> getCurrentUser(String userId) {}
-
-  Future<List<User>> getAllUsers() async {}
 
   Future<FirebaseUser> getFirebaseUser() async {}
 
@@ -42,9 +40,13 @@ abstract class UserRepository {
 
   Future<void> updateLearnSkill(Skill skill, int index) {}
 
+  Future<void> deleteTeachSkill(int index) {}
+
+  Future<void> deleteLearnSkill(int index) {}
+
   Future<void> updatePhoto(String url) async {}
 
   Future<void> updateTimeZone(int timeZoneOffset) {}
 
-  Future<void> updateUserOnboarding(String name, Skill skill) async {}
+  Future<void> completeOnboarding() async {}
 }

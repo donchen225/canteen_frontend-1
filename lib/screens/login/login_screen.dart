@@ -1,15 +1,16 @@
+import 'package:canteen_frontend/components/app_logo.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:canteen_frontend/models/user/user_repository.dart';
 
 import 'package:canteen_frontend/screens/login/bloc/bloc.dart';
-
 import 'login_form.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const routeName = '/login';
+
   final UserRepository _userRepository;
-  final Color gradientStart = Colors.deepOrange[600];
-  final Color gradientEnd = Colors.orange[500];
 
   LoginScreen({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
@@ -19,19 +20,28 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: new BoxDecoration(
-          gradient: new LinearGradient(
-              colors: [gradientStart, gradientEnd],
-              begin: const FractionalOffset(0.5, 0.0),
-              end: const FractionalOffset(0.0, 0.5),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp),
+      backgroundColor: Palette.scaffoldBackgroundLightColor,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        leading: BackButton(
+          onPressed: () => Navigator.maybePop(context),
+          color: Palette.primaryColor,
         ),
-        child: BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(userRepository: _userRepository),
-          child: LoginForm(userRepository: _userRepository),
+        title: Container(
+          height: 45,
+          width: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Image.asset('assets/loading-icon.png',
+              color: Palette.primaryColor),
         ),
+      ),
+      body: BlocProvider<LoginBloc>(
+        create: (context) => LoginBloc(userRepository: _userRepository),
+        child: LoginForm(userRepository: _userRepository),
       ),
     );
   }

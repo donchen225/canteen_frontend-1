@@ -10,15 +10,13 @@ abstract class SettingEvent extends Equatable {
 }
 
 class InitializeSettings extends SettingEvent {
-  final bool hasOnboarded;
-
-  const InitializeSettings({@required this.hasOnboarded});
+  const InitializeSettings();
 
   @override
-  List<Object> get props => [hasOnboarded];
+  List<Object> get props => [];
 
   @override
-  String toString() => 'InitializeSettings { hasOnboarded: $hasOnboarded }';
+  String toString() => 'InitializeSettings';
 }
 
 class LoadSettings extends SettingEvent {
@@ -43,6 +41,19 @@ class UpdateSettings extends SettingEvent {
 
   @override
   String toString() => 'UpdateSettings { settings: $settings }';
+}
+
+class ToggleAppPushNotifications extends SettingEvent {
+  final bool notifications;
+
+  const ToggleAppPushNotifications({this.notifications});
+
+  @override
+  List<Object> get props => [notifications];
+
+  @override
+  String toString() =>
+      'ToggleAppPushNotifications { notifications: $notifications }';
 }
 
 class ClearSettings extends SettingEvent {
