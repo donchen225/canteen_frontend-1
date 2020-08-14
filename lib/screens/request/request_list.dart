@@ -21,13 +21,7 @@ class RequestList extends StatelessWidget {
     }
   }
 
-  User _getAdditionalUser(DetailedRequest request) {
-    if (request is Referral) {
-      return request.receiver;
-    } else if (request is ReferredRequest) {
-      return request.referral;
-    }
-  }
+  User _getAdditionalUser(DetailedRequest request) {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +30,27 @@ class RequestList extends StatelessWidget {
       itemBuilder: (context, index) {
         final request = items[index];
         final user = request.sender;
+        User additionalUser;
+        bool userDoesNotExist = false;
 
-        final additionalUser = _getAdditionalUser(request);
+        if (request is Referral) {
+          if (request.receiver == null) {
+            userDoesNotExist = true;
+          } else {
+            additionalUser = request.receiver;
+          }
+        } else if (request is ReferredRequest) {
+          if (request.referral == null) {
+            userDoesNotExist = true;
+          } else {
+            additionalUser = request.referral;
+          }
+        }
+
+        // Check if sender exists (deleted user), otherwise don't show
+        if (user == null || userDoesNotExist) {
+          return Container();
+        }
 
         return MatchItem(
           displayName: user.displayName ?? '',
