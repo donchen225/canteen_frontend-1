@@ -70,7 +70,10 @@ class PostNameTemplate extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title ?? '',
-              style: secondaryTextStyle.apply(color: color),
+              style: secondaryTextStyle.apply(
+                color: color,
+                heightFactor: 0.9,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
