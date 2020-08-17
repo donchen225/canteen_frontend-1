@@ -1,0 +1,10 @@
+{
+    "id": "05386ce6-45d3-41c9-aea7-f8b3155622f3",
+    "name": "Cool People Only",
+    "description": "A group for only cool people to join.",
+    "tags": [
+        "cool people",
+        "cool"
+    ],
+    "type": "public"
+}

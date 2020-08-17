@@ -2,6 +2,8 @@
 get-canteen-*
 algolia-keys.json
 assets/app_config.json
+firebase_auth_accounts.json
+.ipynb_checkpoints
 
 # Miscellaneous
 *.class

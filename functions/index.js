@@ -1637,7 +1637,6 @@ exports.joinGroup = functions.https.onCall(async (data, context) => {
 // generateMostPopularUsers - Generate Most popular users. Start and end date on not used in the application,
 // they are only used for record keeping. The "active" field determines which
 // document will be accessed. The popular users are added to the "discover" collection in Firestore.
-// TODO: change other documents to inactive.
 // - Function is called by the developer when necessary.
 exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) => {
 
@@ -1711,12 +1710,20 @@ exports.generateMostPopularUsers = functions.https.onRequest(async (req, res) =>
         batch.set(userCollection.doc(), userDoc);
     }
 
-    return batch.commit().then(() => {
-        res.status(200).send("Successfully generated most popular users.");
-        return;
-    }).catch((error) => {
+
+    await batch.commit().catch((error) => {
         console.log(error);
         res.status(500).send(error);
+        return;
+    });
+
+    return firestore.collection(DISCOVER_COLLECTION).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.id !== id) {
+                doc.ref.update({ "active": false });
+            }
+        });
+        res.status(200).send("Successfully updated popular users.");
         return;
     });
 });
