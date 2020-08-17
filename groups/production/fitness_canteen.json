@@ -1,0 +1,10 @@
+{
+    "id": "964c4ac2-a4d9-4748-8f0f-8fa529fef208",
+    "name": "Fitness Canteen",
+    "description": "A community centered around providing fitness-related services.",
+    "tags": [
+        "physical health",
+        "fitness"
+    ],
+    "type": "public"
+}
