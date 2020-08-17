@@ -219,7 +219,11 @@ class App extends StatelessWidget {
           headline3: TextStyle(fontSize: 34, height: 1.1),
           headline4: TextStyle(fontSize: 24),
           headline5: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: -0.25),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.25,
+            height: 1.2,
+          ),
           headline6: TextStyle(
               fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: 0.1),
           subtitle1: TextStyle(
@@ -229,7 +233,11 @@ class App extends StatelessWidget {
           bodyText1: TextStyle(
               fontSize: 16, fontWeight: FontWeight.normal, letterSpacing: -0.1),
           bodyText2: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.normal, letterSpacing: -0.1),
+            fontSize: 15,
+            fontWeight: FontWeight.normal,
+            letterSpacing: -0.1,
+            height: 1.2,
+          ),
           button: TextStyle(
               fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: -0.1),
         ),
