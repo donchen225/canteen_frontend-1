@@ -24,6 +24,7 @@ gcloud firestore export gs://canteen-data-dump-staging --collection-ids=discover
 gsutil -m rsync -r gs://canteen-data-dump-staging gs://canteen-data-dump-prod
 
 gcloud config set project get-canteen-prod
+# REPLACE directory (labeled with timestamp) with specific firestore export directory
 gcloud firestore import gs://canteen-data-dump-prod/2020-08-17T17:16:43_20377
 
 # Copy group images and user images
