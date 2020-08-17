@@ -51,7 +51,7 @@ class GroupMemberEntity extends Equatable {
       name: snapshot.data['display_name'],
       title: snapshot.data['title'],
       photoUrl: snapshot.data['photo_url'],
-      joinedOn: snapshot.data["joined_on"].toDate(),
+      joinedOn: snapshot.data["joined_on"]?.toDate(),
     );
   }
 
