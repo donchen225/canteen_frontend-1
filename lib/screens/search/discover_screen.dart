@@ -122,6 +122,7 @@ class DiscoverScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
                       right: SizeConfig.instance.safeBlockHorizontal * 6,
+                      top: kDiscoverCardPadding / 2,
                     ),
                     child: Text('Popular Groups',
                         style: Theme.of(context).textTheme.headline5.apply(
@@ -321,12 +322,12 @@ class DiscoverScreen extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(
               left: SizeConfig.instance.safeBlockHorizontal * 6,
-              bottom: kDiscoverCardPadding,
+              bottom: kDiscoverCardPadding / 2,
               top: kDiscoverCardPadding / 2,
             ),
             child: ProfileCard(
               user: user,
-              height: 360 - kDiscoverCardPadding * 1.5,
+              height: 360 - kDiscoverCardPadding,
               onTap: () {
                 if (user != null) {
                   Navigator.pushNamed(
