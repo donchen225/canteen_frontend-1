@@ -10,7 +10,6 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_card.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_group_screen.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
