@@ -77,6 +77,8 @@ class GroupCard extends StatelessWidget {
                                 Text(
                                   group.name,
                                   style: titleStyle.apply(fontWeightDelta: 2),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(

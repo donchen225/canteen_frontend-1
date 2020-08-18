@@ -75,6 +75,8 @@ class ProfileCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline6.apply(
                                   fontWeightDelta: 2,
                                 ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Align(
