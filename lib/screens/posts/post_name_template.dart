@@ -41,7 +41,7 @@ class PostNameTemplate extends StatelessWidget {
           children: <Widget>[
             Flexible(
               child: Text(
-                (name ?? '').replaceAll("", "\u{200B}"),
+                (name ?? 'Canteen User').replaceAll("", "\u{200B}"),
                 style: titleTextStyle,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
