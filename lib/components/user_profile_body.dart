@@ -281,13 +281,18 @@ class _UserProfileBodyState extends State<UserProfileBody>
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
-                                        .apply(fontWeightDelta: 2),
+                                        .apply(
+                                          fontWeightDelta: 2,
+                                          heightFactor: 0.88,
+                                        ),
                                   ),
                                 ),
                                 Text(
                                   user.title ?? '',
                                   style: bodyTextStyle.apply(
-                                      color: Palette.textSecondaryBaseColor),
+                                    color: Palette.textSecondaryBaseColor,
+                                    heightFactor: 0.9,
+                                  ),
                                 ),
                               ],
                             ),

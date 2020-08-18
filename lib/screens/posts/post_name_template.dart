@@ -39,9 +39,13 @@ class PostNameTemplate extends StatelessWidget {
       children: <Widget>[
         Row(
           children: <Widget>[
-            Text(
-              name ?? '',
-              style: titleTextStyle,
+            Flexible(
+              child: Text(
+                (name ?? '').replaceAll("", "\u{200B}"),
+                style: titleTextStyle,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
             Visibility(
               visible: showDate,
@@ -66,7 +70,10 @@ class PostNameTemplate extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title ?? '',
-              style: secondaryTextStyle.apply(color: color),
+              style: secondaryTextStyle.apply(
+                color: color,
+                heightFactor: 0.9,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

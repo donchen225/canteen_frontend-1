@@ -15,8 +15,7 @@ class GroupPicture extends StatelessWidget {
       this.size = 160,
       this.onTap});
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContent() {
     if (photoUrl != null && photoUrl.isNotEmpty) {
       return Container(
         height: size,
@@ -33,6 +32,21 @@ class GroupPicture extends StatelessWidget {
 
     return AppLogo(
       size: size,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          width: 4,
+          color: Colors.white,
+        ),
+        color: Colors.green,
+      ),
+      child: _buildContent(),
     );
   }
 }
