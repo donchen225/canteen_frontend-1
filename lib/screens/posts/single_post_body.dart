@@ -137,7 +137,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                           child: Row(
                             children: <Widget>[
                               ProfilePicture(
-                                photoUrl: widget.post.user.photoUrl,
+                                photoUrl: widget.post.user?.photoUrl ?? '',
                                 editable: false,
                                 size: SizeConfig.instance.safeBlockHorizontal *
                                     12,
@@ -150,9 +150,9 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                                         2,
                                   ),
                                   child: PostNameTemplate(
-                                    name: widget.post.user.displayName,
-                                    title: widget.post.user.title,
-                                    photoUrl: widget.post.user.photoUrl,
+                                    name: widget.post.user?.displayName ?? null,
+                                    title: widget.post.user?.title ?? '',
+                                    photoUrl: widget.post.user?.photoUrl ?? '',
                                     showDate: false,
                                   ),
                                 ),
