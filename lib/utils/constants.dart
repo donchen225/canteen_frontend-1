@@ -34,8 +34,9 @@ const double kDotSize = 4;
 const double kLandingHorizontalPaddingBlocks = 10;
 const double kOnboardingHorizontalPaddingBlocks = 5;
 
-// Search screen constants
+// Discover screen constants
 const double kSearchBarBorderRadius = 0.25;
+const double kDiscoverCardPadding = 20;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;

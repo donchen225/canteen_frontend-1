@@ -571,20 +571,22 @@ class _ConnectionRequestDialogScreenState
                           },
                         );
 
-                        final self = CachedSharedPreferences.getString(
-                            PreferenceConstants.userId);
+                        if (selectedUser != null) {
+                          final self = CachedSharedPreferences.getString(
+                              PreferenceConstants.userId);
 
-                        setState(() {
-                          if (selectedUser.id == widget.user.id) {
-                            _referralError =
-                                'Referral must be different than who you are connecting with.';
-                          } else if (selectedUser.id == self) {
-                            _referralError = 'Referral cannot be yourself.';
-                          } else {
-                            _selectedReferral = selectedUser;
-                            _referralError = '';
-                          }
-                        });
+                          setState(() {
+                            if (selectedUser.id == widget.user.id) {
+                              _referralError =
+                                  'Referral must be different than who you are connecting with.';
+                            } else if (selectedUser.id == self) {
+                              _referralError = 'Referral cannot be yourself.';
+                            } else {
+                              _selectedReferral = selectedUser;
+                              _referralError = '';
+                            }
+                          });
+                        }
                       },
                       child: Container(
                         alignment: Alignment.center,

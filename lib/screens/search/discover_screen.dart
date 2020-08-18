@@ -10,7 +10,6 @@ import 'package:canteen_frontend/screens/search/discover_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/group_card.dart';
 import 'package:canteen_frontend/screens/search/profile_card.dart';
 import 'package:canteen_frontend/screens/search/search_bar.dart';
-import 'package:canteen_frontend/screens/search/search_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/screens/search/view_group_screen.dart';
 import 'package:canteen_frontend/shared_blocs/authentication/bloc.dart';
@@ -99,7 +98,6 @@ class DiscoverScreen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.only(
                         top: SizeConfig.instance.scaffoldBodyHeight * 0.02,
-                        bottom: SizeConfig.instance.scaffoldBodyHeight * 0.01,
                         left: SizeConfig.instance.safeBlockHorizontal * 6,
                         right: SizeConfig.instance.safeBlockHorizontal * 6,
                       ),
@@ -122,7 +120,6 @@ class DiscoverScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
                       right: SizeConfig.instance.safeBlockHorizontal * 6,
                     ),
@@ -135,7 +132,7 @@ class DiscoverScreen extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 300,
+                    height: 260,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.groups.length,
@@ -147,13 +144,12 @@ class DiscoverScreen extends StatelessWidget {
                                 ? SizeConfig.instance.safeBlockHorizontal * 6
                                 : 0,
                             right: SizeConfig.instance.safeBlockHorizontal * 6,
-                            bottom:
-                                SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                            top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                            bottom: kDiscoverCardPadding,
+                            top: kDiscoverCardPadding / 2,
                           ),
                           child: GroupCard(
                               group: group,
-                              height: 300 * 0.9,
+                              height: 260 - kDiscoverCardPadding * 1.5,
                               onTap: () {
                                 BlocProvider.of<GroupBloc>(context)
                                     .add(LoadGroup(group));
@@ -171,7 +167,6 @@ class DiscoverScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
                       left: SizeConfig.instance.safeBlockHorizontal * 6,
                       right: SizeConfig.instance.safeBlockHorizontal * 6,
                     ),
@@ -226,7 +221,7 @@ class DiscoverScreen extends StatelessWidget {
     }
 
     return Container(
-      height: 335,
+      height: 360,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: users.length,
@@ -242,13 +237,13 @@ class DiscoverScreen extends StatelessWidget {
                     ? SizeConfig.instance.safeBlockHorizontal * 6
                     : 0,
                 right: SizeConfig.instance.safeBlockHorizontal * 6,
-                bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
-                top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+                bottom: kDiscoverCardPadding,
+                top: kDiscoverCardPadding / 2,
               ),
               child: ProfileCard(
                 user: user,
                 skill: popularData.skill,
-                height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
+                height: 360 - kDiscoverCardPadding * 2,
                 onTap: () {
                   if (user != null) {
                     Navigator.pushNamed(
@@ -316,7 +311,7 @@ class DiscoverScreen extends StatelessWidget {
     }
 
     return Container(
-      height: 335,
+      height: 360,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: recommendations.length,
@@ -326,12 +321,12 @@ class DiscoverScreen extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(
               left: SizeConfig.instance.safeBlockHorizontal * 6,
-              bottom: SizeConfig.instance.scaffoldBodyHeight * 0.03,
-              top: SizeConfig.instance.scaffoldBodyHeight * 0.03,
+              bottom: kDiscoverCardPadding,
+              top: kDiscoverCardPadding / 2,
             ),
             child: ProfileCard(
               user: user,
-              height: SizeConfig.instance.scaffoldBodyHeight * 0.44,
+              height: 360 - kDiscoverCardPadding * 1.5,
               onTap: () {
                 if (user != null) {
                   Navigator.pushNamed(
