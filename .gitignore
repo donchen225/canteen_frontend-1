@@ -32,6 +32,9 @@ ios/Flutter/.last_build_id
 .pub-cache/
 .pub/
 /build/
+android/key.properties
+key.jks
+
 
 # Web related
 lib/generated_plugin_registrant.dart
