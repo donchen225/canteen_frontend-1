@@ -8,6 +8,7 @@ import 'package:canteen_frontend/screens/search/search_result_item.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +63,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
     return Scaffold(
       key: _key,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -70,7 +71,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           flexibleSpace: SafeArea(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final height = kAppBarHeight * 0.75;
+                final height = SizeConfig.instance.appBarHeight * 0.75;
                 return Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(

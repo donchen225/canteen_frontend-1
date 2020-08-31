@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,6 +22,8 @@ class SizeConfig {
 
   double paddingTop;
   double paddingBottom;
+
+  double appBarHeight;
 
   static final SizeConfig instance = SizeConfig._();
 
@@ -53,5 +57,11 @@ class SizeConfig {
         kToolbarHeight -
         kBottomNavigationBarHeight +
         (kBottomNavigationBarFontSize / 2);
+
+    if (Platform.isIOS) {
+      appBarHeight = kAppBarHeight;
+    } else {
+      appBarHeight = kToolbarHeight;
+    }
   }
 }

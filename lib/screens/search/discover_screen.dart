@@ -35,7 +35,7 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -55,7 +55,7 @@ class DiscoverScreen extends StatelessWidget {
                   );
                 },
                 child: SearchBar(
-                  height: kAppBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight * 0.75,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,

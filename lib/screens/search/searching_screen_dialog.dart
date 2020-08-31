@@ -86,7 +86,7 @@ class _SearchingScreenDialogState extends State<SearchingScreenDialog> {
     return Scaffold(
       key: _key,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -94,7 +94,7 @@ class _SearchingScreenDialogState extends State<SearchingScreenDialog> {
           flexibleSpace: SafeArea(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final height = kAppBarHeight * 0.75;
+                final height = SizeConfig.instance.appBarHeight * 0.75;
 
                 return Container(
                   alignment: Alignment.center,

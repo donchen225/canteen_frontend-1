@@ -81,7 +81,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
@@ -99,7 +99,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   );
                 },
                 child: SearchBar(
-                  height: kAppBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight * 0.75,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,

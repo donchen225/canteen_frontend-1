@@ -29,7 +29,8 @@ class DialogScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFEFFFF),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight + additionalTopPadding),
+        preferredSize: Size.fromHeight(
+            SizeConfig.instance.appBarHeight + additionalTopPadding),
         child: SafeArea(
           child: AppBar(
             backgroundColor: const Color(0xFFFEFFFF),

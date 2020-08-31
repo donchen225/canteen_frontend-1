@@ -65,7 +65,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
       appBar: widget.showAppBar
           ? PreferredSize(
-              preferredSize: Size.fromHeight(kAppBarHeight),
+              preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
               child: AppBar(
                 backgroundColor: Palette.containerColor,
                 elevation: 0,
