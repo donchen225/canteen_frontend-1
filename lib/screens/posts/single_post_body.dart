@@ -19,9 +19,11 @@ import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
+import 'package:canteen_frontend/utils/url_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
 
 import 'bloc/post_bloc.dart';
@@ -87,7 +89,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
         ),
       );
 
-      if (commented) {
+      if (commented != null && commented) {
         _shouldScrollToBottom = true;
       }
     } else {
@@ -135,7 +137,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                           child: Row(
                             children: <Widget>[
                               ProfilePicture(
-                                photoUrl: widget.post.user.photoUrl,
+                                photoUrl: widget.post.user?.photoUrl ?? '',
                                 editable: false,
                                 size: SizeConfig.instance.safeBlockHorizontal *
                                     12,
@@ -148,9 +150,9 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                                         2,
                                   ),
                                   child: PostNameTemplate(
-                                    name: widget.post.user.displayName,
-                                    title: widget.post.user.title,
-                                    photoUrl: widget.post.user.photoUrl,
+                                    name: widget.post.user?.displayName ?? null,
+                                    title: widget.post.user?.title ?? '',
+                                    photoUrl: widget.post.user?.photoUrl ?? '',
                                     showDate: false,
                                   ),
                                 ),
@@ -169,8 +171,10 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                               kHorizontalPaddingBlocks,
                         ),
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          widget.post.message,
+                        child: SelectableLinkify(
+                          text: widget.post.message,
+                          onOpen: UrlUtils.onOpen,
+                          options: LinkifyOptions(humanize: false),
                           style: Theme.of(context)
                               .textTheme
                               .headline5

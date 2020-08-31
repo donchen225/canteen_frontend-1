@@ -38,7 +38,7 @@ class ProfileCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            height: height * 0.45,
+            height: height * 0.5,
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -61,8 +61,8 @@ class ProfileCard extends StatelessWidget {
                   Container(
                     color: Colors.grey[100],
                     padding: EdgeInsets.only(
-                      top: height * 0.03,
-                      bottom: height * 0.03,
+                      top: height * 0.015,
+                      bottom: height * 0.015,
                       left: width * kHorizontalPadding,
                       right: width * kHorizontalPadding,
                     ),
@@ -72,7 +72,11 @@ class ProfileCard extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             user.displayName ?? '',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.headline6.apply(
+                                  fontWeightDelta: 2,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Align(
@@ -105,7 +109,7 @@ class ProfileCard extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: height * 0.03,
-                                bottom: height * 0.03,
+                                bottom: height * 0.01,
                               ),
                               child: Align(
                                 alignment: Alignment.centerLeft,
@@ -117,7 +121,7 @@ class ProfileCard extends StatelessWidget {
                                       : '',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .headline5
                                       .apply(
                                         color: Palette.titleColor,
                                         fontWeightDelta: 2,
@@ -128,59 +132,6 @@ class ProfileCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Visibility(
-                            visible:
-                                userSkill != null && userSkill?.name != null,
-                            child: Builder(builder: (BuildContext context) {
-                              final duration = userSkill?.duration != null
-                                  ? '${userSkill.duration.toString()}m'
-                                  : '';
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: height * 0.06,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        duration,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1
-                                            .apply(
-                                              color: Palette.primaryColor,
-                                              fontWeightDelta: 2,
-                                            ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: width * 0.02),
-                                        child: Container(
-                                          width: kDotSize,
-                                          height: kDotSize,
-                                          decoration: BoxDecoration(
-                                            color: Palette.titleColor,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        '\$${userSkill.price}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1
-                                            .apply(
-                                              color: Palette.titleColor,
-                                              fontWeightDelta: 2,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
                         ],
                       ),
                     ),
@@ -188,6 +139,53 @@ class ProfileCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          Visibility(
+            visible: userSkill != null && userSkill?.name != null,
+            child: Builder(builder: (BuildContext context) {
+              final duration = userSkill?.duration != null
+                  ? '${userSkill.duration.toString()}m'
+                  : '';
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: width * kHorizontalPadding,
+                  right: width * kHorizontalPadding,
+                  bottom: height * 0.03,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        duration,
+                        style: Theme.of(context).textTheme.subtitle1.apply(
+                              color: Palette.primaryColor,
+                              fontWeightDelta: 2,
+                            ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                        child: Container(
+                          width: kDotSize,
+                          height: kDotSize,
+                          decoration: BoxDecoration(
+                            color: Palette.titleColor,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '\$${userSkill.price}',
+                        style: Theme.of(context).textTheme.subtitle1.apply(
+                              color: Palette.titleColor,
+                              fontWeightDelta: 2,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
           ),
         ],
       ),

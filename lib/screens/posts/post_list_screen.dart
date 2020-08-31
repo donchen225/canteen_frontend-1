@@ -113,7 +113,7 @@ class _PostListScreenState extends State<PostListScreen> {
                                 child: Container(
                                   alignment: Alignment.topCenter,
                                   child: ProfilePicture(
-                                    photoUrl: post.user.photoUrl,
+                                    photoUrl: post.user?.photoUrl ?? '',
                                     editable: false,
                                     size: SizeConfig
                                             .instance.safeBlockHorizontal *
@@ -132,9 +132,9 @@ class _PostListScreenState extends State<PostListScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
                                       PostNameTemplate(
-                                        name: post.user.displayName,
-                                        title: post.user.title,
-                                        photoUrl: post.user.photoUrl,
+                                        name: post.user?.displayName ?? null,
+                                        title: post.user?.title ?? '',
+                                        photoUrl: post.user?.photoUrl ?? '',
                                         time: post.createdOn,
                                         color: Palette.textSecondaryBaseColor,
                                       ),

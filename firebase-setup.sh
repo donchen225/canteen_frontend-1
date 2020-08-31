@@ -44,6 +44,9 @@ gcloud functions call generateAlgoliaSearchApiKeys
 echo "Setting algolia search attributes..."
 gcloud functions call setAlgoliaSearchAttributes
 
+echo "Updating algolia indices..."
+gcloud functions call sendCollectionToAlgolia
+
 # Set up firestore entries
 ## Create groups in firestore
 echo "Creating initial groups..."

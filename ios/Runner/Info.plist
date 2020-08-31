@@ -56,9 +56,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>For uploading photos to the app.</string>
+	<string>This allows us to use your Camera to capture photos and upload them as profile pictures on Canteen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>For uploading photos to the app.</string>
+	<string>This allows us to use photos from your Photo Library and upload them as profile pictures on Canteen.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
