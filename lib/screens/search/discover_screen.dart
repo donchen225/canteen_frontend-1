@@ -63,10 +63,10 @@ class DiscoverScreen extends StatelessWidget {
                   color: Colors.grey[200],
                   child: Text(
                     "Search Canteen",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .apply(color: Palette.textSecondaryBaseColor),
+                    style: Theme.of(context).textTheme.bodyText2.apply(
+                          color: Palette.textSecondaryBaseColor,
+                          fontSizeDelta: 1,
+                        ),
                   ),
                 ),
               ),

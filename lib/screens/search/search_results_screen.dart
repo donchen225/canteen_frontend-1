@@ -133,11 +133,11 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 widget.query,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2
-                                    .apply(
-                                        color: Palette.textSecondaryBaseColor),
+                                style:
+                                    Theme.of(context).textTheme.bodyText2.apply(
+                                          color: Palette.textSecondaryBaseColor,
+                                          fontSizeDelta: 1,
+                                        ),
                               ),
                             ),
                           ),

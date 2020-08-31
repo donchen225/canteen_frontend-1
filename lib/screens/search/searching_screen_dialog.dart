@@ -114,13 +114,16 @@ class _SearchingScreenDialogState extends State<SearchingScreenDialog> {
                             autofocus: true,
                             autocorrect: false,
                             textInputAction: TextInputAction.search,
-                            style: textTheme,
+                            style: textTheme.apply(
+                              fontSizeDelta: 1,
+                            ),
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
                               hintText: "Search Users",
                               hintStyle: textTheme.apply(
                                 color: Colors.grey[400],
+                                fontSizeDelta: 1,
                               ),
                             ),
                           ),

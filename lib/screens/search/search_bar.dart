@@ -38,7 +38,7 @@ class SearchBar extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.search,
-                      size: height * 0.8,
+                      size: height * 0.75,
                       color: Colors.grey[600],
                     ),
                   ),

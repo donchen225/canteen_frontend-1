@@ -133,6 +133,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                               hintText: "Search skills, groups, people",
                               hintStyle: textTheme.apply(
                                 color: Colors.grey[400],
+                                fontSizeDelta: 1,
                               ),
                             ),
                             onSubmitted: (String query) {
