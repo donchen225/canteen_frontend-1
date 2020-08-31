@@ -24,6 +24,7 @@ class SizeConfig {
   double paddingBottom;
 
   double appBarHeight;
+  double searchBarHeightRatio;
 
   static final SizeConfig instance = SizeConfig._();
 
@@ -59,9 +60,12 @@ class SizeConfig {
         (kBottomNavigationBarFontSize / 2);
 
     if (Platform.isIOS) {
+      // TODO: set kToolbarHeight for iPhones without status bar (iPhone 8 and below)
       appBarHeight = kAppBarHeight;
+      searchBarHeightRatio = kSearchBarHeightRatioWithStatusBar;
     } else {
       appBarHeight = kToolbarHeight;
+      searchBarHeightRatio = kSearchBarHeightRatio;
     }
   }
 }

@@ -71,7 +71,8 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           flexibleSpace: SafeArea(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final height = SizeConfig.instance.appBarHeight * 0.75;
+                final height = SizeConfig.instance.appBarHeight *
+                    SizeConfig.instance.searchBarHeightRatio;
                 return Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(

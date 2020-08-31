@@ -55,7 +55,8 @@ class DiscoverScreen extends StatelessWidget {
                   );
                 },
                 child: SearchBar(
-                  height: SizeConfig.instance.appBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight *
+                      SizeConfig.instance.searchBarHeightRatio,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,
