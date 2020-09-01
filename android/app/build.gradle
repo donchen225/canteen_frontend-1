@@ -78,13 +78,15 @@ android {
     productFlavors {
         development {
             applicationId "com.getcanteen.canteenadhoc"
-            // applicationIdSuffix "adhoc"
+            resValue "string", "app_name", "Canteen Ad Hoc"
         }
         staging {
             applicationId "com.getcanteen.canteenbeta"
+            resValue "string", "app_name", "Canteen Beta"
         }
         production {
             applicationId "com.getcanteen.canteenprod"
+            resValue "string", "app_name", "Canteen"
         }
     }
 }
