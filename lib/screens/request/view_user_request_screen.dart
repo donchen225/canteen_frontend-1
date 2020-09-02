@@ -131,7 +131,7 @@ class _ViewUserRequestScreenState extends State<ViewUserRequestScreen> {
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           backgroundColor: Palette.containerColor,
           elevation: 0,

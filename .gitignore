@@ -24,7 +24,7 @@ firebase_auth_accounts.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
-**/ios/Flutter/.last_build_id
+ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -32,6 +32,9 @@ firebase_auth_accounts.json
 .pub-cache/
 .pub/
 /build/
+android/key.properties
+key.jks
+
 
 # Web related
 lib/generated_plugin_registrant.dart

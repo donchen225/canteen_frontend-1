@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return Scaffold(
             backgroundColor: Palette.scaffoldBackgroundLightColor,
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(kAppBarHeight),
+              preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
               child: AppBar(
                   title: Text(
                     'Settings',

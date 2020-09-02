@@ -7,6 +7,7 @@ import 'package:canteen_frontend/screens/match/match_detail_bloc/bloc.dart';
 import 'package:canteen_frontend/shared_blocs/user/bloc.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,7 +83,8 @@ class _MatchScreenState extends State<MatchScreen>
         builder: (BuildContext context, MatchDetailState state) {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(kAppBarHeight + kTabBarHeight),
+              preferredSize: Size.fromHeight(
+                  SizeConfig.instance.appBarHeight + kTabBarHeight),
               child: AppBar(
                 leading: BackButton(
                   color: Palette.primaryColor,

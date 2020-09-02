@@ -81,7 +81,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
@@ -99,17 +99,18 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   );
                 },
                 child: SearchBar(
-                  height: kAppBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight *
+                      SizeConfig.instance.searchBarHeightRatio,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,
                   color: Colors.grey[200],
                   child: Text(
                     "Search Canteen",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .apply(color: Palette.textSecondaryBaseColor),
+                    style: Theme.of(context).textTheme.bodyText2.apply(
+                          color: Palette.textSecondaryBaseColor,
+                          fontSizeDelta: 1,
+                        ),
                   ),
                 ),
               ),
