@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
@@ -85,7 +86,7 @@ class DiscoverScreen extends StatelessWidget {
 
           if (state is DiscoverLoading) {
             return Center(
-              child: CupertinoActivityIndicator(),
+              child: PlatformLoadingIndicator(),
             );
           }
 

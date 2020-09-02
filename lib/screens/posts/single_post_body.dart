@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:canteen_frontend/components/dot_spacer.dart';
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
@@ -280,7 +281,7 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                   if (state is CommentListLoading) {
                     return Container(
                         height: SizeConfig.instance.safeBlockVertical * 40,
-                        child: CupertinoActivityIndicator());
+                        child: PlatformLoadingIndicator());
                   }
 
                   if (state is CommentListLoaded) {

@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
@@ -159,7 +160,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
           if (state is GroupHomeLoading) {
             return Center(
-              child: CupertinoActivityIndicator(),
+              child: PlatformLoadingIndicator(),
             );
           }
 

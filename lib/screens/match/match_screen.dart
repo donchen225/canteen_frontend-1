@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/match/match.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -134,7 +135,7 @@ class _MatchScreenState extends State<MatchScreen>
               builder: (BuildContext context) {
                 if (state is MatchUninitialized || state is MatchLoading) {
                   return Center(
-                    child: CupertinoActivityIndicator(),
+                    child: PlatformLoadingIndicator(),
                   );
                 }
 

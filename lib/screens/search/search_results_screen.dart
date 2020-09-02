@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -169,7 +170,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           return _buildSearchResultsList(results);
         }
 
-        return Center(child: CupertinoActivityIndicator());
+        return Center(child: PlatformLoadingIndicator());
       },
     );
   }
