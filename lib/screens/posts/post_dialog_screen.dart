@@ -87,39 +87,45 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
               Scaffold.of(context).showSnackBar(snackBar);
             }
           }),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              ProfilePicture(
-                photoUrl: userPhotoUrl,
-                editable: false,
-                size: SizeConfig.instance.blockSizeHorizontal * 6,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal * 2),
-                child: Text('${userName ?? ''}'),
-              ),
-            ],
-          ),
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              textCapitalization: TextCapitalization.sentences,
-              autofocus: true,
-              maxLines: null,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                hintText: 'Your text post',
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.instance.blockSizeHorizontal * 6,
+          right: SizeConfig.instance.blockSizeHorizontal * 6,
+        ),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                ProfilePicture(
+                  photoUrl: userPhotoUrl,
+                  editable: false,
+                  size: SizeConfig.instance.blockSizeHorizontal * 6,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.blockSizeHorizontal * 2),
+                  child: Text('${userName ?? ''}'),
+                ),
+              ],
+            ),
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                textCapitalization: TextCapitalization.sentences,
+                autofocus: true,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: 'Your text post',
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
