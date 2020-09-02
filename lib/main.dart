@@ -241,6 +241,10 @@ class App extends StatelessWidget {
           button: TextStyle(
               fontSize: 15, fontWeight: FontWeight.w500, letterSpacing: -0.1),
         ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+            builders: <TargetPlatform, PageTransitionsBuilder>{
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            }),
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(brightness: Brightness.light),
         primarySwatch: Colors.blue,
