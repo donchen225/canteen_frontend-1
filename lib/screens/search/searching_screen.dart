@@ -186,6 +186,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                         child: Container(
                           alignment: Alignment.center,
                           height: height,
+                          color: Colors.transparent,
                           padding: EdgeInsets.only(
                             left: SizeConfig.instance.safeBlockHorizontal * 3,
                           ),
