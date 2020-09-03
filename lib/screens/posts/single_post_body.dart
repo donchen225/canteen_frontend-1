@@ -279,9 +279,11 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                 child: BlocBuilder<CommentListBloc, CommentListState>(
                     builder: (BuildContext context, CommentListState state) {
                   if (state is CommentListLoading) {
-                    return Container(
-                        height: SizeConfig.instance.safeBlockVertical * 40,
-                        child: PlatformLoadingIndicator());
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: SizeConfig.instance.safeBlockVertical * 15),
+                      child: Center(child: PlatformLoadingIndicator()),
+                    );
                   }
 
                   if (state is CommentListLoaded) {
