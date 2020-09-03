@@ -29,23 +29,15 @@ class LoginScreen extends StatelessWidget {
           onPressed: () => Navigator.maybePop(context),
           color: Palette.primaryColor,
         ),
-        title: Center(
-          child: Container(
-            height: 45,
-            width: 45,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: Image.asset('assets/loading-icon.png',
-                color: Palette.primaryColor),
+        title: Container(
+          height: 45,
+          width: 45,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
           ),
+          child: Image.asset('assets/loading-icon.png',
+              color: Palette.primaryColor),
         ),
-        actions: [
-          // TODO: remove this - using this to center icon in middle
-          BackButton(
-            onPressed: () {},
-          ),
-        ],
       ),
       body: BlocProvider<LoginBloc>(
         create: (context) => LoginBloc(userRepository: _userRepository),

@@ -246,7 +246,8 @@ class App extends StatelessWidget {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             }),
         brightness: Brightness.light,
-        appBarTheme: AppBarTheme(brightness: Brightness.light),
+        appBarTheme:
+            AppBarTheme(brightness: Brightness.light, centerTitle: true),
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Palette.scaffoldBackgroundDarkColor,
         highlightColor: Colors.transparent,
