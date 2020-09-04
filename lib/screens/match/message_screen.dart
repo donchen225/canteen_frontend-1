@@ -8,6 +8,7 @@ import 'package:canteen_frontend/services/service_locator.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -73,7 +74,8 @@ class _MessageScreenState extends State<MessageScreen>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight + kTabBarHeight),
+        preferredSize:
+            Size.fromHeight(SizeConfig.instance.appBarHeight + kTabBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(

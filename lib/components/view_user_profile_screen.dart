@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/user_profile_body.dart';
 import 'package:canteen_frontend/models/user/user.dart';
 import 'package:canteen_frontend/shared_blocs/profile_bloc/bloc.dart';
@@ -46,7 +47,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
         }
 
         if (state is ProfileLoading) {
-          return Center(child: CupertinoActivityIndicator());
+          return Center(child: PlatformLoadingIndicator());
         }
 
         if (state is ProfileLoaded) {
@@ -65,7 +66,7 @@ class _ViewUserProfileScreenState extends State<ViewUserProfileScreen> {
       backgroundColor: Palette.scaffoldBackgroundDarkColor,
       appBar: widget.showAppBar
           ? PreferredSize(
-              preferredSize: Size.fromHeight(kAppBarHeight),
+              preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
               child: AppBar(
                 backgroundColor: Palette.containerColor,
                 elevation: 0,

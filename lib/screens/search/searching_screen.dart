@@ -98,7 +98,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
     return Scaffold(
       key: _key,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -106,7 +106,8 @@ class _SearchingScreenState extends State<SearchingScreen> {
           flexibleSpace: SafeArea(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final height = kAppBarHeight * 0.75;
+                final height = SizeConfig.instance.appBarHeight *
+                    SizeConfig.instance.searchBarHeightRatio;
 
                 return Container(
                   alignment: Alignment.center,
@@ -132,6 +133,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                               hintText: "Search skills, groups, people",
                               hintStyle: textTheme.apply(
                                 color: Colors.grey[400],
+                                fontSizeDelta: 1,
                               ),
                             ),
                             onSubmitted: (String query) {
@@ -184,6 +186,7 @@ class _SearchingScreenState extends State<SearchingScreen> {
                         child: Container(
                           alignment: Alignment.center,
                           height: height,
+                          color: Colors.transparent,
                           padding: EdgeInsets.only(
                             left: SizeConfig.instance.safeBlockHorizontal * 3,
                           ),

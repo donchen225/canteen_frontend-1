@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
@@ -35,7 +36,7 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -55,17 +56,18 @@ class DiscoverScreen extends StatelessWidget {
                   );
                 },
                 child: SearchBar(
-                  height: kAppBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight *
+                      SizeConfig.instance.searchBarHeightRatio,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,
                   color: Colors.grey[200],
                   child: Text(
                     "Search Canteen",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .apply(color: Palette.textSecondaryBaseColor),
+                    style: Theme.of(context).textTheme.bodyText2.apply(
+                          color: Palette.textSecondaryBaseColor,
+                          fontSizeDelta: 1,
+                        ),
                   ),
                 ),
               ),
@@ -84,7 +86,7 @@ class DiscoverScreen extends StatelessWidget {
 
           if (state is DiscoverLoading) {
             return Center(
-              child: CupertinoActivityIndicator(),
+              child: PlatformLoadingIndicator(),
             );
           }
 

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
@@ -28,7 +29,7 @@ class NotificationScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
@@ -87,7 +88,7 @@ class NotificationScreen extends StatelessWidget {
 
           if (state is NotificationsLoading) {
             return Center(
-              child: CupertinoActivityIndicator(),
+              child: PlatformLoadingIndicator(),
             );
           }
 

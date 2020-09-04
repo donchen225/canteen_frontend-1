@@ -40,6 +40,7 @@ class LikeButton extends StatelessWidget {
       },
       child: Container(
           height: size,
+          color: Colors.transparent,
           padding: EdgeInsets.only(
             left: SizeConfig.instance.blockSizeHorizontal * 3,
             right: SizeConfig.instance.blockSizeHorizontal * 3,

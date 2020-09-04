@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/request/request_list.dart';
@@ -16,7 +17,7 @@ class RequestScreen extends StatelessWidget {
       body: BlocBuilder<RequestListBloc, RequestListState>(
           builder: (context, state) {
         if (state is RequestListLoading || state is RequestListLoaded) {
-          return Center(child: CupertinoActivityIndicator());
+          return Center(child: PlatformLoadingIndicator());
         } else if (state is RequestListUnauthenticated) {
           return Container(
             width: double.infinity,

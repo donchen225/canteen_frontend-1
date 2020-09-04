@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/small_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/screens/match/match_list.dart';
@@ -17,7 +18,7 @@ class MatchListScreen extends StatelessWidget {
     return BlocBuilder<MatchListBloc, MatchListState>(
       builder: (matchContext, matchState) {
         if (matchState is MatchListLoading) {
-          return Center(child: CupertinoActivityIndicator());
+          return Center(child: PlatformLoadingIndicator());
         } else if (matchState is MatchListUnauthenticated) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,

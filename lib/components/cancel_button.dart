@@ -16,8 +16,11 @@ class CancelButton extends StatelessWidget {
         }
       },
       child: Container(
+        color: Colors.transparent,
         padding: EdgeInsets.only(
           top: 8,
+          left: 4,
+          right: 4,
           bottom: 8,
         ),
         child: Text(

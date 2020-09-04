@@ -37,6 +37,8 @@ const double kOnboardingHorizontalPaddingBlocks = 5;
 // Discover screen constants
 const double kSearchBarBorderRadius = 0.25;
 const double kDiscoverCardPadding = 20;
+const double kSearchBarHeightRatio = 0.65;
+const double kSearchBarHeightRatioWithStatusBar = 0.75;
 
 // Post screen constants
 const int kNumPostOverflowLines = 4;
