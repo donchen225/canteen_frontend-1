@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
@@ -269,6 +271,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
+  Widget _buildDrawer() {
+    if (Platform.isAndroid) {
+      return SafeArea(
+        child: HomeDrawer(
+          onUserTap: () => _getDrawerUserNavFunction(),
+          onSettingsTap: () => _getDrawerSettingsFunction(),
+        ),
+      );
+    } else {
+      return HomeDrawer(
+        onUserTap: () => _getDrawerUserNavFunction(),
+        onSettingsTap: () => _getDrawerSettingsFunction(),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomAppBarHeight = (SizeConfig.instance.paddingBottom == 0
@@ -283,10 +301,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       extendBodyBehindAppBar: true,
       appBar: null,
       drawerEnableOpenDragGesture: false,
-      drawer: HomeDrawer(
-        onUserTap: () => _getDrawerUserNavFunction(),
-        onSettingsTap: () => _getDrawerSettingsFunction(),
-      ),
+      drawer: _buildDrawer(),
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,

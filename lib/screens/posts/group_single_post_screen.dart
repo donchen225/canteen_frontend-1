@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
@@ -28,7 +29,7 @@ class _GroupSinglePostScreenState extends State<GroupSinglePostScreen> {
           builder: (BuildContext context, SinglePostState state) {
             if (state is SinglePostLoading) {
               return Center(
-                child: CupertinoActivityIndicator(),
+                child: PlatformLoadingIndicator(),
               );
             }
 

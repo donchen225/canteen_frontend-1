@@ -102,73 +102,79 @@ class _CommentDialogScreenState extends State<CommentDialogScreen> {
               Scaffold.of(context).showSnackBar(snackBar);
             }
           }),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              ProfilePicture(
-                photoUrl: widget.post.user.photoUrl,
-                editable: false,
-                size: SizeConfig.instance.blockSizeHorizontal * 6,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.blockSizeHorizontal),
-                child: Text('${widget.post.user.displayName ?? ''}'),
-              ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.instance.blockSizeVertical * 2,
-            ),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: Colors.grey[200],
-                ),
-              ),
-            ),
-            child: Text(
-              widget.post.message,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: SizeConfig.instance.blockSizeVertical * 2),
-            child: Row(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.instance.blockSizeHorizontal * 6,
+          right: SizeConfig.instance.blockSizeHorizontal * 6,
+        ),
+        child: Column(
+          children: <Widget>[
+            Row(
               children: <Widget>[
                 ProfilePicture(
-                  photoUrl: userPhotoUrl,
+                  photoUrl: widget.post.user.photoUrl,
                   editable: false,
                   size: SizeConfig.instance.blockSizeHorizontal * 6,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.blockSizeHorizontal),
-                  child: Text('${userName ?? ''}'),
+                  child: Text('${widget.post.user.displayName ?? ''}'),
                 ),
               ],
             ),
-          ),
-          TextField(
-            controller: _messageController,
-            textCapitalization: TextCapitalization.sentences,
-            autofocus: true,
-            maxLines: null,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              hintText: 'Your comment',
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.instance.blockSizeVertical * 2,
+              ),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    width: 1,
+                    color: Colors.grey[200],
+                  ),
+                ),
+              ),
+              child: Text(
+                widget.post.message,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.instance.blockSizeVertical * 2),
+              child: Row(
+                children: <Widget>[
+                  ProfilePicture(
+                    photoUrl: userPhotoUrl,
+                    editable: false,
+                    size: SizeConfig.instance.blockSizeHorizontal * 6,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.instance.blockSizeHorizontal),
+                    child: Text('${userName ?? ''}'),
+                  ),
+                ],
+              ),
+            ),
+            TextField(
+              controller: _messageController,
+              textCapitalization: TextCapitalization.sentences,
+              autofocus: true,
+              maxLines: null,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintText: 'Your comment',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

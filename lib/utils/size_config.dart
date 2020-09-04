@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,6 +22,9 @@ class SizeConfig {
 
   double paddingTop;
   double paddingBottom;
+
+  double appBarHeight;
+  double searchBarHeightRatio;
 
   static final SizeConfig instance = SizeConfig._();
 
@@ -53,5 +58,14 @@ class SizeConfig {
         kToolbarHeight -
         kBottomNavigationBarHeight +
         (kBottomNavigationBarFontSize / 2);
+
+    if (Platform.isIOS) {
+      // TODO: set kToolbarHeight for iPhones without status bar (iPhone 8 and below)
+      appBarHeight = kAppBarHeight;
+      searchBarHeightRatio = kSearchBarHeightRatioWithStatusBar;
+    } else {
+      appBarHeight = kToolbarHeight;
+      searchBarHeightRatio = kSearchBarHeightRatio;
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/user/user.dart';
@@ -8,6 +9,7 @@ import 'package:canteen_frontend/screens/search/search_result_item.dart';
 import 'package:canteen_frontend/screens/search/searching_screen.dart';
 import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/palette.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +64,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
     return Scaffold(
       key: _key,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Palette.appBarBackgroundColor,
@@ -70,7 +72,8 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           flexibleSpace: SafeArea(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final height = kAppBarHeight * 0.75;
+                final height = SizeConfig.instance.appBarHeight *
+                    SizeConfig.instance.searchBarHeightRatio;
                 return Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(
@@ -131,11 +134,11 @@ class _SearchResultScreenState extends State<SearchResultScreen>
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 widget.query,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2
-                                    .apply(
-                                        color: Palette.textSecondaryBaseColor),
+                                style:
+                                    Theme.of(context).textTheme.bodyText2.apply(
+                                          color: Palette.textSecondaryBaseColor,
+                                          fontSizeDelta: 1,
+                                        ),
                               ),
                             ),
                           ),
@@ -167,7 +170,7 @@ class _SearchResultScreenState extends State<SearchResultScreen>
           return _buildSearchResultsList(results);
         }
 
-        return Center(child: CupertinoActivityIndicator());
+        return Center(child: PlatformLoadingIndicator());
       },
     );
   }

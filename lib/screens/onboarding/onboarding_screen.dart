@@ -51,14 +51,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: Palette.scaffoldBackgroundLightColor,
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           title: Container(
-            height: kAppBarHeight,
-            width: kAppBarHeight,
+            height: SizeConfig.instance.appBarHeight,
+            width: SizeConfig.instance.appBarHeight,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/loading-icon.png'),

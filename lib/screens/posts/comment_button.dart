@@ -1,5 +1,6 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/utils/constants.dart';
+import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,8 +24,12 @@ class CommentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.red,
       height: size,
+      color: Colors.transparent,
+      padding: EdgeInsets.only(
+        left: SizeConfig.instance.blockSizeHorizontal * 3,
+        right: SizeConfig.instance.blockSizeHorizontal * 3,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[

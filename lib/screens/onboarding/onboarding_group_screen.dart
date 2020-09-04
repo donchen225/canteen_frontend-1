@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
 import 'package:canteen_frontend/screens/home/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
@@ -241,7 +242,7 @@ class _OnboardingGroupScreenState extends State<OnboardingGroupScreen> {
                     }
 
                     return Center(
-                      child: CupertinoActivityIndicator(),
+                      child: PlatformLoadingIndicator(),
                     );
                   },
                 ),

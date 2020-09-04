@@ -56,7 +56,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
-        body: SignUpForm(),
+        body: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: SignUpForm()),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:canteen_frontend/components/confirm_button.dart';
 import 'package:canteen_frontend/components/dialog_screen.dart';
 import 'package:canteen_frontend/components/interest_item.dart';
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_upload_sheet.dart';
 import 'package:canteen_frontend/models/availability/day.dart';
 import 'package:canteen_frontend/models/skill/skill_type.dart';
@@ -436,7 +437,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, state) {
       if (state is UserProfileLoading) {
-        return Center(child: CupertinoActivityIndicator());
+        return Center(child: PlatformLoadingIndicator());
       } else {
         return AnimatedSwitcher(
           duration: Duration(milliseconds: animationDuration),

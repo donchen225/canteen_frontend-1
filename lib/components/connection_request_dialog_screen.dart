@@ -228,8 +228,11 @@ class _ConnectionRequestDialogScreenState
             }
           }),
       child: ListView(
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.instance.safeBlockVertical * 2,
+        padding: EdgeInsets.only(
+          top: SizeConfig.instance.safeBlockVertical * 2,
+          bottom: SizeConfig.instance.safeBlockVertical * 2,
+          left: SizeConfig.instance.blockSizeHorizontal * 6,
+          right: SizeConfig.instance.blockSizeHorizontal * 6,
         ),
         children: <Widget>[
               Container(

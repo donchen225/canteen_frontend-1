@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/view_user_profile_screen.dart';
 import 'package:canteen_frontend/models/arguments.dart';
 import 'package:canteen_frontend/models/like/like.dart';
@@ -42,7 +43,7 @@ class _PostListScreenState extends State<PostListScreen> {
       builder: (BuildContext context, PostListState state) {
         if (state is PostListLoading) {
           return Center(
-            child: CupertinoActivityIndicator(),
+            child: PlatformLoadingIndicator(),
           );
         }
 

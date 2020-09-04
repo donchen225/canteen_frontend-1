@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
@@ -81,7 +82,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kAppBarHeight),
+        preferredSize: Size.fromHeight(SizeConfig.instance.appBarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
@@ -99,17 +100,18 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   );
                 },
                 child: SearchBar(
-                  height: kAppBarHeight * 0.75,
+                  height: SizeConfig.instance.appBarHeight *
+                      SizeConfig.instance.searchBarHeightRatio,
                   width: SizeConfig.instance.safeBlockHorizontal * 100 -
                       kProfileIconSize * 1.5 -
                       NavigationToolbar.kMiddleSpacing * 4,
                   color: Colors.grey[200],
                   child: Text(
                     "Search Canteen",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .apply(color: Palette.textSecondaryBaseColor),
+                    style: Theme.of(context).textTheme.bodyText2.apply(
+                          color: Palette.textSecondaryBaseColor,
+                          fontSizeDelta: 1,
+                        ),
                   ),
                 ),
               ),
@@ -158,7 +160,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
 
           if (state is GroupHomeLoading) {
             return Center(
-              child: CupertinoActivityIndicator(),
+              child: PlatformLoadingIndicator(),
             );
           }
 

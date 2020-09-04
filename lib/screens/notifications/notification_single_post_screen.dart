@@ -1,3 +1,4 @@
+import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/screens/notifications/notification_view_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/comment_list_bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/single_post_body.dart';
@@ -30,7 +31,7 @@ class _NotificationSinglePostScreenState
           builder: (BuildContext context, NotificationViewState state) {
             if (state is NotificationViewLoading) {
               return Center(
-                child: CupertinoActivityIndicator(),
+                child: PlatformLoadingIndicator(),
               );
             }
 
