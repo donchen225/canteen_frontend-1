@@ -19,7 +19,7 @@ const double kBottomNavBarHeightWithNotch = 44;
 const double kBottomNavBarHeightNoNotch = 50;
 
 // Profile constants
-const double kProfileSize = 120;
+const double kProfileSize = 100;
 
 // BottomNavigationBar constants
 const double kBottomNavigationBarFontSize = 12;

@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/group_summary_block.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
@@ -125,246 +126,78 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               return <Widget>[
                 SliverToBoxAdapter(
                   child: Container(
-                    color: Palette.containerColor,
+                    color: Colors.white,
                     child: Column(
-                      children: <Widget>[
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        GroupSummaryBlock(group: widget.group),
                         Padding(
                           padding: EdgeInsets.only(
-                            top: SizeConfig.instance.safeBlockVertical * 2,
+                            top: SizeConfig.instance.safeBlockVertical,
                             left: SizeConfig.instance.safeBlockHorizontal *
                                 kHorizontalPaddingBlocks,
                             right: SizeConfig.instance.safeBlockHorizontal *
                                 kHorizontalPaddingBlocks,
                           ),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Column(
-                                    children: [
-                                      GroupPicture(
-                                        photoUrl: widget.group.photoUrl,
-                                        shape: BoxShape.circle,
-                                        size: kProfileSize,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          top: SizeConfig
-                                              .instance.safeBlockVertical,
-                                        ),
-                                        child: FlatButton(
-                                          color: _joined
-                                              ? Palette.whiteColor
-                                              : Palette.primaryColor,
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                              color: _joined
-                                                  ? Palette.primaryColor
-                                                  : Colors.transparent,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                          ),
-                                          child: Text(
-                                            _joined ? 'JOINED' : 'JOIN',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .button
-                                                .apply(
-                                                    color: _joined
-                                                        ? Palette.primaryColor
-                                                        : Palette.whiteColor,
-                                                    fontWeightDelta: 1),
-                                          ),
-                                          onPressed: () {
-                                            if (authenticated) {
-                                              if (!(_joined)) {
-                                                if (widget.group.type ==
-                                                    'public') {
-                                                  _groupBloc.add(
-                                                      JoinPublicGroup(
-                                                          widget.group));
-                                                  setState(() {
-                                                    _joined = !_joined;
-                                                  });
-                                                } else {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            dialogContext) =>
-                                                        BlocProvider<
-                                                            PrivateGroupBloc>(
-                                                      create: (dialogContext) =>
-                                                          PrivateGroupBloc(
-                                                              groupRepository:
-                                                                  GroupRepository()),
-                                                      child: AccessCodeDialog(
-                                                        groupId:
-                                                            widget.group.id,
-                                                        onSuccess:
-                                                            (String groupId) {
-                                                          _groupBloc.add(
-                                                              JoinedPrivateGroup(
-                                                                  widget
-                                                                      .group));
-                                                          setState(() {
-                                                            _joined = !_joined;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              }
-                                            } else {
-                                              UnauthenticatedFunctions
-                                                  .showSignUp(context);
-                                            }
-
-                                            // TODO: add option to leave group
+                          child: FlatButton(
+                            color: _joined
+                                ? Palette.whiteColor
+                                : Palette.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: _joined
+                                    ? Palette.primaryColor
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Text(
+                              _joined ? 'JOINED' : 'JOIN',
+                              style: Theme.of(context).textTheme.button.apply(
+                                  color: _joined
+                                      ? Palette.primaryColor
+                                      : Palette.whiteColor,
+                                  fontWeightDelta: 1),
+                            ),
+                            onPressed: () {
+                              if (authenticated) {
+                                if (!(_joined)) {
+                                  if (widget.group.type == 'public') {
+                                    _groupBloc
+                                        .add(JoinPublicGroup(widget.group));
+                                    setState(() {
+                                      _joined = !_joined;
+                                    });
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) =>
+                                          BlocProvider<PrivateGroupBloc>(
+                                        create: (dialogContext) =>
+                                            PrivateGroupBloc(
+                                                groupRepository:
+                                                    GroupRepository()),
+                                        child: AccessCodeDialog(
+                                          groupId: widget.group.id,
+                                          onSuccess: (String groupId) {
+                                            _groupBloc.add(JoinedPrivateGroup(
+                                                widget.group));
+                                            setState(() {
+                                              _joined = !_joined;
+                                            });
                                           },
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.topLeft,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.instance
-                                                  .safeBlockHorizontal *
-                                              kHorizontalPaddingBlocks),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: SizeConfig.instance
-                                                      .safeBlockVertical *
-                                                  0.5,
-                                            ),
-                                            child: Text(
-                                              widget.group.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5
-                                                  .apply(fontWeightDelta: 2),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: SizeConfig
-                                                  .instance.safeBlockVertical,
-                                            ),
-                                            child: Text(
-                                              widget.group.description ?? '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${widget.group.members?.toString() ?? "0"} members' ??
-                                                '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2
-                                                .apply(
-                                                  color: Palette
-                                                      .textSecondaryBaseColor,
-                                                ),
-                                          ),
-                                          // FlatButton(
-                                          //   color: _joined
-                                          //       ? Palette.whiteColor
-                                          //       : Palette.primaryColor,
-                                          //   shape: RoundedRectangleBorder(
-                                          //     side: BorderSide(
-                                          //       color: _joined
-                                          //           ? Palette.primaryColor
-                                          //           : Colors.transparent,
-                                          //       width: 2,
-                                          //     ),
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(30),
-                                          //   ),
-                                          //   child: Text(
-                                          //     _joined ? 'JOINED' : 'JOIN',
-                                          //     style: Theme.of(context)
-                                          //         .textTheme
-                                          //         .button
-                                          //         .apply(
-                                          //             color: _joined
-                                          //                 ? Palette.primaryColor
-                                          //                 : Palette.whiteColor,
-                                          //             fontWeightDelta: 1),
-                                          //   ),
-                                          //   onPressed: () {
-                                          //     if (authenticated) {
-                                          //       if (!(_joined)) {
-                                          //         if (widget.group.type ==
-                                          //             'public') {
-                                          //           _groupBloc.add(
-                                          //               JoinPublicGroup(
-                                          //                   widget.group));
-                                          //           setState(() {
-                                          //             _joined = !_joined;
-                                          //           });
-                                          //         } else {
-                                          //           showDialog(
-                                          //             context: context,
-                                          //             builder: (BuildContext
-                                          //                     dialogContext) =>
-                                          //                 BlocProvider<
-                                          //                     PrivateGroupBloc>(
-                                          //               create: (dialogContext) =>
-                                          //                   PrivateGroupBloc(
-                                          //                       groupRepository:
-                                          //                           GroupRepository()),
-                                          //               child: AccessCodeDialog(
-                                          //                 groupId:
-                                          //                     widget.group.id,
-                                          //                 onSuccess:
-                                          //                     (String groupId) {
-                                          //                   _groupBloc.add(
-                                          //                       JoinedPrivateGroup(
-                                          //                           widget
-                                          //                               .group));
-                                          //                   setState(() {
-                                          //                     _joined =
-                                          //                         !_joined;
-                                          //                   });
-                                          //                 },
-                                          //               ),
-                                          //             ),
-                                          //           );
-                                          //         }
-                                          //       }
-                                          //     } else {
-                                          //       UnauthenticatedFunctions
-                                          //           .showSignUp(context);
-                                          //     }
+                                    );
+                                  }
+                                }
+                              } else {
+                                UnauthenticatedFunctions.showSignUp(context);
+                              }
 
-                                          //     // TODO: add option to leave group
-                                          //   },
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.symmetric(
-                                  vertical:
-                                      SizeConfig.instance.safeBlockVertical,
-                                ),
-                              ),
-                            ],
+                              // TODO: add option to leave group
+                            },
                           ),
                         ),
                       ],

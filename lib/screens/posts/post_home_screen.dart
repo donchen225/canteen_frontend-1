@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/group_summary_block.dart';
 import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
@@ -204,99 +205,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverToBoxAdapter(
-                    child: Container(
-                      color: Palette.containerColor,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.instance.safeBlockVertical * 2,
-                              left: SizeConfig.instance.safeBlockHorizontal *
-                                  kHorizontalPaddingBlocks,
-                              right: SizeConfig.instance.safeBlockHorizontal *
-                                  kHorizontalPaddingBlocks,
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Column(
-                                      children: [
-                                        GroupPicture(
-                                          photoUrl: group.photoUrl,
-                                          shape: BoxShape.circle,
-                                          size: kProfileSize,
-                                        ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.instance
-                                                    .safeBlockHorizontal *
-                                                kHorizontalPaddingBlocks),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                bottom: SizeConfig.instance
-                                                        .safeBlockVertical *
-                                                    0.5,
-                                              ),
-                                              child: Text(
-                                                group.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5
-                                                    .apply(fontWeightDelta: 2),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: SizeConfig
-                                                    .instance.safeBlockVertical,
-                                              ),
-                                              child: Text(
-                                                group.description ?? '',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${group.members?.toString() ?? "0"} members' ??
-                                                  '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2
-                                                  .apply(
-                                                    color: Palette
-                                                        .textSecondaryBaseColor,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        SizeConfig.instance.safeBlockVertical,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: GroupSummaryBlock(group: group),
                   ),
                   SliverOverlapAbsorber(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
