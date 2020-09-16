@@ -139,6 +139,53 @@ class _PostListScreenState extends State<PostListScreen> {
                                         time: post.createdOn,
                                         color: Palette.textSecondaryBaseColor,
                                       ),
+                                      Visibility(
+                                        visible: post.type != null,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            top: SizeConfig
+                                                .instance.safeBlockVertical,
+                                            bottom: SizeConfig.instance
+                                                    .safeBlockVertical *
+                                                0.5,
+                                          ),
+                                          child: Row(children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: post.type == 'offer'
+                                                    ? Colors.green[300]
+                                                    : Colors.red[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              padding: EdgeInsets.only(
+                                                right: 7,
+                                                top: 2,
+                                                bottom: 2,
+                                                left: 7,
+                                              ),
+                                              child: Text(
+                                                post.type != null
+                                                    ? (post.type == 'offer'
+                                                        ? 'Offer'
+                                                        : (post.type ==
+                                                                'request'
+                                                            ? 'Request'
+                                                            : ''))
+                                                    : '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2
+                                                    .apply(
+                                                      color: Colors.white,
+                                                      fontWeightDelta: 1,
+                                                      fontSizeDelta: -1,
+                                                    ),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ),
                                       Padding(
                                         padding: EdgeInsets.only(
                                             top: SizeConfig.instance

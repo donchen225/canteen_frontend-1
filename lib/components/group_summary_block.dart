@@ -42,53 +42,7 @@ class GroupSummaryBlock extends StatelessWidget {
                           kHorizontalPaddingBlocks),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        children: [
-                          Text(
-                            '${group.members?.toString() ?? "0"}',
-                            style: Theme.of(context).textTheme.bodyText2.apply(
-                                  fontSizeDelta: 2,
-                                  fontWeightDelta: 2,
-                                ),
-                          ),
-                          Text(
-                            'Members' ?? '',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '${group.posts?.toString() ?? "0"}',
-                            style: Theme.of(context).textTheme.bodyText2.apply(
-                                  fontSizeDelta: 2,
-                                  fontWeightDelta: 2,
-                                ),
-                          ),
-                          Text(
-                            'Offers' ?? '',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '${group.posts?.toString() ?? "0"}',
-                            style: Theme.of(context).textTheme.bodyText2.apply(
-                                  fontSizeDelta: 2,
-                                  fontWeightDelta: 2,
-                                ),
-                          ),
-                          Text(
-                            'Requests' ?? '',
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        ],
-                      ),
-                    ],
+                    children: <Widget>[],
                   ),
                 ),
               ),
@@ -107,10 +61,24 @@ class GroupSummaryBlock extends StatelessWidget {
                   .apply(fontWeightDelta: 2),
             ),
           ),
+          Visibility(
+            visible: group.type != null &&
+                (group.type == 'public' || group.type == 'private'),
+            child: Container(
+              width: double.infinity,
+              child: Text(
+                '${group.type == 'public' ? 'Public' : 'Private'} group',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .apply(color: Palette.textSecondaryBaseColor),
+              ),
+            ),
+          ),
           Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.instance.safeBlockVertical * 0.5,
+            padding: EdgeInsets.only(
+              top: SizeConfig.instance.safeBlockVertical,
             ),
             child: Text(
               group.description ?? '',

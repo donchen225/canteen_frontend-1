@@ -8,6 +8,7 @@ class Post extends Equatable {
   final String from;
   final String message;
   final List<String> tags;
+  final String type;
   final int commentCount;
   final int likeCount;
   final DateTime lastUpdated;
@@ -18,6 +19,7 @@ class Post extends Equatable {
       @required this.from,
       this.message,
       this.tags,
+      this.type,
       this.commentCount = 0,
       this.likeCount = 0,
       @required this.lastUpdated,
@@ -29,6 +31,7 @@ class Post extends Equatable {
         from,
         message,
         tags,
+        type,
         commentCount,
         likeCount,
         lastUpdated,
@@ -37,7 +40,7 @@ class Post extends Equatable {
 
   @override
   String toString() {
-    return 'Post { id: $id, from: $from, message: $message, tags: $tags, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
+    return 'Post { id: $id, from: $from, message: $message, tags: $tags, type: $type, commentCount: $commentCount, likeCount: $likeCount, createdOn: $createdOn, lastUpdated $lastUpdated }';
   }
 
   static Post fromEntity(PostEntity entity) {
@@ -46,6 +49,7 @@ class Post extends Equatable {
       from: entity.from,
       message: entity.message,
       tags: entity.tags,
+      type: entity.type,
       commentCount: entity.commentCount,
       likeCount: entity.likeCount,
       createdOn: entity.createdOn,
@@ -59,6 +63,7 @@ class Post extends Equatable {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount,
       lastUpdated: lastUpdated,
@@ -72,6 +77,7 @@ class Post extends Equatable {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount + 1,
       createdOn: createdOn,
@@ -85,6 +91,7 @@ class Post extends Equatable {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount - 1,
       createdOn: createdOn,
@@ -102,6 +109,7 @@ class DetailedPost extends Post {
     @required from,
     @required message,
     @required tags,
+    @required type,
     @required commentCount,
     @required likeCount,
     @required createdOn,
@@ -113,6 +121,7 @@ class DetailedPost extends Post {
             from: from,
             message: message,
             tags: tags,
+            type: type,
             commentCount: commentCount,
             likeCount: likeCount,
             lastUpdated: lastUpdated,
@@ -124,6 +133,7 @@ class DetailedPost extends Post {
         from,
         message,
         tags,
+        type,
         commentCount,
         likeCount,
         lastUpdated,
@@ -142,6 +152,7 @@ class DetailedPost extends Post {
       from: post.from,
       message: post.message,
       tags: post.tags,
+      type: post.type,
       commentCount: post.commentCount,
       likeCount: post.likeCount,
       createdOn: post.createdOn,
@@ -157,6 +168,7 @@ class DetailedPost extends Post {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount + 1,
       createdOn: createdOn,
@@ -172,6 +184,7 @@ class DetailedPost extends Post {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount + 1,
       likeCount: likeCount,
       createdOn: createdOn,
@@ -187,6 +200,7 @@ class DetailedPost extends Post {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount - 1,
       createdOn: createdOn,
@@ -202,6 +216,7 @@ class DetailedPost extends Post {
       from: from,
       message: message,
       tags: tags,
+      type: type,
       commentCount: commentCount,
       likeCount: likeCount,
       createdOn: createdOn,

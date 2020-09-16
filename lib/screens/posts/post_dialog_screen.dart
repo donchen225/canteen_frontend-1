@@ -1,9 +1,9 @@
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:canteen_frontend/screens/posts/action_button.dart';
-import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/text_dialog_screen.dart';
 import 'package:canteen_frontend/screens/profile/profile_picture.dart';
-import 'package:canteen_frontend/utils/shared_preferences_util.dart';
+import 'package:canteen_frontend/shared_blocs/user/user_bloc.dart';
+import 'package:canteen_frontend/utils/palette.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,13 +18,8 @@ class PostDialogScreen extends StatefulWidget {
 }
 
 class _PostDialogScreenState extends State<PostDialogScreen> {
+  String postType;
   TextEditingController _messageController;
-  final currentUserId =
-      CachedSharedPreferences.getString(PreferenceConstants.userId);
-  final userPhotoUrl =
-      CachedSharedPreferences.getString(PreferenceConstants.userPhotoUrl);
-  final userName =
-      CachedSharedPreferences.getString(PreferenceConstants.userName);
 
   _PostDialogScreenState();
 
@@ -41,17 +36,21 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = BlocProvider.of<UserBloc>(context).currentUser;
+
     return TextDialogScreen(
       title: 'New Post',
       canUnfocus: false,
       sendWidget: ActionButton(
-          enabled: _messageController.text.isNotEmpty,
+          enabled: _messageController.text.isNotEmpty &&
+              (postType == 'offer' || postType == 'request'),
           onTap: (BuildContext context) {
             if (_messageController.text.isNotEmpty) {
               final now = DateTime.now();
               final post = Post(
                 message: _messageController.text,
-                from: currentUserId,
+                from: user.id,
+                type: postType,
                 createdOn: now,
                 lastUpdated: now,
               );
@@ -96,14 +95,79 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
             Row(
               children: <Widget>[
                 ProfilePicture(
-                  photoUrl: userPhotoUrl,
+                  photoUrl: user.photoUrl,
                   editable: false,
-                  size: SizeConfig.instance.blockSizeHorizontal * 6,
+                  size: 40,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.instance.blockSizeHorizontal * 2),
-                  child: Text('${userName ?? ''}'),
+                  child: Text(
+                    '${user.displayName ?? ''}',
+                    style: Theme.of(context).textTheme.bodyText1.apply(
+                          fontWeightDelta: 2,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                FlatButton(
+                  minWidth: 100,
+                  child: Text(
+                    'Offer',
+                    style: Theme.of(context).textTheme.button.apply(
+                          color: postType == 'offer'
+                              ? Colors.white
+                              : Palette.primaryColor,
+                          fontWeightDelta: 2,
+                        ),
+                  ),
+                  color:
+                      postType == 'offer' ? Palette.primaryColor : Colors.white,
+                  shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 2,
+                        color: Palette.primaryColor,
+                      ),
+                      borderRadius: BorderRadius.circular(20)),
+                  onPressed: () {
+                    setState(() {
+                      postType = 'offer';
+                    });
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                  ),
+                  child: FlatButton(
+                    minWidth: 100,
+                    child: Text(
+                      'Request',
+                      style: Theme.of(context).textTheme.button.apply(
+                            color: postType == 'request'
+                                ? Colors.white
+                                : Palette.primaryColor,
+                            fontWeightDelta: 2,
+                          ),
+                    ),
+                    color: postType == 'request'
+                        ? Palette.primaryColor
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          width: 2,
+                          color: Palette.primaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(20)),
+                    onPressed: () {
+                      setState(() {
+                        postType = 'request';
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
