@@ -8,7 +8,18 @@ abstract class PostState extends Equatable {
   List<Object> get props => [];
 }
 
-class PostsLoading extends PostState {}
+class PostsLoading extends PostState {
+  final String groupId;
+  final bool isHome;
+
+  const PostsLoading({this.groupId, this.isHome});
+
+  @override
+  List<Object> get props => [groupId, isHome];
+
+  @override
+  String toString() => 'PostsLoading';
+}
 
 class PostsLoaded extends PostState {
   final String groupId;
@@ -25,11 +36,12 @@ class PostsLoaded extends PostState {
 
 class PostsPrivate extends PostState {
   final String groupId;
+  final bool isHome;
 
-  const PostsPrivate({this.groupId});
+  const PostsPrivate({this.groupId, this.isHome});
 
   @override
-  List<Object> get props => [groupId];
+  List<Object> get props => [groupId, isHome];
 
   @override
   String toString() => 'PostsPrivate';

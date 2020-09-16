@@ -4,6 +4,7 @@ import 'package:canteen_frontend/components/platform/platform_loading_indicator.
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
@@ -142,7 +143,14 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     builder: (context) => PostDialogScreen(
-                      groupId: _groupHomeBloc.currentGroup.id,
+                      onConfirm: (post) =>
+                          BlocProvider.of<PostBloc>(context).add(
+                        AddPost(
+                          group: _groupHomeBloc.currentGroup,
+                          post: post,
+                          isHome: true,
+                        ),
+                      ),
                     ),
                   );
                 } else {

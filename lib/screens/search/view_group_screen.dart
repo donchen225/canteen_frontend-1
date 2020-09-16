@@ -3,6 +3,7 @@ import 'package:canteen_frontend/components/group_summary_block.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/group/group_repository.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
 import 'package:canteen_frontend/screens/private_group_dialog/access_code_dialog.dart';
@@ -112,7 +113,13 @@ class _ViewGroupScreenState extends State<ViewGroupScreen>
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => PostDialogScreen(
-                groupId: widget.group.id,
+                onConfirm: (post) => BlocProvider.of<PostBloc>(context).add(
+                  AddPost(
+                    group: widget.group,
+                    post: post,
+                    isHome: false,
+                  ),
+                ),
               ),
             );
           },

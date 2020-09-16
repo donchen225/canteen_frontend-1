@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostDialogScreen extends StatefulWidget {
-  final String groupId;
+  final Function onConfirm;
 
-  PostDialogScreen({@required this.groupId});
+  PostDialogScreen({@required this.onConfirm});
 
   @override
   _PostDialogScreenState createState() => _PostDialogScreenState();
@@ -55,8 +55,7 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                 createdOn: now,
                 lastUpdated: now,
               );
-              BlocProvider.of<PostBloc>(context)
-                  .add(AddPost(groupId: widget.groupId, post: post));
+              widget.onConfirm(post);
               Navigator.maybePop(context);
             } else {
               final snackBar = SnackBar(

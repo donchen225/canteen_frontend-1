@@ -1,4 +1,5 @@
 import 'package:canteen_frontend/models/comment/comment.dart';
+import 'package:canteen_frontend/models/group/group.dart';
 import 'package:canteen_frontend/models/like/like.dart';
 import 'package:canteen_frontend/models/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,25 +15,27 @@ abstract class PostEvent extends Equatable {
 }
 
 class LoadPosts extends PostEvent {
-  final String groupId;
+  final Group group;
+  final bool isHome;
 
-  const LoadPosts({this.groupId});
+  const LoadPosts({this.group, this.isHome});
 
   @override
-  String toString() => 'LoadPosts { groupId: $groupId }';
+  String toString() => 'LoadPosts { group: $group isHome: $isHome }';
 }
 
 class AddPost extends PostEvent {
-  final String groupId;
+  final Group group;
   final Post post;
+  final bool isHome;
 
-  const AddPost({this.groupId, this.post});
-
-  @override
-  List<Object> get props => [post];
+  const AddPost({this.group, this.post, this.isHome});
 
   @override
-  String toString() => 'AddPost { post: $post }';
+  List<Object> get props => [post, isHome];
+
+  @override
+  String toString() => 'AddPost { post: $post isHome: $isHome }';
 }
 
 class AddLike extends PostEvent {
