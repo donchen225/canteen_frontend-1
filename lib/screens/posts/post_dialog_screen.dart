@@ -111,49 +111,24 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                FlatButton(
-                  minWidth: 100,
-                  child: Text(
-                    'Offer',
-                    style: Theme.of(context).textTheme.button.apply(
-                          color: postType == 'offer'
-                              ? Colors.white
-                              : Palette.primaryColor,
-                          fontWeightDelta: 2,
-                        ),
-                  ),
-                  color:
-                      postType == 'offer' ? Palette.primaryColor : Colors.white,
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 2,
-                        color: Palette.primaryColor,
-                      ),
-                      borderRadius: BorderRadius.circular(20)),
-                  onPressed: () {
-                    setState(() {
-                      postType = 'offer';
-                    });
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
-                  ),
-                  child: FlatButton(
-                    minWidth: 100,
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.instance.safeBlockVertical,
+              ),
+              child: Row(
+                children: [
+                  FlatButton(
+                    minWidth: 80,
                     child: Text(
-                      'Request',
+                      'Offer',
                       style: Theme.of(context).textTheme.button.apply(
-                            color: postType == 'request'
+                            color: postType == 'offer'
                                 ? Colors.white
                                 : Palette.primaryColor,
                             fontWeightDelta: 2,
                           ),
                     ),
-                    color: postType == 'request'
+                    color: postType == 'offer'
                         ? Palette.primaryColor
                         : Colors.white,
                     shape: RoundedRectangleBorder(
@@ -164,12 +139,43 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                         borderRadius: BorderRadius.circular(20)),
                     onPressed: () {
                       setState(() {
-                        postType = 'request';
+                        postType = 'offer';
                       });
                     },
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.instance.safeBlockHorizontal * 3,
+                    ),
+                    child: FlatButton(
+                      minWidth: 80,
+                      child: Text(
+                        'Request',
+                        style: Theme.of(context).textTheme.button.apply(
+                              color: postType == 'request'
+                                  ? Colors.white
+                                  : Palette.primaryColor,
+                              fontWeightDelta: 2,
+                            ),
+                      ),
+                      color: postType == 'request'
+                          ? Palette.primaryColor
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 2,
+                            color: Palette.primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        setState(() {
+                          postType = 'request';
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: TextField(
