@@ -41,7 +41,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     if (_groupBloc != null) {
       _groupSubscription = _groupBloc.listen((state) {
         if (state is GroupLoaded) {
-          add(LoadPosts(groupId: state.group.id));
+          add(LoadPosts(group: state.group, isHome: false));
         }
       });
     }
@@ -49,7 +49,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     if (_groupHomeBloc != null) {
       _groupHomeSubscription = _groupHomeBloc.listen((state) {
         if (state is GroupHomeLoaded) {
-          add(LoadPosts(groupId: state.group.id));
+          add(LoadPosts(group: state.group, isHome: true));
         }
       });
     }
@@ -78,16 +78,30 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapLoadPostsToState(LoadPosts event) async* {
-    yield PostsLoading();
+    yield PostsLoading(
+      groupId: event.group.id,
+      isHome: event.isHome,
+    );
 
-    try {
-      final posts = await _postRepository.getPosts(event.groupId);
-      add(PostsUpdated(groupId: event.groupId, updates: posts));
-    } on PlatformException catch (error) {
-      if (error.code == 'Error 7') {
-        print('In sufficient permission to view group.');
-        yield PostsPrivate(groupId: event.groupId);
+    final isMember = _groupHomeBloc.currentUserGroups
+        .any((userGroup) => userGroup.id == event.group.id);
+
+    // Check if user is member of group or if group is public
+    if (isMember || event.group.type == 'public') {
+      try {
+        final posts = await _postRepository.getPosts(event.group.id);
+        add(PostsUpdated(groupId: event.group.id, updates: posts));
+      } on PlatformException catch (error) {
+        if (error.code == 'Error 7') {
+          print('Insufficient permission to view group.');
+        }
       }
+    } else {
+      print('NOT MEMBER');
+      yield PostsPrivate(
+        groupId: event.group.id,
+        isHome: event.isHome,
+      );
     }
   }
 
@@ -120,8 +134,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   }
 
   Stream<PostState> _mapAddPostToState(AddPost event) async* {
-    await _postRepository.addPost(event.groupId, event.post);
-    add(LoadPosts(groupId: event.groupId));
+    await _postRepository.addPost(event.group.id, event.post);
+    add(LoadPosts(group: event.group, isHome: event.isHome));
   }
 
   Stream<PostState> _mapAddLikeToState(AddLike event) async* {

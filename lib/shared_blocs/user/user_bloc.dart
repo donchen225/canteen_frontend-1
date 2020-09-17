@@ -14,6 +14,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
   StreamSubscription _userSubscription;
   StreamSubscription _authSubscription;
+  User currentUser;
 
   UserBloc(
       {@required this.userRepository,
@@ -23,6 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _authenticationBloc = authenticationBloc {
     _authSubscription = _authenticationBloc.listen((authState) {
       if (!(authState is Authenticated) && !(state is UserEmpty)) {
+        currentUser = null;
         add(LogOutUser());
       }
     });
@@ -54,11 +56,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Stream<UserState> _mapLoadUserToState(User user) async* {
+    currentUser = user;
     yield UserLoaded(user);
   }
 
   Stream<UserState> _mapLogOutToState() async* {
+    currentUser = null;
     _userSubscription?.cancel();
+
     yield UserEmpty();
   }
 

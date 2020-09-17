@@ -20,7 +20,6 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   StreamSubscription _postSubscription;
   StreamSubscription _groupSubscription;
   StreamSubscription _groupHomeSubscription;
-  String _currentGroupId;
 
   PostListBloc(
       {@required PostBloc postBloc,
@@ -37,51 +36,42 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
         _userRepository = userRepository,
         _postRepository = postRepository {
     _postSubscription = _postBloc.listen((state) {
-      if (state is PostsLoaded) {
-        final groupId = state.groupId;
-        if (_currentGroupId == groupId) {
-          add(LoadPostList(groupId: groupId, postList: state.posts));
+      if (_groupBloc != null) {
+        if (state is PostsPrivate && !state.isHome) {
+          final groupId = state.groupId;
+
+          if (_groupBloc.currentGroup.id == groupId) {
+            add(PrivatePostList());
+          }
+        } else if (state is PostsLoading && !state.isHome) {
+          add(LoadingPostList());
+        } else if (state is PostsLoaded) {
+          final groupId = state.groupId;
+          if (_groupBloc.currentGroup.id == groupId) {
+            add(LoadPostList(groupId: groupId, postList: state.posts));
+          }
         }
       }
 
-      if (state is PostsPrivate) {
-        final groupId = state.groupId;
-        if (_currentGroupId == groupId) {
-          add(PrivatePostList());
+      if (_groupHomeBloc != null) {
+        if (state is PostsPrivate && state.isHome) {
+          final groupId = state.groupId;
+
+          if (_groupHomeBloc.currentGroup.id == groupId) {
+            add(PrivatePostList());
+          }
+        } else if (state is PostsLoading && state.isHome) {
+          if (_groupHomeBloc.currentGroup.id == state.groupId) {
+            add(LoadingPostList());
+          }
+        } else if (state is PostsLoaded) {
+          final groupId = state.groupId;
+          if (_groupHomeBloc.currentGroup.id == groupId) {
+            add(LoadPostList(groupId: groupId, postList: state.posts));
+          }
         }
       }
     });
-    if (_groupBloc != null) {
-      _groupSubscription = _groupBloc.listen((state) {
-        if (state is GroupLoaded) {
-          final groupId = state.group.id;
-          final posts = _postBloc.postList[groupId];
-          _currentGroupId = groupId;
-
-          if (posts != null) {
-            add(LoadPostList(groupId: groupId, postList: posts));
-          } else {
-            add(LoadingPostList());
-          }
-        }
-      });
-    }
-
-    if (_groupHomeBloc != null) {
-      _groupHomeSubscription = _groupHomeBloc.listen((state) {
-        if (state is GroupHomeLoaded) {
-          final groupId = state.group.id;
-          final posts = _postBloc.postList[groupId];
-          _currentGroupId = groupId;
-
-          if (posts != null) {
-            add(LoadPostList(groupId: groupId, postList: posts));
-          } else {
-            add(LoadingPostList());
-          }
-        }
-      });
-    }
   }
 
   @override

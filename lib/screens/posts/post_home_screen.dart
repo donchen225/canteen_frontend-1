@@ -1,8 +1,10 @@
 import 'package:canteen_frontend/components/group_picture.dart';
+import 'package:canteen_frontend/components/group_summary_block.dart';
 import 'package:canteen_frontend/components/platform/platform_loading_indicator.dart';
 import 'package:canteen_frontend/components/profile_side_bar_button.dart';
 import 'package:canteen_frontend/components/unauthenticated_functions.dart';
 import 'package:canteen_frontend/models/group/group.dart';
+import 'package:canteen_frontend/screens/posts/bloc/bloc.dart';
 import 'package:canteen_frontend/screens/posts/group_home_member_list_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_dialog_screen.dart';
 import 'package:canteen_frontend/screens/posts/post_list_screen.dart';
@@ -141,7 +143,14 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     builder: (context) => PostDialogScreen(
-                      groupId: _groupHomeBloc.currentGroup.id,
+                      onConfirm: (post) =>
+                          BlocProvider.of<PostBloc>(context).add(
+                        AddPost(
+                          group: _groupHomeBloc.currentGroup,
+                          post: post,
+                          isHome: true,
+                        ),
+                      ),
                     ),
                   );
                 } else {
@@ -204,98 +213,69 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverToBoxAdapter(
-                    child: Container(
-                      color: Palette.containerColor,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
+                    child: Column(
+                      children: [
+                        Visibility(
+                          visible: !authenticated,
+                          child: Container(
+                            color: Colors.redAccent,
                             padding: EdgeInsets.only(
-                              top: SizeConfig.instance.safeBlockVertical * 2,
-                              left: SizeConfig.instance.safeBlockHorizontal *
-                                  kHorizontalPaddingBlocks,
                               right: SizeConfig.instance.safeBlockHorizontal *
                                   kHorizontalPaddingBlocks,
+                              left: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
                             ),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Column(
-                                      children: [
-                                        GroupPicture(
-                                          photoUrl: group.photoUrl,
-                                          shape: BoxShape.circle,
-                                          size: kProfileSize,
-                                        ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.instance
-                                                    .safeBlockHorizontal *
-                                                kHorizontalPaddingBlocks),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                bottom: SizeConfig.instance
-                                                        .safeBlockVertical *
-                                                    0.5,
-                                              ),
-                                              child: Text(
-                                                group.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5
-                                                    .apply(fontWeightDelta: 2),
-                                              ),
+                            child: GestureDetector(
+                              onTap: () =>
+                                  UnauthenticatedFunctions.showSignUp(context),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                        right: SizeConfig
+                                                .instance.safeBlockHorizontal *
+                                            kHorizontalPaddingBlocks,
+                                      ),
+                                      child: Text(
+                                        'Create your profile to list your services and needs.',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2
+                                            .apply(
+                                              color: Colors.white,
+                                              // fontWeightDelta: 1,
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: SizeConfig
-                                                    .instance.safeBlockVertical,
-                                              ),
-                                              child: Text(
-                                                group.description ?? '',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${group.members?.toString() ?? "0"} members' ??
-                                                  '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2
-                                                  .apply(
-                                                    color: Palette
-                                                        .textSecondaryBaseColor,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
+                                        maxLines: 2,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        SizeConfig.instance.safeBlockVertical,
                                   ),
-                                ),
-                              ],
+                                  FlatButton(
+                                    color: Palette.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      'Sign Up',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .apply(
+                                            color: Colors.white,
+                                            fontWeightDelta: 1,
+                                          ),
+                                    ),
+                                    onPressed: () =>
+                                        UnauthenticatedFunctions.showSignUp(
+                                            context),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        GroupSummaryBlock(group: group),
+                      ],
                     ),
                   ),
                   SliverOverlapAbsorber(
