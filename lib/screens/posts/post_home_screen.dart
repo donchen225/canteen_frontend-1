@@ -238,7 +238,7 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                                             kHorizontalPaddingBlocks,
                                       ),
                                       child: Text(
-                                        'Welcome to Canteen, create your profile here!',
+                                        'Create your profile to list your services and needs.',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText2
