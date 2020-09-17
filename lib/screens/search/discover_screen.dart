@@ -135,7 +135,7 @@ class DiscoverScreen extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 260,
+                    height: 220,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.groups.length,
@@ -152,7 +152,7 @@ class DiscoverScreen extends StatelessWidget {
                           ),
                           child: GroupCard(
                               group: group,
-                              height: 260 - kDiscoverCardPadding * 1.5,
+                              height: 220 - kDiscoverCardPadding * 1.5,
                               onTap: () {
                                 BlocProvider.of<GroupBloc>(context)
                                     .add(LoadGroup(group));

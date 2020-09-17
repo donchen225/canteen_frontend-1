@@ -76,7 +76,10 @@ class GroupCard extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   group.name,
-                                  style: titleStyle.apply(fontWeightDelta: 2),
+                                  style: titleStyle.apply(
+                                    fontWeightDelta: 2,
+                                    fontSizeDelta: -2,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -101,11 +104,11 @@ class GroupCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Text(
-                          '${group.members.toString()} members',
-                          style: bodyTextStyle.apply(
-                              color: Palette.textSecondaryBaseColor),
-                        )
+                        // Text(
+                        //   '${group.members.toString()} members',
+                        //   style: bodyTextStyle.apply(
+                        //       color: Palette.textSecondaryBaseColor),
+                        // )
                       ],
                     ),
                   ),
