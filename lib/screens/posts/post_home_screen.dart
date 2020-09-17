@@ -213,7 +213,70 @@ class _PostHomeScreenState extends State<PostHomeScreen>
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverToBoxAdapter(
-                    child: GroupSummaryBlock(group: group),
+                    child: Column(
+                      children: [
+                        Visibility(
+                          visible: !authenticated,
+                          child: Container(
+                            color: Colors.redAccent,
+                            padding: EdgeInsets.only(
+                              right: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                              left: SizeConfig.instance.safeBlockHorizontal *
+                                  kHorizontalPaddingBlocks,
+                            ),
+                            child: GestureDetector(
+                              onTap: () =>
+                                  UnauthenticatedFunctions.showSignUp(context),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                        right: SizeConfig
+                                                .instance.safeBlockHorizontal *
+                                            kHorizontalPaddingBlocks,
+                                      ),
+                                      child: Text(
+                                        'Welcome to Canteen, create your profile here!',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2
+                                            .apply(
+                                              color: Colors.white,
+                                              // fontWeightDelta: 1,
+                                            ),
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    color: Palette.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      'Sign Up',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .apply(
+                                            color: Colors.white,
+                                            fontWeightDelta: 1,
+                                          ),
+                                    ),
+                                    onPressed: () =>
+                                        UnauthenticatedFunctions.showSignUp(
+                                            context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GroupSummaryBlock(group: group),
+                      ],
+                    ),
                   ),
                   SliverOverlapAbsorber(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(

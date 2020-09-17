@@ -124,17 +124,16 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                       style: Theme.of(context).textTheme.button.apply(
                             color: postType == 'offer'
                                 ? Colors.white
-                                : Palette.primaryColor,
+                                : Colors.green[300],
                             fontWeightDelta: 2,
                           ),
                     ),
-                    color: postType == 'offer'
-                        ? Palette.primaryColor
-                        : Colors.white,
+                    color:
+                        postType == 'offer' ? Colors.green[300] : Colors.white,
                     shape: RoundedRectangleBorder(
                         side: BorderSide(
                           width: 2,
-                          color: Palette.primaryColor,
+                          color: Colors.green[300],
                         ),
                         borderRadius: BorderRadius.circular(20)),
                     onPressed: () {
@@ -154,17 +153,17 @@ class _PostDialogScreenState extends State<PostDialogScreen> {
                         style: Theme.of(context).textTheme.button.apply(
                               color: postType == 'request'
                                   ? Colors.white
-                                  : Palette.primaryColor,
+                                  : Colors.red[300],
                               fontWeightDelta: 2,
                             ),
                       ),
                       color: postType == 'request'
-                          ? Palette.primaryColor
+                          ? Colors.red[300]
                           : Colors.white,
                       shape: RoundedRectangleBorder(
                           side: BorderSide(
                             width: 2,
-                            color: Palette.primaryColor,
+                            color: Colors.red[300],
                           ),
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {

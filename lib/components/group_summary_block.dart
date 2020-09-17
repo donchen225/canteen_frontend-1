@@ -18,7 +18,7 @@ class GroupSummaryBlock extends StatelessWidget {
     return Container(
       color: Palette.containerColor,
       padding: EdgeInsets.only(
-        top: SizeConfig.instance.safeBlockVertical * 2,
+        top: SizeConfig.instance.safeBlockVertical,
         left:
             SizeConfig.instance.safeBlockHorizontal * kHorizontalPaddingBlocks,
         right:
