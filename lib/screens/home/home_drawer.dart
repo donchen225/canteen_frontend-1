@@ -126,9 +126,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   fontWeightDelta: 2,
                                 ),
                           ),
-                          Text(
-                            '${currentGroup?.members?.toString() ?? 0} members',
-                            style: Theme.of(context).textTheme.bodyText2,
+                          Visibility(
+                            visible: currentGroup != null,
+                            child: Text(
+                              '${currentGroup?.type == 'public' ? 'Public' : 'Private' ?? 'Public'} group',
+                              style:
+                                  Theme.of(context).textTheme.bodyText2.apply(
+                                        color: Palette.textSecondaryBaseColor,
+                                      ),
+                            ),
                           ),
                         ],
                       ),
@@ -175,7 +181,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             fontWeightDelta: 2,
                           ),
                     ),
-                    Text('${group.members.toString()} members'),
+                    Visibility(
+                      visible: currentGroup != null,
+                      child: Text(
+                        '${currentGroup?.type == 'public' ? 'Public' : 'Private' ?? 'Public'} group',
+                        style: Theme.of(context).textTheme.bodyText2.apply(
+                              color: Palette.textSecondaryBaseColor,
+                            ),
+                      ),
+                    ),
                   ],
                 ),
               );
