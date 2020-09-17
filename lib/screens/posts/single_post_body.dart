@@ -158,6 +158,40 @@ class _SinglePostBodyState extends State<SinglePostBody> {
                                   ),
                                 ),
                               ),
+                              Visibility(
+                                visible: widget.post.type != null,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: widget.post.type == 'offer'
+                                        ? Colors.green[300]
+                                        : Colors.red[300],
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: EdgeInsets.only(
+                                    right: 7,
+                                    top: 2,
+                                    bottom: 2,
+                                    left: 7,
+                                  ),
+                                  child: Text(
+                                    widget.post.type != null
+                                        ? (widget.post.type == 'offer'
+                                            ? 'Offer'
+                                            : (widget.post.type == 'request'
+                                                ? 'Request'
+                                                : ''))
+                                        : '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        .apply(
+                                          color: Colors.white,
+                                          fontWeightDelta: 1,
+                                          fontSizeDelta: -1,
+                                        ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
