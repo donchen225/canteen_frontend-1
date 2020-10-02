@@ -19,7 +19,7 @@ firebase auth:import firebase_auth_accounts.json    \
 # Export Firestore data
 # Collections: discover, groups, matches, notifications, recommendations, requests, users
 gcloud config set project get-canteen-staging
-gcloud firestore export gs://canteen-data-dump-staging --collection-ids=discover,groups,members,security,posts,matches,messages,notifications,child_notifications,recommendations,requests,users,settings,tokens --async
+gcloud firestore export gs://canteen-data-dump-staging --collection-ids=discover,groups,members,security,posts,likes,comments,matches,messages,notifications,child_notifications,recommendations,requests,users,settings,tokens --async
 
 gsutil -m rsync -r gs://canteen-data-dump-staging gs://canteen-data-dump-prod
 
