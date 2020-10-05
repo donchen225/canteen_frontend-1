@@ -19,7 +19,7 @@ jobs:
       with:
         ref: develop
     - name: Install Dependencies
-      run: npm install --prefix functions --only=dev
+      run: npm install --prefix ./functions --only=dev
     - name: Deploy Functions to Firebase
       uses: w9jds/firebase-action@master
       with:
