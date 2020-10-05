@@ -1,5 +1,4 @@
 import 'package:canteen_frontend/components/cancel_button.dart';
-import 'package:canteen_frontend/utils/constants.dart';
 import 'package:canteen_frontend/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
