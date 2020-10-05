@@ -866,10 +866,15 @@ exports.onPostCommented = functions.firestore.document('groups/{groupId}/posts/{
         "last_updated": createdOn,
     };
 
-    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
+    const postRef = firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId);
+    const post = await postRef.get().then((documentSnapshot) => {
         return documentSnapshot.data();
     }).catch((error) => {
         console.log(error);
+    });
+
+    postRef.update({
+        "last_updated": createdOn,
     });
 
     const postUserId = post.from;
@@ -938,10 +943,16 @@ exports.onPostLiked = functions.firestore.document('groups/{groupId}/posts/{post
         "last_updated": createdOn,
     };
 
-    const post = await firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId).get().then((documentSnapshot) => {
+    const postRef = firestore.collection(GROUPS_COLLECTION).doc(groupId).collection('posts').doc(postId);
+
+    const post = await postRef.get().then((documentSnapshot) => {
         return documentSnapshot.data();
     }).catch((error) => {
         console.log(error);
+    });
+
+    postRef.update({
+        "last_updated": createdOn,
     });
 
     const postUserId = post.from;
