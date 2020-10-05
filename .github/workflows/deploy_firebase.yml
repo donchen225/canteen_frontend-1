@@ -6,7 +6,7 @@ name: Firebase CD
 # events but only for the develop branch
 on:
   push:
-    branches: [ develop ]
+    branches: [ beta, master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:        
@@ -17,13 +17,22 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v2
       with:
-        ref: develop
+        ref: ${{ github.ref }}
     - name: Install Dependencies
       run: npm install --prefix ./functions
-    - name: Deploy Functions to Firebase
+    - name: Deploy Functions to Firebase Staging
+      if: github.ref == 'beta'
       uses: w9jds/firebase-action@master
       with:
         args: deploy --only functions
       env:
-        PROJECT_ID: get-canteen
+        PROJECT_ID: get-canteen-staging
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    - name: Deploy Functions to Firebase Production
+      if: github.ref == 'master'
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only functions
+      env:
+        PROJECT_ID: get-canteen-prod
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
